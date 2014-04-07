@@ -1,0 +1,58 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity" >
+
+
+    <item android:id="@+id/action_clear_tables"
+    android:title="Clear tables data"
+    android:showAsAction="always|withText" />
+
+
+    <!--<item-->
+        <!--android:id="@+id/menu_item_share"-->
+        <!--android:showAsAction="ifRoom"-->
+        <!--android:title="Share"-->
+        <!--android:actionProviderClass=-->
+            <!--"android.widget.ShareActionProvider" />-->
+
+    <!--<item android:id="@+id/action_add_face_picture"-->
+        <!--android:icon="@drawable/ic_action_photo"-->
+        <!--android:title="Face"-->
+        <!--android:showAsAction="always|withText" />-->
+
+    <!--<item android:id="@+id/action_add_left_picture"-->
+        <!--android:icon="@drawable/ic_action_photo"-->
+        <!--android:title="Left wall"-->
+        <!--android:showAsAction="always|withText" />-->
+
+    <!--<item android:id="@+id/action_add_right_picture"-->
+        <!--android:icon="@drawable/ic_action_photo"-->
+        <!--android:title="Right wall"-->
+        <!--android:showAsAction="always|withText" />-->
+
+    <!--<item android:id="@+id/action_add_roof_picture"-->
+        <!--android:icon="@drawable/ic_action_photo"-->
+        <!--android:title="Roof"-->
+        <!--android:showAsAction="always|withText" />-->
+
+    <!--<item android:id="@+id/action_take_photo"-->
+        <!--android:title="@string/action_take_photo"-->
+        <!--android:icon="@drawable/ic_action_photo"-->
+        <!--android:showAsAction="ifRoom" />-->
+
+    <!--<item android:id="@+id/action_edit_photo"-->
+        <!--android:title="@string/action_edit_photo"-->
+        <!--android:icon="@drawable/ic_action_photo"-->
+        <!--android:showAsAction="ifRoom" />-->
+
+    <!--<item android:id="@+id/action_draw"-->
+        <!--android:icon="@drawable/ic_action_edit"-->
+        <!--android:title="@string/action_draw"-->
+        <!--android:showAsAction="ifRoom" />-->
+
+
+    <!--<item android:id="@+id/action_skitch"-->
+        <!--android:icon="@drawable/ic_action_send"-->
+        <!--android:title="@string/action_skitch"-->
+        <!--android:showAsAction="ifRoom" />-->
+</menu>

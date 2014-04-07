@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.metric.skava.assessment.activity.AssessmentsListActivity" >
+    
+    <item android:id="@+id/action_new_assessment"
+        android:title="@string/new_assessment_action"
+        android:showAsAction="ifRoom|withText" />
+</menu>

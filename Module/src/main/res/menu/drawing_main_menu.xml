@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.metric.skava.test.receiver.activity.ReceiverMainActivity" >
+
+
+    <item android:id="@+id/action_draw_save"
+        android:icon="@drawable/ic_action_done"
+        android:title="@string/action_receiver_save"
+        android:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_draw_cancel"
+        android:icon="@drawable/ic_action_delete"
+        android:title="@string/action_receiver_cancel"
+        android:showAsAction="ifRoom" />
+
+    </menu>

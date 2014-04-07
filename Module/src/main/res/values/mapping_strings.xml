@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="tabs_q_label">Q</string>
+
+    <string name="tabs_rmr_label">RMR</string>
+    <string name="tabs_photos_label">Pictures</string>
+    <string name="tabs_description_label">Description</string>
+    <string name="tabs_results_label">Results</string>
+    <string name="tabs_instructions_label">Instructions</string>
+    
+    <!--<string-array name="fracture_type_spinner_values">-->
+        <!--<item>Massive</item>-->
+        <!--<item>Blocks</item>-->
+        <!--<item>Tabular</item>-->
+        <!--<item>Columnar</item>-->
+        <!--<item>Irregular</item>-->
+        <!--<item>Crushed</item>-->
+    <!--</string-array>-->
+    
+    <string-array name="block_size_spinner_values">
+        <item>Small</item>
+        <item>Medium</item>        
+    </string-array>
+
+    <string name="action_mapping_menu_item">Mapping Menu Item</string>
+
+</resources>

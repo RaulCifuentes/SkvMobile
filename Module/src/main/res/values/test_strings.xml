@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_test_main">FullScreenPictureMainActivity</string>
+    <string name="action_draw">Sketh</string>
+    <string name="action_take_photo">Take picture</string>
+    <string name="action_skitch">Skitch</string>
+    <string name="action_edit_photo">Edit picture</string>
+
+</resources>

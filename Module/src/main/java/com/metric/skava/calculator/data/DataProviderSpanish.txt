@@ -1,0 +1,159 @@
+	public static List<Jr> getAllJr() {
+		ArrayList<Jr> list = new ArrayList<Jr>();
+		list.add(new Jr("A", "Discontinuas o que presentan puentes de roca.",
+				1d));
+		list.add(new Jr("B",
+				"Estructuras ondulosas y rugosas (o irregulares).", 4d));
+		list.add(new Jr("C", "Estructuras ondulosas y lisas.", 3d));
+		list.add(new Jr("D", "Estructuras ondulosas y pulidas.", 2d));
+		list.add(new Jr("E", "Estructuras planas y rugosas.", 1.5d));
+		list.add(new Jr("F", "Estructuras planas y lisas.", 1d));
+		list.add(new Jr("G", "Estructuras planas y pulidas.", 1.5d));
+		list.add(new Jr("H",
+				"Rellenos arcillosos. Espesor impediría contacto entre cajas.",
+				0.5d));
+		list.add(new Jr(
+				"J",
+				"Rellenos de roca molida y/o materiales granulares. Espesor impediría contacto entre cajas",
+				1d));
+		return list;
+
+	}
+
+	public static List<Ja> getAllJa() {
+
+		ArrayList<Ja> list = new ArrayList<Ja>();
+		list.add(new Ja(
+				"A",
+				"Bien trabadas y selladas con rellenos duros, impermeables, y que no se ablandan (ej: cuarzo, epidota, etc.)",
+				0.875d));
+		list.add(new Ja("B",
+				"Cajas no alteradas, que solo presentan patinas locales", 2d));
+		list.add(new Ja(
+				"C",
+				"Cajas ligeramente alteradas. Patinas de materiales que no se ablandan y libres de finos: arenas, roca molida, etc.",
+				2d));
+		list.add(new Ja(
+				"D",
+				"Pátinas limo arenosas, con poco contenido de arcillas, que no se ablandan",
+				3d));
+		list.add(new Ja(
+				"E",
+				"Pátinas de minerales arcillosos de baja friccion y que se ablandan (ej: caolinita, micas, etc.). Estructuras con patinas de clorita, talco, yeso, grafito, etc. Estructuras con pequeñas cantidades de arcillas expansivas (patinas discontinuas de 1 a 2 mm de potencia)",
+				4d));
+		list.add(new Ja("F",
+				"Rellenos de arenas y/o roca molida, libres de arcilla", 4d));
+		list.add(new Ja(
+				"G",
+				"Rellenos de arcillas muy preconsolidadas, que no se ablandan (rellenos continuos, con espesores < 5 mm)",
+				6d));
+		list.add(new Ja(
+				"H",
+				"Rellenos de arcillas algo a poco preconsolidadas, que se ablandan (rellenos continuos, con espesores < 5 mm)",
+				8d));
+		list.add(new Ja(
+				"J",
+				"Rellenos de arcillas expansivas (ej: montmorillonita, rellenos continuos, con espesores < 5mm). El valor de Ja depende del contenido de arcilla, de la exposicion al agua, etc.",
+				8d));
+		list.add(new Ja(
+				"K",
+				"Rellenos de arcillas desintegradas o trituradas: Estructuras con rellenos de arcillas muy preconsolidadas, que no se ablandan (rellenos continuos, con espesores < 5 mm)",
+				6d));
+		list.add(new Ja(
+				"L",
+				"Rellenos de arcillas desintegradas o trituradas: Estructuras con rellenos de arcillas algo a poco preconsolidadas, que se ablandan (rellenos continuos, con espesores < 5 mm)",
+				8d));
+		list.add(new Ja(
+				"M",
+				"Rellenos de arcillas desintegradas o trituradas: Estructuras con rellenos de arcillas expansivas (ej: montmorillonita, rellenos continuos, con espesores < 5mm). El valor de Ja depende del contenido de arcilla, de la exposicion al agua, etc.",
+				12d));
+		list.add(new Ja(
+				"N",
+				"Rellenos potentes de arenas limosas o limo-arcillosas, con poco contenido de arcillas (que no se ablandan)",
+				5d));
+		list.add(new Ja(
+				"O",
+				"Rellenos potentes de salbanda arcillosa: Estructuras con rellenos de arcillas muy preconsolidadas, que no se ablandan (rellenos continuos, con espesores < 5 mm)",
+				10d));
+		list.add(new Ja(
+				"P",
+				"Rellenos potentes de salbanda arcillosa: Estructuras con rellenos de arcillas algo a poco preconsolidadas, que se ablandan (rellenos continuos, con espesores < 5 mm)",
+				10d));
+		list.add(new Ja(
+				"R",
+				"Rellenos potentes de salbanda arcillosa: Estructuras con rellenos de arcillas expansivas (ej: montmorillonita, rellenos continuos, con espesores < 5mm). El valor de Ja depende del contenido de arcilla, de la exposicion al agua, etc.",
+				10d));
+
+		return list;
+
+	}
+
+	public static List<Jw> getAllJw() {
+		ArrayList<Jw> list = new ArrayList<Jw>();
+		list.add(new Jw(
+				"A",
+				"Tunel seco o con infiltraciones menores (ej: 5 lt/min). Solo en algunos sectores.",
+				1d));
+		list.add(new Jw(
+				"B",
+				"Infiltraciones y presiones moderadas, que ocasionalmente causan lavado del relleno de las estructuras.",
+				0.66d));
+		list.add(new Jw(
+				"C",
+				"Infiltraciones y presiones importantes en roca competente con estructuras sin relleno.",
+				0.5d));
+		list.add(new Jw(
+				"D",
+				"Infiltraciones y presiones importantes que causan lavado de los rellenos de las estructuras.",
+				0.33d));
+		list.add(new Jw(
+				"E",
+				"Infiltraciones muy importantes y a presión, gravilladas por tronaduras pero que decaen con el tiempo.",
+				0.15d));
+		list.add(new Jw(
+				"F",
+				"Infiltraciones excepcionalmente altas con presiones que continuan sin decaer con el tiempo.",
+				0.075d));
+		return list;
+	}
+
+	public static List<SRF> getAllSrf() {
+		ArrayList<SRF> list = new ArrayList<SRF>();
+		list.add(new SRF(
+				"A",
+				"Macizo rocoso muy fracturado. Estructuras abiertas que definen bloques en forma de cubos (a cualquier z)",
+				10d));
+		list.add(new SRF(
+				"B",
+				"Estado tensional de magnitud baja. Estructuras superficiales abiertas",
+				5d));
+		list.add(new SRF(
+				"C",
+				"Estado tensional de magnitud moderada. Condición de esfuerzos favorable",
+				5d));
+		list.add(new SRF(
+				"D",
+				"Estado tensional de magnitud alta. Estructuras bien trabadas (favorable estabilidad,puede presentar problemas en las cajas)",
+				7.5d));
+		list.add(new SRF(
+				"E",
+				"Macizo rocoso masivo. Lajamientos moderados 1 hora despues del desarrollo de excavacion subterranea",
+				5d));
+		list.add(new SRF(
+				"F",
+				"Macizo rocoso masivo. Lajamientos e incluso estallidos de roca poco después de excavacion subterránea.",
+				2.5d));
+		list.add(new SRF(
+				"G",
+				"Macizos rocosos que sufren notorios estallidos de roca y deformaciones inmediatamente despues de excavación subterránea",
+				2.5d));
+		list.add(new SRF("H",
+				"El flujo plastico genera presiones leve a moderadas", 1d));
+		list.add(new SRF("J", "El flujo plastico genera presiones importantes",
+				0.5d));
+		list.add(new SRF("K",
+				"El hinchamiento genera presiones leves a moderadas", 7d));
+		list.add(new SRF("L", "El hinchamiento genera presiones importantes",
+				15d));
+		return list;
+	}

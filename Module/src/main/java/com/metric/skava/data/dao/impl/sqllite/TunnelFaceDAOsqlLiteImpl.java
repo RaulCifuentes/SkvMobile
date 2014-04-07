@@ -1,0 +1,147 @@
+package com.metric.skava.data.dao.impl.sqllite;
+
+import android.content.Context;
+import android.database.Cursor;
+
+import com.metric.skava.app.database.utils.CursorUtils;
+import com.metric.skava.app.model.Permission;
+import com.metric.skava.app.model.Tunnel;
+import com.metric.skava.app.model.TunnelFace;
+import com.metric.skava.app.model.User;
+import com.metric.skava.data.dao.DAOFactory;
+import com.metric.skava.data.dao.LocalTunnelFaceDAO;
+import com.metric.skava.data.dao.LocalTunnelDAO;
+import com.metric.skava.data.dao.exception.DAOException;
+import com.metric.skava.data.dao.impl.sqllite.table.PermissionTable;
+import com.metric.skava.data.dao.impl.sqllite.table.TunnelFaceTable;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by metricboy on 3/14/14.
+ */
+public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<TunnelFace> implements LocalTunnelFaceDAO {
+
+    public TunnelFaceDAOsqlLiteImpl(Context context) {
+        super(context);
+    }
+
+
+
+    @Override
+    protected List<TunnelFace> assamblePersistentEntities(Cursor cursor) throws DAOException {
+
+        List<TunnelFace> list = new ArrayList<TunnelFace>();
+
+        while (cursor.moveToNext()) {
+            String code = CursorUtils.getString(TunnelFaceTable.CODE_COLUMN, cursor);
+            String name = CursorUtils.getString(TunnelFaceTable.NAME_COLUMN, cursor);
+            String tunnelCode = CursorUtils.getString(TunnelFaceTable.TUNNEL_CODE_COLUMN, cursor);
+            Integer orientation = CursorUtils.getInt(TunnelFaceTable.ORIENTATION_COLUMN, cursor);
+            Integer slope = CursorUtils.getInt(TunnelFaceTable.SLOPE_COLUMN, cursor);
+
+            LocalTunnelDAO localTunnelDAO = DAOFactory.getInstance(getContext()).getLocalTunnelDAO(DAOFactory.Flavour.SQLLITE);
+            Tunnel tunnel = localTunnelDAO.getTunnelByCode(tunnelCode);
+
+            TunnelFace newInstance = new TunnelFace(code, name);
+            newInstance.setTunnel(tunnel);
+            newInstance.setOrientation(orientation.shortValue());
+            newInstance.setSlope(slope.shortValue());
+            list.add(newInstance);
+        }
+        return list;
+    }
+
+
+    @Override
+    public List<TunnelFace> getTunnelFacesByTunnel(Tunnel tunnel) throws DAOException {
+        String tunnelCode = null;
+        if (tunnel != null) {
+            tunnelCode = tunnel.getCode();
+        }
+        Cursor cursor = getRecordsFilteredByColumn(TunnelFaceTable.FACE_DATABASE_TABLE, TunnelFaceTable.TUNNEL_CODE_COLUMN, tunnelCode, null);
+        List<TunnelFace> list = assamblePersistentEntities(cursor);
+        cursor.close();
+        return list;
+    }
+
+    @Override
+    public List<TunnelFace> getTunnelFacesByTunnel(Tunnel tunnel, User user) throws DAOException {
+        if (user == null) {
+            return getTunnelFacesByTunnel(tunnel);
+        } else {
+            List<TunnelFace> listFaces = new ArrayList<TunnelFace>();
+            List<TunnelFace> allFacesOfUser = getTunnelFacesByUser(user);
+            for (TunnelFace currTunnelFace : allFacesOfUser) {
+                if (currTunnelFace.getTunnel().equals(tunnel)) {
+                    listFaces.add(currTunnelFace);
+                }
+            }
+            return listFaces;
+        }
+    }
+
+
+    //ALTERNATIVE TO FACES PER USER
+//    //find the user tunnel faces
+//    List<Permission> permissionList = mPermissionDAO.getPermissionsByUser(user);
+//    List<TunnelFace> allFacesGrantedToUser = new ArrayList<TunnelFace>();
+//    for (Permission permission : permissionList) {
+//        Permission.IdentifiableEntityType currentEntityGranted = permission.getWhere();
+//        if (currentEntityGranted.equals(Permission.IdentifiableEntityType.FACE)) {
+//            TunnelFace targetFace = (TunnelFace) permission.getWhereExactly();
+//            allFacesGrantedToUser.add(targetFace);
+//        }
+//    }
+
+    @Override
+    public List<TunnelFace> getTunnelFacesByUser(User user) throws DAOException {
+        List<TunnelFace> tunnelList = new ArrayList<TunnelFace>();
+        Cursor cursor = getRecordsFilteredByColumns(PermissionTable.PERMISSION_DATABASE_TABLE, new String[]{PermissionTable.USER_CODE_COLUMN, PermissionTable.TARGET_TYPE_CODE_COLUMN}, new String[]{user.getCode(), Permission.IdentifiableEntityType.FACE.name() }, null);
+        while (cursor.moveToNext()) {
+            String faceCode = CursorUtils.getString(PermissionTable.TARGET_CODE_COLUMN, cursor);
+            TunnelFace tunnelFace = getTunnelFaceByCode(faceCode);
+            tunnelList.add(tunnelFace);
+        }
+        return tunnelList;
+    }
+
+    @Override
+    public TunnelFace getTunnelFaceByCode(String code) throws DAOException {
+        TunnelFace tunnelFace = getIdentifiableEntityByCode(TunnelFaceTable.FACE_DATABASE_TABLE, code);
+        return tunnelFace;
+    }
+
+    @Override
+    public List<TunnelFace> getAllTunnelFaces() throws DAOException {
+        List<TunnelFace> list = getAllPersistentEntities(TunnelFaceTable.FACE_DATABASE_TABLE);
+        return list;
+    }
+
+    @Override
+    protected void savePersistentEntity(String tableName, TunnelFace newSkavaEntity) throws DAOException {
+        String[] colNames = {TunnelFaceTable.TUNNEL_CODE_COLUMN, TunnelFaceTable.CODE_COLUMN, TunnelFaceTable.NAME_COLUMN, };
+        String[] colValues = {newSkavaEntity.getTunnel().getCode(), newSkavaEntity.getCode(),newSkavaEntity.getName() };
+        saveRecord(TunnelFaceTable.FACE_DATABASE_TABLE, colNames, colValues);
+    }
+
+    @Override
+    public void saveTunnelFace(TunnelFace newFace) throws DAOException {
+        savePersistentEntity(TunnelFaceTable.FACE_DATABASE_TABLE, newFace);
+    }
+
+    @Override
+    public boolean deleteTunnelFace(String code) {
+        return false;
+    }
+
+    @Override
+    public int deleteAllTunnelFaces() {
+        return deleteAllPersistentEntities(TunnelFaceTable.FACE_DATABASE_TABLE);
+    }
+
+
+
+}

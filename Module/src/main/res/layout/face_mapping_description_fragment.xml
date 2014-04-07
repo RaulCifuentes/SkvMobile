@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="30dp"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/fracture_type_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="@string/rockmass_desc_fracture_type"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_margin="20dp"
+        />
+
+    <Spinner
+        android:id="@+id/fracture_type_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/fracture_type_label"
+        android:layout_alignBaseline="@id/fracture_type_label"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginRight="20dp"
+        />
+
+    <TextView
+        android:id="@+id/block_size_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fracture_type_label"
+        android:text="@string/rockmass_desc_block_size"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_margin="20dp"
+        />
+
+    <Spinner
+        android:id="@+id/block_size_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/block_size_label"
+        android:layout_alignLeft="@id/fracture_type_spinner"
+        android:layout_alignBaseline="@id/block_size_label"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginRight="20dp"/>
+
+    <TextView
+        android:id="@+id/junctures_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/block_size_label"
+        android:text="@string/rockmass_desc_joints_m3"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_margin="20dp"
+        />
+
+    <EditText
+        android:id="@+id/junctures_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/junctures_label"
+        android:layout_toRightOf="@id/junctures_label"
+        android:layout_alignLeft="@id/block_size_spinner"
+        android:text="Number of joint per cubic meter"
+        android:layout_marginRight="20dp"/>
+
+    <TextView
+        android:id="@+id/details_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/junctures_label"
+        android:text="@string/rockmass_desc_details"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_margin="20dp"
+        />
+
+    <MultiAutoCompleteTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Long custom description ... "
+        android:id="@+id/detailsMultiAutoCompleteTextView"
+        android:layout_alignBaseline="@id/details_label"
+        android:layout_toRightOf="@id/details_label"
+        android:layout_alignLeft="@id/block_size_spinner"
+        android:layout_marginRight="20dp"
+         />
+
+</RelativeLayout>

@@ -1,0 +1,64 @@
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    tools:context=".MainActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:columnCount="2"
+    >
+
+    <include
+        android:id="@+id/summary_report_generales"
+        layout="@layout/summary_report_generales"
+        android:layout_gravity="fill_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/summary_report_box_margin"/>
+
+    <include
+        android:id="@+id/summary_report_caracterizacion_macizo"
+        layout="@layout/summary_report_caracterizacion_macizo"
+        android:layout_gravity="fill_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/summary_report_box_margin"
+         />
+
+    <include
+        android:id="@+id/summary_report_macizo"
+        layout="@layout/summary_report_macizo"
+        android:layout_gravity="fill_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/summary_report_box_margin"
+         />
+
+    <include
+        android:id="@+id/summary_report_soporte"
+        layout="@layout/summary_report_soporte"
+        android:layout_gravity="fill_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/summary_report_box_margin"
+         />
+
+    <ImageView
+        android:id="@+id/summary_report_stereo_projection"
+        android:src="@drawable/stereo_placeholder"
+        android:layout_gravity="fill_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_margin="@dimen/summary_report_box_margin"
+         />
+
+    <include
+        android:id="@+id/summary_report_discontinuidades"
+        layout="@layout/summary_report_discontinuidades"
+        android:layout_gravity="fill_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/summary_report_box_margin"
+        />
+
+</GridLayout>

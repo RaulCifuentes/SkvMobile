@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string name="report_datos_generales">General Information</string>
+    <string name="report_proyecto">Project</string>
+    <string name="report_tunel">Tunnel</string>
+    <string name="report_frente">Face</string>
+    <string name="report_tipo_seccion">Section</string>
+    <string name="report_fecha">Date</string>
+    <string name="report_geologo">Geologist</string>
+    <string name="report_pk">Peg Numbers</string>
+    <string name="report_avance">Current Advance</string>
+    <string name="report_accumm_avance">Accum Advance</string>
+    <string name="report_metodo">Method</string>
+    <string name="report_orientacion">Orientation</string>
+    <string name="report_pendiente">Slope</string>
+
+    <string name="report_macizo">Rock Mass</string>
+    <string name="report_tipo_fracturacion">Fracture Type</string>
+    <string name="report_medida_bloques">Blocks Dimension</string>
+    <string name="report_juntas_m3">Joints / m3</string>
+
+
+    <string name="report_recomenda_soporte">Support Recomendation</string>
+    <string name="report_tipo_perno">Bolt Type</string>
+    <string name="report_largo_perno">Bolt Length</string>
+    <string name="report_tipo_shotcrete">Shotcrete Type</string>
+    <string name="report_espesor_shotcrete">Thickness</string>
+    <string name="report_tipo_malla">Mesh Type</string>
+    <string name="report_cobertura">Coverage</string>
+    <string name="report_tipo_marco">Arch Typo</string>
+    <string name="report_separacion">Separation</string>
+
+
+    <string name="report_clasificacion_rmr">Rock Mass Rating System (RMR)</string>
+    <string name="report_rmr_parametros">Parameters</string>
+    <string name="report_rmr_valorizacion">Valorization</string>
+    <string name="report_rmr_puntaje">Score</string>
+    <string name="report_rmr_ucs">UCS</string>
+    <string name="report_rmr_espaciado">Spacing</string>
+    <string name="report_rmr_discontinuidades">Cond.\nDiscont.</string>
+    <string name="report_rmr_persistencia">Persistence</string>
+    <string name="report_rmr_abertura">Aperture</string>
+    <string name="report_rmr_rugosidad">Roughness</string>
+    <string name="report_rmr_relleno">Infilling</string>
+    <string name="report_rmr_meteorizacion">Weathering</string>
+    <string name="report_rmr_agua">Groundwater</string>
+    <string name="report_rmr_ajuste">Orientation</string>
+    <string name="report_rmr_rmr_value">RMR Value</string>
+    <string name="report_rmr_clase">Class</string>
+    <string name="report_rmr_calidad">Quality</string>
+
+
+    <string name="report_clasificacion_q">Q System (Q)</string>
+    <string name="report_q_parametros">Parameters</string>
+    <string name="report_q_valorizacion">Valorization</string>
+    <string name="report_q_puntaje">Score</string>
+    <string name="report_q_esr">ESR</string>
+    <string name="report_q_ancho">Span</string>
+    <string name="report_q_a_esr">S/ESR</string>
+    <string name="report_q_rqd">RQD</string>
+    <string name="report_q_jn">Jn</string>
+    <string name="report_q_jr">Jr</string>
+    <string name="report_q_ja">Ja</string>
+    <string name="report_q_jw">Jw</string>
+    <string name="report_q_srf">SRF</string>
+    <string name="report_q_q_value">Q Value</string>
+    <string name="report_q_calidad">Quality</string>
+
+    <string name="report_discontinuidades">Discontinuity System</string>
+    <string name="report_disc_numero">Number</string>
+    <string name="report_disc_tipo">Type</string>
+    <string name="report_disc_relevancia">Relevance</string>
+    <string name="report_disc_dip_dir">Dip Dir (°)</string>
+    <string name="report_disc_dip">Dip (°)</string>
+    <string name="report_disc_espaciamiento">Spacing</string>
+    <string name="report_disc_persistencia">Persistence</string>
+    <string name="report_disc_abertura">Aperture</string>
+    <string name="report_disc_forma">Discontinuity Shape</string>
+    <string name="report_disc_condicion">Discontinuity Condition</string>
+    <string name="report_disc_relleno">Infilling</string>
+    <string name="report_disc_alt_paredes">Weathering</string>
+    <string name="report_disc_jr">Jr</string>
+    <string name="report_disc_ja">Ja</string>
+    <string name="report_disc_agua">Water</string>
+
+</resources>

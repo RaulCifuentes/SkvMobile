@@ -1,0 +1,131 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    tools:context=".MainActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <include
+        android:id="@+id/summary_report_generales"
+        layout="@layout/summary_report_generales"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/summary_report_box_margin"/>
+
+    <include
+        android:id="@+id/summary_report_caracterizacion_macizo"
+        layout="@layout/summary_report_caracterizacion_macizo"
+        android:layout_toRightOf="@id/summary_report_generales"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/summary_report_box_margin"
+         />
+
+    <include
+        android:id="@+id/summary_report_macizo"
+        layout="@layout/summary_report_macizo"
+        android:layout_below="@id/summary_report_caracterizacion_macizo"
+        android:layout_alignLeft="@id/summary_report_generales"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/summary_report_box_margin"
+         />
+
+    <include
+        android:id="@+id/summary_report_soporte"
+        layout="@layout/summary_report_soporte"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/summary_report_macizo"
+        android:layout_alignTop="@id/summary_report_macizo"
+        android:layout_margin="@dimen/summary_report_box_margin"
+         />
+
+    <ImageView
+        android:id="@+id/summary_report_stereo_projection"
+        android:src="@drawable/fisher_graphic"
+        android:layout_below="@id/summary_report_soporte"
+        android:layout_alignLeft="@id/summary_report_macizo"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_margin="@dimen/summary_report_box_margin"
+         />
+
+    <include
+        android:id="@+id/summary_report_discontinuidades"
+        layout="@layout/summary_report_discontinuidades"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/summary_report_stereo_projection"
+        android:layout_alignTop="@id/summary_report_stereo_projection"
+        android:layout_margin="@dimen/summary_report_box_margin"
+        />
+
+    <ImageView
+        android:id="@+id/summary_report_left_wall_pic"
+        android:src="@drawable/skava_shadow"
+        android:layout_below="@id/summary_report_stereo_projection"
+        android:layout_alignLeft="@id/summary_report_stereo_projection"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_margin="@dimen/summary_report_box_margin"
+        />
+
+    <ImageView
+        android:id="@+id/summary_report_right_wall_pic"
+        android:src="@drawable/skava_shadow"
+        android:layout_below="@id/summary_report_left_wall_pic"
+        android:layout_alignLeft="@id/summary_report_left_wall_pic"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_margin="@dimen/summary_report_box_margin"
+        />
+
+    <ImageView
+        android:id="@+id/summary_report_roof_pic"
+        android:src="@drawable/skava_shadow"
+        android:layout_below="@id/summary_report_right_wall_pic"
+        android:layout_alignLeft="@id/summary_report_right_wall_pic"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_margin="@dimen/summary_report_box_margin"
+        />
+
+    <ImageView
+        android:id="@+id/summary_report_face_pic"
+        android:src="@drawable/skava_shadow"
+        android:layout_below="@id/summary_report_discontinuidades"
+        android:layout_alignLeft="@id/summary_report_discontinuidades"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:minWidth="800dp"
+        android:minHeight="600dp"
+        android:layout_margin="@dimen/summary_report_box_margin"
+        />
+
+    <TextView
+        android:id="@+id/summary_report_outcrop_description_label"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Outcrop Geological Description"
+        android:textStyle="bold"
+        android:layout_below="@id/summary_report_face_pic"
+        android:layout_alignLeft="@id/summary_report_face_pic"
+        style="@style/ReportLabelContainerBox"
+        />
+    <TextView
+        android:id="@+id/summary_report_outcrop_description_value"
+        android:gravity="center"
+        android:layout_below="@id/summary_report_outcrop_description_label"
+        android:layout_alignLeft="@id/summary_report_outcrop_description_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/text_box"
+        />
+
+
+</RelativeLayout>

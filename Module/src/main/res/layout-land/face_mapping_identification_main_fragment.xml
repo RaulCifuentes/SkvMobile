@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/face_mapping_main_layout_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/LinearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+         <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+             >
+
+            <TextView
+                android:id="@+id/textView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="GEOLOGIST"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView
+                android:id="@+id/textView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginStart="15dp"
+                android:layout_toRightOf="@id/textView01"
+                android:text=":"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginStart="15dp"
+                android:layout_toRightOf="@id/textView02"
+                android:text="Juan Jose Berrio"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/textView04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/textView01"
+                android:layout_below="@id/textView01"
+                android:layout_gravity="left"
+                android:text="PROJECT"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView05"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/textView02"
+                android:layout_below="@id/textView02"
+                android:layout_gravity="left"
+                android:text=":"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView06"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/textView03"
+                android:layout_below="@id/textView03"
+                android:layout_gravity="left"
+                android:text="ADITS Ventilation"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/textView07"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="TUNNEL"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/textView06"
+                android:layout_marginLeft="52dp" />
+
+            <TextView
+                android:id="@+id/textView08"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text=":"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/textView07"
+                android:layout_marginLeft="34dp" />
+
+            <TextView
+                android:id="@+id/textView09"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="ADIT 74"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="33dp" />
+
+            <TextView
+                android:id="@+id/TextView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/textView07"
+                android:layout_below="@id/textView07"
+                android:layout_gravity="left"
+                android:text="FACE"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/textView08"
+                android:layout_below="@id/textView08"
+                android:layout_gravity="left"
+                android:text=":"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/textView09"
+                android:layout_below="@id/textView09"
+                android:layout_gravity="left"
+                android:text="South"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </RelativeLayout>
+
+
+        <!-- End Header -->
+
+        <View
+            android:id="@+id/division_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="@color/dim_foreground_dark_inverse" />
+
+        <!-- Detail -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <!-- android:layout_centerInParent="true" -->
+
+                <Space
+                    android:id="@+id/space01"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="10dp"
+                    android:background="@color/Aqua"
+                    android:gravity="center"
+                    android:text="Space01" />
+
+                <!-- Begin Mapping Number -->
+
+                <TextView
+                    android:id="@+id/mapping_nmbr_label_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/space01"
+                    android:text="@string/resultsLabelIconicFont"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/mapping_nmbr_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/mapping_nmbr_label_icon"
+                    android:layout_toRightOf="@+id/mapping_nmbr_label_icon"
+                    android:text="Mapping Number"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/mapping_nmbr_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/mapping_nmbr_label_icon"
+                    android:layout_below="@id/mapping_nmbr_label_icon"
+                    android:layout_margin="5dp"
+                    android:layout_toRightOf="@id/mapping_nmbr_label"
+                    android:background="@drawable/text_box"
+                    android:gravity="right"
+                    android:padding="5dp"
+                    android:text="062"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    />
+<!--                 android:textColor=@android:color/holo_green_light  -->
+
+                <!-- End Mapping Number -->
+
+
+                <!-- Begin Space -->
+
+                <Space
+                    android:id="@+id/space02"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/mapping_nmbr_label_icon"
+                    android:layout_below="@id/mapping_nmbr_value"
+                    android:layout_margin="10dp"
+                    android:background="@color/Aqua"
+                    android:gravity="center"
+                    android:text="Space 02" />
+                <!-- End Space -->
+
+
+                <!-- Begin Mapping Date -->
+
+                <TextView
+                    android:id="@+id/mapping_date_label_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/mapping_nmbr_label_icon"
+                    android:layout_below="@id/space02"
+                    android:text="g"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/mapping_date_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/mapping_date_label_icon"
+                    android:layout_alignLeft="@id/mapping_nmbr_label"
+                    android:layout_below="@id/mapping_nmbr_label"
+                    android:text="Date"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Button
+                    android:id="@+id/mapping_date_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/mapping_nmbr_value"
+                    android:layout_below="@id/mapping_date_label_icon"
+                    android:onClick="showDatePickerDialog"
+                    android:text="l" />
+
+                <TextView
+                    android:id="@+id/mapping_date_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/mapping_date_button"
+                    android:layout_alignLeft="@id/mapping_date_label_icon"
+                    android:layout_below="@id/mapping_date_label_icon"
+                    android:layout_toLeftOf="@id/mapping_date_button"
+                    android:background="@drawable/text_box"
+                    android:gravity="right"
+                    android:padding="5dp"
+                    android:text="01/01/2001"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                     />
+<!--                 android:textColor=@android:color/holo_green_light -->
+
+                <!-- End Mapping Date -->
+
+
+                <!-- Begin Space -->
+
+                <Space
+                    android:id="@+id/space03"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/mapping_date_label_icon"
+                    android:layout_below="@id/mapping_date_value"
+                    android:layout_margin="10dp"
+                    android:background="@color/Aqua"
+                    android:gravity="center"
+                    android:text="Space03" />
+                <!-- End Space -->
+
+
+                <!-- Begin Mapping PK -->
+
+                <TextView
+                    android:id="@+id/mapping_pk_label_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/mapping_date_label_icon"
+                    android:layout_below="@id/space03"
+                    android:text="@string/resultsLabelIconicFont"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/mapping_pk_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/mapping_pk_label_icon"
+                    android:layout_alignLeft="@id/mapping_date_label"
+                    android:layout_below="@id/mapping_date_label"
+                    android:text="PK"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <RelativeLayout
+                    android:id="@+id/mapping_pk_pickers_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/mapping_pk_label_icon"
+                    android:layout_below="@id/mapping_pk_label_icon"
+                    android:layout_margin="10dp"
+                    android:gravity="center_vertical" >
+
+                    <TextView
+                        android:id="@+id/mapping_pk_divider_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="50dp"
+                        android:layout_marginRight="50dp"
+                        android:text="to" />
+
+                    <NumberPicker
+                        android:id="@+id/mapping_pk_first_number_picker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/mapping_pk_divider_label"
+                         />
+
+                    <NumberPicker
+                        android:id="@+id/mapping_pk_second_number_picker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/mapping_pk_divider_label"
+                      />
+                       
+<!--                     selectionDivider=@android:color/holo_green_light -->
+<!--                         selectionDividerHeight="3dp" -->
+<!--                         selectionDividersDistance="6dp" -->
+                    
+                    
+                </RelativeLayout>
+
+                <!-- End Mapping PK -->
+
+
+                <!-- Begin Space -->
+
+                <Space
+                    android:id="@+id/space04"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/mapping_pk_label_icon"
+                    android:layout_below="@id/mapping_pk_pickers_container"
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@id/mapping_pk_pickers_container"
+                    android:background="@color/Aqua"
+                    android:gravity="center"
+                    android:text="Space 04" />
+                <!-- End Space -->
+
+
+                <!-- Begin Mapping Excavation ExcavationSection -->
+
+                <TextView
+                    android:id="@+id/excavation_sctn_label_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/mapping_pk_label_icon"
+                    android:layout_below="@id/space04"
+                    android:text="@string/resultsLabelIconicFont"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/excavation_sctn_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/excavation_sctn_label_icon"
+                    android:layout_toRightOf="@id/excavation_sctn_label_icon"
+                    android:text="Excavation Section"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/excavation_sctn_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/excavation_sctn_label_icon"
+                    android:layout_below="@id/excavation_sctn_label_icon"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/text_box"
+                    android:gravity="right"
+                    android:padding="5dp"
+                    android:text="Complete"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                     />
+<!--                 android:textColor=@android:color/holo_green_light -->
+
+                <!-- End Mapping Excavation ExcavationSection -->
+
+
+                <!-- Begin Space -->
+
+                <Space
+                    android:id="@+id/space05"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/excavation_sctn_value"
+                    android:layout_margin="10dp"
+                    android:background="@color/Aqua"
+                    android:gravity="center"
+                    android:text="Space05" />
+
+                <!-- End Space -->
+
+
+                <!-- Begin Mapping Excavation Type -->
+
+                <TextView
+                    android:id="@+id/excavation_tp_label_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/excavation_sctn_label_icon"
+                    android:layout_below="@id/space05"
+                    android:text="@string/resultsLabelIconicFont"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/excavation_tp_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/excavation_tp_label_icon"
+                    android:layout_toRightOf="@id/excavation_tp_label_icon"
+                    android:text="Excavation Type"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/excavation_tp_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/excavation_tp_label_icon"
+                    android:layout_below="@id/excavation_tp_label_icon"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/text_box"
+                    android:gravity="right"
+                    android:padding="5dp"
+                    android:text="Traditional with explosion"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                     />
+<!--                 android:textColor=@android:color/holo_green_light -->
+
+                <!-- End Mapping Excavation Type -->
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/mapping_finish_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="30dp"
+                android:text="Finish without inspection" />
+
+            <Button
+                android:id="@+id/mapping_continue_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="30dp"
+                android:text="Continue >" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</FrameLayout>

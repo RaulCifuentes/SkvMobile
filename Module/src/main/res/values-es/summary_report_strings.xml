@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string name="report_datos_generales">Datos Generales</string>
+    <string name="report_proyecto">Proyecto</string>
+    <string name="report_tunel">Túnel</string>
+    <string name="report_frente">Frente</string>
+    <string name="report_tipo_seccion">Tipo Sección</string>
+    <string name="report_fecha">Fecha</string>
+    <string name="report_geologo">Geólogo</string>
+    <string name="report_pk">PK</string>
+    <string name="report_avance">Avance</string>
+    <string name="report_metodo">Método</string>
+    <string name="report_orientacion">Orientación</string>
+    <string name="report_pendiente">Pendiente</string>
+
+    <string name="report_macizo">Macizo</string>
+    <string name="report_tipo_fracturacion">Tipo Fracturacion</string>
+    <string name="report_medida_bloques">Medida Bloques</string>
+    <string name="report_juntas_m3">Juntas / m3</string>
+
+
+    <string name="report_recomenda_soporte">Recomendacion Soporte</string>
+    <string name="report_tipo_perno">Tipo Perno</string>
+    <string name="report_largo_perno">Largo Perno</string>
+    <string name="report_tipo_shotcrete">Tipo Shotcrete</string>
+    <string name="report_espesor_shotcrete">Espesor</string>
+    <string name="report_tipo_malla">Tipo Malla</string>
+    <string name="report_cobertura">Cobertura</string>
+    <string name="report_tipo_marco">Tipo Marco</string>
+    <string name="report_separacion">Separacion</string>
+
+
+    <string name="report_clasificacion_rmr">Clasificación Bieniawski (RMR)</string>
+    <string name="report_rmr_parametros">Parámetros</string>
+    <string name="report_rmr_valorizacion">Valorización</string>
+    <string name="report_rmr_puntaje">Puntaje</string>
+    <string name="report_rmr_ucs">UCS</string>
+    <string name="report_rmr_espaciado">Espaciado</string>
+    <string name="report_rmr_discontinuidades">Cond.\nDiscont.</string>
+    <string name="report_rmr_persistencia">Persistencia</string>
+    <string name="report_rmr_abertura">Abertura</string>
+    <string name="report_rmr_rugosidad">Rugosidad</string>
+    <string name="report_rmr_relleno">Relleno</string>
+    <string name="report_rmr_meteorizacion">Meteorización</string>
+    <string name="report_rmr_agua">Agua</string>
+    <string name="report_rmr_ajuste">Ajuste Orientación</string>
+    <string name="report_rmr_rmr_value">Valor RMR</string>
+    <string name="report_rmr_clase">Clase</string>
+    <string name="report_rmr_calidad">Calidad</string>
+
+
+
+    <string name="report_clasificacion_q">Clasificación Barton (Q)</string>
+    <string name="report_q_parametros">Parámetros</string>
+    <string name="report_q_valorizacion">Valorización</string>
+    <string name="report_q_puntaje">Puntaje</string>
+    <string name="report_q_esr">ESR</string>
+    <string name="report_q_ancho">Ancho</string>
+    <string name="report_q_a_esr">A/ESR</string>
+    <string name="report_q_rqd">RQD</string>
+    <string name="report_q_jn">Jn</string>
+    <string name="report_q_jr">Jr</string>
+    <string name="report_q_ja">Ja</string>
+    <string name="report_q_jw">Jw</string>
+    <string name="report_q_srf">SRF</string>
+    <string name="report_q_q_value">Valor</string>
+    <string name="report_q_calidad">Calidad</string>
+    <string name="report_discontinuidades">Sistema de Discontinuidades</string>
+
+
+    <string name="report_disc_numero">Número</string>
+    <string name="report_disc_tipo">Tipo</string>
+    <string name="report_disc_relevancia">Relevancia</string>
+    <string name="report_disc_dip_dir">Dip Dir (°)</string>
+    <string name="report_disc_dip">Dip (°)</string>
+    <string name="report_disc_espaciamiento">Espaciamiento</string>
+    <string name="report_disc_persistencia">Persistencia</string>
+    <string name="report_disc_abertura">Abertura</string>
+    <string name="report_disc_forma">Forma de Discontinuidad</string>
+    <string name="report_disc_condicion">Condición de Discontinuidad</string>
+    <string name="report_disc_relleno">Relleno</string>
+    <string name="report_disc_alt_paredes">Alteración Paredes</string>
+    <string name="report_disc_agua">Agua</string>
+
+</resources>

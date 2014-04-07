@@ -1,0 +1,69 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/span_Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/span_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="@color/suggestion_highlight_text" />
+
+    <RelativeLayout
+        android:id="@+id/spanInputContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center_horizontal">
+
+
+        <!--<NumberPicker-->
+        <!--android:id="@+id/rqd_number_picker"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginLeft="74dp"-->
+        <!--android:layout_toRightOf="@+id/rqd_jn_label"/>-->
+
+
+        <TextView
+            android:id="@+id/span_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/span_label" />
+
+        <Space  android:layout_toRightOf="@+id/span_label" android:id="@+id/space" android:layout_width="@dimen/form_column_left_margin" android:layout_height="@dimen/grid_space_separation_height" />
+
+
+        <EditText
+            android:inputType="number"
+            android:hint="Tunnel's width in meters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/span_edit_text"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/space"
+            />
+
+        <!--<EditText-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/editText"-->
+        <!--android:layout_alignTop="@+id/rqd_jn_label"-->
+        <!--android:layout_toRightOf="@+id/rqd_jn_label" />-->
+    </RelativeLayout>
+
+
+
+</LinearLayout>
