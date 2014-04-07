@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="preferences_security_label">Security</string>
+    <string name="preferences_gui_label">User Interface</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="menuitem_refresh">Refresh</string>
+    <string name="menuitem_preferences">Settings</string>
+    <string name="menuitem_quit">Quit</string>
+    <string name="confirm_quit">Are you sure you want to quit ?</string>
+
+    <string-array name="change_theme_values">
+        <item>DAY_THEME</item>
+        <item>NIGHT_THEME</item>
+        <item>DEFAULT_THEME</item>
+    </string-array>
+
+    <string-array name="change_theme_options">
+        <item>Day Theme</item>
+        <item>Night Theme</item>
+        <item>Default Theme</item>
+    </string-array>
+
+</resources>

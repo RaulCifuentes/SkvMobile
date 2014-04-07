@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_label">Login</string>
+    <string name="calculators_label">Calculators</string>
+    <string name="face_id_label">Face</string>
+    <string name="assessment_label">Face Mapping</string>
+    <string name="mapping_label">Mapping</string>
+    <string name="mapping_report_label">Report</string>
+    <string name="mapping_report_horizontal_label">Report Horizontal Scroll</string>
+    <string name="pictures_label">Picture</string>
+    <string name="drawing_label">Drawing</string>
+    <string name="voice_label">Voice</string>
+    <string name="maps_label">Maps</string>
+    <string name="test_label">Test (Pruebitas)</string>
+    <string name="test_write_label">Test (Write files)</string>
+    <string name="settings_label">Settings</string>
+    <string name="about_label">About</string>
+
+
+    <!--<string-array name="nav_drawer_items">-->
+        <!--<item>Home</item>-->
+        <!--<item>Rock Mass Calculators</item>-->
+        <!--<item>Tunnel Mapping</item>-->
+        <!--<item>Tunnel\'s Health Revision</item>-->
+        <!--<item>Exploratory Drill</item>-->
+        <!--<item>Security Report</item>-->
+    <!--</string-array>-->
+    <!--<string-array name="nav_drawer_items_iconic_font_letters">-->
+        <!--<item>N</item>-->
+        <!--<item>2</item>-->
+        <!--<item>h</item>-->
+        <!--<item>O</item>-->
+        <!--<item>q</item>-->
+        <!--<item>z</item>-->
+    <!--</string-array>-->
+    <!--<array name="nav_drawer_icons">-->
+        <!--<item>@drawable/ic_action_attach</item>-->
+        <!--<item>@drawable/ic_action_call</item>-->
+        <!--<item>@drawable/ic_action_copy</item>-->
+        <!--<item>@drawable/ic_action_cut</item>-->
+        <!--<item>@drawable/ic_action_delete</item>-->
+    <!--</array>-->
+
+
+</resources>

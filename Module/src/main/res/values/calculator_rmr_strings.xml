@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_section_strenght">Strength of rock</string>
+    <string name="title_section_spacing">Spacing of discontinuities</string>
+    <string name="title_section_condition">Condition of discontinuities</string>
+    <string name="title_section_groundwater">Groundwater</string>
+    <string name="title_section_orientation">Orientation of discontinuities</string>
+    <string name="title_section_rmr">RMR</string>
+
+    <string name="strength_title_label">Strength of intact rock material</string>
+
+</resources>

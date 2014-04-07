@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_about">About</string>
+    <string name="barton_indicator">Barton</string>
+    <string name="bienowski_indicator">Bieniaswki</string>
+    <string name="about_skava">Skava Consulting started as the driver of technological change in underground works and mining. \nOur highly skilled team provides this industry with state of the art products and services. </string>
+    <string name="about_skava_values">EXCELLENCE. Best in quality and in everything we do.\n\nINNOVATION. Innovate in everything, from products to processes.\n\nCOMMITMENT. Accountable for our work. Business decisions are taken considering experience and good judgment.\n\nINTEGRITY. Honesty and integrity are above and before everything we do.\n\nOPEN COMMUNICATION.Every member of the team is encouraged to openly share their opinion.\n\nSOCIAL COMMITMENT.Through improvement of the industry standards.\n\nCONSTRUCTIVE ATTITUDE.Our team is optimistic and creative, always.</string>
+    <string name="hello_blank_fragment">Hello Skava. </string>
+    <string name="desc_list_item_icon">Item Icon Description</string>
+    <string name="first">First</string>
+    <string name="last">Last</string>
+    <string name="fire">Fire</string>
+    <string name="cancel">Cancel</string>
+    <string name="hello_world">hello_world</string>
+    <string name="textLabel">testLabel</string>
+    <string name="title_activity_full_screen_picture_main">FullScreenPictureMainActivity</string>
+    <string name="title_activity_settings_main">SettingsMainActivity</string>
+
+    <!-- **** -->
+
+    <string name="title_stage_list">Face Mapping Stages</string>
+    <string name="title_stage_detail">Stage Detail</string>
+    <string name="title_activity_identification_main">IdentificationMainActivity</string>
+    <string name="title_activity_rock_mass_description_main">RockMassDescriptionMainActivity</string>
+    <string name="title_activity_about_main">AboutMainActivity</string>
+    <string name="title_activity_test_write_files">TestWriteFilesActivity</string>
+    <string name="title_activity_pictures_main">PicturesMainActivity</string>
+    <string name="title_activity_picture_detail">PictureDetailActivity</string>
+    <string name="title_activity_discontinuities_main">DiscontinuitiesMainActivity</string>
+    <string name="title_activity_instructions_main">InstructionsMainActivity</string>
+    <string name="title_activity_test_list_view_main">TestListViewMainActivity</string>
+    <string name="report_caracterizacion_macizo">Rock Mass Clasification</string>
+    <string name="action_ok">Accept</string>
+    <string name="parsingPKError">PK debe ser un numero</string>
+    <string name="parsingOrientationError">Orientation debe ser un numero</string>
+    <string name="parsingSlopeError">Slope debe ser numero</string>
+    <string name="title_activity_test_dropbox_main">TestDropboxMainActivity</string>
+    <string name="link_button">Link to Dropbox</string>
+    <string name="task_label">New Task</string>
+    <string name="add_button">Add</string>
+    <string name="title_activity_sync_main">SyncMainActivity</string>
+    <string name="action_sync_all">Sync All</string>
+    <string name="action_setup_data">Setup Data</string>
+    <string name="action_sync_clients">Sync Clients</string>
+    <string name="action_sync_roles">Sync Roles</string>
+    <string name="action_sync_users">Sync Users</string>
+    <string name="action_sync_projects">Sync Projects</string>
+    <string name="action_sync_tunnels">Sync Tunnels</string>
+    <string name="action_sync_sections">Sync Sections</string>
+    <string name="action_sync_methods">Sync Methods</string>
+    <string name="action_sync_faces">Sync Faces</string>
+    <string name="action_sync_assessments">Sync Assessments</string>
+    <string name="title_activity_rock_support_main">RockSupportMainActivity</string>
+    <string name="rqd_table_note">Note: Where RQD is reported or measured as &lt; 10 (including 0) the value 10 is used to evaluate the Q value</string>
+    <string name="rqd_table_header">RQD Rock Quality Designation</string>
+    <string name="title_tab_esr">Excavation Support Ratio (ESR)</string>
+    <string name="title_tab_span">Span (Wall height)</string>
+    <string name="esrTitle">Excavation Support Ratio</string>
+    <string name="span_title">Span</string>
+    <string name="span_label">Tunnel width (Wall height) in meters </string>
+    <string name="rmr_RMR">Rock Mass Rating</string>
+    <string name="title_activity_web_view_main">WebViewMainActivity</string>
+    <string name="title_activity_assessments_list">List of face mappings</string>
+    <string name="new_assessment_action">New</string>
+    <string name="analyse_assessment_action">Analyse</string>
+    <string name="admin_assessment_action">Admin</string>
+    <string name="sumary_report_outcrop_default_value">During the feasibility and preliminary design stages of a project, when very little detailed
+information is available on the rock mass and its stress and hydrologic characteristics, the
+use of a rock mass classification scheme can be of considerable benefit. At its simplest,
+this may involve using the classification scheme as a check-list to ensure that all relevant
+information has been considered. At the other end of the spectrum, one or more rock
+mass classification schemes can be used to build up a picture of the composition and
+characteristics of a rock mass to provide initial estimates of support requirements, and to
+provide estimates of the strength and deformation properties of the rock mass.</string>
+    <string name="non_geologist_alert">El usuario %1$s aparece como el geologo del assessment pero no tiene el rol GEOLOGIST asociado</string>
+    <string name="null_parameter">Calling %1$s with parameter %2$s  null</string>
+    <string name="label">Skava label</string>
+    <string name="signup_title">Create new account</string>
+    <string name="title_activity_test_authentication_main">TestAuthenticationMainActivity</string>
+    <string name="title_activity_save_assessment">SaveAssessmentActivity</string>
+
+</resources>

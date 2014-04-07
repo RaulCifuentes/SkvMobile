@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" -->
+    <!-- android:layout_width="match_parent" -->
+    <!-- android:layout_height="match_parent" -->
+    <!-- android:background="@color/Black" -->
+    <!-- > -->
+
+    <TextView
+        android:id="@+id/fragmentTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold" />
+    <!-- android:layout_gravity="top" -->
+
+    <View
+        android:id="@+id/division_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="@color/suggestion_highlight_text" />
+    <!-- android:layout_below="@id/fragmentTitle" -->
+
+    <RelativeLayout
+        android:id="@+id/rqdInputContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal">
+
+        <include
+            layout="@layout/calculator_rmr_condition_discontinuities_centre_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+    <!--layout="@layout/calculator_rmr_condition_discontinuities_centre_content_linear"-->
+
+</LinearLayout> <!-- </RelativeLayout> -->

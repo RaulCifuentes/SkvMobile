@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+    <GridLayout
+        android:id="@+id/grid_top"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:visibility="invisible"
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TOP PLACEHOLDER"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/grid_bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:visibility="invisible"
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BOTTOM PLACEHOLDER"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </GridLayout>
+
+
+    <GridLayout
+        android:id="@+id/grid_left"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@id/grid_bottom"
+        android:layout_below="@id/grid_top">
+
+        <TextView
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LEFT"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/grid_right"
+        android:layout_below="@id/grid_top"
+        android:layout_above="@id/grid_bottom"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:visibility="invisible"
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="RIGHT"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </GridLayout>
+
+
+    <GridLayout
+        android:id="@+id/grid_centre"
+        android:layout_above="@id/grid_bottom"
+        android:layout_below="@id/grid_top"
+        android:layout_toRightOf="@id/grid_left"
+        android:layout_toLeftOf="@id/grid_right"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true">
+
+        <GridLayout
+            android:layout_gravity="center"
+            android:columnCount="3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mapping_gral_info_project"
+                android:layout_column="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:layout_marginStart="@dimen/semicolon_label_value_margin"
+                android:layout_marginEnd="@dimen/semicolon_label_value_margin"
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/mapping_gral_info_project_spinner"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="2" />
+
+
+            <TextView
+                android:id="@+id/textView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mapping_gral_info_tunnel"
+                android:layout_column="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:layout_marginStart="@dimen/semicolon_label_value_margin"
+                android:layout_marginEnd="@dimen/semicolon_label_value_margin"
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/mapping_gral_info_tunnel_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="2" />
+
+
+            <TextView
+                android:id="@+id/textView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mapping_gral_info_face"
+                android:layout_column="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:layout_marginStart="@dimen/semicolon_label_value_margin"
+                android:layout_marginEnd="@dimen/semicolon_label_value_margin"
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/mapping_gral_info_face_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="2" />
+
+
+            <TextView
+                android:id="@+id/textView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mapping_gral_info_section"
+                android:layout_column="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:layout_marginStart="@dimen/semicolon_label_value_margin"
+                android:layout_marginEnd="@dimen/semicolon_label_value_margin"
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+
+            <Spinner
+                android:id="@+id/mapping_gral_info_section_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="2" />
+
+
+            <TextView
+                android:id="@+id/textView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mapping_gral_info_date"
+                android:layout_column="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:layout_marginStart="@dimen/semicolon_label_value_margin"
+                android:layout_marginEnd="@dimen/semicolon_label_value_margin"
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_column="2">
+
+                <TextView
+                    android:hint="DD/MM/YYYY"
+                    android:id="@+id/mapping_gral_info_date_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:inputType="date" />
+
+                <Button
+                    android:id="@+id/mapping_gral_date_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="l" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/textView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mapping_gral_info_geologist"
+                android:layout_column="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:layout_marginStart="@dimen/semicolon_label_value_margin"
+                android:layout_marginEnd="@dimen/semicolon_label_value_margin"
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:hint="Extracted from login."
+                android:id="@+id/mapping_gral_info_geologist_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="2"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+            <TextView
+                android:id="@+id/textView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mapping_gral_info_initial_pk"
+                android:layout_column="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:layout_marginStart="@dimen/semicolon_label_value_margin"
+                android:layout_marginEnd="@dimen/semicolon_label_value_margin"
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <EditText
+                android:hint="(PK) MM + CCC, DD"
+                android:id="@+id/mapping_gral_info_pk_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="2"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+            <TextView
+                android:id="@+id/textView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mapping_gral_info_actual_advance"
+                android:layout_column="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:layout_marginStart="@dimen/semicolon_label_value_margin"
+                android:layout_marginEnd="@dimen/semicolon_label_value_margin"
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:hint="Absolute value of last Peg # substracted from actual Peg #."
+                android:id="@+id/mapping_gral_info_advance_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="2"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+            <TextView
+                android:id="@+id/textView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mapping_gral_info_method"
+                android:layout_column="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_toRightOf="@id/textView01"
+                android:text=":"
+                android:layout_marginStart="@dimen/semicolon_label_value_margin"
+                android:layout_marginEnd="@dimen/semicolon_label_value_margin"
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/mapping_gral_info_method_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="2" />
+
+
+            <TextView
+                android:id="@+id/textView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mapping_gral_info_orientation"
+                android:layout_column="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_toRightOf="@id/textView01"
+                android:text=":"
+                android:layout_marginStart="@dimen/semicolon_label_value_margin"
+                android:layout_marginEnd="@dimen/semicolon_label_value_margin"
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <EditText
+                android:hint="Degree of deviation from 0° (North)."
+                android:id="@+id/mapping_gral_info_orientation_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:inputType="number" />
+
+
+            <TextView
+                android:id="@+id/textView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mapping_gral_info_slope"
+                android:layout_column="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_toRightOf="@id/textView01"
+                android:text=":"
+                android:layout_marginStart="@dimen/semicolon_label_value_margin"
+                android:layout_marginEnd="@dimen/semicolon_label_value_margin"
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <EditText
+                android:hint="Percentage of deviation from horizontal: length divided by heigth."
+                android:id="@+id/mapping_gral_info_slope_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:inputType="number" />
+
+
+            <TextView
+                android:id="@+id/textView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mapping_gral_info_code"
+                android:layout_column="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_toRightOf="@id/textView01"
+                android:text=":"
+                android:layout_marginStart="@dimen/semicolon_label_value_margin"
+                android:layout_marginEnd="@dimen/semicolon_label_value_margin"
+                android:layout_column="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:hint="Internal code of the project: SKVNNN, NNN are numbers 0-9."
+                android:id="@+id/mapping_gral_info_code_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+        </GridLayout>
+
+
+    </GridLayout>
+
+</RelativeLayout>

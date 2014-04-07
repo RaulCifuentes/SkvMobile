@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_tab_discontinuities_family_1">1</string>
+    <string name="title_tab_discontinuities_family_2">2</string>
+    <string name="title_tab_discontinuities_family_3">3</string>
+    <string name="title_tab_discontinuities_family_4">4</string>
+    <string name="title_tab_discontinuities_family_5">5</string>
+    <string name="title_tab_discontinuities_family_6">6</string>
+    <string name="title_tab_discontinuities_family_7">7</string>
+
+    <string name="discontinuity_system_type_label">Type</string>
+    <string name="discontinuity_system_relevance_label">Relevance</string>
+    <string name="discontinuity_system_dip_dir_label">Dip Dir (°)</string>
+    <string name="discontinuity_system_dip_label">Dip (°)</string>
+    <string name="discontinuity_system_spacing_label">Spacing</string>
+    <string name="discontinuity_system_persistence_label">Persistence</string>
+    <string name="discontinuity_system_aperture_label">Aperture</string>
+    <string name="discontinuity_system_shape_label">Shape</string>
+    <string name="discontinuity_system_water_label">Water</string>
+    <string name="discontinuity_system_ja_label">Ja</string>
+    <string name="discontinuity_system_jr_label">Jr</string>
+    <string name="discontinuity_system_weathering_label">Weathering</string>
+    <string name="discontinuity_system_infilling_label">Infilling</string>
+    <string name="discontinuity_system_roughness_label">Condition</string>
+    
+</resources>

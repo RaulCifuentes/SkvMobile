@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base application theme. -->
+    <!--<style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">-->
+    <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+    <!--</style>-->
+
+    <style name="ReportActivityTheme" parent="android:Theme.Holo">
+        <!-- Customize your theme here. -->
+        <item name="android:textViewStyle">@style/BorderedBackground</item>
+    </style>
+
+    <style name="BorderedBackground">
+        <!--<item name="android:paddingTop">2dp</item>-->
+        <!--<item name="android:paddingBottom">2dp</item>-->
+        <!--<item name="android:paddingLeft">2dp</item>-->
+        <!--<item name="android:paddingRight">2dp</item>-->
+        <item name="android:textSize">@dimen/small_text_size</item>
+        <item name="android:background">@drawable/text_box</item>
+    </style>
+
+
+
+</resources>

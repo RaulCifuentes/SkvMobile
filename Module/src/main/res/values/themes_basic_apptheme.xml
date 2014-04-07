@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base application theme. -->
+    <!--<style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">-->
+    <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+    <!--</style>-->
+
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="BasicAppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:buttonStyle">@style/MyButtonStyle</item>
+        <item name="android:textSize">@dimen/general_text_size</item>
+    </style>
+
+
+    <style name="MyButtonStyle">
+        <item name="android:background">@drawable/skava_button</item>
+        <item name="android:textSize">@dimen/button_text_size</item>
+    </style>
+
+
+</resources>

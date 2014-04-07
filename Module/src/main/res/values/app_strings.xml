@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Mobile Skava</string>
+    <string name="drawer_open">Mobile Skava </string>
+    <string name="drawer_close">Slider Menu Closed</string>
+
+</resources>

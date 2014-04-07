@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="*">
+
+    <TableRow style="@style/HeaderRow">
+
+        <TextView
+            style="@style/HeaderText"
+            android:text="Strike perpendicular to tunnel axis"
+            android:gravity="center"
+            android:layout_span="2" />
+
+        <TextView
+            style="@style/HeaderText"
+            android:text="Strike parallel to tunnel axis"
+            android:gravity="center"
+            android:layout_span="2" />
+
+    </TableRow>
+
+    <TableRow style="@style/BodyRow">
+
+        <TextView
+            style="@style/BodyText"
+            android:gravity="center"
+            android:text="Drive with dip - Dip 45 - 90°" />
+
+        <TextView
+            style="@style/BodyText"
+            android:gravity="center"
+            android:text="Drive with dip - Dip 20 - 45°" />
+
+        <TextView
+            style="@style/BodyText"
+            android:gravity="center"
+            android:text="Dip 45 - 90°" />
+
+        <TextView
+            style="@style/BodyText"
+            android:gravity="center"
+            android:text="Dip 20 - 45°" />
+    </TableRow>
+
+    <TableRow style="@style/BodyValueRow">
+
+        <TextView
+            style="@style/BodyText"
+            android:gravity="center"
+            android:text="Very favourable" />
+
+        <TextView
+            style="@style/BodyText"
+            android:gravity="center"
+            android:text="Favourable" />
+
+        <TextView
+            style="@style/BodyText"
+            android:gravity="center"
+            android:text="Very unfavourable" />
+
+        <TextView
+            style="@style/BodyText"
+            android:gravity="center"
+            android:text="Fair" />
+    </TableRow>
+
+    <TableRow style="@style/BodyRow">
+
+        <TextView
+            style="@style/BodyText"
+            android:gravity="center"
+            android:text="Drive against dip - Dip 45 - 90°" />
+
+        <TextView
+            style="@style/BodyText"
+            android:gravity="center"
+            android:text="Drive against dip - Dip 20 - 45°" />
+
+        <TextView
+            style="@style/BodyText"
+            android:gravity="center"
+            android:text="Dip 0 - 20 - Irrespective of strike°"
+            android:layout_span="2" />
+    </TableRow>
+
+    <TableRow style="@style/BodyValueRow">
+
+        <TextView
+            style="@style/BodyText"
+            android:gravity="center"
+            android:text="Fair" />
+
+        <TextView
+            style="@style/BodyText"
+            android:gravity="center"
+            android:text="Unfavourable" />
+
+        <TextView
+            style="@style/BodyText"
+            android:gravity="center"
+            android:text="Fair"
+            android:layout_span="2" />
+    </TableRow>
+
+
+</TableLayout>

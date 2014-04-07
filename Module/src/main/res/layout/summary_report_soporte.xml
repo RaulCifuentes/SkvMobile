@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+        <TableRow
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <TextView
+                android:layout_span="8"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_recomenda_soporte"
+                android:id="@+id/textView3"
+                android:textStyle="bold"
+                style="@style/ReportLabelContainerBox" />
+
+        </TableRow>
+
+
+        <TableRow
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_tipo_perno"
+                android:id="@+id/textView2"
+                style="@style/ReportLabelContainerBox" />
+
+            <LinearLayout android:orientation="horizontal">
+
+                <TextView
+                    android:layout_weight="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Value"
+                    android:id="@+id/report_tipo_perno_value"
+                    android:background="@drawable/text_box" />
+
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Value"
+                    android:id="@+id/report_diametro_perno_value"
+                    android:background="@drawable/text_box" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_tipo_shotcrete"
+                android:id="@+id/textView"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Value"
+                android:id="@+id/report_tipo_shotcrete_value"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_tipo_malla"
+                android:id="@+id/textView"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Value"
+                android:id="@+id/report_tipo_malla_value"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_tipo_marco"
+                android:id="@+id/textView"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Value"
+                android:id="@+id/report_tipo_marco_value"
+                android:background="@drawable/text_box" />
+        </TableRow>
+
+        <!--Fila 2-->
+        <TableRow
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_largo_perno"
+                android:id="@+id/textView2"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Value"
+                android:id="@+id/report_largo_perno_value"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_espesor_shotcrete"
+                android:id="@+id/textView"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Value"
+                android:id="@+id/report_espesor_shotcrete_value"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_cobertura"
+                android:id="@+id/textView"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Value"
+                android:id="@+id/report_cobertura_value"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_separacion"
+                android:id="@+id/textView"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Value"
+                android:id="@+id/report_separacion_value"
+                android:background="@drawable/text_box" />
+        </TableRow>
+        <!--Fila 3-->
+
+        <TableRow
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_recomenda_soporte"
+                android:id="@+id/textView2"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_span="7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Value"
+                android:id="@+id/report_observaciones_soporte_value"
+                android:background="@drawable/text_box" />
+        </TableRow>
+
+
+    </TableLayout>
+
+</FrameLayout>

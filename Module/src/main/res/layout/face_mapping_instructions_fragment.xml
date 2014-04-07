@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="30dp">
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Brannigan, Begin Again"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView1"
+        android:layout_margin="30dp"
+        android:text="I daresay that Fry has discovered the smelliest object in the known universe! That&apos;s right, baby. I ain&apos;t your loverboy Flexo, the guy you love so much. You even love anyone pretending to be him! No. We&apos;re on the top. If rubbin&apos; frozen dirt in your crotch is wrong, hey I don&apos;t wanna be right. Bender, you risked your life to save me! No! I want to live! There are still too many things I don&apos;t own!" />
+
+    <Space
+        android:id="@+id/space1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView2"
+        android:layout_margin="20dp"
+        android:minHeight="10dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/space1"
+        android:layout_gravity="center_horizontal"
+        android:text="Proposition Infinity"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:text="Is merely the sewer of an even greater society above you!"
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView3"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="30dp"
+         />
+
+</RelativeLayout>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radioButtonDetailed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Detailed" />
+
+        <Space
+            android:layout_width="@dimen/grid_space_separation_width"
+            android:layout_height="@dimen/grid_space_separation_height" />
+
+        <RadioButton
+            android:id="@+id/radioButtonSummarized"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Summarized" />
+
+
+    </RadioGroup>
+
+    <Space
+        android:layout_width="@dimen/grid_space_separation_width"
+        android:layout_height="@dimen/grid_space_separation_height" />
+
+    <FrameLayout
+        android:id="@+id/lists_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ListView
+            android:id="@+id/listview_summarized_conditions"
+            android:gravity="center"
+            android:layout_gravity="center|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:choiceMode="singleChoice" />
+
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/listview_detailed_conditions"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/rqdInputContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!--First row -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <ListView
+                        android:layout_weight="1"
+                        android:id="@+id/listviewPersistence"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:choiceMode="singleChoice" />
+
+                    <Space
+                        android:layout_width="@dimen/grid_space_separation_width"
+                        android:layout_height="@dimen/grid_space_separation_height" />
+
+                    <ListView
+                        android:layout_weight="1"
+                        android:id="@+id/listviewAperture"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:choiceMode="singleChoice" />
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="@dimen/grid_space_separation_width"
+                    android:layout_height="@dimen/grid_space_separation_height" />
+
+
+                <!--Second row -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <ListView
+                        android:layout_weight="1"
+                        android:id="@+id/listviewRoughtness"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:choiceMode="singleChoice" />
+
+                    <Space
+                        android:layout_width="@dimen/grid_space_separation_width"
+                        android:layout_height="@dimen/grid_space_separation_height" />
+
+                    <ListView
+                        android:layout_weight="1"
+                        android:id="@+id/listviewInfilling"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:choiceMode="singleChoice" />
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="@dimen/grid_space_separation_width"
+                    android:layout_height="@dimen/grid_space_separation_height" />
+
+
+                <!--Third row-->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <ListView
+                        android:layout_weight="1"
+                        android:id="@+id/listviewWeathering"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:choiceMode="singleChoice" />
+
+                    <Space
+                        android:visibility="gone"
+                        android:layout_width="@dimen/grid_space_separation_width"
+                        android:layout_height="@dimen/grid_space_separation_height" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:visibility="gone"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:text="Detailed" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </FrameLayout>
+</LinearLayout>
+
+

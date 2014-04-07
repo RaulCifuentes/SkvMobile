@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <GridLayout
+        android:id="@+id/grid_top"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView12"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TOP"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/grid_bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:visibility="invisible"
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BOTTOM"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </GridLayout>
+
+
+    <GridLayout
+        android:id="@+id/grid_left"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@id/grid_bottom"
+        android:layout_below="@id/grid_top">
+
+        <TextView
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LEFT"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/grid_right"
+        android:layout_below="@id/grid_top"
+        android:layout_above="@id/grid_bottom"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:visibility="invisible"
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="RIGHT"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </GridLayout>
+
+
+    <GridLayout
+        android:id="@+id/grid_centre"
+        android:layout_above="@id/grid_bottom"
+        android:layout_below="@id/grid_top"
+        android:layout_toRightOf="@id/grid_left"
+        android:layout_toLeftOf="@id/grid_right"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true">
+
+        <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:columnCount="2"
+            >
+
+            <TextView
+                android:id="@+id/rockmass_desc_fracture_type_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rockmass_desc_fracture_type"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <Spinner
+                android:id="@+id/rockmass_desc_fracture_type_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <Space
+                android:layout_width="20px"
+                android:layout_height="20px" />
+
+            <Space
+                android:layout_width="20px"
+                android:layout_height="20px" />
+
+            <TextView
+                android:id="@+id/rockmass_desc_block_size_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rockmass_desc_block_size"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/rockmass_desc_block_size_spinner"
+                android:inputType="number"
+                android:numeric="integer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Approximate block diameter in meters."
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <Space
+                android:layout_width="20px"
+                android:layout_height="20px" />
+
+            <Space
+                android:layout_width="20px"
+                android:layout_height="20px" />
+
+            <TextView
+                android:id="@+id/rockmass_desc_junctures_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rockmass_desc_joints_m3"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/rockmass_desc_junctures_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:numeric="integer"
+                android:hint="Number of joints per cubic meter" />
+
+            <Space
+                android:layout_width="20px"
+                android:layout_height="20px" />
+
+            <Space
+                android:layout_width="20px"
+                android:layout_height="20px" />
+
+            <TextView
+                android:id="@+id/rockmass_desc_details_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rockmass_desc_details"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <MultiAutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Detailed custom description ... "
+                android:id="@+id/detailsMultiAutoCompleteTextView" />
+        </GridLayout>
+
+    </GridLayout>
+
+</RelativeLayout>
+
+
+

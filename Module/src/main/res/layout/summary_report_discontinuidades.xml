@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="*"
+   >
+
+    <TableRow>
+
+        <TextView
+            style="@style/ReportLabelContainerBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_discontinuidades"
+            android:gravity="center"
+            android:id="@+id/textView"
+            android:layout_span="8"
+            android:textStyle="bold" />
+
+    </TableRow>
+
+    <TableRow android:id="@+id/report_disc_number_row">
+
+        <TextView
+            style="@style/ReportLabelContainerBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_disc_numero"
+            android:id="@+id/textView2"
+            android:textStyle="bold" />
+
+    </TableRow>
+
+
+    <TableRow android:id="@+id/report_disc_type_row">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_disc_tipo"
+            android:id="@+id/textView4"
+            android:textStyle="bold"
+            style="@style/ReportLabelContainerBox" />
+
+    </TableRow>
+
+
+    <TableRow android:id="@+id/report_disc_relevance_row">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_disc_relevancia"
+            android:id="@+id/textView4"
+            android:textStyle="bold"
+            style="@style/ReportLabelContainerBox" />
+
+    </TableRow>
+
+    <TableRow android:id="@+id/report_disc_dip_dir_row">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_disc_dip_dir"
+            android:id="@+id/textView6"
+            android:textStyle="bold"
+            style="@style/ReportLabelContainerBox" />
+
+    </TableRow>
+
+    <TableRow android:id="@+id/report_disc_dip_row">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_disc_dip"
+            android:id="@+id/textView7"
+            android:textStyle="bold"
+            style="@style/ReportLabelContainerBox" />
+
+    </TableRow>
+
+
+    <TableRow android:id="@+id/report_disc_spacing_row">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_disc_espaciamiento"
+            android:id="@+id/textView11"
+            android:textStyle="bold"
+            style="@style/ReportLabelContainerBox" />
+
+    </TableRow>
+
+    <TableRow android:id="@+id/report_disc_persistence_row">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_disc_persistencia"
+            android:id="@+id/textView11"
+            android:textStyle="bold"
+            style="@style/ReportLabelContainerBox" />
+
+
+    </TableRow>
+
+    <TableRow android:id="@+id/report_disc_aperture_row">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_disc_abertura"
+            android:id="@+id/textView11"
+            android:textStyle="bold"
+            style="@style/ReportLabelContainerBox" />
+
+
+    </TableRow>
+
+    <TableRow  android:id="@+id/report_disc_shape_row">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_disc_forma"
+            android:id="@+id/textView11"
+            android:textStyle="bold"
+            style="@style/ReportLabelContainerBox" />
+
+    </TableRow>
+
+    <TableRow  android:id="@+id/report_disc_condition_row">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_disc_condicion"
+            android:id="@+id/textView11"
+            android:textStyle="bold"
+            style="@style/ReportLabelContainerBox" />
+
+
+    </TableRow>
+
+    <TableRow android:id="@+id/report_disc_infilling_row">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_disc_relleno"
+            android:id="@+id/textView11"
+            android:textStyle="bold"
+            style="@style/ReportLabelContainerBox" />
+
+    </TableRow>
+
+    <TableRow  android:id="@+id/report_disc_weathering_row">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_disc_alt_paredes"
+            android:id="@+id/textView11"
+            android:textStyle="bold"
+            style="@style/ReportLabelContainerBox" />
+
+    </TableRow>
+
+    <TableRow  android:id="@+id/report_disc_jr_row">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_disc_jr"
+            android:id="@+id/textView11"
+            android:textStyle="bold"
+            style="@style/ReportLabelContainerBox" />
+
+    </TableRow>
+
+    <TableRow  android:id="@+id/report_disc_ja_row">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_disc_ja"
+            android:id="@+id/textView11"
+            android:textStyle="bold"
+            style="@style/ReportLabelContainerBox" />
+
+    </TableRow>
+
+    <TableRow  android:id="@+id/report_disc_water_row">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_disc_agua"
+            android:id="@+id/textView11"
+            android:textStyle="bold"
+            style="@style/ReportLabelContainerBox" />
+
+    </TableRow>
+
+</TableLayout>

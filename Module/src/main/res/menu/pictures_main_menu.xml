@@ -1,0 +1,34 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.metric.skava.pictures.activity.PicturesMainActivity" >
+
+    <item android:id="@+id/action_add_face_picture"
+        android:icon="@drawable/ic_action_photo"
+        android:title="Face"
+        android:showAsAction="ifRoom|withText" />
+
+    <item android:id="@+id/action_add_left_picture"
+        android:icon="@drawable/ic_action_photo"
+        android:title="Left wall"
+        android:showAsAction="ifRoom|withText" />
+
+    <item android:id="@+id/action_add_right_picture"
+        android:icon="@drawable/ic_action_photo"
+        android:title="Right wall"
+        android:showAsAction="ifRoom|withText" />
+
+    <item android:id="@+id/action_add_roof_picture"
+        android:icon="@drawable/ic_action_photo"
+        android:title="Roof"
+        android:showAsAction="ifRoom|withText" />
+
+    <item android:id="@+id/action_add_extra_picture"
+        android:icon="@drawable/ic_action_photo"
+        android:title="Extra"
+        android:showAsAction="ifRoom" />
+
+    <!--<item android:id="@+id/action_settings"-->
+        <!--android:title="@string/action_settings"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:showAsAction="never" />-->
+</menu>

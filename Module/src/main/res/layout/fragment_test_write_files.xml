@@ -1,0 +1,70 @@
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:rowCount="6"
+    android:orientation="vertical"
+    tools:context="com.metric.skava.test.activity.TestWriteFilesActivity$PlaceholderFragment">
+
+
+    <Button
+        android:layout_gravity="fill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create file DemoFile.jpg"
+        android:id="@+id/button"
+        android:layout_row="0"
+        android:layout_column="0" />
+
+    <Button
+        android:layout_gravity="fill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check exists DemoFile.jpg"
+        android:id="@+id/button2"
+        android:layout_row="1"
+        android:layout_column="0" />
+
+    <Button
+        android:layout_gravity="fill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete DemoFile.jpg"
+        android:id="@+id/button3"
+        android:layout_row="2"
+        android:layout_column="0" />
+
+    <LinearLayout>
+
+        <TextView
+            android:layout_gravity="fill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status : "
+            android:id="@+id/textView" />
+
+        <TextView
+            android:layout_gravity="fill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewStatus" />
+    </LinearLayout>
+
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView" />
+    </ScrollView>
+
+
+</GridLayout>

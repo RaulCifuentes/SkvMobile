@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2011 Joseph Fernandez <joefernandez.apps@gmail.com>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.metric.skava.app.util;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+public class DateDataFormat {
+	
+	// cannot be instantiated
+	private DateDataFormat(){}
+	
+    /**
+     * <p>A date formatter for database fields.</p>
+     */
+    public static final String DATE_FORMAT = "yyyyMMddHHmmss";
+
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+    
+    public static long formatDateAsLong(Calendar cal){
+    	return Long.parseLong(dateFormat.format(cal.getTime()));
+    }
+
+    public static long formatDateAsLong(Date date){
+        return Long.parseLong(dateFormat.format(date));
+    }
+
+
+    public static Date getDateFromFormattedLong(long l){
+        try {
+            Date asDate = dateFormat.parse(String.valueOf(l));
+            return asDate;
+
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    public static Calendar getCalendarFromFormattedLong(long l){
+    	try {
+			Calendar c = Calendar.getInstance();
+			c.setTime(dateFormat.parse(String.valueOf(l)));
+			return c;
+			
+		} catch (ParseException e) {
+			return null;
+		}
+    }
+    
+    public static long getNowFormattedLong(){
+    	return DateDataFormat.formatDateAsLong(Calendar.getInstance());
+    }
+}

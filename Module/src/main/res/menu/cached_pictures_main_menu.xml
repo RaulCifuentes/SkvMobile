@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.metric.skava.cached_pictures.activity.Cached_PicturesMainActivity" >
+
+    <item android:id="@+id/action_create_picture"
+        android:title="Create Picture"
+        android:showAsAction="ifRoom" />
+
+
+    <item
+        android:id="@+id/clear_cache"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:showAsAction="never"
+        android:title="Clear cache"/>
+
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+</menu>

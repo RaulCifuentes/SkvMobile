@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!--<PreferenceCategory android:title="@string/preferences_security_label" >-->
+        <!--<CheckBoxPreference-->
+            <!--android:key="PREFERENCE_SECURITY"-->
+            <!--android:title="Force login"-->
+            <!--android:summary="Ask to login every single time..."-->
+            <!--android:defaultValue="true"-->
+             <!--/>-->
+    <!--</PreferenceCategory>-->
+
+    <PreferenceCategory android:title="@string/preferences_gui_label" >
+        <ListPreference
+            android:key="PREFERENCE_THEME"
+            android:title="Theme"
+            android:summary="Dress the app with diferent colors..."
+            android:defaultValue="DAY_THEME"
+            android:dialogTitle="What's your choice?"
+            android:entries="@array/change_theme_options"
+            android:entryValues="@array/change_theme_values"
+             />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Skava Preferences" />
+    <CheckBoxPreference android:title="Use debug server"
+        android:key="isDebug"
+        android:summary="Connecting to a debug server instead of prod server"/>
+    <SwitchPreference android:title="Debug Logs" android:key="logsVerbose" android:summary="Show debug logs on LogCat"/>
+
+</PreferenceScreen>

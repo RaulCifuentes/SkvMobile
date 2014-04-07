@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.metric.skava.app.layout.CheckeableLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingTop="4dip"
+    android:paddingBottom="6dip"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/checked_first_column_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:checkMark="@null"
+        android:drawableLeft="?android:attr/listChoiceIndicatorSingle"
+        android:gravity="center"
+        android:paddingStart="5dp"
+        android:layout_weight="1"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+    <TextView
+        android:layout_gravity="center_vertical"
+        android:id="@+id/second_column_text_view"
+        android:gravity="center"
+        android:text="Columna 1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3" />
+
+    <TextView
+        android:layout_gravity="center_vertical"
+        android:id="@+id/third_column_text_view"
+        android:gravity="center"
+        android:layout_width="0dp"
+        android:text="Columna 2"
+        android:layout_height="wrap_content"
+        android:layout_weight="3" />
+</com.metric.skava.app.layout.CheckeableLinearLayout>
+
+

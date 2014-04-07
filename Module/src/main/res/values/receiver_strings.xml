@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="title_activity_receiver_main">SKAVA Receiver</string>
+
+    <string name="action_receiver_cancel">Cancel</string>
+
+    <string name="action_receiver_save">Save</string>
+
+    <string name="picture_file_name">This is the name of the picture</string>
+
+    <string name="picture_description_hint">Type an informative picture description</string>
+
+</resources>

@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*"
+        >
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_span="3"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_clasificacion_rmr"
+                android:id="@+id/clas_rmr_title"
+                android:textStyle="bold"
+                style="@style/ReportLabelContainerBox" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_rmr_parametros"
+                android:id="@+id/parametros_label"
+                android:textStyle="bold"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_rmr_valorizacion"
+                android:id="@+id/valorizacion_label"
+                android:textStyle="bold"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_rmr_puntaje"
+                android:id="@+id/puntaje_label"
+                android:textStyle="bold"
+                style="@style/ReportLabelContainerBox" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_rmr_ucs"
+                android:id="@+id/ucs_label"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_ucs_value"
+                android:id="@+id/report_rmr_ucs_value"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_ucs_rating"
+                android:id="@+id/report_rmr_ucs_rating"
+                android:background="@drawable/text_box" />
+
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_rmr_espaciado"
+                android:id="@+id/espaciado_label"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_espaciado_value"
+                android:id="@+id/report_rmr_espaciado_value"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_espaciado_rating"
+                android:id="@+id/report_rmr_espaciado_rating"
+                android:background="@drawable/text_box" />
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_rmr_persistencia"
+                android:id="@+id/persistencia_label"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_persistencia_value"
+                android:id="@+id/report_rmr_persistencia_value"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_persistencia_rating"
+                android:id="@+id/report_rmr_persistencia_rating"
+                android:background="@drawable/text_box" />
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_rmr_abertura"
+                android:id="@+id/abertura_label"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_abertura_value"
+                android:id="@+id/report_rmr_abertura_value"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_abertura_rating"
+                android:id="@+id/report_rmr_abertura_rating"
+                android:background="@drawable/text_box" />
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_rmr_rugosidad"
+                android:id="@+id/rugosidad_label"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_rugosidad_value"
+                android:id="@+id/report_rmr_rugosidad_value"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_rugosidad_rating"
+                android:id="@+id/report_rmr_rugosidad_rating"
+                android:background="@drawable/text_box" />
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_rmr_relleno"
+                android:id="@+id/relleno_label"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_relleno_value"
+                android:id="@+id/report_rmr_relleno_value"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_relleno_rating"
+                android:id="@+id/report_rmr_relleno_rating"
+                android:background="@drawable/text_box" />
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_rmr_meteorizacion"
+                android:id="@+id/meteorizacion_label"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_meteorizacion_value"
+                android:id="@+id/report_rmr_meteorizacion_value"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_meteorizacion_rating"
+                android:id="@+id/report_rmr_meteorizacion_rating"
+                android:background="@drawable/text_box" />
+
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_rmr_agua"
+                android:id="@+id/agua_label"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_agua_value"
+                android:id="@+id/report_rmr_agua_value"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_agua_rating"
+                android:id="@+id/report_rmr_agua_rating"
+                android:background="@drawable/text_box" />
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_rmr_ajuste"
+                android:id="@+id/ajuste_label"
+                style="@style/ReportLabelContainerBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_ajuste_value"
+                android:id="@+id/report_rmr_ajuste_value"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="report_rmr_ajuste_value_rating"
+                android:id="@+id/report_rmr_ajuste_value_rating"
+                android:background="@drawable/text_box" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!--<TableLayout-->
+                <!--android:layout_span="3"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:stretchColumns="*"-->
+                <!-->-->
+
+                <!--<TableRow-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content">-->
+            <LinearLayout android:layout_span="3" android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/report_rmr_rmr_value"
+                        android:id="@+id/clase_label"
+                        android:textStyle="bold"
+                        style="@style/ReportLabelContainerBox"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="report_rmr_rmr_value"
+                        android:id="@+id/report_rmr_rmr_value"
+                        android:background="@drawable/text_box"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/report_rmr_clase"
+                        android:id="@+id/clase_label"
+                        android:textStyle="bold"
+                        style="@style/ReportLabelContainerBox"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="report_rmr_clase_value"
+                        android:id="@+id/report_rmr_clase_value"
+                        android:background="@drawable/text_box"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/report_rmr_calidad"
+                        android:id="@+id/calidad_label"
+                        android:textStyle="bold"
+                        style="@style/ReportLabelContainerBox"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="report_rmr_calidad_value"
+                        android:id="@+id/report_rmr_calidad_value"
+                        android:background="@drawable/text_box"
+                        android:layout_weight="1"/>
+            </LinearLayout>
+                <!--</TableRow>-->
+            <!--</TableLayout>-->
+
+        </TableRow>
+
+    </TableLayout>
+
+</FrameLayout>
+

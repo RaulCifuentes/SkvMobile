@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <GridLayout
+        android:id="@+id/grid_top"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:text="TOP"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/grid_bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BOTTOM"
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </GridLayout>
+
+
+    <GridLayout
+        android:id="@+id/grid_left"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@id/grid_bottom"
+        android:layout_below="@id/grid_top">
+
+        <TextView
+            android:layout_gravity="center"
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LEFT"
+            android:visibility="invisible"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/grid_right"
+        android:layout_below="@id/grid_top"
+        android:layout_above="@id/grid_bottom"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="RIGHT"
+            android:visibility="invisible"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </GridLayout>
+
+
+    <GridLayout android:id="@+id/grid_centre"
+        android:layout_above="@id/grid_bottom"
+        android:layout_below="@id/grid_top"
+        android:layout_toRightOf="@id/grid_left"
+        android:layout_toLeftOf="@id/grid_right"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        >
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center|center_vertical"
+            android:choiceMode="singleChoice"
+            />
+    </GridLayout>
+
+</RelativeLayout>
+
+
+
+
