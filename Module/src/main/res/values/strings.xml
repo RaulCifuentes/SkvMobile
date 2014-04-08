@@ -27,7 +27,7 @@
     <string name="title_activity_about_main">AboutMainActivity</string>
     <string name="title_activity_test_write_files">TestWriteFilesActivity</string>
     <string name="title_activity_pictures_main">PicturesMainActivity</string>
-    <string name="title_activity_picture_detail">PictureDetailActivity</string>
+    <string name="title_activity_picture_detail">View Picture</string>
     <string name="title_activity_discontinuities_main">DiscontinuitiesMainActivity</string>
     <string name="title_activity_instructions_main">InstructionsMainActivity</string>
     <string name="title_activity_test_list_view_main">TestListViewMainActivity</string>
