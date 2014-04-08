@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -29,6 +30,8 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
                              Bundle savedInstanceState) {
         headerView = inflater.inflate(R.layout.calculator_two_column_list_view_header_checked_radio, null, false);
 
+        selectedOrientation = getRMRCalculationContext().getOrientationDiscontinuities();
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.calculator_rmr_orientation_discontinuities_fragment,
                 container, false);
@@ -37,12 +40,13 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         TextView title = (TextView) getView().findViewById(R.id.fragmentTitle);
         title.setText(getString(R.string.title_section_orientation));
 
-        setupTunnelsOrientations();
-        setupFoundationsOrientations();
-        setupSlopesOrientations();
+        RadioButton tunnelsRadio = (RadioButton) view.findViewById(R.id.radioButtonMines);
+        RadioButton foundationsRadio = (RadioButton) view.findViewById(R.id.radioButtonFoundations);
+        RadioButton slopesRadio = (RadioButton) view.findViewById(R.id.radioButtonSlopes);
 
         mListTunnels = (ListView) view.findViewById(R.id.listview_tunnels);
         mListTunnels.setVisibility(View.GONE);
@@ -51,34 +55,70 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
         mListFoundations = (ListView) view.findViewById(R.id.listview_foundations);
         mListFoundations.setVisibility(View.GONE);
 
+
+        if (selectedOrientation != null){
+            switch (selectedOrientation.getGroupType()){
+                case OrientationDiscontinuities.TUNNEL_MINES:
+                    tunnelsRadio.setChecked(true);
+                    foundationsRadio.setChecked(false);
+                    slopesRadio.setChecked(false);
+                    mListTunnels.setVisibility(View.VISIBLE);
+                    mListFoundations.setVisibility(View.GONE);
+                    mListSlopes.setVisibility(View.GONE);
+                    break;
+                case OrientationDiscontinuities.FOUNDATIONS:
+                    tunnelsRadio.setChecked(false);
+                    foundationsRadio.setChecked(true);
+                    slopesRadio.setChecked(false);
+                    mListTunnels.setVisibility(View.GONE);
+                    mListFoundations.setVisibility(View.VISIBLE);
+                    mListSlopes.setVisibility(View.GONE);
+                    break;
+                case OrientationDiscontinuities.SLOPES:
+                    tunnelsRadio.setChecked(false);
+                    foundationsRadio.setChecked(false);
+                    slopesRadio.setChecked(true);
+                    mListTunnels.setVisibility(View.GONE);
+                    mListFoundations.setVisibility(View.GONE);
+                    mListSlopes.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
+        //selects the tunnels as default if theres no previous info
+//        radioGroup.check(R.id.radioButtonMines);
+
+        setupTunnelsOrientations();
+        setupFoundationsOrientations();
+        setupSlopesOrientations();
         RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
         radioGroup.setOnCheckedChangeListener(this);
 
-        //selects the tunnels as default if theres no previous info
-        radioGroup.check(R.id.radioButtonMines);
+
     }
 
 
     public void setupTunnelsOrientations() {
-        final List<OrientationDiscontinuities> listOrientations = getMappedIndexDataProvider().getAllOrientationDiscontinuities(OrientationDiscontinuities.TUNNEL_MINES);
 
         final ListView listview = (ListView) getView().findViewById(R.id.listview_tunnels);
-
-        final MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities> adapter = new MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities>(getActivity(),
-                R.layout.calculator_two_column_list_view_row_checked_radio, listOrientations);
-
         TextView firstTextView = (TextView) headerView.findViewById(R.id.first_column_text_view);
         TextView secondTextView = (TextView) headerView.findViewById(R.id.second_column_text_view);
         secondTextView.setText(ConditionDiscontinuities.DESCRIPTION);
-
         listview.addHeaderView(headerView, null, false);
+        final int numberOfHeaders = listview.getHeaderViewsCount();
 
+        final List<OrientationDiscontinuities> listOrientations = getMappedIndexDataProvider().getAllOrientationDiscontinuities(OrientationDiscontinuities.TUNNEL_MINES);
+        final MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities> adapter = new MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities>(getActivity(),
+                R.layout.calculator_two_column_list_view_row_checked_radio, listOrientations);
         listview.setAdapter(adapter);
 
-        selectedOrientation = getRMRCalculationContext().getOrientationDiscontinuities();
+
         if (selectedOrientation != null) {
             int posIndex = adapter.getPosition(selectedOrientation);
-            listview.setItemChecked(posIndex, true);
+            if (posIndex!=-1){
+                posIndex += numberOfHeaders;
+                listview.setItemChecked(posIndex, true);
+                listview.setSelection(posIndex);
+            }
         }
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -92,25 +132,27 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
     }
 
     public void setupSlopesOrientations() {
-        final List<OrientationDiscontinuities> listOrientations = getMappedIndexDataProvider().getAllOrientationDiscontinuities(OrientationDiscontinuities.SLOPES);
 
         final ListView listview = (ListView) getView().findViewById(R.id.listview_slopes);
-
-        final MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities> adapter = new MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities>(getActivity(),
-                R.layout.calculator_two_column_list_view_row_checked_radio, listOrientations);
-
         TextView firstTextView = (TextView) headerView.findViewById(R.id.first_column_text_view);
         TextView secondTextView = (TextView) headerView.findViewById(R.id.second_column_text_view);
         secondTextView.setText(ConditionDiscontinuities.DESCRIPTION);
-
         listview.addHeaderView(headerView, null, false);
+        final int numberOfHeaders = listview.getHeaderViewsCount();
 
+        final List<OrientationDiscontinuities> listOrientations = getMappedIndexDataProvider().getAllOrientationDiscontinuities(OrientationDiscontinuities.SLOPES);
+        final MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities> adapter = new MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities>(getActivity(),
+                R.layout.calculator_two_column_list_view_row_checked_radio, listOrientations);
         listview.setAdapter(adapter);
 
         selectedOrientation = getRMRCalculationContext().getOrientationDiscontinuities();
         if (selectedOrientation != null) {
             int posIndex = adapter.getPosition(selectedOrientation);
-            listview.setItemChecked(posIndex, true);
+            if (posIndex!=-1){
+                posIndex += numberOfHeaders;
+                listview.setItemChecked(posIndex, true);
+                listview.setSelection(posIndex);
+            }
         }
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -124,25 +166,27 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
     }
 
     public void setupFoundationsOrientations() {
-        final List<OrientationDiscontinuities> listOrientations = getMappedIndexDataProvider().getAllOrientationDiscontinuities(OrientationDiscontinuities.FOUNDATIONS);
 
         final ListView listview = (ListView) getView().findViewById(R.id.listview_foundations);
-
-        final MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities> adapter = new MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities>(getActivity(),
-                R.layout.calculator_two_column_list_view_row_checked_radio, listOrientations);
-
         TextView firstTextView = (TextView) headerView.findViewById(R.id.first_column_text_view);
         TextView secondTextView = (TextView) headerView.findViewById(R.id.second_column_text_view);
         secondTextView.setText(ConditionDiscontinuities.DESCRIPTION);
-
         listview.addHeaderView(headerView, null, false);
+        final int numberOfHeaders = listview.getHeaderViewsCount();
 
+        final List<OrientationDiscontinuities> listOrientations = getMappedIndexDataProvider().getAllOrientationDiscontinuities(OrientationDiscontinuities.FOUNDATIONS);
+        final MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities> adapter = new MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities>(getActivity(),
+                R.layout.calculator_two_column_list_view_row_checked_radio, listOrientations);
         listview.setAdapter(adapter);
 
         selectedOrientation = getRMRCalculationContext().getOrientationDiscontinuities();
         if (selectedOrientation != null) {
             int posIndex = adapter.getPosition(selectedOrientation);
-            listview.setItemChecked(posIndex, true);
+            if (posIndex!=-1){
+                posIndex += numberOfHeaders;
+                listview.setItemChecked(posIndex, true);
+                listview.setSelection(posIndex);
+            }
         }
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -1,11 +1,18 @@
 package com.metric.skava.report.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.metric.skava.R;
 import com.metric.skava.app.activity.SkavaFragmentActivity;
+import com.metric.skava.app.exception.SkavaSystemException;
+import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.data.dao.DAOFactory;
+import com.metric.skava.data.dao.LocalAssessmentDAO;
+import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.report.fragment.MappingReportMainFragment;
 
 
@@ -48,7 +55,42 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_mapping_report_draft) {
+            saveDraft();
+            return true;
+        }
+        if (id == R.id.action_mapping_report_send) {
+            sendAsCompleted();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void saveDraft(){
+        LocalAssessmentDAO localAssessmentDAO;
+        try {
+            localAssessmentDAO = DAOFactory.getInstance(this).getAssessmentDAO(DAOFactory.Flavour.SQLLITE);
+            localAssessmentDAO.saveDraft(getCurrentAssessment());
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+            throw new SkavaSystemException(e);
+        }
+    }
+
+
+    private void sendAsCompleted(){
+        LocalAssessmentDAO localAssessmentDAO;
+        try {
+            localAssessmentDAO = DAOFactory.getInstance(this).getAssessmentDAO(DAOFactory.Flavour.SQLLITE);
+            localAssessmentDAO.send(getCurrentAssessment());
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+            throw new SkavaSystemException(e);
+        }
     }
 
 

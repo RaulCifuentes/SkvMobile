@@ -20,7 +20,6 @@ import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.assessment.data.AssesmentStageDataProvider;
 import com.metric.skava.assessment.dialog.ExistingAssessmentDialog;
 import com.metric.skava.assessment.fragment.AssessmentStageListFragment;
-import com.metric.skava.assessment.fragment.SaveAssessmentMainFragment;
 import com.metric.skava.calculator.barton.activity.QBartonCalculatorDetailActivity;
 import com.metric.skava.calculator.barton.fragment.QBartonCalculatorMainFragment;
 import com.metric.skava.calculator.rmr.activity.RMRCalculatorDetailActivity;
@@ -39,8 +38,6 @@ import com.metric.skava.report.activity.MappingReportMainActivity;
 import com.metric.skava.report.fragment.MappingReportMainFragment;
 import com.metric.skava.rockmass.activity.RockMassDescriptionMainActivity;
 import com.metric.skava.rockmass.fragment.RockMassDescriptionMainFragment;
-import com.metric.skava.rocksupport.activity.RockSupportMainActivity;
-import com.metric.skava.rocksupport.fragment.RockSupportMainFragment;
 
 
 /**
@@ -223,29 +220,29 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
                 return;
             }
 
-            if (id.equalsIgnoreCase(AssesmentStageDataProvider.ROCK_SUPPORT)) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fx = fragmentManager.beginTransaction();
-                Fragment previous = getSupportFragmentManager().findFragmentById(R.id.stage_detail_container);
-                if (previous != null) {
-                    fx.detach(previous);
-                }
-                //use the previous fragment if there is one
-                Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_ROCK_SUPPORT_STAGE_TAG);
-                RockSupportMainFragment rockSupportFragment;
-                if (fragment != null) {
-                    rockSupportFragment = (RockSupportMainFragment) fragment;
-                    fx.attach(rockSupportFragment);
-                } else {
-                    Bundle arguments = new Bundle();
-                    arguments.putString(RockSupportMainFragment.ARG_BASKET_ID, id);
-                    rockSupportFragment = new RockSupportMainFragment();
-                    rockSupportFragment.setArguments(arguments);
-                    fx.add(R.id.stage_detail_container, rockSupportFragment, FRAGMENT_ROCK_SUPPORT_STAGE_TAG);
-                }
-                fx.commit();
-                return;
-            }
+//            if (id.equalsIgnoreCase(AssesmentStageDataProvider.ROCK_SUPPORT)) {
+//                FragmentManager fragmentManager = getSupportFragmentManager();
+//                FragmentTransaction fx = fragmentManager.beginTransaction();
+//                Fragment previous = getSupportFragmentManager().findFragmentById(R.id.stage_detail_container);
+//                if (previous != null) {
+//                    fx.detach(previous);
+//                }
+//                //use the previous fragment if there is one
+//                Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_ROCK_SUPPORT_STAGE_TAG);
+//                RockSupportMainFragment rockSupportFragment;
+//                if (fragment != null) {
+//                    rockSupportFragment = (RockSupportMainFragment) fragment;
+//                    fx.attach(rockSupportFragment);
+//                } else {
+//                    Bundle arguments = new Bundle();
+//                    arguments.putString(RockSupportMainFragment.ARG_BASKET_ID, id);
+//                    rockSupportFragment = new RockSupportMainFragment();
+//                    rockSupportFragment.setArguments(arguments);
+//                    fx.add(R.id.stage_detail_container, rockSupportFragment, FRAGMENT_ROCK_SUPPORT_STAGE_TAG);
+//                }
+//                fx.commit();
+//                return;
+//            }
 
             if (id.equalsIgnoreCase(AssesmentStageDataProvider.RMR)) {
                 FragmentTransaction fx = getSupportFragmentManager().beginTransaction();
@@ -355,28 +352,28 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
 //                return;
             }
 
-            if (id.equalsIgnoreCase(AssesmentStageDataProvider.SAVE)) {
-                FragmentTransaction fx = getSupportFragmentManager().beginTransaction();
-                Fragment previous = getSupportFragmentManager().findFragmentById(R.id.stage_detail_container);
-                if (previous != null) {
-                    fx.detach(previous);
-                }
-                //use the previous fragment if there is one
-                Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_SAVE_STAGE_TAG);
-                SaveAssessmentMainFragment saveAssessmentFragment;
-                if (fragment != null) {
-                    saveAssessmentFragment = (SaveAssessmentMainFragment) fragment;
-                    fx.attach(saveAssessmentFragment);
-                } else {
-                    saveAssessmentFragment = new SaveAssessmentMainFragment();
-                    Bundle arguments = new Bundle();
-                    arguments.putString(SaveAssessmentMainFragment.ARG_BASKET_ID, id);
-                    saveAssessmentFragment.setArguments(arguments);
-                    fx.add(R.id.stage_detail_container, saveAssessmentFragment, FRAGMENT_SAVE_STAGE_TAG);
-                }
-                fx.commit();
-                return;
-            }
+//            if (id.equalsIgnoreCase(AssesmentStageDataProvider.SAVE)) {
+//                FragmentTransaction fx = getSupportFragmentManager().beginTransaction();
+//                Fragment previous = getSupportFragmentManager().findFragmentById(R.id.stage_detail_container);
+//                if (previous != null) {
+//                    fx.detach(previous);
+//                }
+//                //use the previous fragment if there is one
+//                Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_SAVE_STAGE_TAG);
+//                SaveAssessmentMainFragment saveAssessmentFragment;
+//                if (fragment != null) {
+//                    saveAssessmentFragment = (SaveAssessmentMainFragment) fragment;
+//                    fx.attach(saveAssessmentFragment);
+//                } else {
+//                    saveAssessmentFragment = new SaveAssessmentMainFragment();
+//                    Bundle arguments = new Bundle();
+//                    arguments.putString(SaveAssessmentMainFragment.ARG_BASKET_ID, id);
+//                    saveAssessmentFragment.setArguments(arguments);
+//                    fx.add(R.id.stage_detail_container, saveAssessmentFragment, FRAGMENT_SAVE_STAGE_TAG);
+//                }
+//                fx.commit();
+//                return;
+//            }
 
 
         } else {
@@ -404,12 +401,12 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
             }
 
 
-            if (id.equalsIgnoreCase(AssesmentStageDataProvider.ROCK_SUPPORT)) {
-                Intent detailIntent = new Intent(this, RockSupportMainActivity.class);
-                detailIntent.putExtra(RockSupportMainFragment.ARG_BASKET_ID, id);
-                startActivity(detailIntent);
-                return;
-            }
+//            if (id.equalsIgnoreCase(AssesmentStageDataProvider.ROCK_SUPPORT)) {
+//                Intent detailIntent = new Intent(this, RockSupportMainActivity.class);
+//                detailIntent.putExtra(RockSupportMainFragment.ARG_BASKET_ID, id);
+//                startActivity(detailIntent);
+//                return;
+//            }
 
             if (id.equalsIgnoreCase(AssesmentStageDataProvider.RMR)) {
                 Intent detailIntent = new Intent(this, RMRCalculatorDetailActivity.class);

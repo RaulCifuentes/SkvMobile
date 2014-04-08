@@ -80,5 +80,7 @@ provide estimates of the strength and deformation properties of the rock mass.</
     <string name="signup_title">Create new account</string>
     <string name="title_activity_test_authentication_main">TestAuthenticationMainActivity</string>
     <string name="title_activity_save_assessment">SaveAssessmentActivity</string>
+    <string name="action_report_send">Send</string>
+    <string name="action_report_save_draft">Save draft</string>
 
 </resources>

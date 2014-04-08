@@ -34,7 +34,8 @@ public class SpanFragment extends SkavaFragment {
         spanEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
 
 
-        Float span = getSupportRequirementsContext().getSpan();
+//        Float span = getSupportRequirementsContext().getSpan();
+        Double span =  getCurrentAssessment().getTunnel().getExcavationFactors().getSpan();
         if (span != null) {
             spanEditText.setText(span.toString());
         }
@@ -42,10 +43,10 @@ public class SpanFragment extends SkavaFragment {
         spanEditText.addTextChangedListener(new TextValidator(spanEditText) {
             @Override
             public void validate(TextView textView, String text) {
-                Float enteredValue;
+                Double enteredValue;
                 try {
-                    enteredValue = Float.parseFloat(text);
-                    getSupportRequirementsContext().setSpan(enteredValue);
+                    enteredValue = Double.parseDouble(text);
+                    getCurrentAssessment().getTunnel().getExcavationFactors().setSpan(enteredValue);
                 } catch (NumberFormatException e) {
                     spanEditText.setError("Span must be a number!");
                 }

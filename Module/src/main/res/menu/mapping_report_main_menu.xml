@@ -6,4 +6,17 @@
         <!--android:title="@string/action_settings"-->
         <!--android:orderInCategory="100"-->
         <!--android:showAsAction="never" />-->
+
+    <item
+        android:id="@+id/action_mapping_report_send"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_report_send"/>
+
+    <item
+        android:id="@+id/action_mapping_report_draft"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_report_save_draft"/>
+
+
+
 </menu>

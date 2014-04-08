@@ -6,18 +6,18 @@ package com.metric.skava.rocksupport.model;
 public class ExcavationFactors {
 
     private ESR esr;
-    private Float span;
+    private Double span;
 
     public ExcavationFactors(ESR esr) {
         this.esr = esr;
     }
 
 
-    public Float getSpan() {
+    public Double getSpan() {
         return span;
     }
 
-    public void setSpan(Float span) {
+    public void setSpan(Double span) {
         this.span = span;
     }
 

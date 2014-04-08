@@ -1,22 +1,28 @@
 package com.metric.skava.rockmass.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.metric.skava.R;
 import com.metric.skava.app.adapter.SkavaEntityAdapter;
 import com.metric.skava.app.fragment.SkavaFragment;
 import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.app.validator.TextValidator;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.rockmass.model.FractureType;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 /**
@@ -25,24 +31,26 @@ import java.util.List;
 public class RockMassDescriptionMainFragment extends SkavaFragment implements AdapterView.OnItemSelectedListener {
 
 
-    private Spinner fractureTypeSpinner;
     private DAOFactory daoFactory;
+
+    private Spinner fractureTypeSpinner;
+    private SkavaEntityAdapter<FractureType> fractureTypeAdapter;
+
+    private EditText blocksSizeEditText;
+    private EditText numOfJointsEditText;
+    private EditText outcropEditText;
+
+    private int fractureTypeSpinnerLastPosition;
+    private FractureType selectedFractureType;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         daoFactory = DAOFactory.getInstance(getActivity());
 
-    }
+        fractureTypeSpinnerLastPosition = -1;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.rock_mass_description_main_fragment, container, false);
-
-        fractureTypeSpinner = (Spinner) rootView.findViewById(R.id.rockmass_desc_fracture_type_spinner);
-
-//        SkavaDataProvider dataProvider = SkavaDataProvider.getInstance(getActivity());
         List<FractureType> fractureTypeList = null;
         try {
             fractureTypeList = daoFactory.getFractureTypeDAO().getAllFractureTypes();
@@ -50,19 +58,85 @@ public class RockMassDescriptionMainFragment extends SkavaFragment implements Ad
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
         }
-        SkavaEntityAdapter fractureTypeAdapter = new SkavaEntityAdapter<FractureType>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, fractureTypeList);
+        fractureTypeList.add(new FractureType("HINT", "Select a type ..."));
+        fractureTypeAdapter = new SkavaEntityAdapter<FractureType>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, fractureTypeList);
         // Specify the layout to use when the list of choices appears
         fractureTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
+
+        selectedFractureType = getCurrentAssessment().getFractureType();
+
+    }
+
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View rootView = inflater.inflate(R.layout.rock_mass_description_main_fragment, container, false);
+
+
+        fractureTypeSpinner = (Spinner) rootView.findViewById(R.id.rockmass_desc_fracture_type_spinner);
         fractureTypeSpinner.setAdapter(fractureTypeAdapter);
+        fractureTypeSpinner.setOnItemSelectedListener(this);
 
         FractureType fractureType = getCurrentAssessment().getFractureType();
         if (fractureType != null) {
             fractureTypeSpinner.setSelection(fractureTypeAdapter.getPosition(fractureType));
         } else {
-            fractureTypeSpinner.setSelection(fractureTypeAdapter.getCount()-1); //display hint
+            fractureTypeSpinner.setSelection(fractureTypeAdapter.getCount() - 1); //display hint
         }
-        fractureTypeSpinner.setOnItemSelectedListener(this);
+
+        NumberFormat numberFormatter = DecimalFormat.getNumberInstance();
+
+        blocksSizeEditText = (EditText) rootView.findViewById(R.id.rockmass_desc_block_size_value);
+        blocksSizeEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
+        Short blocksSize = getCurrentAssessment().getOrientation();
+        if (blocksSize != null) {
+            blocksSizeEditText.setText(numberFormatter.format(blocksSize));
+        }
+
+        blocksSizeEditText.addTextChangedListener(new TextValidator(blocksSizeEditText) {
+            @Override
+            public void validate(TextView textView, java.lang.String text) {
+                /* Validation code here */
+                Short enteredValue = 0;
+                try {
+                    enteredValue = Short.parseShort(text);
+                        getSkavaContext().getAssessment().setBlockSize(enteredValue);
+                } catch (NumberFormatException e) {
+                    blocksSizeEditText.setError("Orientation must be a number!");
+                }
+            }
+        });
+
+        numOfJointsEditText = (EditText) rootView.findViewById(R.id.rockmass_desc_junctures_value);
+        numOfJointsEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
+        Short numberOfJoints = getCurrentAssessment().getOrientation();
+        if (numberOfJoints != null) {
+            numOfJointsEditText.setText(numberFormatter.format(blocksSize));
+        }
+
+        numOfJointsEditText.addTextChangedListener(new TextValidator(numOfJointsEditText) {
+            @Override
+            public void validate(TextView textView, java.lang.String text) {
+                /* Validation code here */
+                Short enteredValue = 0;
+                try {
+                    enteredValue = Short.parseShort(text);
+                    getSkavaContext().getAssessment().setNumberOfJoints(enteredValue);
+                } catch (NumberFormatException e) {
+                    numOfJointsEditText.setError("Joints per m3 must be a number!");
+                }
+            }
+        });
+
+        outcropEditText = (EditText) rootView.findViewById(R.id.rockmass_desc_junctures_value);
+        outcropEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
+        String outcropDescription = getCurrentAssessment().getOutcropDescription();
+        if (outcropDescription != null) {
+            outcropEditText.setText(outcropDescription);
+        }
 
         return rootView;
     }
@@ -71,13 +145,17 @@ public class RockMassDescriptionMainFragment extends SkavaFragment implements Ad
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (parent == fractureTypeSpinner){
-            FractureType selectedFractureType = (FractureType)parent.getItemAtPosition(position);
-            getSkavaContext().getAssessment().setFractureType(selectedFractureType);
+            if (position != fractureTypeSpinner.getAdapter().getCount() && position != fractureTypeSpinnerLastPosition) {
+                selectedFractureType = (FractureType) parent.getItemAtPosition(position);
+                getSkavaContext().getAssessment().setFractureType(selectedFractureType);
+                fractureTypeSpinnerLastPosition = position;
+            }
         }
+
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
+        //Do nothing
     }
 }

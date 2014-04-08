@@ -1,7 +1,8 @@
 package com.metric.skava.data.dao;
 
-import com.metric.skava.app.model.TunnelFace;
+import com.metric.skava.app.model.Tunnel;
 import com.metric.skava.data.dao.exception.DAOException;
+import com.metric.skava.rockmass.model.RockMass;
 import com.metric.skava.rocksupport.model.SupportRequirement;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public interface SupportRequirementDAO {
 
-    public SupportRequirement getSupportRequirementByTunnelFace(TunnelFace face) throws DAOException;
+    public SupportRequirement getSupportRequirementByTunnel(Tunnel tunnel, RockMass.RockMassQualityType qualityType) throws DAOException;
 
     public List<SupportRequirement> getAllSupportRequirements() throws DAOException;
 

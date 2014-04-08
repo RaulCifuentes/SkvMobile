@@ -17,7 +17,8 @@ public class SupportRequirement extends SkavaEntity {
 
 
     private Tunnel tunnel;
-    private Double spanOverESR;
+    private Double spanOverESRLowerBoundary;
+    private Double spanOverESRUpperBoundary;
     private RockMass.RockMassQualityType rockMassQualityType;
     private BoltType boltType;
     private Double diameter;
@@ -47,12 +48,20 @@ public class SupportRequirement extends SkavaEntity {
     }
 
 
-    public Double getSpanOverESR() {
-        return spanOverESR;
+    public Double getSpanOverESRLower() {
+        return spanOverESRLowerBoundary;
     }
 
-    public void setSpanOverESR(Double spanOverESR) {
-        this.spanOverESR = spanOverESR;
+    public void setSpanOverESRLower(Double spanOverESR) {
+        this.spanOverESRLowerBoundary = spanOverESR;
+    }
+
+    public Double getSpanOverESRUpper() {
+        return spanOverESRUpperBoundary;
+    }
+
+    public void setSpanOverESRUpper(Double spanOverESR) {
+        this.spanOverESRUpperBoundary = spanOverESR;
     }
 
     public RockMass.RockMassQualityType getRockMassQualityType() {

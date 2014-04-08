@@ -16,7 +16,6 @@ import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.calculator.barton.model.Q_Calculation;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
-import com.metric.skava.rocksupport.model.ExcavationFactors;
 
 /**
  * Created by metricboy on 2/21/14.
@@ -55,9 +54,10 @@ public class SkavaFragment extends Fragment {
         return getCurrentAssessment().getRmrCalculation();
     }
 
-    public ExcavationFactors getSupportRequirementsContext() {
-        return getCurrentAssessment().getExcavationFactors();
-    }
+    //The ESR and Span are not editable, so no need to update through any context at all
+//    public ExcavationFactors getSupportRequirementsContext() {
+//        return getCurrentAssessment().getExcavationFactors();
+//    }
 
 
     @Override

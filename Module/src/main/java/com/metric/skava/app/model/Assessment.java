@@ -8,7 +8,6 @@ import com.metric.skava.calculator.rmr.model.RMR_Calculation;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
 import com.metric.skava.instructions.model.Recomendation;
 import com.metric.skava.rockmass.model.FractureType;
-import com.metric.skava.rocksupport.model.ExcavationFactors;
 
 import java.util.Date;
 import java.util.List;
@@ -46,7 +45,9 @@ public class Assessment implements IdentifiableEntity {
     private List<Uri> pictureUriList;
     private Q_Calculation qCalculation;
     private RMR_Calculation rmrCalculation;
-    private ExcavationFactors excavationFactors;
+
+    //These belong to the tunnel and seems to be non editable
+//    private ExcavationFactors excavationFactors;
 
 
     public Assessment(String internalCode) {
@@ -251,13 +252,13 @@ public class Assessment implements IdentifiableEntity {
         this.discontinuitySystem = discontinuitySystem;
     }
 
-    public ExcavationFactors getExcavationFactors() {
-        return excavationFactors;
-    }
-
-    public void setExcavationFactors(ExcavationFactors excavationFactors) {
-        this.excavationFactors = excavationFactors;
-    }
+//    public ExcavationFactors getExcavationFactors() {
+//        return excavationFactors;
+//    }
+//
+//    public void setExcavationFactors(ExcavationFactors excavationFactors) {
+//        this.excavationFactors = excavationFactors;
+//    }
 
 
     @Override
