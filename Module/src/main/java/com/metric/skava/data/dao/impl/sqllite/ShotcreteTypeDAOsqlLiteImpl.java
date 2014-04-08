@@ -23,7 +23,7 @@ public class ShotcreteTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDA
 
 
     @Override
-    protected List<ShotcreteType> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<ShotcreteType> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<ShotcreteType> list = new ArrayList<ShotcreteType>();
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(ShotcreteTypeTable.CODE_COLUMN, cursor);

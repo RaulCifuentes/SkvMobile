@@ -40,7 +40,7 @@ public class PermissionDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Per
 
 
     @Override
-    protected List<Permission> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<Permission> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<Permission> list = new ArrayList<Permission>();
         while (cursor.moveToNext()) {
             String userCode = CursorUtils.getString(PermissionTable.USER_CODE_COLUMN, cursor);
@@ -88,7 +88,7 @@ public class PermissionDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Per
     public List<Permission> getPermissionsByUser(User user) throws DAOException {
         List<Permission> permissionList;
         Cursor cursor = getRecordsFilteredByColumn(PermissionTable.PERMISSION_DATABASE_TABLE, PermissionTable.USER_CODE_COLUMN, user.getCode(), null);
-        permissionList = assamblePersistentEntities(cursor);
+        permissionList = assemblePersistentEntities(cursor);
         return permissionList;
     }
 

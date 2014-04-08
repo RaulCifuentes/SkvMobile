@@ -25,7 +25,7 @@ public class ExcavationSectionDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnti
 
 
     @Override
-    protected List<ExcavationSection> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<ExcavationSection> assemblePersistentEntities(Cursor cursor) throws DAOException {
 
         List<ExcavationSection> list = new ArrayList<ExcavationSection>();
 

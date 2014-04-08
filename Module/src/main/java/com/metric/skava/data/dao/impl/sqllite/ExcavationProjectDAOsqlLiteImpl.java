@@ -32,7 +32,7 @@ public class ExcavationProjectDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnti
     }
 
     @Override
-    protected List<ExcavationProject> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<ExcavationProject> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<ExcavationProject> list = new ArrayList<ExcavationProject>();
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(ExcavationProjectTable.CODE_COLUMN, cursor);

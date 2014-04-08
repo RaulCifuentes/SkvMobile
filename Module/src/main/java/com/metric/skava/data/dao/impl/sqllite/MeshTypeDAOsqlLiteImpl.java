@@ -24,7 +24,7 @@ public class MeshTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Mes
 
 
     @Override
-    protected List<MeshType> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<MeshType> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<MeshType> list = new ArrayList<MeshType>();
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(MeshTypeTable.CODE_COLUMN, cursor);

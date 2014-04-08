@@ -42,6 +42,7 @@ import com.metric.skava.data.dao.impl.sqllite.table.MeshTypeTable;
 import com.metric.skava.data.dao.impl.sqllite.table.OrientationTable;
 import com.metric.skava.data.dao.impl.sqllite.table.PermissionTable;
 import com.metric.skava.data.dao.impl.sqllite.table.PersistenceTable;
+import com.metric.skava.data.dao.impl.sqllite.table.RockQualityTable;
 import com.metric.skava.data.dao.impl.sqllite.table.RoleTable;
 import com.metric.skava.data.dao.impl.sqllite.table.RoughnessTable;
 import com.metric.skava.data.dao.impl.sqllite.table.SRFTable;
@@ -64,7 +65,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "mySkavaDatabase.db";
 
-    public static final int DATABASE_VERSION = 11;
+    public static final int DATABASE_VERSION = 12;
 
     public SkavaDBHelper(Context context, String name,
                          SQLiteDatabase.CursorFactory factory, int version) {
@@ -125,12 +126,9 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         // ******************** Discontinuities ********************
         db.execSQL(DiscontinuityTypeTable.CREATE_DISCONTINUITIES_TABLE);
 
-
         db.execSQL(DiscontinuityRelevanceTable.CREATE_RELEVANCES_TABLE);
 
-
         db.execSQL(DiscontinuityWaterTable.CREATE_WATERS_TABLE);
-
 
         db.execSQL(DiscontinuityShapeTable.CREATE_SHAPES_TABLE);
 
@@ -175,16 +173,14 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
         db.execSQL(JnTable.CREATE_Jn_TABLE);
 
+
+        // ***************** Q/RMR Calculations *****************
+        db.execSQL(RockQualityTable.CREATE_ROCK_QUALITIES_TABLE);
+
         // ******************** Assessment ********************
-//        db.execSQL(InternalCodeTable.CREATE_INTERNAL_CODES_TABLE);
-//        db.execSQL(InternalCodeTable.INSERT_INTERNAL_CODES_TABLE);
-//        db.execSQL(InternalCodeTable.INSERT_INTERNAL_CODES_TABLE_SECOND);
-//        db.execSQL(InternalCodeTable.INSERT_INTERNAL_CODES_TABLE_THIRD);
 
         db.execSQL(AssessmentTable.CREATE_ASSESSMENT_TABLE);
-//        db.execSQL(AssessmentTable.INSERT_ASSESSMENT_TABLE);
-//        db.execSQL(AssessmentTable.INSERT_ASSESSMENT_TABLE_SECOND);
-//        db.execSQL(AssessmentTable.INSERT_ASSESSMENT_TABLE_THIRD);
+
 
     }
 
@@ -208,7 +204,6 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
         // ******************** Clients ********************
         db.execSQL("DROP TABLE IF EXISTS " + SyncLoggingTable.SYNC_LOGGING_TABLE);
-
 
         // ******************** Clients ********************
         db.execSQL("DROP TABLE IF EXISTS " + ClientTable.CLIENT_DATABASE_TABLE);
@@ -239,7 +234,6 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + SupportRequirementTable.SUPPORT_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + SupportRecomendationTable.RECOMENDATION_DATABASE_TABLE);
 
-
         // ******************** Discontinuities ********************
         db.execSQL("DROP TABLE IF EXISTS " + DiscontinuityTypeTable.DISCONTINUITY_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + DiscontinuityRelevanceTable.RELEVANCES_DATABASE_TABLE);
@@ -269,9 +263,9 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + JrTable.MAPPED_INDEX_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + JnTable.MAPPED_INDEX_DATABASE_TABLE);
 
-        // ******************** Q ********************
-        db.execSQL("DROP TABLE IF EXISTS " + "USER_ROLES");
-        db.execSQL("DROP TABLE IF EXISTS " + "USER_FACES");
+        // ***************** Q/RMR Calculations *****************
+
+        db.execSQL("DROP TABLE IF EXISTS " + RockQualityTable.ROCK_QUALITY_DATABASE_TABLE);
 
         // ******************** Assessment ********************
         db.execSQL("DROP TABLE IF EXISTS " + InternalCodeTable.INTERNAL_CODE_DATABASE_TABLE);
@@ -404,6 +398,8 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
         clearJn(db);
         insertJn(db);
+
+
     }
 
     private static void insertExcavationFactors(SQLiteDatabase db) throws DAOException {

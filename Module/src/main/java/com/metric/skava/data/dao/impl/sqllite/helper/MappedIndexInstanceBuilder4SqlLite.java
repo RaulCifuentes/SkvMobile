@@ -16,7 +16,7 @@ import com.metric.skava.rocksupport.model.ESR;
 /**
  * Created by metricboy on 3/18/14.
  */
-public class MappedIndexInstanceBuilder4SqlLite  {
+public class MappedIndexInstanceBuilder4SqlLite {
 
     private final Context mContext;
 
@@ -78,7 +78,7 @@ public class MappedIndexInstanceBuilder4SqlLite  {
     }
 
     public ESR buildESRFromCursorRecord(Cursor cursor) {
-        ESR babyESR = null;
+        ESR babyESR = new ESR("Test", "TestESR", 1d);
         return babyESR;
     }
 

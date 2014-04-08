@@ -24,7 +24,7 @@ public class DiscontinuityTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnti
 
 
     @Override
-    protected List<DiscontinuityType> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<DiscontinuityType> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<DiscontinuityType> list = new ArrayList<DiscontinuityType>();
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(DiscontinuityTypeTable.CODE_COLUMN, cursor);

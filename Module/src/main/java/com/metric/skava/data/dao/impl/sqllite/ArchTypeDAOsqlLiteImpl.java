@@ -23,7 +23,7 @@ public class ArchTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<ArchType> imple
 
 
     @Override
-    protected List<ArchType> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<ArchType> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<ArchType> list = new ArrayList<ArchType>();
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(ArchTypeTable.CODE_COLUMN, cursor);

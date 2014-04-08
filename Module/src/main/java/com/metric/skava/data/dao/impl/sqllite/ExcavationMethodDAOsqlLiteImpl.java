@@ -22,7 +22,7 @@ public class ExcavationMethodDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntit
     }
 
     @Override
-    protected List<ExcavationMethod> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<ExcavationMethod> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<ExcavationMethod> list = new ArrayList<ExcavationMethod>();
 
         while (cursor.moveToNext()) {

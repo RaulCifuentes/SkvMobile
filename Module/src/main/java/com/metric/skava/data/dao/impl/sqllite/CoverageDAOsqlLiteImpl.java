@@ -24,7 +24,7 @@ public class CoverageDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Cov
 
 
     @Override
-    protected List<Coverage> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<Coverage> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<Coverage> list = new ArrayList<Coverage>();
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(CoverageTable.CODE_COLUMN, cursor);

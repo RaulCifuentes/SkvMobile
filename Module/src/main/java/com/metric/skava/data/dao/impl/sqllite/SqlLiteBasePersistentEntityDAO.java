@@ -20,11 +20,11 @@ public abstract class SqlLiteBasePersistentEntityDAO<T> extends SqlLiteBaseDAO {
 
     protected abstract void savePersistentEntity(String tableName, T newSkavaEntity) throws DAOException;
 
-    protected abstract List<T> assamblePersistentEntities(Cursor cursor) throws DAOException;
+    protected abstract List<T> assemblePersistentEntities(Cursor cursor) throws DAOException;
 
     public T getPersistentEntityByCandidateKey(String tableName, String candidateKeyColumn, String keyValue) throws DAOException {
         Cursor cursor = getRecordsFilteredByColumn(tableName, candidateKeyColumn, keyValue, null);
-        List<T> list = assamblePersistentEntities(cursor);
+        List<T> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
             throw new DAOException("Entity not found. Table[ " + tableName + "] Column [ " + candidateKeyColumn + " ] Value [ " + keyValue + " ]");
         }
@@ -37,7 +37,7 @@ public abstract class SqlLiteBasePersistentEntityDAO<T> extends SqlLiteBaseDAO {
 
     public List<T> getAllPersistentEntities(String tableName) throws DAOException {
         Cursor cursor = getAllRecords(tableName);
-        List<T> list = assamblePersistentEntities(cursor);
+        List<T> list = assemblePersistentEntities(cursor);
         cursor.close();
         return list;
     }

@@ -3,10 +3,9 @@ package com.metric.skava.data.dao.impl.sqllite.table;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class SupportRecomendationTable extends SkavaEntityTable {
+public class SupportRecomendationTable extends SkavaTable {
 
     public static final String RECOMENDATION_DATABASE_TABLE = "Recomendations";
-
 
     public static final String ASSESSMENT_CODE_COLUMN = "ASSESSMENT_CODE";
     public static final String BOLT_TYPE_CODE_COLUMN = "BOLT_TYPE_CODE";
@@ -18,6 +17,8 @@ public class SupportRecomendationTable extends SkavaEntityTable {
     public static final String COVERAGE_CODE_COLUMN = "COVERAGE";
     public static final String ARCH_TYPE_CODE_COLUMN = "ARCH_TYPE";
     public static final String SEPARATION_COLUMN = "SEPARATION";
+    public static final String OBSERVATIONS_COLUMN = "OBSERVATIONS";
+
 
 
     public static final String CREATE_RECOMENDATIONS_TABLE = "create table " +
@@ -33,14 +34,15 @@ public class SupportRecomendationTable extends SkavaEntityTable {
             COVERAGE_CODE_COLUMN + " text not null, " +
             ARCH_TYPE_CODE_COLUMN + " text not null, " +
             SEPARATION_COLUMN + " real not null " +
+            OBSERVATIONS_COLUMN + " text null " +
             " );";
 
-    public static final String INSERT_RECOMENDATIONS_TABLE = "insert into " + RECOMENDATION_DATABASE_TABLE + "(" +
-            ASSESSMENT_CODE_COLUMN + "," + CODE_COLUMN + "," + NAME_COLUMN + "," +
-            BOLT_TYPE_CODE_COLUMN +  "," + BOLT_DIAMETER_COLUMN + "," + BOLT_LENGTH_COLUMN + "," +
-            SHOTCRETE_TYPE_CODE_COLUMN + "," + THICKNESS_COLUMN + "," + MESH_TYPE_CODE_COLUMN + "," +
-            COVERAGE_CODE_COLUMN + "," + ARCH_TYPE_CODE_COLUMN + "," + SEPARATION_COLUMN +
-            ") values('TFC_A', 'SPT_A','Support A', 'BLT_A', 10, 10, 'SHT_A', 10, 'MSH_A', 'CVR_A', 'ARC_A', 10 )";
+//    public static final String INSERT_RECOMENDATIONS_TABLE = "insert into " + RECOMENDATION_DATABASE_TABLE + "(" +
+//            ASSESSMENT_CODE_COLUMN + "," + CODE_COLUMN + "," + NAME_COLUMN + "," +
+//            BOLT_TYPE_CODE_COLUMN +  "," + BOLT_DIAMETER_COLUMN + "," + BOLT_LENGTH_COLUMN + "," +
+//            SHOTCRETE_TYPE_CODE_COLUMN + "," + THICKNESS_COLUMN + "," + MESH_TYPE_CODE_COLUMN + "," +
+//            COVERAGE_CODE_COLUMN + "," + ARCH_TYPE_CODE_COLUMN + "," + SEPARATION_COLUMN +
+//            ") values('TFC_A', 'SPT_A','Support A', 'BLT_A', 10, 10, 'SHT_A', 10, 'MSH_A', 'CVR_A', 'ARC_A', 10 )";
 
 
 

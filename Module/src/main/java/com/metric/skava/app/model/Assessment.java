@@ -6,7 +6,7 @@ import com.metric.skava.app.data.IdentifiableEntity;
 import com.metric.skava.calculator.barton.model.Q_Calculation;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
-import com.metric.skava.instructions.model.Recomendation;
+import com.metric.skava.instructions.model.SupportRecomendation;
 import com.metric.skava.rockmass.model.FractureType;
 
 import java.util.Date;
@@ -17,13 +17,13 @@ import java.util.List;
  */
 public class Assessment implements IdentifiableEntity {
 
+    private String code;
     private String internalCode;
-
-    private java.lang.String code;
     private TunnelFace face;
+
+    private User geologist;
     private ExcavationSection section;
     private Date date;
-    private User geologist;
     private Double initialPeg;
     private Double finalPeg;
     private Double currentAdvance;
@@ -33,14 +33,12 @@ public class Assessment implements IdentifiableEntity {
     private Short orientation;
     private Short slope;
 
-
     private FractureType fractureType;
     private Short blockSize;
     private Short numberOfJoints;
+    private String outcropDescription;
 
-    private java.lang.String outcropDescription;
-
-    private Recomendation recomendation;
+    private SupportRecomendation recomendation;
     private List<DiscontinuityFamily> discontinuitySystem;
     private List<Uri> pictureUriList;
     private Q_Calculation qCalculation;
@@ -49,9 +47,9 @@ public class Assessment implements IdentifiableEntity {
     //These belong to the tunnel and seems to be non editable
 //    private ExcavationFactors excavationFactors;
 
-
     public Assessment(String internalCode) {
         this.internalCode = internalCode;
+//        this.code = UUID.randomUUID().toString();
     }
 
     public java.lang.String getCode() {
@@ -236,11 +234,11 @@ public class Assessment implements IdentifiableEntity {
         this.outcropDescription = outcropDescription;
     }
 
-    public Recomendation getRecomendation() {
+    public SupportRecomendation getRecomendation() {
         return recomendation;
     }
 
-    public void setRecomendation(Recomendation recomendation) {
+    public void setRecomendation(SupportRecomendation recomendation) {
         this.recomendation = recomendation;
     }
 

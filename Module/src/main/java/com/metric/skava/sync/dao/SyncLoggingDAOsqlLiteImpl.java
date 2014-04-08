@@ -25,7 +25,7 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
     }
 
     @Override
-    protected List<SyncLogEntry> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<SyncLogEntry> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<SyncLogEntry> list = new ArrayList<SyncLogEntry>();
         while (cursor.moveToNext()) {
             Long dateAsLong = CursorUtils.getLong(SyncLoggingTable.DATE_COLUMN, cursor);
@@ -47,7 +47,7 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
     @Override
     public SyncLogEntry getLastSyncByState(SyncLogEntry.Status state) throws DAOException {
         Cursor cursor = getRecordsFilteredByColumn(SyncLoggingTable.SYNC_LOGGING_TABLE, SyncLoggingTable.STATUS_COLUMN, state.name(), SyncLoggingTable.DATE_COLUMN);
-        List<SyncLogEntry> list = assamblePersistentEntities(cursor);
+        List<SyncLogEntry> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()){
             return null;
         }

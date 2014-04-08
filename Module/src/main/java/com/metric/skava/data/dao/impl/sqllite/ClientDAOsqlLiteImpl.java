@@ -26,7 +26,7 @@ public class ClientDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Clien
 
 
     @Override
-    protected List<Client> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<Client> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<Client> list = new ArrayList<Client>();
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(ClientTable.CODE_COLUMN, cursor);

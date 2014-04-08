@@ -42,7 +42,7 @@ import com.metric.skava.instructions.model.ArchType;
 import com.metric.skava.instructions.model.BoltType;
 import com.metric.skava.instructions.model.Coverage;
 import com.metric.skava.instructions.model.MeshType;
-import com.metric.skava.instructions.model.Recomendation;
+import com.metric.skava.instructions.model.SupportRecomendation;
 import com.metric.skava.instructions.model.ShotcreteType;
 import com.metric.skava.rockmass.model.FractureType;
 
@@ -236,7 +236,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             assessmentFields.set("discontinuitiesSystem", discontinuitiesFamilySystem);
 
 
-            Recomendation recomendation = assessment.getRecomendation();
+            SupportRecomendation recomendation = assessment.getRecomendation();
 
             BoltType boltType = recomendation.getBoltType();
             assessmentFields.set("boltType", boltType.getCode());

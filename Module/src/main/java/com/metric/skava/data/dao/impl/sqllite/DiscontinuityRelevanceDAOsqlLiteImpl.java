@@ -23,7 +23,7 @@ public class DiscontinuityRelevanceDAOsqlLiteImpl extends SqlLiteBaseIdentifiabl
 
 
     @Override
-    protected List<DiscontinuityRelevance> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<DiscontinuityRelevance> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<DiscontinuityRelevance> list = new ArrayList<DiscontinuityRelevance>();
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(DiscontinuityRelevanceTable.CODE_COLUMN, cursor);

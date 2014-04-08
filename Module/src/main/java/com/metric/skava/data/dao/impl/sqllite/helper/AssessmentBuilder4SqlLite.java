@@ -63,27 +63,40 @@ public class AssessmentBuilder4SqlLite {
 
     public Assessment buildAssessmentFromCursorRecord(Cursor cursor) throws DAOException {
 
+        String code = CursorUtils.getString(AssessmentTable.CODE_COLUMN, cursor);
         String internalCode = CursorUtils.getString(AssessmentTable.INTERNAL_CODE_COLUMN, cursor);
 
-        Assessment babyAssessment = new Assessment(internalCode);
+        Assessment babyAssessment = new Assessment(code);
+        babyAssessment.setInternalCode(internalCode);
 
         java.lang.String faceID = CursorUtils.getString(AssessmentTable.TUNEL_FACE_CODE_COLUMN, cursor);
         TunnelFace tunnelFace = localTunnelFaceDAO.getTunnelFaceByCode(faceID);
         babyAssessment.setFace(tunnelFace);
 
+        java.lang.String geologistID = CursorUtils.getString(AssessmentTable.GEOLOGIST_CODE_COLUMN, cursor);
+        User geologist = localUserDAO.getUserByCode(geologistID);
+        babyAssessment.setGeologist(geologist);
+
+        Long dateAsLongRep = CursorUtils.getLong(AssessmentTable.DATE_COLUMN, cursor);
+        Date date = DateDataFormat.getCalendarFromFormattedLong(dateAsLongRep).getTime();
+        babyAssessment.setDate(date);
+
         java.lang.String sectionID = CursorUtils.getString(AssessmentTable.EXCAVATION_SECTION_CODE_COLUMN, cursor);
         ExcavationSection section = localExcavationSectionDAO.getExcavationSectionByCode(sectionID);
         babyAssessment.setSection(section);
 
-        Double pk = CursorUtils.getDouble(AssessmentTable.PK_COLUMN, cursor);
-        babyAssessment.setInitialPeg(pk);
-
-        Double advance = CursorUtils.getDouble(AssessmentTable.ADVANCE_COLUMN, cursor);
-        babyAssessment.setCurrentAdvance(advance);
-
         java.lang.String methodID = CursorUtils.getString(AssessmentTable.EXCAVATION_METHOD_CODE_COLUMN, cursor);
         ExcavationMethod method = localExcavationMethodDAO.getExcavationMethodByCode(methodID);
         babyAssessment.setMethod(method);
+
+        Double initialPk = CursorUtils.getDouble(AssessmentTable.PK_INITIAL_COLUMN, cursor);
+        babyAssessment.setInitialPeg(initialPk);
+
+        Double finalPk = CursorUtils.getDouble(AssessmentTable.PK_FINAL_COLUMN, cursor);
+        babyAssessment.setFinalPeg(finalPk);
+
+        Double advance = CursorUtils.getDouble(AssessmentTable.ADVANCE_ACUMM_COLUMN, cursor);
+        babyAssessment.setAccummAdvance(advance);
 
         Long orientation =  CursorUtils.getLong(AssessmentTable.ORIENTATION_COLUMN, cursor);
         babyAssessment.setOrientation(orientation.shortValue());
@@ -100,16 +113,6 @@ public class AssessmentBuilder4SqlLite {
 
         Long numJoints = CursorUtils.getLong(AssessmentTable.NUMBER_JOINTS_COLUMN, cursor);
         babyAssessment.setNumberOfJoints(numJoints.shortValue());
-
-        java.lang.String geologistID = CursorUtils.getString(AssessmentTable.GEOLOGIST_CODE_COLUMN, cursor);
-        User geologist = localUserDAO.getUserByCode(geologistID);
-        babyAssessment.setGeologist(geologist);
-
-        Long longRepresentation = CursorUtils.getLong(AssessmentTable.DATE_COLUMN, cursor);
-
-        Date date = DateDataFormat.getCalendarFromFormattedLong(longRepresentation).getTime();
-
-        babyAssessment.setDate(date);
 
         java.lang.String outcrop = CursorUtils.getString(AssessmentTable.OUTCROP_COLUMN, cursor);
         babyAssessment.setOutcropDescription(outcrop);
