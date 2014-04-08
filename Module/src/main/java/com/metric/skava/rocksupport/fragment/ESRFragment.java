@@ -13,13 +13,10 @@ import android.widget.Toast;
 
 import com.metric.skava.BuildConfig;
 import com.metric.skava.R;
-import com.metric.skava.app.adapter.SkavaEntityAdapter;
 import com.metric.skava.app.fragment.SkavaFragment;
-import com.metric.skava.app.model.ExcavationMethod;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.calculator.adapter.MultiColumnMappedIndexArrayAdapter;
 import com.metric.skava.calculator.barton.model.Jn;
-import com.metric.skava.calculator.barton.model.Jr;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalEsrDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -64,7 +61,7 @@ public class ESRFragment extends SkavaFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (BuildConfig.DEBUG) {
-            Log.d(SkavaConstants.LOG, "Entering " + this.getClass().getSimpleName()
+            Log.d(SkavaConstants.LOG, "Entering " + ESRFragment.class.getSimpleName()
                     + " : onCreateView ");
         }
 
@@ -120,7 +117,7 @@ public class ESRFragment extends SkavaFragment {
             }
         });
         if (BuildConfig.DEBUG) {
-            Log.d(SkavaConstants.LOG, "Exiting " + this. getClass().getSimpleName()
+            Log.d(SkavaConstants.LOG, "Exiting " + ESRFragment.class.getSimpleName()
                     + " : onViewCreated ");
         }
     }

@@ -36,7 +36,7 @@ public class TunnelDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Tunne
 
 
     @Override
-    protected List<Tunnel> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<Tunnel> assemblePersistentEntities(Cursor cursor) throws DAOException {
 
         List<Tunnel> list = new ArrayList<Tunnel>();
 
@@ -89,7 +89,7 @@ public class TunnelDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Tunne
             projectCode = project.getCode();
         }
         Cursor cursor = getRecordsFilteredByColumn(TunnelTable.TUNNEL_DATABASE_TABLE, TunnelTable.PROJECT_CODE_COLUMN, projectCode, null);
-        List<Tunnel> list = assamblePersistentEntities(cursor);
+        List<Tunnel> list = assemblePersistentEntities(cursor);
         cursor.close();
         return list;
     }

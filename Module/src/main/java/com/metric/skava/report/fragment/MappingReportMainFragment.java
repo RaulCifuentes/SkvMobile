@@ -48,7 +48,7 @@ import com.metric.skava.discontinuities.model.DiscontinuityWater;
 import com.metric.skava.instructions.model.BoltType;
 import com.metric.skava.instructions.model.Coverage;
 import com.metric.skava.instructions.model.MeshType;
-import com.metric.skava.instructions.model.Recomendation;
+import com.metric.skava.instructions.model.SupportRecomendation;
 import com.metric.skava.instructions.model.ShotcreteType;
 import com.metric.skava.pictures.util.SkavaPictureFilesUtils;
 import com.metric.skava.rockmass.model.FractureType;
@@ -318,7 +318,7 @@ public class MappingReportMainFragment extends SkavaFragment {
         }
 
 
-        Recomendation recomendation = currentAssessment.getRecomendation();
+        SupportRecomendation recomendation = currentAssessment.getRecomendation();
         if (recomendation != null) {
             BoltType boltType = recomendation.getBoltType();
             if (boltType != null) {

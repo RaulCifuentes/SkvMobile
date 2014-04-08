@@ -24,7 +24,7 @@ public class BoltTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Bol
 
 
     @Override
-    protected List<BoltType> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<BoltType> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<BoltType> list = new ArrayList<BoltType>();
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(BoltTypeTable.CODE_COLUMN, cursor);

@@ -1,6 +1,7 @@
 package com.metric.skava.calculator.barton.logic;
 
 public class QBartonOutput {
+
 	private Double QBarton;
 
 	private Double rqdOverJn;

@@ -30,10 +30,11 @@ import com.metric.skava.calculator.rmr.model.Weathering;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
-import com.metric.skava.instructions.model.Recomendation;
+import com.metric.skava.instructions.model.SupportRecomendation;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by metricboy on 3/5/14.
@@ -76,7 +77,9 @@ public class SkavaUtils {
 
         String internalCode = "SKV-" + assesmentNumber;
 
-        Assessment initialAssessment = new Assessment(internalCode);
+        String code = UUID.randomUUID().toString();
+        Assessment initialAssessment = new Assessment(code);
+        initialAssessment.setInternalCode(internalCode);
 
         DAOFactory daoFactory = DAOFactory.getInstance(context);
 
@@ -144,7 +147,7 @@ public class SkavaUtils {
 
         initialAssessment.setDiscontinuitySystem(discontinuitySystem);
 
-        Recomendation recomendation = new Recomendation();
+        SupportRecomendation recomendation = new SupportRecomendation();
 
         initialAssessment.setRecomendation(recomendation);
 

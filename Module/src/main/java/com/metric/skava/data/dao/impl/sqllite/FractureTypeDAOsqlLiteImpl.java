@@ -24,7 +24,7 @@ public class FractureTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO
 
 
     @Override
-    protected List<FractureType> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<FractureType> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<FractureType> list = new ArrayList<FractureType>();
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(FractureTypeTable.CODE_COLUMN, cursor);

@@ -31,7 +31,7 @@ public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<T
 
 
     @Override
-    protected List<TunnelFace> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<TunnelFace> assemblePersistentEntities(Cursor cursor) throws DAOException {
 
         List<TunnelFace> list = new ArrayList<TunnelFace>();
 
@@ -62,7 +62,7 @@ public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<T
             tunnelCode = tunnel.getCode();
         }
         Cursor cursor = getRecordsFilteredByColumn(TunnelFaceTable.FACE_DATABASE_TABLE, TunnelFaceTable.TUNNEL_CODE_COLUMN, tunnelCode, null);
-        List<TunnelFace> list = assamblePersistentEntities(cursor);
+        List<TunnelFace> list = assemblePersistentEntities(cursor);
         cursor.close();
         return list;
     }

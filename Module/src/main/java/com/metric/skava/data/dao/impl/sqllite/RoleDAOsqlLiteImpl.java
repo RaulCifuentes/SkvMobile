@@ -25,7 +25,7 @@ public class RoleDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Role> i
 
 
     @Override
-    protected List<Role> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<Role> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<Role> list = new ArrayList<Role>();
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(RoleTable.CODE_COLUMN, cursor);

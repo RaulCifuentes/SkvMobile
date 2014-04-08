@@ -37,9 +37,8 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnt
     }
 
 
-
     @Override
-    protected List<SupportRequirement> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<SupportRequirement> assemblePersistentEntities(Cursor cursor) throws DAOException {
 
         List<SupportRequirement> list = new ArrayList<SupportRequirement>();
 
@@ -100,22 +99,27 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnt
 
     @Override
     public SupportRequirement getSupportRequirementByTunnel(Tunnel tunnel, RockMass.RockMassQualityType qualityType) throws DAOException {
-        String [] names = new String[] {SupportRequirementTable.TUNNEL_CODE_COLUMN, SupportRequirementTable.ROCK_QUALITY_CODE_COLUMN};
-        Object [] values = new Object[] {tunnel.getCode(), qualityType.name() };
+        String[] names = new String[]{SupportRequirementTable.TUNNEL_CODE_COLUMN, SupportRequirementTable.ROCK_QUALITY_CODE_COLUMN};
+        Object[] values = new Object[]{tunnel.getCode(), qualityType.name()};
         Cursor cursor = getRecordsFilteredByColumns(SupportRequirementTable.SUPPORT_DATABASE_TABLE, names, values, null);
-        List<SupportRequirement> listSupportRequirements = assamblePersistentEntities(cursor);
+        List<SupportRequirement> listSupportRequirements = assemblePersistentEntities(cursor);
 
-        ESR tunnelESR = tunnel.getExcavationFactors().getEsr();
-        Double tunnelSpan = tunnel.getExcavationFactors().getSpan();
-        Double esrSpanRatio = tunnelSpan / tunnelESR.getValue();
+        if (tunnel.getExcavationFactors() != null) {
+            ESR tunnelESR = tunnel.getExcavationFactors().getEsr();
+            Double tunnelSpan = tunnel.getExcavationFactors().getSpan();
+            if (tunnelESR != null) {
+                Double esrSpanRatio = tunnelSpan / tunnelESR.getValue();
 
-        for (SupportRequirement currentSupportRequirement : listSupportRequirements) {
-            Double lowerBound = currentSupportRequirement.getSpanOverESRLower();
-            Double upperBound = currentSupportRequirement.getSpanOverESRUpper();
-            if (lowerBound < esrSpanRatio && esrSpanRatio < upperBound) {
-                return currentSupportRequirement;
+                for (SupportRequirement currentSupportRequirement : listSupportRequirements) {
+                    Double lowerBound = currentSupportRequirement.getSpanOverESRLower();
+                    Double upperBound = currentSupportRequirement.getSpanOverESRUpper();
+                    if (lowerBound < esrSpanRatio && esrSpanRatio < upperBound) {
+                        return currentSupportRequirement;
+                    }
+                }
             }
         }
+
         return null;
     }
 

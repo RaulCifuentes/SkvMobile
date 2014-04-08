@@ -4,7 +4,7 @@ import com.metric.skava.instructions.model.ArchType;
 import com.metric.skava.instructions.model.BoltType;
 import com.metric.skava.instructions.model.Coverage;
 import com.metric.skava.instructions.model.MeshType;
-import com.metric.skava.instructions.model.Recomendation;
+import com.metric.skava.instructions.model.SupportRecomendation;
 import com.metric.skava.instructions.model.ShotcreteType;
 
 /**
@@ -12,11 +12,11 @@ import com.metric.skava.instructions.model.ShotcreteType;
  */
 public class RecomendationProvider {
 
-    //TODO Read the Support Requirement configuration and build a Recomendation
+    //TODO Read the Support Requirement configuration and build a SupportRecomendation
 
 
-    public Recomendation recomend() {
-        Recomendation recomendation = new Recomendation();
+    public SupportRecomendation recomend() {
+        SupportRecomendation recomendation = new SupportRecomendation();
         BoltType boltType = null;
         recomendation.setBoltType(boltType);
         Double diameter = null;

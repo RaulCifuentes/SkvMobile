@@ -30,7 +30,7 @@ public class UserDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<User> i
 
 
     @Override
-    protected List<User> assamblePersistentEntities(Cursor cursor) throws DAOException {
+    protected List<User> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<User> list = new ArrayList<User>();
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(UserTable.CODE_COLUMN, cursor);

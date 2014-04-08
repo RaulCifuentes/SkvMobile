@@ -3,37 +3,41 @@ package com.metric.skava.data.dao.impl.sqllite.table;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class AssessmentTable extends SkavaEntityTable {
+public class AssessmentTable extends SkavaTable {
 
     public static final String ASSESSMENT_DATABASE_TABLE = "Assessments";
 
     public static final String INTERNAL_CODE_COLUMN = "INTERNAL_CODE";
 
+    public static final String CODE_COLUMN = "CODE";
+
     public static final String GEOLOGIST_CODE_COLUMN = "GEOLOGIST_CODE";
 
-    public static final String FRACTURE_TYPE_CODE_COLUMN = "FRACTURE_TYPE_CODE";
-
     public static final String TUNEL_FACE_CODE_COLUMN = "TUNNEL_FACE_CODE";
+
+    public static final String DATE_COLUMN = "DATE";
 
     public static final String EXCAVATION_SECTION_CODE_COLUMN = "SECTION_CODE";
 
     public static final String EXCAVATION_METHOD_CODE_COLUMN = "METHOD_CODE";
 
-    public static final String OUTCROP_COLUMN = "OUTCROP";
+    public static final String PK_INITIAL_COLUMN = "PEG_INITIAL";
 
-    public static final String DATE_COLUMN = "DATE";
+    public static final String PK_FINAL_COLUMN = "PEG_FINAL";
 
-    public static final String PK_COLUMN = "PK";
-
-    public static final String ADVANCE_COLUMN = "ADVANCE";
+    public static final String ADVANCE_ACUMM_COLUMN = "ADVANCE";
 
     public static final String ORIENTATION_COLUMN = "ORIENTATION";
 
     public static final String SLOPE_COLUMN = "SLOPE";
 
-    public static final String NUMBER_JOINTS_COLUMN = "NUMBER_JOINTS";
+    public static final String FRACTURE_TYPE_CODE_COLUMN = "FRACTURE_TYPE_CODE";
 
     public static final String BLOCKS_SIZE_COLUMN = "BLOCKS_SIZE";
+
+    public static final String NUMBER_JOINTS_COLUMN = "NUMBER_JOINTS";
+
+    public static final String OUTCROP_COLUMN = "OUTCROP";
 
 
     //TODO Solved the relations on the dependant side
@@ -43,14 +47,16 @@ public class AssessmentTable extends SkavaEntityTable {
     public static final String CREATE_ASSESSMENT_TABLE = "create table " +
             ASSESSMENT_DATABASE_TABLE + " (" + GLOBAL_KEY_ID +
             " integer primary key autoincrement, " +
+            CODE_COLUMN + " text not null, " +
             INTERNAL_CODE_COLUMN + " text not null, " +
             GEOLOGIST_CODE_COLUMN + " text not null, " +
             TUNEL_FACE_CODE_COLUMN + " text not null, " +
-            EXCAVATION_SECTION_CODE_COLUMN + " text not null, " +
             DATE_COLUMN + " integer not null, " +
-            PK_COLUMN + " real not null, " +
-            ADVANCE_COLUMN + " real not null, " +
+            EXCAVATION_SECTION_CODE_COLUMN + " text not null, " +
             EXCAVATION_METHOD_CODE_COLUMN + " text not null, " +
+            PK_INITIAL_COLUMN + " real not null, " +
+            PK_FINAL_COLUMN + " real not null, " +
+            ADVANCE_ACUMM_COLUMN + " real not null, " +
             ORIENTATION_COLUMN + " integer not null, " +
             SLOPE_COLUMN + " integer not null, " +
             FRACTURE_TYPE_CODE_COLUMN + " text not null, " +
@@ -59,14 +65,16 @@ public class AssessmentTable extends SkavaEntityTable {
             OUTCROP_COLUMN + " text null  );";
 
     private static String INSERT_SCRIPT = "insert into " + ASSESSMENT_DATABASE_TABLE + "(" +
+            CODE_COLUMN + "," +
             INTERNAL_CODE_COLUMN + "," +
             GEOLOGIST_CODE_COLUMN + "," +
             TUNEL_FACE_CODE_COLUMN + "," +
-            EXCAVATION_SECTION_CODE_COLUMN + "," +
             DATE_COLUMN + "," +
-            PK_COLUMN + "," +
-            ADVANCE_COLUMN + "," +
+            EXCAVATION_SECTION_CODE_COLUMN + "," +
             EXCAVATION_METHOD_CODE_COLUMN + "," +
+            PK_INITIAL_COLUMN + "," +
+            PK_FINAL_COLUMN + "," +
+            ADVANCE_ACUMM_COLUMN + "," +
             ORIENTATION_COLUMN + "," +
             SLOPE_COLUMN + "," +
             FRACTURE_TYPE_CODE_COLUMN + "," +
