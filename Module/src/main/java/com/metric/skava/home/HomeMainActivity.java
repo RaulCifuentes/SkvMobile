@@ -56,7 +56,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         //Check internet access
         boolean connected = isNetworkAvailable();
         if (connected) {
-            //Check the syncronization
+            //Check the syncronization status
             try {
                 SyncAgent syncAgent = SyncAgent.getInstance(this, this);
                 if (syncAgent.shouldUpdate()) {
@@ -78,18 +78,19 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 
             if (lastSuccess != null) {
                 getSkavaContext().setSyncMetadata(lastSuccess);
-                Log.d(SkavaConstants.LOG, "Using the last succeeded sync data as " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastSuccess.getSyncDate()));
-                Toast.makeText(this, "Using the last succeeded sync data as " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastSuccess.getSyncDate()), Toast.LENGTH_LONG).show();
+                Log.d(SkavaConstants.LOG, "Using data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastSuccess.getSyncDate()));
+                Toast.makeText(this, "Using data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastSuccess.getSyncDate()), Toast.LENGTH_LONG).show();
             } else {
-                Log.d(SkavaConstants.LOG, "No possible to operate. No internet nor local data. Sorry !!");
-                Toast.makeText(this, "No possible to operate. There's no connection to internet nor local data. Sorry !!", Toast.LENGTH_LONG).show();
+                Log.d(SkavaConstants.LOG, "Operating on emergency data. No internet nor local data. Sorry !!");
+                Toast.makeText(this, "Operating on emergency data. No internet nor local data. Sorry ", Toast.LENGTH_LONG).show();
                 //Run an emergency setup data on the local tables
                 SQLiteDatabase dbConn = ((SyncLoggingDAOsqlLiteImpl) syncLoggingDAO).getDBConnection();
                 try {
                     SkavaDBHelper.insertDefaultData(dbConn);
                     SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Source.DEFAULT, SyncLogEntry.Status.SUCCESS);
                     syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
-                    Toast.makeText(this, "Using default data !!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Emergency default data successfully loaded.", Toast.LENGTH_LONG).show();
+                    Log.d(SkavaConstants.LOG, "Emergency default data successfully loaded.");
                 } catch (DAOException daoe) {
                     Toast.makeText(this, daoe.getMessage(), Toast.LENGTH_LONG).show();
                     SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Source.DEFAULT, SyncLogEntry.Status.FAIL);

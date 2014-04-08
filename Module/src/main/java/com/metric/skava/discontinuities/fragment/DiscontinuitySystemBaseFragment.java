@@ -442,6 +442,12 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
                 mDiscontinuityFamilyInstance.setPersistence(selectedPersistence);
             }
         }
+        if (parent == discApertureSpinner) {
+            if (position != discApertureSpinner.getAdapter().getCount()) {
+                Aperture selectedAperture = (Aperture) parent.getItemAtPosition(position);
+                mDiscontinuityFamilyInstance.setAperture(selectedAperture);
+            }
+        }
         if (parent == discShapeSpinner) {
             if (position != discShapeSpinner.getAdapter().getCount()) {
                 DiscontinuityShape selectedShape = (DiscontinuityShape) parent.getItemAtPosition(position);
@@ -466,6 +472,20 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
                 mDiscontinuityFamilyInstance.setWeathering(selectedWeathering);
             }
         }
+        if (parent == discJrSpinner) {
+            if (position != discJrSpinner.getAdapter().getCount()) {
+                Jr selectedJr = (Jr) parent.getItemAtPosition(position);
+                mDiscontinuityFamilyInstance.setJr(selectedJr);
+            }
+        }
+        if (parent == discJaSpinner) {
+            if (position != discJaSpinner.getAdapter().getCount()) {
+                Ja selectedJa = (Ja) parent.getItemAtPosition(position);
+                mDiscontinuityFamilyInstance.setJa(selectedJa);
+            }
+        }
+
+
         if (parent == discWaterSpinner) {
             if (position != discWaterSpinner.getAdapter().getCount()) {
                 DiscontinuityWater selectedWater = (DiscontinuityWater) parent.getItemAtPosition(position);

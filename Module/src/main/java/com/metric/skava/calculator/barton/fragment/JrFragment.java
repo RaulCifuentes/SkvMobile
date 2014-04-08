@@ -61,8 +61,6 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
         TextView title = (TextView) getView().findViewById(R.id.fragmentTitle);
         title.setText(getString(R.string.jrTitle));
 
-
-
         RadioButton firstRadio = (RadioButton) view.findViewById(R.id.radioButtonFirst);
         firstRadio.setText("a. Rock-wall contact");
         RadioButton secondRadio = (RadioButton) view.findViewById(R.id.radioButtonSecond);

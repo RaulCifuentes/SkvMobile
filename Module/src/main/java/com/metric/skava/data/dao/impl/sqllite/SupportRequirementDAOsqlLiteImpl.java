@@ -5,7 +5,6 @@ import android.database.Cursor;
 
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.Tunnel;
-import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalArchTypeDAO;
 import com.metric.skava.data.dao.LocalBoltTypeDAO;
@@ -21,6 +20,8 @@ import com.metric.skava.instructions.model.BoltType;
 import com.metric.skava.instructions.model.Coverage;
 import com.metric.skava.instructions.model.MeshType;
 import com.metric.skava.instructions.model.ShotcreteType;
+import com.metric.skava.rockmass.model.RockMass;
+import com.metric.skava.rocksupport.model.ESR;
 import com.metric.skava.rocksupport.model.SupportRequirement;
 
 import java.util.ArrayList;
@@ -98,8 +99,24 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnt
 
 
     @Override
-    public SupportRequirement getSupportRequirementByTunnelFace(TunnelFace face) throws DAOException {
-        return getPersistentEntityByCandidateKey(SupportRequirementTable.SUPPORT_DATABASE_TABLE, SupportRequirementTable.TUNNEL_CODE_COLUMN, face.getCode());
+    public SupportRequirement getSupportRequirementByTunnel(Tunnel tunnel, RockMass.RockMassQualityType qualityType) throws DAOException {
+        String [] names = new String[] {SupportRequirementTable.TUNNEL_CODE_COLUMN, SupportRequirementTable.ROCK_QUALITY_CODE_COLUMN};
+        Object [] values = new Object[] {tunnel.getCode(), qualityType.name() };
+        Cursor cursor = getRecordsFilteredByColumns(SupportRequirementTable.SUPPORT_DATABASE_TABLE, names, values, null);
+        List<SupportRequirement> listSupportRequirements = assamblePersistentEntities(cursor);
+
+        ESR tunnelESR = tunnel.getExcavationFactors().getEsr();
+        Double tunnelSpan = tunnel.getExcavationFactors().getSpan();
+        Double esrSpanRatio = tunnelSpan / tunnelESR.getValue();
+
+        for (SupportRequirement currentSupportRequirement : listSupportRequirements) {
+            Double lowerBound = currentSupportRequirement.getSpanOverESRLower();
+            Double upperBound = currentSupportRequirement.getSpanOverESRUpper();
+            if (lowerBound < esrSpanRatio && esrSpanRatio < upperBound) {
+                return currentSupportRequirement;
+            }
+        }
+        return null;
     }
 
 

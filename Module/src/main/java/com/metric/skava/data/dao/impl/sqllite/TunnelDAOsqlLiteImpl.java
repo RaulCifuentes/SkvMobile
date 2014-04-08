@@ -67,7 +67,7 @@ public class TunnelDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Tunne
             LocalEsrDAO localEsrDAO = DAOFactory.getInstance(getContext()).getLocalEsrDAO(DAOFactory.Flavour.SQLLITE);
             ESR esr = localEsrDAO.getESR(esrCode);
             ExcavationFactors factor = new ExcavationFactors(esr);
-            factor.setSpan(span.floatValue());
+            factor.setSpan(span);
             factorList.add(factor);
         }
         ExcavationFactors factors = null;

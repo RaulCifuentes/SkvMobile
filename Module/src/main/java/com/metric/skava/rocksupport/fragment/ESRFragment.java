@@ -29,8 +29,8 @@ import com.metric.skava.rocksupport.model.ESR;
 import java.util.List;
 
 /**
- * Created by metricboy on 3/9/14.
- */
+* Created by metricboy on 3/9/14.
+*/
 public class ESRFragment extends SkavaFragment {
 
     private DAOFactory daoFactory;
@@ -57,9 +57,6 @@ public class ESRFragment extends SkavaFragment {
         // Specify the layout to use when the list of choices appears
         esrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-
-
-
 
     }
 
@@ -103,7 +100,8 @@ public class ESRFragment extends SkavaFragment {
 
         final int numberOfHeaders = listview.getHeaderViewsCount();
 
-        ESR esr = getSupportRequirementsContext().getEsr();
+//        ESR esr = getSupportRequirementsContext().getEsr();
+        ESR esr = getCurrentAssessment().getTunnel().getExcavationFactors().getEsr();
         if (esr != null) {
             int posIndex = adapter.getPosition(esr);
             //adjust as the adapter takes header also into account
@@ -117,7 +115,8 @@ public class ESRFragment extends SkavaFragment {
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
                 ESR selectedItem = (ESR) parent.getItemAtPosition(position);
-                getSupportRequirementsContext().setEsr(selectedItem);
+//                getSupportRequirementsContext().setEsr(selectedItem);
+                getCurrentAssessment().getTunnel().getExcavationFactors().setEsr(selectedItem);
             }
         });
         if (BuildConfig.DEBUG) {

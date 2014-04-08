@@ -15,9 +15,10 @@ import android.widget.Toast;
 
 import com.metric.skava.R;
 import com.metric.skava.app.fragment.SkavaFragment;
-import com.metric.skava.app.model.TunnelFace;
+import com.metric.skava.app.model.Tunnel;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.app.validator.TextValidator;
+import com.metric.skava.calculator.barton.helper.QToQualityMapper;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.SupportRequirementDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -26,6 +27,7 @@ import com.metric.skava.instructions.model.BoltType;
 import com.metric.skava.instructions.model.Coverage;
 import com.metric.skava.instructions.model.MeshType;
 import com.metric.skava.instructions.model.ShotcreteType;
+import com.metric.skava.rockmass.model.RockMass;
 import com.metric.skava.rocksupport.model.SupportRequirement;
 
 import java.text.DecimalFormat;
@@ -48,11 +50,23 @@ public class InstructionsMainFragment extends SkavaFragment {
 
         SupportRequirementDAO supportRequirementDAO = daoFactory.getSupportRequirementDAO();
 
-        TunnelFace face = getCurrentAssessment().getFace();
+        Tunnel tunnel = getCurrentAssessment().getTunnel();
+        Double qValue = null;
+        if (getQCalculationContext()!= null){
+            if (getQCalculationContext().getQResult() != null )
+            qValue = getQCalculationContext().getQResult().getQBarton();
+        } else if (getRMRCalculationContext() != null) {
+            if (getRMRCalculationContext().getRMRResult() != null )
+            qValue = getRMRCalculationContext().getRMRResult().getRMR();
+        }
+
+        QToQualityMapper qMapper = QToQualityMapper.getInstance();
+        RockMass.RockMassQualityType quality =  qMapper.mapQToRockMassQuality(qValue);
+
         SupportRequirement supportRequirement = null;
-        if (face != null) {
+        if (tunnel != null) {
             try {
-                supportRequirement = supportRequirementDAO.getSupportRequirementByTunnelFace(face);
+                supportRequirement = supportRequirementDAO.getSupportRequirementByTunnel(tunnel, quality);
             } catch (DAOException e) {
                 Log.e(SkavaConstants.LOG, e.getMessage());
                 Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);

@@ -234,7 +234,7 @@ public class MappingReportMainFragment extends SkavaFragment {
         }
 
 
-        ExcavationFactors excavationFactors = currentAssessment.getExcavationFactors();
+        ExcavationFactors excavationFactors = currentAssessment.getTunnel().getExcavationFactors();
         ESR esr = excavationFactors.getEsr();
         if (esr != null) {
             TextView textView = ((TextView) rootView.findViewById(R.id.report_q_esr_value));
@@ -243,10 +243,9 @@ public class MappingReportMainFragment extends SkavaFragment {
             textView.setText(numberFormat.format(esr.getValue()));
         }
 
-        Float span = excavationFactors.getSpan();
+        Double span = excavationFactors.getSpan();
         if (span != null) {
             TextView textView = ((TextView) rootView.findViewById(R.id.report_q_ancho_value));
-//            textView.setText(span.toString());
             textView.setText("-");
             textView = ((TextView) rootView.findViewById(R.id.report_q_ancho_rating));
             textView.setText(numberFormat.format(span));
@@ -255,7 +254,7 @@ public class MappingReportMainFragment extends SkavaFragment {
         if (esr != null && span != null) {
             TextView textView = ((TextView) rootView.findViewById(R.id.report_q_a_esr_value));
             textView.setText(span.toString());
-            textView.setText("-");
+            textView.setText(esr.getKey());
             Double ratio = span / esr.getValue();
             textView = ((TextView) rootView.findViewById(R.id.report_q_a_esr_rating));
             textView.setText(numberFormat.format(ratio));

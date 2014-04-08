@@ -10,6 +10,9 @@ public class SupportRequirementTable extends SkavaEntityTable {
     public static final String TUNNEL_CODE_COLUMN =
             "TUNNEL_CODE";
 
+    public static final String SPAN_ESR_RATIO_LOWERBOUND_COLUMN = "SPAN_ESR_RATIO_LOWER";
+    public static final String SPAN_ESR_RATIO_UPPERBOUND_COLUMN = "SPAN_ESR_RATIO_UPPER";
+    public static final String ROCK_QUALITY_CODE_COLUMN = "ROCK_QUALITY_CODE";
     public static final String BOLT_TYPE_CODE_COLUMN = "BOLT_TYPE_CODE";
     public static final String BOLT_DIAMETER_COLUMN = "BOLT_DIAMETER";
     public static final String BOLT_LENGTH_COLUMN = "BOLT_LENGTH";
@@ -25,8 +28,9 @@ public class SupportRequirementTable extends SkavaEntityTable {
             SUPPORT_DATABASE_TABLE + " (" + GLOBAL_KEY_ID +
             " integer primary key autoincrement, " +
             TUNNEL_CODE_COLUMN + " text not null, " +
-            CODE_COLUMN + " text not null, " +
-            NAME_COLUMN + " text not null, " +
+            SPAN_ESR_RATIO_LOWERBOUND_COLUMN + " integer not null, " +
+            SPAN_ESR_RATIO_UPPERBOUND_COLUMN + " integer not null, " +
+            ROCK_QUALITY_CODE_COLUMN + " text not null, " +
             BOLT_TYPE_CODE_COLUMN + " text not null, " +
             BOLT_DIAMETER_COLUMN + " real not null, " +
             BOLT_LENGTH_COLUMN + " real not null, " +
@@ -39,33 +43,71 @@ public class SupportRequirementTable extends SkavaEntityTable {
             " );";
 
     public static final String INSERT_SUPPORTS_TABLE = "insert into " + SUPPORT_DATABASE_TABLE + "(" +
-            TUNNEL_CODE_COLUMN + "," + CODE_COLUMN + "," + NAME_COLUMN + "," +
+            TUNNEL_CODE_COLUMN + "," + SPAN_ESR_RATIO_LOWERBOUND_COLUMN + "," + SPAN_ESR_RATIO_UPPERBOUND_COLUMN + "," + ROCK_QUALITY_CODE_COLUMN + "," +
             BOLT_TYPE_CODE_COLUMN +  "," + BOLT_DIAMETER_COLUMN + "," + BOLT_LENGTH_COLUMN + "," +
             SHOTCRETE_TYPE_CODE_COLUMN + "," + THICKNESS_COLUMN + "," + MESH_TYPE_CODE_COLUMN + "," +
             COVERAGE_CODE_COLUMN + "," + ARCH_TYPE_CODE_COLUMN + "," + SEPARATION_COLUMN +
-            ") values('TNL_A', 'SPT_A','Support A', 'BLT_A', 10, 10, 'SHT_A', 10, 'MSH_A', 'CVR_A', 'ARC_A', 10 )";
+            ") values('TNL_A', 0, 100, 'EXCEPTIONALLY_POOR', 'BLT_B', 10, 10, 'SHT_B', 10, 'MSH_A', 'CVR_A', 'ARC_B', 10 )";
 
     public static final String INSERT_SUPPORTS_TABLE_SECOND = "insert into " + SUPPORT_DATABASE_TABLE + "(" +
-            TUNNEL_CODE_COLUMN + "," + CODE_COLUMN + "," + NAME_COLUMN + "," +
+            TUNNEL_CODE_COLUMN + "," + SPAN_ESR_RATIO_LOWERBOUND_COLUMN + "," + SPAN_ESR_RATIO_UPPERBOUND_COLUMN + "," + ROCK_QUALITY_CODE_COLUMN + "," +
             BOLT_TYPE_CODE_COLUMN +  "," + BOLT_DIAMETER_COLUMN + "," + BOLT_LENGTH_COLUMN + "," +
             SHOTCRETE_TYPE_CODE_COLUMN + "," + THICKNESS_COLUMN + "," + MESH_TYPE_CODE_COLUMN + "," +
             COVERAGE_CODE_COLUMN + "," + ARCH_TYPE_CODE_COLUMN + "," + SEPARATION_COLUMN +
-            ") values('TNL_B', 'SPT_A','Support A', 'BLT_A', 10, 10, 'SHT_A', 10, 'MSH_A', 'CVR_A', 'ARC_A', 10 )";
+            ") values('TNL_B', 0, 100, 'EXTREMELY_POOR', 'BLT_C', 10, 10, 'SHT_A', 10, 'MSH_A', 'CVR_A', 'ARC_A', 10 )";
 
     public static final String INSERT_SUPPORTS_TABLE_THIRD = "insert into " + SUPPORT_DATABASE_TABLE + "(" +
-            TUNNEL_CODE_COLUMN + "," + CODE_COLUMN + "," + NAME_COLUMN + "," +
+            TUNNEL_CODE_COLUMN + "," + SPAN_ESR_RATIO_LOWERBOUND_COLUMN + "," + SPAN_ESR_RATIO_UPPERBOUND_COLUMN + "," + ROCK_QUALITY_CODE_COLUMN + "," +
             BOLT_TYPE_CODE_COLUMN +  "," + BOLT_DIAMETER_COLUMN + "," + BOLT_LENGTH_COLUMN + "," +
             SHOTCRETE_TYPE_CODE_COLUMN + "," + THICKNESS_COLUMN + "," + MESH_TYPE_CODE_COLUMN + "," +
             COVERAGE_CODE_COLUMN + "," + ARCH_TYPE_CODE_COLUMN + "," + SEPARATION_COLUMN +
-            ") values('TNL_C', 'SPT_A','Support A', 'BLT_A', 10, 10, 'SHT_A', 10, 'MSH_A', 'CVR_A', 'ARC_A', 10 )";
+            ") values('TNL_C', 0, 100, 'VERY_POOR', 'BLT_A', 10, 10, 'SHT_B', 10, 'MSH_A', 'CVR_A', 'ARC_A', 10 )";
 
     public static final String INSERT_SUPPORTS_TABLE_FOURTH = "insert into " + SUPPORT_DATABASE_TABLE + "(" +
-            TUNNEL_CODE_COLUMN + "," + CODE_COLUMN + "," + NAME_COLUMN + "," +
+            TUNNEL_CODE_COLUMN + "," + SPAN_ESR_RATIO_LOWERBOUND_COLUMN + "," + SPAN_ESR_RATIO_UPPERBOUND_COLUMN + "," + ROCK_QUALITY_CODE_COLUMN + "," +
             BOLT_TYPE_CODE_COLUMN +  "," + BOLT_DIAMETER_COLUMN + "," + BOLT_LENGTH_COLUMN + "," +
             SHOTCRETE_TYPE_CODE_COLUMN + "," + THICKNESS_COLUMN + "," + MESH_TYPE_CODE_COLUMN + "," +
             COVERAGE_CODE_COLUMN + "," + ARCH_TYPE_CODE_COLUMN + "," + SEPARATION_COLUMN +
-            ") values('TNL_D', 'SPT_A','Support A', 'BLT_A', 10, 10, 'SHT_A', 10, 'MSH_A', 'CVR_A', 'ARC_A', 10 )";
+            ") values('TNL_D', 0, 100, 'POOR', 'BLT_B', 10, 10, 'SHT_A', 10, 'MSH_A', 'CVR_A', 'ARC_B', 10 )";
 
-   public static final String DELETE_SUPPORTS_TABLE = "delete from " + SUPPORT_DATABASE_TABLE ;
+
+    public static final String INSERT_SUPPORTS_TABLE_FIFTH = "insert into " + SUPPORT_DATABASE_TABLE + "(" +
+            TUNNEL_CODE_COLUMN + "," + SPAN_ESR_RATIO_LOWERBOUND_COLUMN + "," + SPAN_ESR_RATIO_UPPERBOUND_COLUMN + "," + ROCK_QUALITY_CODE_COLUMN + "," +
+            BOLT_TYPE_CODE_COLUMN +  "," + BOLT_DIAMETER_COLUMN + "," + BOLT_LENGTH_COLUMN + "," +
+            SHOTCRETE_TYPE_CODE_COLUMN + "," + THICKNESS_COLUMN + "," + MESH_TYPE_CODE_COLUMN + "," +
+            COVERAGE_CODE_COLUMN + "," + ARCH_TYPE_CODE_COLUMN + "," + SEPARATION_COLUMN +
+            ") values('TNL_D', 0, 100, 'FAIR', 'BLT_C', 10, 10, 'SHT_B', 10, 'MSH_A', 'CVR_A', 'ARC_A', 10 )";
+
+
+    public static final String INSERT_SUPPORTS_TABLE_SIXTH = "insert into " + SUPPORT_DATABASE_TABLE + "(" +
+            TUNNEL_CODE_COLUMN + "," + SPAN_ESR_RATIO_LOWERBOUND_COLUMN + "," + SPAN_ESR_RATIO_UPPERBOUND_COLUMN + "," + ROCK_QUALITY_CODE_COLUMN + "," +
+            BOLT_TYPE_CODE_COLUMN +  "," + BOLT_DIAMETER_COLUMN + "," + BOLT_LENGTH_COLUMN + "," +
+            SHOTCRETE_TYPE_CODE_COLUMN + "," + THICKNESS_COLUMN + "," + MESH_TYPE_CODE_COLUMN + "," +
+            COVERAGE_CODE_COLUMN + "," + ARCH_TYPE_CODE_COLUMN + "," + SEPARATION_COLUMN +
+            ") values('TNL_D', 0, 100, 'GOOD', 'BLT_D', 10, 10, 'SHT_C', 10, 'MSH_A', 'CVR_A', 'ARC_A', 10 )";
+
+    public static final String INSERT_SUPPORTS_TABLE_SEVENTH = "insert into " + SUPPORT_DATABASE_TABLE + "(" +
+            TUNNEL_CODE_COLUMN + "," + SPAN_ESR_RATIO_LOWERBOUND_COLUMN + "," + SPAN_ESR_RATIO_UPPERBOUND_COLUMN + "," + ROCK_QUALITY_CODE_COLUMN + "," +
+            BOLT_TYPE_CODE_COLUMN +  "," + BOLT_DIAMETER_COLUMN + "," + BOLT_LENGTH_COLUMN + "," +
+            SHOTCRETE_TYPE_CODE_COLUMN + "," + THICKNESS_COLUMN + "," + MESH_TYPE_CODE_COLUMN + "," +
+            COVERAGE_CODE_COLUMN + "," + ARCH_TYPE_CODE_COLUMN + "," + SEPARATION_COLUMN +
+            ") values('TNL_D', 0, 100, 'VERY_GOOD', 'BLT_C', 10, 10, 'SHT_C', 10, 'MSH_A', 'CVR_A', 'ARC_A', 10 )";
+
+    public static final String INSERT_SUPPORTS_TABLE_EIGHTH = "insert into " + SUPPORT_DATABASE_TABLE + "(" +
+            TUNNEL_CODE_COLUMN + "," + SPAN_ESR_RATIO_LOWERBOUND_COLUMN + "," + SPAN_ESR_RATIO_UPPERBOUND_COLUMN + "," + ROCK_QUALITY_CODE_COLUMN + "," +
+            BOLT_TYPE_CODE_COLUMN +  "," + BOLT_DIAMETER_COLUMN + "," + BOLT_LENGTH_COLUMN + "," +
+            SHOTCRETE_TYPE_CODE_COLUMN + "," + THICKNESS_COLUMN + "," + MESH_TYPE_CODE_COLUMN + "," +
+            COVERAGE_CODE_COLUMN + "," + ARCH_TYPE_CODE_COLUMN + "," + SEPARATION_COLUMN +
+            ") values('TNL_D', 0, 100, 'EXTREMELY_GOOD', 'BLT_B', 10, 10, 'SHT_A', 10, 'MSH_A', 'CVR_C', 'ARC_C', 10 )";
+
+    public static final String INSERT_SUPPORTS_TABLE_NINETH = "insert into " + SUPPORT_DATABASE_TABLE + "(" +
+            TUNNEL_CODE_COLUMN + "," + SPAN_ESR_RATIO_LOWERBOUND_COLUMN + "," + SPAN_ESR_RATIO_UPPERBOUND_COLUMN + "," + ROCK_QUALITY_CODE_COLUMN + "," +
+            BOLT_TYPE_CODE_COLUMN +  "," + BOLT_DIAMETER_COLUMN + "," + BOLT_LENGTH_COLUMN + "," +
+            SHOTCRETE_TYPE_CODE_COLUMN + "," + THICKNESS_COLUMN + "," + MESH_TYPE_CODE_COLUMN + "," +
+            COVERAGE_CODE_COLUMN + "," + ARCH_TYPE_CODE_COLUMN + "," + SEPARATION_COLUMN +
+            ") values('TNL_D', 0, 100, 'EXCEPTIONALLY_GOOD', 'BLT_A', 10, 10, 'SHT_B', 10, 'MSH_B', 'CVR_A', 'ARC_B', 10 )";
+
+
+    public static final String DELETE_SUPPORTS_TABLE = "delete from " + SUPPORT_DATABASE_TABLE ;
 
 }

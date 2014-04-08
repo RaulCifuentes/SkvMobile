@@ -31,8 +31,6 @@ import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
 import com.metric.skava.instructions.model.Recomendation;
-import com.metric.skava.rocksupport.model.ESR;
-import com.metric.skava.rocksupport.model.ExcavationFactors;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -117,12 +115,12 @@ public class SkavaUtils {
         initialAssessment.setRmrCalculation(mRMRCalculation);
 
         //Support Requirements
-        ESR esr = provider.getAllESR().get(0);
-        Float span = 100f;
-        ExcavationFactors mExcavationFactors = new ExcavationFactors(esr);
-        mExcavationFactors.setSpan(span);
+//        ESR esr = provider.getAllESR().get(0);
+//        Float span = 100f;
+//        ExcavationFactors mExcavationFactors = new ExcavationFactors(esr);
+//        mExcavationFactors.setSpan(span);
 
-        initialAssessment.setExcavationFactors(mExcavationFactors);
+//        initialAssessment.setExcavationFactors(mExcavationFactors);
 
 
         //Default 4 picture placeholders

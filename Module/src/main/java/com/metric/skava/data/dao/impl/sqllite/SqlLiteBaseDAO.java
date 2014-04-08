@@ -34,14 +34,18 @@ public abstract class SqlLiteBaseDAO {
         return getRecordsFilteredByColumn(tableName, null, null, null);
     }
 
-    protected Cursor getRecordsFilteredByColumn(String tableName, String columnName, String columnValue, String orderBy) {
+    protected Cursor getRecordsFilteredByColumn(String tableName, String columnName, Object columnValue, String orderBy) {
         String[] result_columns = null;
         String where = null;
         String whereArgs[] = null;
         if (columnValue != null) {
             // Specify the where clause that will limit our results.
             where = columnName + "=?";
-            whereArgs = new String[]{columnValue};
+            if (columnValue instanceof String){
+                whereArgs = new String[]{(String)columnValue};
+            } else if (columnValue instanceof Long){
+                whereArgs = new String[]{columnValue.toString()};
+            }
         }
         // Replace these with valid SQL statements as necessary.
         String groupBy = null;
@@ -52,7 +56,7 @@ public abstract class SqlLiteBaseDAO {
         return cursor;
     }
 
-    protected Cursor getRecordsFilteredByColumns(String tableName, String[] columnNames, String[] columnValues, String orderBy) {
+    protected Cursor getRecordsFilteredByColumns(String tableName, String[] columnNames, Object[] columnValues, String orderBy) {
         Cursor cursor = null;
         if (columnValues != null) {
             // Specify the where clause that will limit our results.
@@ -71,7 +75,15 @@ public abstract class SqlLiteBaseDAO {
 
                     String[] result_columns = null; // this brings me all columns (select *)
                     String where = finalCriteria;
-                    String whereArgs[] = columnValues;// Replace these with valid SQL statements as necessary.
+                    String whereArgs[] = new String[columnValues.length];
+                    for (int i = 0; i < columnValues.length; i++) {
+                        Object columnValue = columnValues[i];
+                        if (columnValues[i] instanceof String){
+                            whereArgs[i] = (String) columnValues[i];
+                        } else if (columnValues[i] instanceof Long){
+                            whereArgs[i] =  ((Long) columnValues[i]).toString();
+                        }
+                    }
                     String groupBy = null;
                     String having = null;
                     String order = null;

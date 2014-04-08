@@ -121,9 +121,8 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
-                android:id="@+id/rockmass_desc_block_size_spinner"
+                android:id="@+id/rockmass_desc_block_size_value"
                 android:inputType="number"
-                android:numeric="integer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Approximate block diameter in meters."
@@ -149,7 +148,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:numeric="integer"
                 android:hint="Number of joints per cubic meter" />
 
             <Space
