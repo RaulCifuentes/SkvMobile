@@ -39,8 +39,13 @@ public class FractureTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO
 
     @Override
     public FractureType getFractureTypeByCode(String code) throws DAOException {
+        // HACK: Para cuando se olviden de llenar el fracture
+        if (!code.equals("HINT")){
         FractureType entity = getIdentifiableEntityByCode(FractureTypeTable.FRACTURE_DATABASE_TABLE, code);
         return entity;
+        }else {
+            return null;
+        }
     }
 
     @Override

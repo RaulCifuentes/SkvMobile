@@ -13,6 +13,7 @@ import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.Role;
 import com.metric.skava.app.model.User;
 import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.assessment.fragment.AssessmentListFragment;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalRoleDAO;
@@ -74,6 +75,7 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_new_assessment) {
+            getSkavaContext().setAssessment(null);
             Intent intent = new Intent(this, AssessmentStageListActivity.class);
             startActivity(intent);
             return true;
