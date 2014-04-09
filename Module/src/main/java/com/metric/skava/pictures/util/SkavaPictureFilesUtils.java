@@ -60,8 +60,14 @@ public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
     public Bitmap getBitmapFromUri(Uri uri) throws SkavaSystemException {
         Bitmap originalSizeBitmap = null;
         try {
+            // HACK: In order to avoid Out Of Memory exceptions, image is resampled prior to decoding.
+            // Value was chosen taking into account image size and display size.
+            
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 2;
+
             String path = getExistingFileFromUri(uri).getPath();
-            originalSizeBitmap = BitmapFactory.decodeFile(path);
+            originalSizeBitmap = BitmapFactory.decodeFile(path, options);
         } catch (OutOfMemoryError e) {
             throw new SkavaSystemException(e);
         }
