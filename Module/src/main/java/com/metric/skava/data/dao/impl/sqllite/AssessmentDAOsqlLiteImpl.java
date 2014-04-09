@@ -8,6 +8,7 @@ import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
+import com.metric.skava.app.util.DateDataFormat;
 import com.metric.skava.calculator.barton.model.Q_Calculation;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
@@ -239,7 +240,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 newSkavaEntity.getInternalCode(),
                 newSkavaEntity.getGeologist().getCode(),
                 newSkavaEntity.getFace().getCode(),
-                newSkavaEntity.getDate(),
+                DateDataFormat.formatDateAsLong(newSkavaEntity.getDate()),
                 newSkavaEntity.getSection().getCode(),
                 newSkavaEntity.getMethod().getCode(),
                 newSkavaEntity.getInitialPeg(),

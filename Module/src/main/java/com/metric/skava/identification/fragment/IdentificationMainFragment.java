@@ -149,7 +149,6 @@ public class IdentificationMainFragment extends SkavaFragment implements
 
         daoFactory = DAOFactory.getInstance(getActivity());
 
-
         geologist = getSkavaContext().getLoggedUser();
         getCurrentAssessment().setGeologist(geologist);
 

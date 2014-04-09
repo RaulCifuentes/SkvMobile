@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.metric.skava.R;
 import com.metric.skava.app.activity.SkavaFragmentActivity;
 import com.metric.skava.app.exception.SkavaSystemException;
+import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
@@ -72,7 +73,8 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
         LocalAssessmentDAO localAssessmentDAO;
         try {
             localAssessmentDAO = DAOFactory.getInstance(this).getAssessmentDAO(DAOFactory.Flavour.SQLLITE);
-            localAssessmentDAO.saveDraft(getCurrentAssessment());
+            Assessment currentAssessment = getCurrentAssessment();
+            localAssessmentDAO.saveDraft(currentAssessment);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();

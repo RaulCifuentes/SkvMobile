@@ -50,18 +50,18 @@ public class AssessmentTable extends SkavaTable {
             CODE_COLUMN + " text not null, " +
             INTERNAL_CODE_COLUMN + " text not null, " +
             GEOLOGIST_CODE_COLUMN + " text not null, " +
-            TUNEL_FACE_CODE_COLUMN + " text not null, " +
+            TUNEL_FACE_CODE_COLUMN + " text null, " +
             DATE_COLUMN + " integer not null, " +
-            EXCAVATION_SECTION_CODE_COLUMN + " text not null, " +
-            EXCAVATION_METHOD_CODE_COLUMN + " text not null, " +
-            PK_INITIAL_COLUMN + " real not null, " +
-            PK_FINAL_COLUMN + " real not null, " +
-            ADVANCE_ACUMM_COLUMN + " real not null, " +
-            ORIENTATION_COLUMN + " integer not null, " +
-            SLOPE_COLUMN + " integer not null, " +
-            FRACTURE_TYPE_CODE_COLUMN + " text not null, " +
-            BLOCKS_SIZE_COLUMN + " integer not null, " +
-            NUMBER_JOINTS_COLUMN + " integer not null, " +
+            EXCAVATION_SECTION_CODE_COLUMN + " text null, " +
+            EXCAVATION_METHOD_CODE_COLUMN + " text null, " +
+            PK_INITIAL_COLUMN + " real null, " +
+            PK_FINAL_COLUMN + " real null, " +
+            ADVANCE_ACUMM_COLUMN + " real null, " +
+            ORIENTATION_COLUMN + " integer null, " +
+            SLOPE_COLUMN + " integer null, " +
+            FRACTURE_TYPE_CODE_COLUMN + " text null, " +
+            BLOCKS_SIZE_COLUMN + " integer null, " +
+            NUMBER_JOINTS_COLUMN + " integer null, " +
             OUTCROP_COLUMN + " text null  );";
 
     private static String INSERT_SCRIPT = "insert into " + ASSESSMENT_DATABASE_TABLE + "(" +
