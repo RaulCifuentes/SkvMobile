@@ -68,13 +68,20 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
 
         Bitmap originalSizeBitmap = null;
         try {
-            originalSizeBitmap = mPictureFilesUtils.getBitmapFromUri(mSeletedPictureUri);
+            originalSizeBitmap = getBitmapFromUri();
         } catch (SkavaSystemException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
         }
         mImageView.setImageBitmap(originalSizeBitmap);
 
+    }
+
+    private Bitmap getBitmapFromUri() {
+
+        Bitmap bitmapFromUri = mPictureFilesUtils.getBitmapFromUri(mSeletedPictureUri);
+
+        return bitmapFromUri;
     }
 
 
