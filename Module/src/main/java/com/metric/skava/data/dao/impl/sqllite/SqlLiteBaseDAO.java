@@ -104,6 +104,10 @@ public abstract class SqlLiteBaseDAO {
                     newValues.put(columnNames[i], (String) columnValues[i]);
                 } else if (columnValues[i] instanceof Long){
                     newValues.put(columnNames[i], (Long) columnValues[i]);
+                } else if (columnValues[i] instanceof Double){
+                    newValues.put(columnNames[i], (Double) columnValues[i]);
+                } else if (columnValues[i] instanceof Short){
+                    newValues.put(columnNames[i], (Short) columnValues[i]);
                 }
             }
             // [ ... Repeat for each column / value pair ... ]
