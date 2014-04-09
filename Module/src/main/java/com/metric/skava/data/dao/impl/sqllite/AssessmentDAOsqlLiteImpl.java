@@ -114,13 +114,14 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             //First the barebones assessment data
             Assessment newInstance = assessmentBuilder.buildAssessmentFromCursorRecord(cursor);
             //Now the associated support recommendation, Q and RMR calculations, Discontinuity Systems, etc
-            SupportRecomendation recomendation = getRecommendationByAssessmentCode(newInstance.getCode());
-            newInstance.setRecomendation(recomendation);
-            Q_Calculation qCalculation = getQCalculationByAssessmentCode(newInstance.getCode());
-            newInstance.setQCalculation(qCalculation);
+            // TODO: Uncomment when fixed
+//            SupportRecomendation recomendation = getRecommendationByAssessmentCode(newInstance.getCode());
+//            newInstance.setRecomendation(recomendation);
+//            Q_Calculation qCalculation = getQCalculationByAssessmentCode(newInstance.getCode());
+//            newInstance.setQCalculation(qCalculation);
 //            newInstance.setRmrCalculation(rmrCalculation)
-            List<Uri> resourceList = getResourcesByAssessmentCode(newInstance.getCode());
-            newInstance.setPictureUriList(resourceList);
+//            List<Uri> resourceList = getResourcesByAssessmentCode(newInstance.getCode());
+  //          newInstance.setPictureUriList(resourceList);
             list.add(newInstance);
         }
         return list;
@@ -248,7 +249,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 newSkavaEntity.getAccummAdvance(),
                 newSkavaEntity.getOrientation(),
                 newSkavaEntity.getSlope(),
-                newSkavaEntity.getFractureType(),
+                newSkavaEntity.getFractureType().getCode(),
                 newSkavaEntity.getBlockSize(),
                 newSkavaEntity.getNumberOfJoints(),
                 newSkavaEntity.getOutcropDescription()
@@ -269,44 +270,44 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 SupportRecomendationTable.ARCH_TYPE_CODE_COLUMN,
                 SupportRecomendationTable.SEPARATION_COLUMN
         };
-        SupportRecomendation recomendation = newSkavaEntity.getRecomendation();
-        Object[] recomendationValues = new Object[]{
-                newSkavaEntity.getCode(),
-                recomendation.getBoltType().getCode(),
-                recomendation.getBoltDiameter(),
-                recomendation.getBoltLength(),
-                recomendation.getShotcreteType().getCode(),
-                recomendation.getThickness(),
-                recomendation.getMeshType().getCode(),
-                recomendation.getCoverage(),
-                recomendation.getArchType().getCode(),
-                recomendation.getSeparation()
-        };
-        saveRecord(SupportRecomendationTable.RECOMENDATION_DATABASE_TABLE, recommendationNames, recomendationValues);
+//        SupportRecomendation recomendation = newSkavaEntity.getRecomendation();
+//        Object[] recomendationValues = new Object[]{
+//                newSkavaEntity.getCode(),
+//                recomendation.getBoltType().getCode(),
+//                recomendation.getBoltDiameter(),
+//                recomendation.getBoltLength(),
+//                recomendation.getShotcreteType().getCode(),
+//                recomendation.getThickness(),
+//                recomendation.getMeshType().getCode(),
+//                recomendation.getCoverage(),
+//                recomendation.getArchType().getCode(),
+//                recomendation.getSeparation()
+//        };
+//        saveRecord(SupportRecomendationTable.RECOMENDATION_DATABASE_TABLE, recommendationNames, recomendationValues);
 
         //Save the related Q Calculation
-        Q_Calculation qCalculation = newSkavaEntity.getQCalculation();
-        String[] qCalculationNames = new String[]{
-                QCalculationTable.ASSESSMENT_CODE_COLUMN,
-                QCalculationTable.RQD_COLUMN,
-                QCalculationTable.Jn_CODE_COLUMN,
-                QCalculationTable.Jr_CODE_COLUMN,
-                QCalculationTable.Ja_CODE_COLUMN,
-                QCalculationTable.Jw_CODE_COLUMN,
-                QCalculationTable.SRF_CODE_COLUMN,
-                QCalculationTable.Q_COLUMN
-        };
-        Object[] qCalculationValues = new Object[]{
-                newSkavaEntity.getCode(),
-                qCalculation.getRqd().getValue(),
-                qCalculation.getJn().getKey(),
-                qCalculation.getJr().getKey(),
-                qCalculation.getJa().getKey(),
-                qCalculation.getJw().getKey(),
-                qCalculation.getSrf().getKey(),
-                qCalculation.getQResult().getQBarton(),
-        };
-        saveRecord(QCalculationTable.Q_CALCULATION_DATABASE_TABLE, qCalculationNames, qCalculationValues);
+//        Q_Calculation qCalculation = newSkavaEntity.getQCalculation();
+//        String[] qCalculationNames = new String[]{
+//                QCalculationTable.ASSESSMENT_CODE_COLUMN,
+//                QCalculationTable.RQD_COLUMN,
+//                QCalculationTable.Jn_CODE_COLUMN,
+//                QCalculationTable.Jr_CODE_COLUMN,
+//                QCalculationTable.Ja_CODE_COLUMN,
+//                QCalculationTable.Jw_CODE_COLUMN,
+//                QCalculationTable.SRF_CODE_COLUMN,
+//                QCalculationTable.Q_COLUMN
+//        };
+//        Object[] qCalculationValues = new Object[]{
+//                newSkavaEntity.getCode(),
+//                qCalculation.getRqd().getValue(),
+//                qCalculation.getJn().getKey(),
+//                qCalculation.getJr().getKey(),
+//                qCalculation.getJa().getKey(),
+//                qCalculation.getJw().getKey(),
+//                qCalculation.getSrf().getKey(),
+//                qCalculation.getQResult().getQBarton(),
+//        };
+//        saveRecord(QCalculationTable.Q_CALCULATION_DATABASE_TABLE, qCalculationNames, qCalculationValues);
 
         //Save the related RMR Calculation
 //        String[] rmrCalculationNames = new String[]{};
@@ -316,6 +317,9 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         //Save the related pictures urls
         List<Uri> pictureList = newSkavaEntity.getPictureUriList();
         for (Uri uri : pictureList) {
+            if (null == uri) {
+                continue;
+            }
             String[] resourcesNames = new String[]{
                     ExternalResourcesTable.RESOURCE_TYPE_COLUMN,
                     ExternalResourcesTable.RESOURCE_URL_COLUMN
