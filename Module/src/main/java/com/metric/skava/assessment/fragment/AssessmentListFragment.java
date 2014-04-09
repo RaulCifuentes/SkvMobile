@@ -157,7 +157,7 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(mAssessmentAdapter.getItem(position));
+            mListener.onFragmentInteraction(mAssessmentAdapter.getItem(position-1));
         }
     }
 
