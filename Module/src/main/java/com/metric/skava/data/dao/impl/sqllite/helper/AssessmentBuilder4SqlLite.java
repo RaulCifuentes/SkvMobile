@@ -78,7 +78,7 @@ public class AssessmentBuilder4SqlLite {
         babyAssessment.setGeologist(geologist);
 
         Long dateAsLongRep = CursorUtils.getLong(AssessmentTable.DATE_COLUMN, cursor);
-        Date date = DateDataFormat.getCalendarFromFormattedLong(dateAsLongRep).getTime();
+        Date date = DateDataFormat.getDateFromFormattedLong(dateAsLongRep);
         babyAssessment.setDate(date);
 
         java.lang.String sectionID = CursorUtils.getString(AssessmentTable.EXCAVATION_SECTION_CODE_COLUMN, cursor);

@@ -85,7 +85,6 @@ public class SkavaUtils {
 
         MappedIndexDataProvider provider = MappedIndexDataProvider.getInstance(context);
 
-
         Date date = new Date();
         initialAssessment.setDate(date);
 

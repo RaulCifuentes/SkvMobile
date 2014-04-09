@@ -47,9 +47,8 @@ public class Assessment implements IdentifiableEntity {
     //These belong to the tunnel and seems to be non editable
 //    private ExcavationFactors excavationFactors;
 
-    public Assessment(String internalCode) {
-        this.internalCode = internalCode;
-//        this.code = UUID.randomUUID().toString();
+    public Assessment(String code) {
+        this.code = code;
     }
 
     public java.lang.String getCode() {

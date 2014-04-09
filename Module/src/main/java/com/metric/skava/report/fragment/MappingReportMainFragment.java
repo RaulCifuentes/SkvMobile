@@ -48,8 +48,8 @@ import com.metric.skava.discontinuities.model.DiscontinuityWater;
 import com.metric.skava.instructions.model.BoltType;
 import com.metric.skava.instructions.model.Coverage;
 import com.metric.skava.instructions.model.MeshType;
-import com.metric.skava.instructions.model.SupportRecomendation;
 import com.metric.skava.instructions.model.ShotcreteType;
+import com.metric.skava.instructions.model.SupportRecomendation;
 import com.metric.skava.pictures.util.SkavaPictureFilesUtils;
 import com.metric.skava.rockmass.model.FractureType;
 import com.metric.skava.rockmass.model.RockMass;
@@ -233,31 +233,32 @@ public class MappingReportMainFragment extends SkavaFragment {
             ((TextView) rootView.findViewById(R.id.report_rmr_calidad_value)).setText(qualityType.toString());
         }
 
+        if (currentAssessment.getTunnel()!= null){
+            ExcavationFactors excavationFactors = currentAssessment.getTunnel().getExcavationFactors();
+            ESR esr = excavationFactors.getEsr();
+            if (esr != null) {
+                TextView textView = ((TextView) rootView.findViewById(R.id.report_q_esr_value));
+                textView.setText(esr.getKey());
+                textView = ((TextView) rootView.findViewById(R.id.report_q_esr_rating));
+                textView.setText(numberFormat.format(esr.getValue()));
+            }
 
-        ExcavationFactors excavationFactors = currentAssessment.getTunnel().getExcavationFactors();
-        ESR esr = excavationFactors.getEsr();
-        if (esr != null) {
-            TextView textView = ((TextView) rootView.findViewById(R.id.report_q_esr_value));
-            textView.setText(esr.getKey());
-            textView = ((TextView) rootView.findViewById(R.id.report_q_esr_rating));
-            textView.setText(numberFormat.format(esr.getValue()));
-        }
+            Double span = excavationFactors.getSpan();
+            if (span != null) {
+                TextView textView = ((TextView) rootView.findViewById(R.id.report_q_ancho_value));
+                textView.setText("-");
+                textView = ((TextView) rootView.findViewById(R.id.report_q_ancho_rating));
+                textView.setText(numberFormat.format(span));
+            }
 
-        Double span = excavationFactors.getSpan();
-        if (span != null) {
-            TextView textView = ((TextView) rootView.findViewById(R.id.report_q_ancho_value));
-            textView.setText("-");
-            textView = ((TextView) rootView.findViewById(R.id.report_q_ancho_rating));
-            textView.setText(numberFormat.format(span));
-        }
-
-        if (esr != null && span != null) {
-            TextView textView = ((TextView) rootView.findViewById(R.id.report_q_a_esr_value));
-            textView.setText(span.toString());
-            textView.setText(esr.getKey());
-            Double ratio = span / esr.getValue();
-            textView = ((TextView) rootView.findViewById(R.id.report_q_a_esr_rating));
-            textView.setText(numberFormat.format(ratio));
+            if (esr != null && span != null) {
+                TextView textView = ((TextView) rootView.findViewById(R.id.report_q_a_esr_value));
+                textView.setText(span.toString());
+                textView.setText(esr.getKey());
+                Double ratio = span / esr.getValue();
+                textView = ((TextView) rootView.findViewById(R.id.report_q_a_esr_rating));
+                textView.setText(numberFormat.format(ratio));
+            }
         }
 
 
