@@ -1,6 +1,9 @@
 package com.metric.skava.report.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,14 +61,35 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
         }
         if (id == R.id.action_mapping_report_draft) {
             saveDraft();
+            backToMappingStages();
             return true;
         }
         if (id == R.id.action_mapping_report_send) {
             sendAsCompleted();
+            backToMappingStages();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void backToMappingStages() {
+        Intent upIntent = NavUtils.getParentActivityIntent(this);
+//        upIntent.putExtra("REDIRECT", true);
+        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+            // This activity is NOT part of this app's task, so create a new task
+            // when navigating up, with a synthesized back stack.
+            TaskStackBuilder.create(this)
+                    // Add all of this activity's parents to the back stack
+                    .addNextIntentWithParentStack(upIntent)
+                            // Navigate up to the closest parent
+                    .startActivities();
+        } else {
+            // This activity is part of this app's task, so simply
+            // navigate up to the logical parent activity.
+            NavUtils.navigateUpTo(this, upIntent);
+        }
+
     }
 
 
