@@ -3,6 +3,8 @@ package com.metric.skava.sync.helper;
 import android.app.Activity;
 import android.content.Context;
 
+import com.dropbox.sync.android.DbxDatastore;
+import com.dropbox.sync.android.DbxDatastoreStatus;
 import com.metric.skava.app.model.Client;
 import com.metric.skava.app.model.ExcavationMethod;
 import com.metric.skava.app.model.ExcavationProject;
@@ -59,7 +61,9 @@ public class SyncAgent {
     }
 
     public boolean shouldUpdate() throws DAOException {
-        return datastoreHelper.getDatastore().getSyncStatus().hasIncoming;
+        DbxDatastore datastore = datastoreHelper.getDatastore();
+        DbxDatastoreStatus syncStatus = datastore.getSyncStatus();
+        return syncStatus.hasIncoming;
     }
 
     public void sleep() {

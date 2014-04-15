@@ -87,6 +87,7 @@ public class DatastoreHelper {
             assertLinkedAccount(getAccountManager());
             if (mAccount == null) {
                 mAccount = getAccountManager().getLinkedAccount();
+            }
                 if (mAccount != null) {
                     if (mDatastore == null || !mDatastore.isOpen()) {
                         mDatastoreManager = DbxDatastoreManager.forAccount(mAccount);
@@ -99,8 +100,6 @@ public class DatastoreHelper {
                 } else {
                     throw new DAOException("Failed getting linked Dropbox user account !! ");
                 }
-
-            }
         } catch (DbxException e) {
             throw new DAOException(e);
         }
