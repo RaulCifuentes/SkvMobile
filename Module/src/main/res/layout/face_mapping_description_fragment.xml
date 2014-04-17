@@ -79,7 +79,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Long custom description ... "
-        android:id="@+id/detailsMultiAutoCompleteTextView"
+        android:id="@+id/rockmass_desc_details_value"
         android:layout_alignBaseline="@id/details_label"
         android:layout_toRightOf="@id/details_label"
         android:layout_alignLeft="@id/block_size_spinner"

@@ -169,7 +169,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Detailed custom description ... "
-                android:id="@+id/detailsMultiAutoCompleteTextView" />
+                android:id="@+id/rockmass_desc_details_value" />
         </GridLayout>
 
     </GridLayout>
