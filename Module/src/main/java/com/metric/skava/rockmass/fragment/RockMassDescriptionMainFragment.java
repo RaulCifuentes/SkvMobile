@@ -134,7 +134,6 @@ public class RockMassDescriptionMainFragment extends SkavaFragment implements Ad
         });
 
         outcropEditText = (EditText) rootView.findViewById(R.id.rockmass_desc_details_value);
-        outcropEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
         String outcropDescription = getCurrentAssessment().getOutcropDescription();
         if (outcropDescription != null) {
             outcropEditText.setText(outcropDescription);
