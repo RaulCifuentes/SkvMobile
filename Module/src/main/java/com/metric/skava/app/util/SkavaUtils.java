@@ -135,14 +135,12 @@ public class SkavaUtils {
         initialAssessment.setPictureUriList(pictureUriList);
 
         //Discontinuity System
-        ArrayList<DiscontinuityFamily> discontinuitySystem = new ArrayList<DiscontinuityFamily>(7);
-        discontinuitySystem.add(new DiscontinuityFamily());
-        discontinuitySystem.add(new DiscontinuityFamily());
-        discontinuitySystem.add(new DiscontinuityFamily());
-        discontinuitySystem.add(new DiscontinuityFamily());
-        discontinuitySystem.add(new DiscontinuityFamily());
-        discontinuitySystem.add(new DiscontinuityFamily());
-        discontinuitySystem.add(new DiscontinuityFamily());
+        int dfItems = 7;
+        ArrayList<DiscontinuityFamily> discontinuitySystem = new ArrayList<DiscontinuityFamily>(dfItems);
+        for(int i=0; i < dfItems; i++){
+            DiscontinuityFamily df = new DiscontinuityFamily();
+            discontinuitySystem.add(df);
+        }
 
         initialAssessment.setDiscontinuitySystem(discontinuitySystem);
 
