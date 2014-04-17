@@ -165,11 +165,19 @@
                 android:text="@string/rockmass_desc_details"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <MultiAutoCompleteTextView
+            <Space
+                android:layout_width="20px"
+                android:layout_height="20px"
+                android:id="@+id/space" />
+
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Detailed custom description ... "
-                android:id="@+id/rockmass_desc_details_value" />
+                android:inputType="textMultiLine"
+                android:id="@+id/rockmass_desc_details_value"
+                android:layout_columnSpan="2"
+                android:lines="4" />
         </GridLayout>
 
     </GridLayout>
