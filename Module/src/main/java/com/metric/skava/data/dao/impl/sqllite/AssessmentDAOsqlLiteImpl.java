@@ -10,6 +10,7 @@ import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
 import com.metric.skava.app.util.DateDataFormat;
 import com.metric.skava.calculator.barton.model.Q_Calculation;
+import com.metric.skava.calculator.rmr.model.RMR_Calculation;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.LocalPermissionDAO;
@@ -19,6 +20,7 @@ import com.metric.skava.data.dao.impl.sqllite.helper.AssessmentBuilder4SqlLite;
 import com.metric.skava.data.dao.impl.sqllite.table.AssessmentTable;
 import com.metric.skava.data.dao.impl.sqllite.table.ExternalResourcesTable;
 import com.metric.skava.data.dao.impl.sqllite.table.QCalculationTable;
+import com.metric.skava.data.dao.impl.sqllite.table.RMRCalculationTable;
 import com.metric.skava.data.dao.impl.sqllite.table.SupportRecomendationTable;
 import com.metric.skava.instructions.model.ArchType;
 import com.metric.skava.instructions.model.BoltType;
@@ -311,11 +313,38 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             saveRecord(QCalculationTable.Q_CALCULATION_DATABASE_TABLE, qCalculationNames, qCalculationValues);
         }
 
-        //Save the related RMR Calculation
-//        String[] rmrCalculationNames = new String[]{};
-//        String[] rmrCalculationValues = new String[]{};
-//        saveRecord(RMRCalculationTable.RMR_CALCULATION_DATABASE_TABLE, rmrCalculationNames, rmrCalculationValues);
+        RMR_Calculation rmrCalculation = newSkavaEntity.getRmrCalculation();
+        if (rmrCalculation != null) {
+            //Save the related RMR Calculation
+            String[] rmrCalculationNames = new String[]{
+                    RMRCalculationTable.ASSESSMENT_CODE_COLUMN,
+                    RMRCalculationTable.STRENGTHOFROCK_CODE_COLUMN,
+                    RMRCalculationTable.RQD_RMR_CODE_COLUMN,
+                    RMRCalculationTable.SPACING_CODE_COLUMN,
+                    RMRCalculationTable.CONDITIONDISCONTINUITIES_CODE_COLUMN,
+                    RMRCalculationTable.PERSISTENCE_CODE_COLUMN,
+                    RMRCalculationTable.APERTURE_CODE_COLUMN,
+                    RMRCalculationTable.ROUGHNESS_CODE_COLUMN,
+                    RMRCalculationTable.INFILLING_CODE_COLUMN,
+                    RMRCalculationTable.WEATHERING_CODE_COLUMN,
+                    RMRCalculationTable.GROUNDWATER_CODE_COLUMN
+            };
 
+            Object[] rmrCalculationValues = new Object[]{
+                    newSkavaEntity.getCode(),
+                    rmrCalculation.getStrengthOfRock().getKey(),
+                    rmrCalculation.getRqd().getKey(),
+                    rmrCalculation.getSpacing().getKey(),
+                    rmrCalculation.getConditionDiscontinuities().getKey(),
+                    rmrCalculation.getPersistence().getKey(),
+                    rmrCalculation.getAperture().getKey(),
+                    rmrCalculation.getRoughness().getKey(),
+                    rmrCalculation.getInfilling().getKey(),
+                    rmrCalculation.getWeathering().getKey(),
+                    rmrCalculation.getGroundwater().getKey()
+            };
+            saveRecord(RMRCalculationTable.RMR_CALCULATION_DATABASE_TABLE, rmrCalculationNames, rmrCalculationValues);
+        }
         //Save the related pictures urls
         List<Uri> pictureList = newSkavaEntity.getPictureUriList();
         for (Uri uri : pictureList) {

@@ -43,6 +43,7 @@ import com.metric.skava.data.dao.impl.sqllite.table.OrientationTable;
 import com.metric.skava.data.dao.impl.sqllite.table.PermissionTable;
 import com.metric.skava.data.dao.impl.sqllite.table.PersistenceTable;
 import com.metric.skava.data.dao.impl.sqllite.table.QCalculationTable;
+import com.metric.skava.data.dao.impl.sqllite.table.RMRCalculationTable;
 import com.metric.skava.data.dao.impl.sqllite.table.RockQualityTable;
 import com.metric.skava.data.dao.impl.sqllite.table.RoleTable;
 import com.metric.skava.data.dao.impl.sqllite.table.RoughnessTable;
@@ -66,7 +67,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "mySkavaDatabase.db";
 
-    public static final int DATABASE_VERSION = 15;
+    public static final int DATABASE_VERSION = 17;
 
     public SkavaDBHelper(Context context, String name,
                          SQLiteDatabase.CursorFactory factory, int version) {
@@ -176,8 +177,8 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
         db.execSQL(RockQualityTable.CREATE_ROCK_QUALITIES_TABLE);
         // ***************** Q Calculations *****************
-
         db.execSQL(QCalculationTable.CREATE_QCALCULATION_TABLE);
+        db.execSQL(RMRCalculationTable.CREATE_RMRCALCULATION_TABLE);
 
         // ******************** Assessment ********************
 
@@ -269,6 +270,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
         db.execSQL("DROP TABLE IF EXISTS " + RockQualityTable.ROCK_QUALITY_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + QCalculationTable.Q_CALCULATION_DATABASE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + RMRCalculationTable.RMR_CALCULATION_DATABASE_TABLE);
 
         // ******************** Assessment ********************
         db.execSQL("DROP TABLE IF EXISTS " + InternalCodeTable.INTERNAL_CODE_DATABASE_TABLE);
