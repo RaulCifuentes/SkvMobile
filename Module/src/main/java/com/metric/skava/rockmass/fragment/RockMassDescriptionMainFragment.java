@@ -2,6 +2,8 @@ package com.metric.skava.rockmass.fragment;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -131,12 +133,29 @@ public class RockMassDescriptionMainFragment extends SkavaFragment implements Ad
             }
         });
 
-        outcropEditText = (EditText) rootView.findViewById(R.id.rockmass_desc_junctures_value);
+        outcropEditText = (EditText) rootView.findViewById(R.id.rockmass_desc_details_value);
         outcropEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
         String outcropDescription = getCurrentAssessment().getOutcropDescription();
         if (outcropDescription != null) {
             outcropEditText.setText(outcropDescription);
         }
+
+        outcropEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                // Implementation left blank
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                // Implementation left blank
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                getCurrentAssessment().setOutcropDescription(editable.toString());
+            }
+        });
 
         return rootView;
     }
