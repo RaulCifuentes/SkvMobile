@@ -153,4 +153,22 @@ public class DiscontinuityFamily {
     public void setAperture(Aperture aperture) {
         this.aperture = aperture;
     }
+    
+    public boolean isComplete() {
+        return
+            this.getType() != null &&
+            this.getRelevance() != null &&
+            this.getDipDegrees() != null &&
+            this.getDipDirDegrees() != null &&
+            this.getShape() != null &&
+            this.getSpacing() != null &&
+            this.getRoughness() != null &&
+            this.getWeathering() != null &&
+            this.getWater().getCode() != null &&
+            this.getPersistence() != null &&
+            this.getAperture() != null &&
+            this.getInfilling() != null &&
+            this.getJa() != null &&
+            this.getJr() != null;
+    }
 }

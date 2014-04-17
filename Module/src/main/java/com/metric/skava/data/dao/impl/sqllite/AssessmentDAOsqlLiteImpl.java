@@ -18,10 +18,12 @@ import com.metric.skava.data.dao.LocalTunnelFaceDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.helper.AssessmentBuilder4SqlLite;
 import com.metric.skava.data.dao.impl.sqllite.table.AssessmentTable;
+import com.metric.skava.data.dao.impl.sqllite.table.DiscontinuityFamilyTable;
 import com.metric.skava.data.dao.impl.sqllite.table.ExternalResourcesTable;
 import com.metric.skava.data.dao.impl.sqllite.table.QCalculationTable;
 import com.metric.skava.data.dao.impl.sqllite.table.RMRCalculationTable;
 import com.metric.skava.data.dao.impl.sqllite.table.SupportRecomendationTable;
+import com.metric.skava.discontinuities.model.DiscontinuityFamily;
 import com.metric.skava.instructions.model.ArchType;
 import com.metric.skava.instructions.model.BoltType;
 import com.metric.skava.instructions.model.Coverage;
@@ -251,7 +253,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 newSkavaEntity.getAccummAdvance(),
                 newSkavaEntity.getOrientation(),
                 newSkavaEntity.getSlope(),
-                newSkavaEntity.getFractureType().getCode(),
+                newSkavaEntity.getFractureType() != null ? newSkavaEntity.getFractureType().getCode() : null,
                 newSkavaEntity.getBlockSize(),
                 newSkavaEntity.getNumberOfJoints(),
                 newSkavaEntity.getOutcropDescription()
@@ -345,6 +347,58 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             };
             saveRecord(RMRCalculationTable.RMR_CALCULATION_DATABASE_TABLE, rmrCalculationNames, rmrCalculationValues);
         }
+
+        // Save Discontinuity Families
+        List<DiscontinuityFamily> discontinuitySystem = newSkavaEntity.getDiscontinuitySystem();
+        if (discontinuitySystem != null) {
+            for(DiscontinuityFamily df: discontinuitySystem) {
+                // TODO: Cambiar la segunda condicion por algo que se parezca al Null Pattern
+                if (df == null || !df.isComplete()) {
+                    continue;
+                }
+
+                String[] discontinuitySystemNames = new String[]{
+                        DiscontinuityFamilyTable.ASSESSMENT_CODE_COLUMN,
+                        DiscontinuityFamilyTable.NUMBER_CODE_COLUMN,
+                        DiscontinuityFamilyTable.TYPE_CODE_COLUMN,
+                        DiscontinuityFamilyTable.RELEVANCE_CODE_COLUMN,
+                        DiscontinuityFamilyTable.DIPDIRDEGREES_CODE_COLUMN,
+                        DiscontinuityFamilyTable.DIPDEGREES_CODE_COLUMN,
+                        DiscontinuityFamilyTable.SHAPE_CODE_COLUMN,
+                        DiscontinuityFamilyTable.SPACING_CODE_COLUMN,
+                        DiscontinuityFamilyTable.ROUGHNESS_CODE_COLUMN,
+                        DiscontinuityFamilyTable.WEATHERING_CODE_COLUMN,
+                        DiscontinuityFamilyTable.DISCONTINUITYWATER_CODE_COLUMN,
+                        DiscontinuityFamilyTable.PERSISTENCE_CODE_COLUMN,
+                        DiscontinuityFamilyTable.APERTURE_CODE_COLUMN,
+                        DiscontinuityFamilyTable.INFILLING_CODE_COLUMN,
+                        DiscontinuityFamilyTable.JA_CODE_COLUMN,
+                        DiscontinuityFamilyTable.JR_CODE_COLUMN
+                };
+
+                Object[] discontinuitySystemValues = new Object[]{
+                        newSkavaEntity.getCode(),
+                        df.getNumber(),
+                        df.getType().getCode(),
+                        df.getRelevance().getCode(),
+                        df.getDipDegrees(),
+                        df.getDipDirDegrees(),
+                        df.getShape().getCode(),
+                        df.getSpacing().getKey(),
+                        df.getRoughness().getKey(),
+                        df.getWeathering().getKey(),
+                        df.getWater().getCode(),
+                        df.getPersistence().getKey(),
+                        df.getAperture().getKey(),
+                        df.getInfilling().getKey(),
+                        df.getJa().getKey(),
+                        df.getJr().getKey()
+                };
+
+                saveRecord(DiscontinuityFamilyTable.DISCONTINUITY_FAMILY_DATABASE_TABLE, discontinuitySystemNames, discontinuitySystemValues);
+            }
+        }
+
         //Save the related pictures urls
         List<Uri> pictureList = newSkavaEntity.getPictureUriList();
         for (Uri uri : pictureList) {

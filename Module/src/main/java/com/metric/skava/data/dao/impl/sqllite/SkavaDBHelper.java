@@ -19,6 +19,7 @@ import com.metric.skava.data.dao.impl.sqllite.table.BoltTypeTable;
 import com.metric.skava.data.dao.impl.sqllite.table.ClientTable;
 import com.metric.skava.data.dao.impl.sqllite.table.ConditionTable;
 import com.metric.skava.data.dao.impl.sqllite.table.CoverageTable;
+import com.metric.skava.data.dao.impl.sqllite.table.DiscontinuityFamilyTable;
 import com.metric.skava.data.dao.impl.sqllite.table.DiscontinuityRelevanceTable;
 import com.metric.skava.data.dao.impl.sqllite.table.DiscontinuityShapeTable;
 import com.metric.skava.data.dao.impl.sqllite.table.DiscontinuityTypeTable;
@@ -67,7 +68,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "mySkavaDatabase.db";
 
-    public static final int DATABASE_VERSION = 17;
+    public static final int DATABASE_VERSION = 21;
 
     public SkavaDBHelper(Context context, String name,
                          SQLiteDatabase.CursorFactory factory, int version) {
@@ -179,6 +180,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         // ***************** Q Calculations *****************
         db.execSQL(QCalculationTable.CREATE_QCALCULATION_TABLE);
         db.execSQL(RMRCalculationTable.CREATE_RMRCALCULATION_TABLE);
+        db.execSQL(DiscontinuityFamilyTable.CREATE_DISCONTINUITY_FAMILIES_TABLE);
 
         // ******************** Assessment ********************
 
@@ -271,6 +273,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + RockQualityTable.ROCK_QUALITY_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + QCalculationTable.Q_CALCULATION_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + RMRCalculationTable.RMR_CALCULATION_DATABASE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + DiscontinuityFamilyTable.DISCONTINUITY_FAMILY_DATABASE_TABLE);
 
         // ******************** Assessment ********************
         db.execSQL("DROP TABLE IF EXISTS " + InternalCodeTable.INTERNAL_CODE_DATABASE_TABLE);
