@@ -285,29 +285,31 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
 //        };
 //        saveRecord(SupportRecomendationTable.RECOMENDATION_DATABASE_TABLE, recommendationNames, recomendationValues);
 
-        //Save the related Q Calculation
-//        Q_Calculation qCalculation = newSkavaEntity.getQCalculation();
-//        String[] qCalculationNames = new String[]{
-//                QCalculationTable.ASSESSMENT_CODE_COLUMN,
-//                QCalculationTable.RQD_COLUMN,
-//                QCalculationTable.Jn_CODE_COLUMN,
-//                QCalculationTable.Jr_CODE_COLUMN,
-//                QCalculationTable.Ja_CODE_COLUMN,
-//                QCalculationTable.Jw_CODE_COLUMN,
-//                QCalculationTable.SRF_CODE_COLUMN,
-//                QCalculationTable.Q_COLUMN
-//        };
-//        Object[] qCalculationValues = new Object[]{
-//                newSkavaEntity.getCode(),
-//                qCalculation.getRqd().getValue(),
-//                qCalculation.getJn().getKey(),
-//                qCalculation.getJr().getKey(),
-//                qCalculation.getJa().getKey(),
-//                qCalculation.getJw().getKey(),
-//                qCalculation.getSrf().getKey(),
-//                qCalculation.getQResult().getQBarton(),
-//        };
-//        saveRecord(QCalculationTable.Q_CALCULATION_DATABASE_TABLE, qCalculationNames, qCalculationValues);
+        // Save the related Q Calculation
+        Q_Calculation qCalculation = newSkavaEntity.getQCalculation();
+        if (qCalculation != null) {
+            String[] qCalculationNames = new String[]{
+                    QCalculationTable.ASSESSMENT_CODE_COLUMN,
+                    QCalculationTable.RQD_COLUMN,
+                    QCalculationTable.Jn_CODE_COLUMN,
+                    QCalculationTable.Jr_CODE_COLUMN,
+                    QCalculationTable.Ja_CODE_COLUMN,
+                    QCalculationTable.Jw_CODE_COLUMN,
+                    QCalculationTable.SRF_CODE_COLUMN,
+                    QCalculationTable.Q_COLUMN
+            };
+            Object[] qCalculationValues = new Object[]{
+                    newSkavaEntity.getCode(),
+                    qCalculation.getRqd().getValue(),
+                    qCalculation.getJn().getKey(),
+                    qCalculation.getJr().getKey(),
+                    qCalculation.getJa().getKey(),
+                    qCalculation.getJw().getKey(),
+                    qCalculation.getSrf().getKey(),
+                    qCalculation.getQResult().getQBarton(),
+            };
+            saveRecord(QCalculationTable.Q_CALCULATION_DATABASE_TABLE, qCalculationNames, qCalculationValues);
+        }
 
         //Save the related RMR Calculation
 //        String[] rmrCalculationNames = new String[]{};
