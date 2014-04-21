@@ -12,6 +12,7 @@ import com.metric.skava.calculator.barton.logic.QBartonOutput;
 
 public class Q_Calculation implements Parcelable {
 
+    private Long _id;
 	private RQD rqd;
 	private Jn jn;
 	private Jr jr;
@@ -78,6 +79,14 @@ public class Q_Calculation implements Parcelable {
 	public void setSrf(SRF sRF) {
 		this.sRF = sRF;
 	}
+
+    public Long get_id() {
+        return _id;
+    }
+
+    public void set_id(Long _id) {
+        this._id = _id;
+    }
 
     public QBartonOutput getQResult() {
         if (qResult == null) {

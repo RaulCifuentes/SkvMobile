@@ -222,6 +222,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
     @Override
     protected void savePersistentEntity(java.lang.String tableName, Assessment newSkavaEntity) throws DAOException {
         String[] names = new String[]{
+                AssessmentTable.GLOBAL_KEY_ID,
                 AssessmentTable.CODE_COLUMN,
                 AssessmentTable.INTERNAL_CODE_COLUMN,
                 AssessmentTable.GEOLOGIST_CODE_COLUMN,
@@ -241,6 +242,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         };
 
         Object[] values = new Object[]{
+                newSkavaEntity.get_id(),
                 newSkavaEntity.getCode(),
                 newSkavaEntity.getInternalCode(),
                 newSkavaEntity.getGeologist().getCode(),
@@ -259,7 +261,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 newSkavaEntity.getOutcropDescription()
         };
 
-        saveRecord(tableName, names, values);
+        Long assesmentId = saveRecord(tableName, names, values);
+        newSkavaEntity.set_id(assesmentId);
 
         //Save the related recommendation
         String[] recommendationNames = new String[]{
@@ -293,6 +296,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         Q_Calculation qCalculation = newSkavaEntity.getQCalculation();
         if (qCalculation != null) {
             String[] qCalculationNames = new String[]{
+                    QCalculationTable.GLOBAL_KEY_ID,
                     QCalculationTable.ASSESSMENT_CODE_COLUMN,
                     QCalculationTable.RQD_COLUMN,
                     QCalculationTable.Jn_CODE_COLUMN,
@@ -303,6 +307,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                     QCalculationTable.Q_COLUMN
             };
             Object[] qCalculationValues = new Object[]{
+                    qCalculation.get_id(),
                     newSkavaEntity.getCode(),
                     qCalculation.getRqd().getValue(),
                     qCalculation.getJn().getKey(),
@@ -312,13 +317,15 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                     qCalculation.getSrf().getKey(),
                     qCalculation.getQResult().getQBarton(),
             };
-            saveRecord(QCalculationTable.Q_CALCULATION_DATABASE_TABLE, qCalculationNames, qCalculationValues);
+            Long qCalculationId = saveRecord(QCalculationTable.Q_CALCULATION_DATABASE_TABLE, qCalculationNames, qCalculationValues);
+            qCalculation.set_id(qCalculationId);
         }
 
         RMR_Calculation rmrCalculation = newSkavaEntity.getRmrCalculation();
         if (rmrCalculation != null) {
             //Save the related RMR Calculation
             String[] rmrCalculationNames = new String[]{
+                    RMRCalculationTable.GLOBAL_KEY_ID,
                     RMRCalculationTable.ASSESSMENT_CODE_COLUMN,
                     RMRCalculationTable.STRENGTHOFROCK_CODE_COLUMN,
                     RMRCalculationTable.RQD_RMR_CODE_COLUMN,
@@ -333,6 +340,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             };
 
             Object[] rmrCalculationValues = new Object[]{
+                    rmrCalculation.get_id(),
                     newSkavaEntity.getCode(),
                     rmrCalculation.getStrengthOfRock().getKey(),
                     rmrCalculation.getRqd().getKey(),
@@ -345,7 +353,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                     rmrCalculation.getWeathering().getKey(),
                     rmrCalculation.getGroundwater().getKey()
             };
-            saveRecord(RMRCalculationTable.RMR_CALCULATION_DATABASE_TABLE, rmrCalculationNames, rmrCalculationValues);
+            Long rmrCalculationId = saveRecord(RMRCalculationTable.RMR_CALCULATION_DATABASE_TABLE, rmrCalculationNames, rmrCalculationValues);
+            rmrCalculation.set_id(rmrCalculationId);
         }
 
         // Save Discontinuity Families
@@ -358,6 +367,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 }
 
                 String[] discontinuitySystemNames = new String[]{
+                        DiscontinuityFamilyTable.GLOBAL_KEY_ID,
                         DiscontinuityFamilyTable.ASSESSMENT_CODE_COLUMN,
                         DiscontinuityFamilyTable.NUMBER_CODE_COLUMN,
                         DiscontinuityFamilyTable.TYPE_CODE_COLUMN,
@@ -377,6 +387,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 };
 
                 Object[] discontinuitySystemValues = new Object[]{
+                        df.get_id(),
                         newSkavaEntity.getCode(),
                         df.getNumber(),
                         df.getType().getCode(),
@@ -395,7 +406,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                         df.getJr().getKey()
                 };
 
-                saveRecord(DiscontinuityFamilyTable.DISCONTINUITY_FAMILY_DATABASE_TABLE, discontinuitySystemNames, discontinuitySystemValues);
+                Long dfId = saveRecord(DiscontinuityFamilyTable.DISCONTINUITY_FAMILY_DATABASE_TABLE, discontinuitySystemNames, discontinuitySystemValues);
+                df.set_id(dfId);
             }
         }
 
