@@ -14,6 +14,7 @@ import com.metric.skava.calculator.rmr.model.Weathering;
  */
 public class DiscontinuityFamily {
 
+    private Long _id;
     private int number;
     private DiscontinuityType type;
     private DiscontinuityRelevance relevance;
@@ -170,5 +171,13 @@ public class DiscontinuityFamily {
             this.getInfilling() != null &&
             this.getJa() != null &&
             this.getJr() != null;
+    }
+
+    public Long get_id() {
+        return _id;
+    }
+
+    public void set_id(Long _id) {
+        this._id = _id;
     }
 }

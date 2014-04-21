@@ -14,6 +14,7 @@ import com.metric.skava.calculator.rmr.logic.RMROutput;
 
 public class RMR_Calculation implements Parcelable {
 
+    private Long _id;
     private StrengthOfRock strengthOfRock;
     private RQD_RMR rqd;
     private Spacing spacing;
@@ -143,6 +144,14 @@ public class RMR_Calculation implements Parcelable {
 
     public void setWeathering(Weathering weathering) {
         this.weathering = weathering;
+    }
+
+    public Long get_id() {
+        return _id;
+    }
+
+    public void set_id(Long _id) {
+        this._id = _id;
     }
 
     public RMROutput getRMRResult() {

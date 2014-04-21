@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class Assessment implements IdentifiableEntity {
 
+    private Long _id;
     private String code;
     private String internalCode;
     private TunnelFace face;
@@ -247,6 +248,14 @@ public class Assessment implements IdentifiableEntity {
 
     public void setDiscontinuitySystem(List<DiscontinuityFamily> discontinuitySystem) {
         this.discontinuitySystem = discontinuitySystem;
+    }
+
+    public Long get_id() {
+        return _id;
+    }
+
+    public void set_id(Long _id) {
+        this._id = _id;
     }
 
 //    public ExcavationFactors getExcavationFactors() {
