@@ -11,10 +11,13 @@ import android.widget.Toast;
 import com.metric.skava.R;
 import com.metric.skava.app.exception.SkavaSystemException;
 import com.metric.skava.app.fragment.SkavaFragment;
+import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.DAOFactory;
+import com.metric.skava.data.dao.RemoteAssessmentDAO;
 import com.metric.skava.data.dao.exception.DAOException;
+import com.metric.skava.data.dao.impl.dropbox.AssessmentDAODropboxImpl;
 
 /**
  * Created by metricboy on 4/2/14.
@@ -22,10 +25,16 @@ import com.metric.skava.data.dao.exception.DAOException;
 public class SaveAssessmentMainFragment extends SkavaFragment {
 
     private LocalAssessmentDAO mLocalAssessmentDAO;
+    private RemoteAssessmentDAO mRemoteAssessmentDAO;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initLocalDAO();
+        initRemoteDAO();
+    }
+
+    private void initLocalDAO() {
         try {
             mLocalAssessmentDAO = DAOFactory.getInstance(getActivity()).getAssessmentDAO(DAOFactory.Flavour.SQLLITE);
         } catch (DAOException e) {
@@ -33,7 +42,16 @@ public class SaveAssessmentMainFragment extends SkavaFragment {
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             throw new SkavaSystemException(e);
         }
+    }
 
+    private void initRemoteDAO() {
+        try {
+            mRemoteAssessmentDAO = new AssessmentDAODropboxImpl(getActivity(), getSkavaContext());
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            throw new SkavaSystemException(e);
+        }
     }
 
     @Override
@@ -45,7 +63,9 @@ public class SaveAssessmentMainFragment extends SkavaFragment {
             @Override
             public void onClick(View v) {
                 try {
-                    mLocalAssessmentDAO.saveDraft(getCurrentAssessment());
+                    Assessment assessment = getCurrentAssessment();
+                    mLocalAssessmentDAO.saveDraft(assessment);
+                    mRemoteAssessmentDAO.saveAssessment(assessment);
                 } catch (DAOException e) {
                     Log.e(SkavaConstants.LOG, e.getMessage());
                     Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -59,7 +79,9 @@ public class SaveAssessmentMainFragment extends SkavaFragment {
             @Override
             public void onClick(View v) {
                 try {
-                    mLocalAssessmentDAO.send(getCurrentAssessment());
+                    Assessment assessment = getCurrentAssessment();
+                    mLocalAssessmentDAO.saveDraft(assessment);
+                    mRemoteAssessmentDAO.saveAssessment(assessment);
                 } catch (DAOException e) {
                     Log.e(SkavaConstants.LOG, e.getMessage());
                     Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
