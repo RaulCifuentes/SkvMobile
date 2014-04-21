@@ -4,6 +4,7 @@ import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.data.SkavaDataProvider;
 import com.metric.skava.app.exception.SkavaExceptionHandler;
 import com.metric.skava.calculator.data.MappedIndexDataProvider;
+import com.metric.skava.data.dao.impl.dropbox.datastore.DatastoreHelper;
 
 
 public class SkavaApplication extends MetricApplication {
@@ -53,6 +54,8 @@ public class SkavaApplication extends MetricApplication {
         super.onCreate();
 
         mSkavaContext = new SkavaContext();
+        /// TODO: Ver que se le pasa como segundo parámetro a este setter. Definir tb que SkavaContext tenga valores por defecto
+        mSkavaContext.setDatastoreHelper(DatastoreHelper.getInstance(this, null));
         mSkavaDataProvider = SkavaDataProvider.getInstance(this);
         mMappedIndexDataProvider = MappedIndexDataProvider.getInstance(this);
 

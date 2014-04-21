@@ -15,6 +15,14 @@ import com.metric.skava.app.model.ExcavationSection;
 import com.metric.skava.app.model.Tunnel;
 import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
+import com.metric.skava.calculator.barton.logic.QBartonOutput;
+import com.metric.skava.calculator.barton.model.Ja;
+import com.metric.skava.calculator.barton.model.Jn;
+import com.metric.skava.calculator.barton.model.Jr;
+import com.metric.skava.calculator.barton.model.Jw;
+import com.metric.skava.calculator.barton.model.Q_Calculation;
+import com.metric.skava.calculator.barton.model.RQD;
+import com.metric.skava.calculator.barton.model.SRF;
 import com.metric.skava.calculator.rmr.model.Aperture;
 import com.metric.skava.calculator.rmr.model.Groundwater;
 import com.metric.skava.calculator.rmr.model.Infilling;
@@ -130,46 +138,74 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             assessmentFields.set("skavaInternalCode", internalCode);
 
             ExcavationProject project = assessment.getProject();
-            assessmentFields.set("project", project.getCode());
+            if (project != null) {
+                assessmentFields.set("project", project.getCode());
+            }
 
             Tunnel tunnel = assessment.getTunnel();
-            assessmentFields.set("tunnel", tunnel.getCode());
+            if (tunnel != null) {
+                assessmentFields.set("tunnel", tunnel.getCode());
+            }
 
             TunnelFace face = assessment.getFace();
-            assessmentFields.set("face", face.getCode());
+            if (face != null) {
+                assessmentFields.set("face", face.getCode());
+            }
 
             ExcavationSection section = assessment.getSection();
-            assessmentFields.set("section", section.getCode());
+            if (section != null) {
+                assessmentFields.set("section", section.getCode());
+            }
 
             Date date = assessment.getDate();
-            assessmentFields.set("date", date);
+            if (date != null) {
+                assessmentFields.set("date", date);
+            }
 
             User geologist = assessment.getGeologist();
-            assessmentFields.set("geologist", geologist.getCode());
+            if (geologist != null) {
+                assessmentFields.set("geologist", geologist.getCode());
+            }
 
             Double PK = assessment.getInitialPeg();
-            assessmentFields.set("pk", PK);
+            if (PK != null) {
+                assessmentFields.set("pk", PK);
+            }
 
             Double advance = assessment.getCurrentAdvance();
-            assessmentFields.set("advance", advance);
+            if (advance != null) {
+                assessmentFields.set("advance", advance);
+            }
 
             ExcavationMethod method = assessment.getMethod();
-            assessmentFields.set("method", method.getCode());
+            if (method != null) {
+                assessmentFields.set("method", method.getCode());
+            }
 
             Short orientation = assessment.getOrientation();
-            assessmentFields.set("orientation", orientation);
+            if (orientation != null) {
+                assessmentFields.set("orientation", orientation);
+            }
 
             Short slope = assessment.getSlope();
-            assessmentFields.set("slope", slope);
+            if (slope != null) {
+                assessmentFields.set("slope", slope);
+            }
 
             FractureType fractureType = assessment.getFractureType();
-            assessmentFields.set("fractureType", fractureType.getCode());
+            if (fractureType != null) {
+                assessmentFields.set("fractureType", fractureType.getCode());
+            }
 
             Short blockSize = assessment.getBlockSize();
-            assessmentFields.set("blockSize", blockSize);
+            if (blockSize != null) {
+                assessmentFields.set("blockSize", blockSize);
+            }
 
             Short numJoints = assessment.getNumberOfJoints();
+            if (numJoints != null) {
             assessmentFields.set("numJoints", numJoints);
+            }
 
             List<Uri> pictureList = assessment.getPictureUriList();
             //TODO Check the toString/parse methods or encode/decode to persist the URI info
@@ -183,132 +219,246 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             assessmentFields.set("uri", uriEncodedList);
 
             List<DiscontinuityFamily> discontinuitySystem = assessment.getDiscontinuitySystem();
+            if (discontinuitySystem != null) {
 
-            DbxList discontinuitiesFamilySystem = new DbxList();
+                DbxList discontinuitiesFamilySystem = new DbxList();
 
-            for (DiscontinuityFamily family : discontinuitySystem) {
-                DbxFields discontinuityFamilyFields = new DbxFields();
+                for (DiscontinuityFamily family : discontinuitySystem) {
+                    if (family == null || !family.isComplete()) {
+                        continue;
+                    }
+                    DbxFields discontinuityFamilyFields = new DbxFields();
 
-                int number = family.getNumber();
-                discontinuityFamilyFields.set("number", number);
+                    discontinuityFamilyFields.set("assesment_code", assessment.getCode());
 
-                DiscontinuityType type = family.getType();
-                discontinuityFamilyFields.set("type", type.getCode());
+                    int number = family.getNumber();
+                    discontinuityFamilyFields.set("number", number);
 
-                DiscontinuityRelevance relevance = family.getRelevance();
-                discontinuityFamilyFields.set("relevance", relevance.getCode());
+                    DiscontinuityType type = family.getType();
+                    if (type != null) {
+                        discontinuityFamilyFields.set("type", type.getCode());
+                    }
 
-                Short dipDirDegrees = family.getDipDirDegrees();
-                discontinuityFamilyFields.set("dipDirDegrees", dipDirDegrees);
+                    DiscontinuityRelevance relevance = family.getRelevance();
+                    if (relevance != null) {
+                        discontinuityFamilyFields.set("relevance", relevance.getCode());
+                    }
 
-                Short dipDegrees = family.getDipDegrees();
-                discontinuityFamilyFields.set("dipDegrees", dipDegrees);
+                    Short dipDirDegrees = family.getDipDirDegrees();
+                    if (dipDirDegrees != null) {
+                        discontinuityFamilyFields.set("dipDirDegrees", dipDirDegrees);
+                    }
 
-                Spacing spacing = family.getSpacing();
-                discontinuityFamilyFields.set("spacing", spacing.getKey());
+                    Short dipDegrees = family.getDipDegrees();
+                    if (dipDegrees != null) {
+                        discontinuityFamilyFields.set("dipDegrees", dipDegrees);
+                    }
 
-                Persistence persistence = family.getPersistence();
-                discontinuityFamilyFields.set("persistence", persistence.getKey());
+                    Spacing spacing = family.getSpacing();
+                    if (spacing != null) {
+                        discontinuityFamilyFields.set("spacing", spacing.getKey());
+                    }
 
-                Aperture aperture = family.getAperture();
-                discontinuityFamilyFields.set("aperture", aperture.getKey());
+                    Persistence persistence = family.getPersistence();
+                    if (persistence != null) {
+                        discontinuityFamilyFields.set("persistence", persistence.getKey());
+                    }
 
-                DiscontinuityShape shape = family.getShape();
-                discontinuityFamilyFields.set("shape", shape.getCode());
+                    Aperture aperture = family.getAperture();
+                    if (aperture != null) {
+                        discontinuityFamilyFields.set("aperture", aperture.getKey());
+                    }
 
-                Roughness rouhness = family.getRoughness();
-                discontinuityFamilyFields.set("roughness", rouhness.getKey());
+                    DiscontinuityShape shape = family.getShape();
+                    if (shape != null) {
+                        discontinuityFamilyFields.set("shape", shape.getCode());
+                    }
 
-                Infilling infilling = family.getInfilling();
-                discontinuityFamilyFields.set("infilling", infilling.getKey());
+                    Roughness roughness = family.getRoughness();
+                    if (roughness != null) {
+                    discontinuityFamilyFields.set("roughness", roughness.getKey());
+                    }
 
-                Weathering weathering = family.getWeathering();
-                discontinuityFamilyFields.set("weathering", weathering.getKey());
+                    Infilling infilling = family.getInfilling();
+                    if (infilling != null) {
+                        discontinuityFamilyFields.set("infilling", infilling.getKey());
+                    }
 
-                DiscontinuityWater water = family.getWater();
-                discontinuityFamilyFields.set("water", water.getCode());
+                    Weathering weathering = family.getWeathering();
+                    if (weathering != null) {
+                    discontinuityFamilyFields.set("weathering", weathering.getKey());
+                    }
 
-                DbxRecord discontinuityFamilyRecord = mDiscontinuitiesFamilyDropBoxTable.persist(discontinuityFamilyFields);
+                    DiscontinuityWater water = family.getWater();
+                    if (water != null) {
+                    discontinuityFamilyFields.set("water", water.getCode());
+                    }
 
-                discontinuitiesFamilySystem.add(discontinuityFamilyRecord.getId());
+                    DbxRecord discontinuityFamilyRecord = mDiscontinuitiesFamilyDropBoxTable.persist(discontinuityFamilyFields);
+
+                    discontinuitiesFamilySystem.add(discontinuityFamilyRecord.getId());
+                }
+
+                assessmentFields.set("discontinuitiesSystem", discontinuitiesFamilySystem);
             }
 
-            assessmentFields.set("discontinuitiesSystem", discontinuitiesFamilySystem);
-
-
             SupportRecomendation recomendation = assessment.getRecomendation();
+            if (recomendation != null){
+                BoltType boltType = recomendation.getBoltType();
+                if (boltType != null) {
+                assessmentFields.set("boltType", boltType.getCode());
+                }
 
-            BoltType boltType = recomendation.getBoltType();
-            assessmentFields.set("boltType", boltType.getCode());
+                Double boltDiameter = recomendation.getBoltDiameter();
+                if (boltDiameter != null) {
+                assessmentFields.set("boltDiameter", boltDiameter);
+                }
 
-            Double boltDiameter = recomendation.getBoltDiameter();
-            assessmentFields.set("boltDiameter", boltDiameter);
+                Double boltLength = recomendation.getBoltLength();
+                if (boltLength != null) {
+                    assessmentFields.set("boltLength", boltLength);
+                }
 
-            Double boltLength = recomendation.getBoltLength();
-            assessmentFields.set("boltLength", boltLength);
+                ShotcreteType shotcreteType = recomendation.getShotcreteType();
+                if (shotcreteType != null) {
+                    assessmentFields.set("shotcreteType", shotcreteType.getCode());
+                }
 
-            ShotcreteType shotcreteType = recomendation.getShotcreteType();
-            assessmentFields.set("shotcreteType", shotcreteType.getCode());
+                Double thickness = recomendation.getThickness();
+                if (thickness != null) {
+                    assessmentFields.set("thickness", thickness);
+                }
 
-            Double thickness = recomendation.getThickness();
-            assessmentFields.set("thickness", thickness);
+                MeshType meshType = recomendation.getMeshType();
+                if (meshType != null) {
+                    assessmentFields.set("meshType", meshType.getCode());
+                }
 
-            MeshType meshType = recomendation.getMeshType();
-            assessmentFields.set("meshType", meshType.getCode());
+                Coverage coverage = recomendation.getCoverage();
+                if (coverage != null) {
+                    assessmentFields.set("coverage", coverage.getCode());
+                }
 
-            Coverage coverage = recomendation.getCoverage();
-            assessmentFields.set("coverage", coverage.getCode());
+                ArchType archType = recomendation.getArchType();
+                if (archType != null) {
+                    assessmentFields.set("archType", archType.getCode());
+                }
 
-            ArchType archType = recomendation.getArchType();
-            assessmentFields.set("archType", archType.getCode());
+                Double separation = recomendation.getSeparation();
+                if (separation != null) {
+                    assessmentFields.set("separation", separation);
+                }
 
-            Double separation = recomendation.getSeparation();
-            assessmentFields.set("separation", separation);
-
-            java.lang.String observations = recomendation.getObservations();
-            assessmentFields.set("observations", observations);
+                String observations = recomendation.getObservations();
+                if (observations != null) {
+                    assessmentFields.set("observations", observations);
+                }
+            }
 
             RMR_Calculation rmrCalculation = assessment.getRmrCalculation();
 
-            DbxFields rmrCalculationFields = new DbxFields();
+            if (rmrCalculation != null) {
 
-            StrengthOfRock strengthOfRock = rmrCalculation.getStrengthOfRock();
-            rmrCalculationFields.set("strength", strengthOfRock.getKey());
+                DbxFields rmrCalculationFields = new DbxFields();
 
-            Spacing spacingDiscontinuities = rmrCalculation.getSpacing();
-            rmrCalculationFields.set("spacing", spacingDiscontinuities.getKey());
+                StrengthOfRock strengthOfRock = rmrCalculation.getStrengthOfRock();
+                if (strengthOfRock != null) {
+                    rmrCalculationFields.set("strength", strengthOfRock.getKey());
+                }
 
-            Persistence persistence = rmrCalculation.getPersistence();
-            rmrCalculationFields.set("persistence", persistence.getKey());
+                Spacing spacingDiscontinuities = rmrCalculation.getSpacing();
+                if (spacingDiscontinuities != null) {
+                rmrCalculationFields.set("spacing", spacingDiscontinuities.getKey());
+                }
 
-            Aperture aperture = rmrCalculation.getAperture();
-            rmrCalculationFields.set("aperture", aperture.getKey());
+                Persistence persistence = rmrCalculation.getPersistence();
+                if (persistence != null) {
+                    rmrCalculationFields.set("persistence", persistence.getKey());
+                }
 
-            Roughness roughness = rmrCalculation.getRoughness();
-            rmrCalculationFields.set("roughness", roughness.getKey());
+                Aperture aperture = rmrCalculation.getAperture();
+                if (aperture != null) {
+                    rmrCalculationFields.set("aperture", aperture.getKey());
+                }
 
-            Infilling infilling = rmrCalculation.getInfilling();
-            rmrCalculationFields.set("infilling", infilling.getKey());
+                Roughness roughness = rmrCalculation.getRoughness();
+                if (roughness != null) {
+                rmrCalculationFields.set("roughness", roughness.getKey());
+                }
 
-            Weathering weathering = rmrCalculation.getWeathering();
-            rmrCalculationFields.set("weathering", weathering.getKey());
+                Infilling infilling = rmrCalculation.getInfilling();
+                if (infilling != null) {
+                    rmrCalculationFields.set("infilling", infilling.getKey());
+                }
 
-            Groundwater groundwater = rmrCalculation.getGroundwater();
-            rmrCalculationFields.set("groundwater", groundwater.getKey());
+                Weathering weathering = rmrCalculation.getWeathering();
+                if (weathering != null) {
+                    rmrCalculationFields.set("weathering", weathering.getKey());
+                }
 
-            int orientationType = rmrCalculation.getOrientationType();
-            rmrCalculationFields.set("orientationType", orientationType);
-            OrientationDiscontinuities orientationDiscontinuities = rmrCalculation.getOrientationDiscontinuities();
-            rmrCalculationFields.set("orientation", orientationDiscontinuities.getKey());
+                Groundwater groundwater = rmrCalculation.getGroundwater();
+                if (groundwater != null) {
+                    rmrCalculationFields.set("groundwater", groundwater.getKey());
+                }
 
-            RQD_RMR rqd = rmrCalculation.getRqd();
-            rmrCalculationFields.set("rqd", rqd.getKey());
+                int orientationType = rmrCalculation.getOrientationType();
+                rmrCalculationFields.set("orientationType", orientationType);
 
-//            ConditionDiscontinuities conditionDiscontinuities = rmrCalculation.getConditionDiscontinuities();
-//            rmrCalculationFields.set();
+                OrientationDiscontinuities orientationDiscontinuities = rmrCalculation.getOrientationDiscontinuities();
+                if (orientationDiscontinuities != null) {
+                    rmrCalculationFields.set("orientation", orientationDiscontinuities.getKey());
+                }
 
-            mRMRCalculationDropBoxTable.persist(rmrCalculationFields);
+                RQD_RMR rqd = rmrCalculation.getRqd();
+                if (rqd != null) {
+                rmrCalculationFields.set("rqd", rqd.getKey());
+                }
 
+                mRMRCalculationDropBoxTable.persist(rmrCalculationFields);
+            }
+
+            Q_Calculation qCalculation = assessment.getQCalculation();
+            if (qCalculation != null) {
+                DbxFields qCalculationFields = new DbxFields();
+                qCalculationFields.set("assessment_code", assessment.getCode());
+
+                RQD rqd = qCalculation.getRqd();
+                if (rqd != null) {
+                    qCalculationFields.set("rqd", rqd.getValue());
+                }
+
+                Jn jn = qCalculation.getJn();
+                if (jn != null) {
+                    qCalculationFields.set("jn", jn.getValue());
+                }
+
+                Jr jr = qCalculation.getJr();
+                if (jr != null) {
+                    qCalculationFields.set("jr", jr.getValue());
+                }
+
+                Ja ja = qCalculation.getJa();
+                if (ja != null) {
+                    qCalculationFields.set("ja", ja.getValue());
+                }
+
+                Jw jw = qCalculation.getJw();
+                if (jw != null) {
+                    qCalculationFields.set("jw", jw.getValue());
+                }
+
+                SRF srf = qCalculation.getSrf();
+                if (srf != null) {
+                    qCalculationFields.set("srf", srf.getKey());
+                }
+
+                QBartonOutput qBarton = qCalculation.getQResult();
+                if (qBarton != null) {
+                    qCalculationFields.set("qBarton", qBarton.getQBarton());
+                }
+
+                mQBartonCalculationDropBoxTable.persist(qCalculationFields);
+            }
 
             mAssessmentsTable.persist(assessmentFields);
 
@@ -319,8 +469,5 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         } catch (Exception e){
             throw new DAOException(e);
         }
-
     }
-
-
 }
