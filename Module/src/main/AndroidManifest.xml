@@ -48,8 +48,8 @@
             android:name="com.dropbox.client2.android.AuthActivity"
             android:launchMode="singleTask">
             <intent-filter>
-                <data android:scheme="db-bzsvwf0odnoslis" />
-                <!-- <data android:scheme="db-m375gz1gq6k8vv1" /> -->
+                <!-- <data android:scheme="db-bzsvwf0odnoslis" /> -->
+                <data android:scheme="db-m375gz1gq6k8vv1" />
 
                 <action android:name="android.intent.action.VIEW" />
 
