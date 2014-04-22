@@ -17,9 +17,13 @@ import com.metric.skava.data.dao.exception.DAOException;
  */
 public class DatastoreHelper {
 
-    private static final String APP_SECRET = "pc2wwbqnblh0r53";
+    // Datastore raul
+    // private static final String APP_SECRET = "pc2wwbqnblh0r53";
+    // private static final String APP_KEY = "bzsvwf0odnoslis";
 
-    private static final String APP_KEY = "bzsvwf0odnoslis";
+    // Datastore Fabian
+    private static final String APP_SECRET = "rjfwy6os8tbpgin";
+    private static final String APP_KEY = "m375gz1gq6k8vv1";
 
     private static final String APP_DATASTORE_NAME = "skavatunnelapp";
 
