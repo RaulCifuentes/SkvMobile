@@ -66,14 +66,7 @@
     <string name="new_assessment_action">New</string>
     <string name="analyse_assessment_action">Analyse</string>
     <string name="admin_assessment_action">Admin</string>
-    <string name="sumary_report_outcrop_default_value">During the feasibility and preliminary design stages of a project, when very little detailed
-information is available on the rock mass and its stress and hydrologic characteristics, the
-use of a rock mass classification scheme can be of considerable benefit. At its simplest,
-this may involve using the classification scheme as a check-list to ensure that all relevant
-information has been considered. At the other end of the spectrum, one or more rock
-mass classification schemes can be used to build up a picture of the composition and
-characteristics of a rock mass to provide initial estimates of support requirements, and to
-provide estimates of the strength and deformation properties of the rock mass.</string>
+    <string name="sumary_report_outcrop_default_value"></string>
     <string name="non_geologist_alert">El usuario %1$s aparece como el geologo del assessment pero no tiene el rol GEOLOGIST asociado</string>
     <string name="null_parameter">Calling %1$s with parameter %2$s  null</string>
     <string name="label">Skava label</string>
