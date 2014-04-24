@@ -13,7 +13,7 @@
     <string name="report_avance">Avance</string>
     <string name="report_metodo">Método</string>
     <string name="report_orientacion">Orientación</string>
-    <string name="report_pendiente">Pendiente</string>
+    <string name="report_pendiente">Pendiente (%)</string>
 
     <string name="report_macizo">Macizo</string>
     <string name="report_tipo_fracturacion">Tipo Fracturacion</string>

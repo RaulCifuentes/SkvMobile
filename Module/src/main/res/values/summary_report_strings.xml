@@ -14,7 +14,7 @@
     <string name="report_accumm_avance">Accum Advance</string>
     <string name="report_metodo">Method</string>
     <string name="report_orientacion">Orientation</string>
-    <string name="report_pendiente">Slope</string>
+    <string name="report_pendiente">Slope (%)</string>
 
     <string name="report_macizo">Rock Mass</string>
     <string name="report_tipo_fracturacion">Fracture Type</string>

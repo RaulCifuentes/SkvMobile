@@ -13,7 +13,7 @@
     <string name="mapping_gral_info_accum_advance">Accum Advance</string>
     <string name="mapping_gral_info_method">Method</string>
     <string name="mapping_gral_info_orientation">Orientation</string>
-    <string name="mapping_gral_info_slope">Slope</string>
+    <string name="mapping_gral_info_slope">Slope (%)</string>
     <string name="mapping_gral_info_code">Code</string>
 
 

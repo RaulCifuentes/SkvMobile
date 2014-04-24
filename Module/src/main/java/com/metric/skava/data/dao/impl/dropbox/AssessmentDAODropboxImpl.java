@@ -187,7 +187,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 assessmentFields.set("orientation", orientation);
             }
 
-            Short slope = assessment.getSlope();
+            Double slope = assessment.getSlope();
             if (slope != null) {
                 assessmentFields.set("slope", slope);
             }
