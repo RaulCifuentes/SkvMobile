@@ -7,6 +7,8 @@ import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -473,27 +475,26 @@ public class IdentificationMainFragment extends SkavaFragment implements
 
 
         slopeTextEdit = (EditText) rootView.findViewById(R.id.mapping_gral_info_slope_value);
-        slopeTextEdit.setRawInputType(Configuration.KEYBOARD_12KEY);
-        Short slope = getCurrentAssessment().getSlope();
+        Double slope = getCurrentAssessment().getSlope();
         if (slope != null) {
             slopeTextEdit.setText(numberFormatter.format(slope));
         }
 
-        slopeTextEdit.addTextChangedListener(new TextValidator(slopeTextEdit) {
+        slopeTextEdit.addTextChangedListener(new TextWatcher() {
             @Override
-            public void validate(TextView textView, java.lang.String text) {
-                /* Validation code here */
-                Short enteredValue = 0;
-                try {
-                    enteredValue = Short.parseShort(text);
-                    if (enteredValue > 0 && enteredValue < 90) {
-                        getSkavaContext().getAssessment().setSlope(enteredValue);
-                    } else {
-                        slopeTextEdit.setError("Slope must be a number between 0 and 90!");
-                    }
-                } catch (NumberFormatException e) {
-                    slopeTextEdit.setError("Slope must be between 0 and 100!");
-                }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                Double enteredValue = Double.parseDouble(editable.toString());
+                getSkavaContext().getAssessment().setSlope(enteredValue);
             }
         });
 

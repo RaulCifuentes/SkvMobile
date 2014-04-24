@@ -101,8 +101,8 @@ public class AssessmentBuilder4SqlLite {
         Long orientation =  CursorUtils.getLong(AssessmentTable.ORIENTATION_COLUMN, cursor);
         babyAssessment.setOrientation(orientation.shortValue());
 
-        Long slope = CursorUtils.getLong(AssessmentTable.SLOPE_COLUMN, cursor);
-        babyAssessment.setSlope(slope.shortValue());
+        Double slope = CursorUtils.getDouble(AssessmentTable.SLOPE_COLUMN, cursor);
+        babyAssessment.setSlope(slope.doubleValue());
 
         java.lang.String fractureTypeID = CursorUtils.getString(AssessmentTable.FRACTURE_TYPE_CODE_COLUMN, cursor);
         FractureType fractureType = localFractureTypeDAO.getFractureTypeByCode(fractureTypeID);

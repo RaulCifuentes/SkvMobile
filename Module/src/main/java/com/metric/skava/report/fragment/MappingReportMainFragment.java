@@ -139,7 +139,7 @@ public class MappingReportMainFragment extends SkavaFragment {
             ((TextView) rootView.findViewById(R.id.report_orientacion_value)).setText(numberFormat.format(orientation));
         }
 
-        Short slope = currentAssessment.getSlope();
+        Double slope = currentAssessment.getSlope();
         if (slope != null) {
             ((TextView) rootView.findViewById(R.id.report_pendiente_value)).setText(numberFormat.format(slope));
         }

@@ -32,7 +32,7 @@ public class Assessment implements IdentifiableEntity {
 
     private ExcavationMethod method;
     private Short orientation;
-    private Short slope;
+    private Double slope;
 
     private FractureType fractureType;
     private Short blockSize;
@@ -194,11 +194,11 @@ public class Assessment implements IdentifiableEntity {
         this.orientation = orientation;
     }
 
-    public Short getSlope() {
+    public Double getSlope() {
         return slope;
     }
 
-    public void setSlope(Short slope) {
+    public void setSlope(Double slope) {
         this.slope = slope;
     }
 

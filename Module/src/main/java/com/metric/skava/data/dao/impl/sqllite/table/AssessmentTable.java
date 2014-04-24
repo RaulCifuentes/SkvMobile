@@ -58,7 +58,7 @@ public class AssessmentTable extends SkavaTable {
             PK_FINAL_COLUMN + " real null, " +
             ADVANCE_ACUMM_COLUMN + " real null, " +
             ORIENTATION_COLUMN + " integer null, " +
-            SLOPE_COLUMN + " integer null, " +
+            SLOPE_COLUMN + " real null, " +
             FRACTURE_TYPE_CODE_COLUMN + " text null, " +
             BLOCKS_SIZE_COLUMN + " integer null, " +
             NUMBER_JOINTS_COLUMN + " integer null, " +
