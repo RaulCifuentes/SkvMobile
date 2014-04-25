@@ -85,6 +85,13 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true">
 
+    </GridLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
         <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -170,17 +177,46 @@
                 android:layout_height="20px"
                 android:id="@+id/space" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Detailed custom description ... "
-                android:inputType="textMultiLine"
-                android:id="@+id/rockmass_desc_details_value"
-                android:layout_columnSpan="2"
-                android:lines="4" />
         </GridLayout>
 
-    </GridLayout>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Detailed custom description ... "
+            android:inputType="textMultiLine"
+            android:id="@+id/rockmass_desc_details_value"
+            android:layout_columnSpan="2"
+            android:lines="4"
+            android:maxLength="@integer/inputlength_large" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Maximum length:"
+                android:id="@+id/textView2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@integer/inputlength_large"
+                android:id="@+id/textView" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text=" characters"
+                android:id="@+id/textView3" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>
 
