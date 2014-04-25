@@ -123,7 +123,7 @@ public class DatastoreHelper {
         this.mAccount = linkedAccount;
     }
 
-    public DbxAccountManager getAccountManager() {
+    private DbxAccountManager getAccountManager() {
         if (mDbxAcctMgr == null) {
             mDbxAcctMgr = DbxAccountManager.getInstance(mContext.getApplicationContext(), APP_KEY, APP_SECRET);
         }

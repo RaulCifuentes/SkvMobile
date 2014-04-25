@@ -93,7 +93,7 @@ public class RockMassDescriptionMainFragment extends SkavaFragment implements Ad
 
         blocksSizeEditText = (EditText) rootView.findViewById(R.id.rockmass_desc_block_size_value);
         blocksSizeEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
-        Short blocksSize = getCurrentAssessment().getOrientation();
+        Double blocksSize = getCurrentAssessment().getBlockSize();
         if (blocksSize != null) {
             blocksSizeEditText.setText(numberFormatter.format(blocksSize));
         }
@@ -102,21 +102,20 @@ public class RockMassDescriptionMainFragment extends SkavaFragment implements Ad
             @Override
             public void validate(TextView textView, java.lang.String text) {
                 /* Validation code here */
-                Double enteredValue = 0d;
                 try {
-                    enteredValue = Double.parseDouble(text);
-                        getSkavaContext().getAssessment().setBlockSize(enteredValue);
+                    Double enteredValue = Double.parseDouble(text);
+                    getSkavaContext().getAssessment().setBlockSize(enteredValue);
                 } catch (NumberFormatException e) {
-                    blocksSizeEditText.setError("Orientation must be a number!");
+                    blocksSizeEditText.setError("Block size must be a number!");
                 }
             }
         });
 
         numOfJointsEditText = (EditText) rootView.findViewById(R.id.rockmass_desc_junctures_value);
         numOfJointsEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
-        Short numberOfJoints = getCurrentAssessment().getOrientation();
+        Short numberOfJoints = getCurrentAssessment().getNumberOfJoints();
         if (numberOfJoints != null) {
-            numOfJointsEditText.setText(numberFormatter.format(blocksSize));
+            numOfJointsEditText.setText(numberFormatter.format(numberOfJoints));
         }
 
         numOfJointsEditText.addTextChangedListener(new TextValidator(numOfJointsEditText) {

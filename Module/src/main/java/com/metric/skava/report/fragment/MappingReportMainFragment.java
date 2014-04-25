@@ -21,6 +21,7 @@ import com.metric.skava.app.model.ExcavationSection;
 import com.metric.skava.app.model.Tunnel;
 import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
+import com.metric.skava.app.util.PegNumberFormat;
 import com.metric.skava.calculator.barton.helper.QToQualityMapper;
 import com.metric.skava.calculator.barton.model.Ja;
 import com.metric.skava.calculator.barton.model.Jn;
@@ -81,6 +82,7 @@ public class MappingReportMainFragment extends SkavaFragment {
 
         Assessment currentAssessment = getSkavaContext().getAssessment();
         NumberFormat numberFormat = DecimalFormat.getInstance();
+        NumberFormat pkFormat = new PegNumberFormat();
 
         ExcavationProject project = currentAssessment.getProject();
         if (project != null) {
@@ -117,7 +119,7 @@ public class MappingReportMainFragment extends SkavaFragment {
         Double initPk = currentAssessment.getInitialPeg();
         Double lastPk = currentAssessment.getFinalPeg();
         if (initPk != null && lastPk != null) {
-            ((TextView) rootView.findViewById(R.id.report_pk_values)).setText(numberFormat.format(initPk) + " - " + numberFormat.format(lastPk) );
+            ((TextView) rootView.findViewById(R.id.report_pk_values)).setText(pkFormat.format(initPk) + " - " + pkFormat.format(lastPk) );
         }
 
         Double currentAdvance = currentAssessment.getCurrentAdvance();
