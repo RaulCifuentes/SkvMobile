@@ -35,7 +35,7 @@ public class Assessment implements IdentifiableEntity {
     private Double slope;
 
     private FractureType fractureType;
-    private Short blockSize;
+    private Double blockSize;
     private Short numberOfJoints;
     private String outcropDescription;
 
@@ -210,11 +210,11 @@ public class Assessment implements IdentifiableEntity {
         this.fractureType = fractureType;
     }
 
-    public Short getBlockSize() {
+    public Double getBlockSize() {
         return blockSize;
     }
 
-    public void setBlockSize(Short blockSize) {
+    public void setBlockSize(Double blockSize) {
         this.blockSize = blockSize;
     }
 

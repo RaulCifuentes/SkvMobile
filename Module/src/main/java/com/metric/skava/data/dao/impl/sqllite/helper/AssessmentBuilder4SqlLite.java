@@ -108,8 +108,8 @@ public class AssessmentBuilder4SqlLite {
         FractureType fractureType = localFractureTypeDAO.getFractureTypeByCode(fractureTypeID);
         babyAssessment.setFractureType(fractureType);
 
-        Long blockSize = CursorUtils.getLong(AssessmentTable.BLOCKS_SIZE_COLUMN, cursor);
-        babyAssessment.setBlockSize(blockSize.shortValue());
+        Double blockSize = CursorUtils.getDouble(AssessmentTable.BLOCKS_SIZE_COLUMN, cursor);
+        babyAssessment.setBlockSize(blockSize.doubleValue());
 
         Long numJoints = CursorUtils.getLong(AssessmentTable.NUMBER_JOINTS_COLUMN, cursor);
         babyAssessment.setNumberOfJoints(numJoints.shortValue());

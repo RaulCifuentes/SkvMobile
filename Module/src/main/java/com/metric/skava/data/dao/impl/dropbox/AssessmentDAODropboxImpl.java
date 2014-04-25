@@ -197,7 +197,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 assessmentFields.set("fractureType", fractureType.getCode());
             }
 
-            Short blockSize = assessment.getBlockSize();
+            Double blockSize = assessment.getBlockSize();
             if (blockSize != null) {
                 assessmentFields.set("blockSize", blockSize);
             }

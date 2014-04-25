@@ -475,6 +475,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
 
 
         slopeTextEdit = (EditText) rootView.findViewById(R.id.mapping_gral_info_slope_value);
+        slopeTextEdit.setRawInputType(Configuration.KEYBOARD_12KEY);
         Double slope = getCurrentAssessment().getSlope();
         if (slope != null) {
             slopeTextEdit.setText(numberFormatter.format(slope));
@@ -493,8 +494,15 @@ public class IdentificationMainFragment extends SkavaFragment implements
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Double enteredValue = Double.parseDouble(editable.toString());
-                getSkavaContext().getAssessment().setSlope(enteredValue);
+                String editableValue = editable.toString();
+                if (!editableValue.equals("")) {
+                    try {
+                        Double enteredValue = Double.parseDouble(editableValue);
+                        getSkavaContext().getAssessment().setSlope(enteredValue);
+                    } catch (NumberFormatException e) {
+                        slopeTextEdit.setError("Block size must be a number!");
+                    }
+                }
             }
         });
 
