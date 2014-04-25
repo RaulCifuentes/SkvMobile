@@ -19,6 +19,7 @@ import com.metric.skava.data.dao.impl.sqllite.table.BoltTypeTable;
 import com.metric.skava.data.dao.impl.sqllite.table.ClientTable;
 import com.metric.skava.data.dao.impl.sqllite.table.ConditionTable;
 import com.metric.skava.data.dao.impl.sqllite.table.CoverageTable;
+import com.metric.skava.data.dao.impl.sqllite.table.DiscontinuityFamilyTable;
 import com.metric.skava.data.dao.impl.sqllite.table.DiscontinuityRelevanceTable;
 import com.metric.skava.data.dao.impl.sqllite.table.DiscontinuityShapeTable;
 import com.metric.skava.data.dao.impl.sqllite.table.DiscontinuityTypeTable;
@@ -43,6 +44,7 @@ import com.metric.skava.data.dao.impl.sqllite.table.OrientationTable;
 import com.metric.skava.data.dao.impl.sqllite.table.PermissionTable;
 import com.metric.skava.data.dao.impl.sqllite.table.PersistenceTable;
 import com.metric.skava.data.dao.impl.sqllite.table.QCalculationTable;
+import com.metric.skava.data.dao.impl.sqllite.table.RMRCalculationTable;
 import com.metric.skava.data.dao.impl.sqllite.table.RockQualityTable;
 import com.metric.skava.data.dao.impl.sqllite.table.RoleTable;
 import com.metric.skava.data.dao.impl.sqllite.table.RoughnessTable;
@@ -66,7 +68,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "mySkavaDatabase.db";
 
-    public static final int DATABASE_VERSION = 14;
+    public static final int DATABASE_VERSION = 22;
 
     public SkavaDBHelper(Context context, String name,
                          SQLiteDatabase.CursorFactory factory, int version) {
@@ -174,11 +176,11 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
         db.execSQL(JnTable.CREATE_Jn_TABLE);
 
-
-        // ***************** Q/RMR Calculations *****************
         db.execSQL(RockQualityTable.CREATE_ROCK_QUALITIES_TABLE);
+        // ***************** Q Calculations *****************
         db.execSQL(QCalculationTable.CREATE_QCALCULATION_TABLE);
-
+        db.execSQL(RMRCalculationTable.CREATE_RMRCALCULATION_TABLE);
+        db.execSQL(DiscontinuityFamilyTable.CREATE_DISCONTINUITY_FAMILIES_TABLE);
 
         // ******************** Assessment ********************
 
@@ -269,9 +271,9 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         // ***************** Q/RMR Calculations *****************
 
         db.execSQL("DROP TABLE IF EXISTS " + RockQualityTable.ROCK_QUALITY_DATABASE_TABLE);
-
         db.execSQL("DROP TABLE IF EXISTS " + QCalculationTable.Q_CALCULATION_DATABASE_TABLE);
-
+        db.execSQL("DROP TABLE IF EXISTS " + RMRCalculationTable.RMR_CALCULATION_DATABASE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + DiscontinuityFamilyTable.DISCONTINUITY_FAMILY_DATABASE_TABLE);
 
         // ******************** Assessment ********************
         db.execSQL("DROP TABLE IF EXISTS " + InternalCodeTable.INTERNAL_CODE_DATABASE_TABLE);

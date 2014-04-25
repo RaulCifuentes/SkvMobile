@@ -252,7 +252,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
 
-
+<!--
         <com.metric.skava.app.widget.MaskedEditText
             android:id="@+id/mapping_gral_info_initial_pk_value"
             android:layout_width="wrap_content"
@@ -261,7 +261,37 @@
             android:inputType="number"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            />-->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:weightSum="1">
+
+            <EditText
+                android:id="@+id/mapping_gral_info_initial_pk_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number|numberSigned|numberDecimal"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginLeft="@dimen/form_column_left_margin"
+                android:hint="Initial Peg N°" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/textView"
+                android:text="Formatted Value"
+                android:layout_weight="0.02" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@id/mapping_gral_info_initial_pk_value_formatted"
+                android:singleLine="true" />
+        </LinearLayout>
 
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
@@ -284,15 +314,36 @@
             android:textStyle="bold" />
 
 
-        <com.metric.skava.app.widget.MaskedEditText
-            android:id="@+id/mapping_gral_info_final_pk_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            custom_edit:mask="##+###,##"
-            android:inputType="number"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:weightSum="1">
+
+            <EditText
+                android:id="@+id/mapping_gral_info_final_pk_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number|numberSigned|numberDecimal"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginLeft="@dimen/form_column_left_margin"
+                android:hint="Final Peg N°" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/mapping_gral_info_final_pk_value_formatted_label"
+                android:text="Formatted Value"
+                android:layout_weight="0.02" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@id/mapping_gral_info_final_pk_value_formatted"
+                android:singleLine="true" />
+        </LinearLayout>
 
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
@@ -445,7 +496,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:inputType="number"
+            android:inputType="number|numberSigned|numberDecimal"
 
             />
 

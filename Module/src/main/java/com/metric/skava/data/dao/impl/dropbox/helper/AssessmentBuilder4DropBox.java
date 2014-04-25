@@ -77,7 +77,7 @@ public class AssessmentBuilder4DropBox {
         babyAssessment.setOrientation(orientation.shortValue());
 
         Double slope = assessmentRecord.getDouble("slope");
-        babyAssessment.setSlope(slope);
+        babyAssessment.setSlope(slope.doubleValue());
 
         java.lang.String fractureTypeID = assessmentRecord.getString("fractureType");
         FractureType fractureType = fractureTypeDAO.getFractureTypeByCode(fractureTypeID);
