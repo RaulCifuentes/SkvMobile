@@ -83,8 +83,8 @@ public class AssessmentBuilder4DropBox {
         FractureType fractureType = fractureTypeDAO.getFractureTypeByCode(fractureTypeID);
         babyAssessment.setFractureType(fractureType);
 
-        Long blockSize = assessmentRecord.getLong("blockSize");
-        babyAssessment.setBlockSize(blockSize.shortValue());
+        Double blockSize = assessmentRecord.getDouble("blockSize");
+        babyAssessment.setBlockSize(blockSize.doubleValue());
 
         Long numJoints = assessmentRecord.getLong("numJoints");
         babyAssessment.setNumberOfJoints(numJoints.shortValue());
