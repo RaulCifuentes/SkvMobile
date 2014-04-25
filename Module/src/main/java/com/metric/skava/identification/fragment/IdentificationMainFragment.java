@@ -35,6 +35,7 @@ import com.metric.skava.app.model.ExcavationSection;
 import com.metric.skava.app.model.Tunnel;
 import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
+import com.metric.skava.app.util.PegNumberFormat;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.app.validator.TextValidator;
 import com.metric.skava.data.dao.DAOFactory;
@@ -108,6 +109,8 @@ public class IdentificationMainFragment extends SkavaFragment implements
     private Double initialPeg;
     private Date selectedDate;
     private Double advance;
+
+    private PegNumberFormat pegNumberFormat;
 
 
     private UserDataDomain mUserDataDomain;
@@ -214,13 +217,15 @@ public class IdentificationMainFragment extends SkavaFragment implements
         finalPeg = getSkavaContext().getAssessment().getFinalPeg();
         advance = getSkavaContext().getAssessment().getCurrentAdvance();
 
+        pegNumberFormat = new PegNumberFormat();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.identification_main_fragment, container, false);
+        final View rootView = inflater.inflate(R.layout.identification_main_fragment, container, false);
 
         String internalCode = getCurrentAssessment().getInternalCode();
         if (internalCode != null) {
@@ -335,22 +340,17 @@ public class IdentificationMainFragment extends SkavaFragment implements
         initialPegEditText.addTextChangedListener(new TextValidator(initialPegEditText) {
             @Override
             public void validate(TextView textView, java.lang.String text) {
-                /* Validation code here */
-                Double enteredValue = 0d;
-                try {
-                    //TODO format and parse Peg values
-                    text = text.replace("+", "");
-                    text = text.replace(",", "");
-                    enteredValue = Double.parseDouble(text);
-                    if (enteredValue >= 0 && enteredValue < 9999999) {
+                if (!text.equals("")) {
+                    /* Validation code here */
+                    Double enteredValue = 0d;
+                    try {
+                        //TODO format and parse Peg values
+                        enteredValue = Double.parseDouble(text);
                         initialPeg = enteredValue;
-                    } else {
+                    } catch (NumberFormatException e) {
                         initialPegEditText.setError("Initial Peg must be a number!");
                     }
-                } catch (NumberFormatException e) {
-                    initialPegEditText.setError("Initial Peg must be a number!");
                 }
-
             }
         });
 
@@ -372,6 +372,9 @@ public class IdentificationMainFragment extends SkavaFragment implements
                     //do job here owhen Edittext lose focus
                     if (initialPeg != null) {
                         getCurrentAssessment().setInitialPeg(initialPeg);
+                        String initialPegFormatted = pegNumberFormat.format(initialPeg);
+                        TextView initialPegFormattedEditText = (TextView) rootView.findViewById(R.id.mapping_gral_info_initial_pk_value_formatted);
+                        initialPegFormattedEditText.setText(initialPegFormatted);
                     }
                 }
             }
@@ -390,19 +393,16 @@ public class IdentificationMainFragment extends SkavaFragment implements
         finalPegEditText.addTextChangedListener(new TextValidator(finalPegEditText) {
             @Override
             public void validate(TextView textView, java.lang.String text) {
-                /* Validation code here */
-                Double enteredValue = 0d;
-                try {
-                    text = text.replace("+", "");
-                    text = text.replace(",", "");
-                    enteredValue = Double.parseDouble(text);
-                    if (enteredValue >= 0 && enteredValue < 9999999) {
+                if (!text.equals("")) {
+                    /* Validation code here */
+                    Double enteredValue = 0d;
+                    try {
+                        //TODO format and parse Peg values
+                        enteredValue = Double.parseDouble(text);
                         finalPeg = enteredValue;
-                    } else {
+                    } catch (NumberFormatException e) {
                         finalPegEditText.setError("Final Peg must be a number!");
                     }
-                } catch (NumberFormatException e) {
-                    finalPegEditText.setError("Final Peg must be a number!");
                 }
             }
         });
@@ -423,7 +423,12 @@ public class IdentificationMainFragment extends SkavaFragment implements
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     //do job here owhen Edittext lose focus
-                    getCurrentAssessment().setFinalPeg(finalPeg);
+                    if (finalPeg != null) {
+                        getCurrentAssessment().setFinalPeg(finalPeg);
+                        String finalPegFormatted = pegNumberFormat.format(finalPeg);
+                        TextView finalPegFormattedEditText = (TextView) rootView.findViewById(R.id.mapping_gral_info_final_pk_value_formatted);
+                        finalPegFormattedEditText.setText(finalPegFormatted);
+                    }
                     if (finalPeg != null && initialPeg != null) {
                         advance = finalPeg - initialPeg;
                     }
