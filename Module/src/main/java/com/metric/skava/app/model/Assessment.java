@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class Assessment implements IdentifiableEntity {
 
+    private Long _id;
     private String code;
     private String internalCode;
     private TunnelFace face;
@@ -31,10 +32,10 @@ public class Assessment implements IdentifiableEntity {
 
     private ExcavationMethod method;
     private Short orientation;
-    private Short slope;
+    private Double slope;
 
     private FractureType fractureType;
-    private Short blockSize;
+    private Double blockSize;
     private Short numberOfJoints;
     private String outcropDescription;
 
@@ -193,11 +194,11 @@ public class Assessment implements IdentifiableEntity {
         this.orientation = orientation;
     }
 
-    public Short getSlope() {
+    public Double getSlope() {
         return slope;
     }
 
-    public void setSlope(Short slope) {
+    public void setSlope(Double slope) {
         this.slope = slope;
     }
 
@@ -209,11 +210,11 @@ public class Assessment implements IdentifiableEntity {
         this.fractureType = fractureType;
     }
 
-    public Short getBlockSize() {
+    public Double getBlockSize() {
         return blockSize;
     }
 
-    public void setBlockSize(Short blockSize) {
+    public void setBlockSize(Double blockSize) {
         this.blockSize = blockSize;
     }
 
@@ -247,6 +248,14 @@ public class Assessment implements IdentifiableEntity {
 
     public void setDiscontinuitySystem(List<DiscontinuityFamily> discontinuitySystem) {
         this.discontinuitySystem = discontinuitySystem;
+    }
+
+    public Long get_id() {
+        return _id;
+    }
+
+    public void set_id(Long _id) {
+        this._id = _id;
     }
 
 //    public ExcavationFactors getExcavationFactors() {

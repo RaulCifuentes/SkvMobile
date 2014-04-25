@@ -56,7 +56,7 @@ public class AssessmentBuilder4SqlLite {
         localTunnelFaceDAO = daoFactory.getLocalTunnelFaceDAO(DAOFactory.Flavour.SQLLITE);
         localUserDAO = daoFactory.getLocalUserDAO(DAOFactory.Flavour.SQLLITE);
         localExcavationMethodDAO = daoFactory.getLocalExcavationMethodDAO(DAOFactory.Flavour.SQLLITE);
-        localFractureTypeDAO = daoFactory.getFractureTypeDAO();
+        localFractureTypeDAO = daoFactory.getLocalFractureTypeDAO();
 
     }
 
@@ -101,15 +101,15 @@ public class AssessmentBuilder4SqlLite {
         Long orientation =  CursorUtils.getLong(AssessmentTable.ORIENTATION_COLUMN, cursor);
         babyAssessment.setOrientation(orientation.shortValue());
 
-        Long slope = CursorUtils.getLong(AssessmentTable.SLOPE_COLUMN, cursor);
-        babyAssessment.setSlope(slope.shortValue());
+        Double slope = CursorUtils.getDouble(AssessmentTable.SLOPE_COLUMN, cursor);
+        babyAssessment.setSlope(slope);
 
         java.lang.String fractureTypeID = CursorUtils.getString(AssessmentTable.FRACTURE_TYPE_CODE_COLUMN, cursor);
         FractureType fractureType = localFractureTypeDAO.getFractureTypeByCode(fractureTypeID);
         babyAssessment.setFractureType(fractureType);
 
-        Long blockSize = CursorUtils.getLong(AssessmentTable.BLOCKS_SIZE_COLUMN, cursor);
-        babyAssessment.setBlockSize(blockSize.shortValue());
+        Double blockSize = CursorUtils.getDouble(AssessmentTable.BLOCKS_SIZE_COLUMN, cursor);
+        babyAssessment.setBlockSize(blockSize);
 
         Long numJoints = CursorUtils.getLong(AssessmentTable.NUMBER_JOINTS_COLUMN, cursor);
         babyAssessment.setNumberOfJoints(numJoints.shortValue());

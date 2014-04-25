@@ -16,11 +16,11 @@ public class GroundwaterTable extends MappexIndexInstanceBaseTable {
     public static final String INSERT_GROUNDWATER_TABLE_FOURTH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + "values('Groundwater', 'Lenght','D', '25 - 125', '25 - 125', 4 )";
     public static final String INSERT_GROUNDWATER_TABLE_FIFTH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + "values('Groundwater', 'Lenght','E', '> 125', '> 125', 0 )";
 
-    public static final String INSERT_GROUNDWATER_TABLE_SIXTH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + "values('Groundwater', 'Press', 'A', 'Very favourable', 'Very favourable', 15 )";
-    public static final String INSERT_GROUNDWATER_TABLE_SEVENTH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + " values('Groundwater', 'Press','B', 'Favourable', 'Favourable', 10 )";
-    public static final String INSERT_GROUNDWATER_TABLE_EIGHTH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + " values('Groundwater', 'Press','C', 'Fair', 'Fair', 7 )";
-    public static final String INSERT_GROUNDWATER_TABLE_NINETH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + " values('Groundwater', 'Press','D', 'Unfavourable', 'Unfavourable', 4 )";
-    public static final String INSERT_GROUNDWATER_TABLE_TENTH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + " values('Groundwater', 'Press','E', 'Very unfavourable', 'Very unfavourable', 0 )";
+    public static final String INSERT_GROUNDWATER_TABLE_SIXTH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + "values('Groundwater', 'Press', 'A', '0', '0', 15 )";
+    public static final String INSERT_GROUNDWATER_TABLE_SEVENTH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + " values('Groundwater', 'Press','B', '< 0.1', '< 0.1', 10 )";
+    public static final String INSERT_GROUNDWATER_TABLE_EIGHTH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + " values('Groundwater', 'Press','C', '0.1 - 0.2', '0.1 - 0.2', 7 )";
+    public static final String INSERT_GROUNDWATER_TABLE_NINETH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + " values('Groundwater', 'Press','D', '0.2 - 0.5', '0.2 - 0.5', 4 )";
+    public static final String INSERT_GROUNDWATER_TABLE_TENTH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + " values('Groundwater', 'Press','E', '> 0.5', ''> 0.5', 0 )";
 
 
     public static final String INSERT_GROUNDWATER_TABLE_ELEVENTH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + "values('Groundwater', 'Conditions', 'A', 'Completely Dry', 'Completely Dry', 15 )";

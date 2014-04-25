@@ -66,7 +66,7 @@ public class DiscontinuityTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnti
     }
 
     @Override
-    public int deleteEmptyDiscontinuityTypes(String tableName) {
+    public int deleteAllDiscontinuityTypes() {
         return 0;
     }
 

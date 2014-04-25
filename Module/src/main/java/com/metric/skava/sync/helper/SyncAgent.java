@@ -3,6 +3,8 @@ package com.metric.skava.sync.helper;
 import android.app.Activity;
 import android.content.Context;
 
+import com.dropbox.sync.android.DbxDatastore;
+import com.dropbox.sync.android.DbxDatastoreStatus;
 import com.metric.skava.app.model.Client;
 import com.metric.skava.app.model.ExcavationMethod;
 import com.metric.skava.app.model.ExcavationProject;
@@ -13,6 +15,10 @@ import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalClientDAO;
+import com.metric.skava.data.dao.LocalDiscontinuityRelevanceDAO;
+import com.metric.skava.data.dao.LocalDiscontinuityShapeDAO;
+import com.metric.skava.data.dao.LocalDiscontinuityTypeDAO;
+import com.metric.skava.data.dao.LocalDiscontinuityWaterDAO;
 import com.metric.skava.data.dao.LocalExcavationMethodDAO;
 import com.metric.skava.data.dao.LocalExcavationProjectDAO;
 import com.metric.skava.data.dao.LocalExcavationSectionDAO;
@@ -21,6 +27,10 @@ import com.metric.skava.data.dao.LocalTunnelDAO;
 import com.metric.skava.data.dao.LocalTunnelFaceDAO;
 import com.metric.skava.data.dao.LocalUserDAO;
 import com.metric.skava.data.dao.RemoteClientDAO;
+import com.metric.skava.data.dao.RemoteDiscontinuityRelevanceDAO;
+import com.metric.skava.data.dao.RemoteDiscontinuityShapeDAO;
+import com.metric.skava.data.dao.RemoteDiscontinuityTypeDAO;
+import com.metric.skava.data.dao.RemoteDiscontinuityWaterDAO;
 import com.metric.skava.data.dao.RemoteExcavationMethodDAO;
 import com.metric.skava.data.dao.RemoteExcavationProjectDAO;
 import com.metric.skava.data.dao.RemoteExcavationSectionDAO;
@@ -30,6 +40,10 @@ import com.metric.skava.data.dao.RemoteTunnelFaceDAO;
 import com.metric.skava.data.dao.RemoteUserDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.datastore.DatastoreHelper;
+import com.metric.skava.discontinuities.model.DiscontinuityRelevance;
+import com.metric.skava.discontinuities.model.DiscontinuityShape;
+import com.metric.skava.discontinuities.model.DiscontinuityType;
+import com.metric.skava.discontinuities.model.DiscontinuityWater;
 
 import java.util.List;
 
@@ -41,6 +55,12 @@ public class SyncAgent {
     static SyncAgent instance;
     private final DAOFactory daoFactory;
     private final Context mContext;
+
+    public DatastoreHelper getDatastoreHelper() {
+        return datastoreHelper;
+    }
+
+
     private DatastoreHelper datastoreHelper;
 
     public static SyncAgent getInstance(Context appContext, Activity dropboxLinkAccountActivity) throws DAOException {
@@ -55,11 +75,16 @@ public class SyncAgent {
         daoFactory = DAOFactory.getInstance(mContext);
         datastoreHelper = DatastoreHelper.getInstance(mContext, dropboxLinkAccountActivity);
         datastoreHelper.wakeUp();
-
     }
 
     public boolean shouldUpdate() throws DAOException {
-        return datastoreHelper.getDatastore().getSyncStatus().hasIncoming;
+        DbxDatastore datastore = datastoreHelper.getDatastore();
+        DbxDatastoreStatus syncStatus = datastore.getSyncStatus();
+        return syncStatus.hasIncoming;
+    }
+
+    public boolean isAlreadyLinked(){
+        return getDatastoreHelper().getAccountManager().hasLinkedAccount();
     }
 
     public void sleep() {
@@ -67,27 +92,51 @@ public class SyncAgent {
     }
 
 
-    public void downloadGlobalData() throws DAOException {
-        clearRoles();
-        syncRoles();
-        clearUsers();
-        syncUsers();
-        clearMethods();
-        syncMethods();
-        clearSections();
-        syncSections();
+    public boolean downloadGlobalData() throws DAOException {
+        boolean success;
+        try {
+            clearRoles();
+            syncRoles();
+            clearUsers();
+            syncUsers();
+            clearMethods();
+            syncMethods();
+            clearSections();
+            syncSections();
+            clearDiscontinuityTypes();
+            syncDiscontinuityTypes();
+            clearDiscontinuityRelevances();
+            syncDiscontinuityRelevances();
+            clearDiscontinuityWaters();
+            syncDiscontinuityWaters();
+            clearDiscontinuityShapes();
+            syncDiscontinuityShapes();
+            success = true;
+        } catch (DAOException e) {
+            throw e;
+        }
+        return success;
     }
 
 
-    public void downloadNonSpecificData() throws DAOException {
-        clearClients();
-        syncClients();
-        clearProjects();
-        syncProjects();
-        clearTunnels();
-        syncTunnels();
-        clearFaces();
-        syncFaces();
+
+    public boolean downloadNonSpecificData() throws DAOException {
+        boolean success;
+        try {
+            clearClients();
+            syncClients();
+            clearProjects();
+            syncProjects();
+            clearTunnels();
+            syncTunnels();
+            clearFaces();
+            syncFaces();
+            success = true;
+        } catch (DAOException e) {
+            throw e;
+        }
+        return success;
+
     }
 
     //TODO Use the user information to pull just the faces, tunnels, projects anc clients for that user
@@ -182,7 +231,70 @@ public class SyncAgent {
         sqlLiteLocalClientDAO.deleteAllClients();
     }
 
+    private void clearDiscontinuityTypes() throws DAOException {
+        LocalDiscontinuityTypeDAO sqlLiteDiscontinuityTypeDAO = daoFactory.getLocalDiscontinuityTypeDAO();
+        sqlLiteDiscontinuityTypeDAO.deleteAllDiscontinuityTypes();
+    }
 
+
+    private void clearDiscontinuityShapes() throws DAOException {
+        LocalDiscontinuityShapeDAO sqlLiteDiscontinuityShapeDAO = daoFactory.getLocalDiscontinuityShapeDAO();
+        sqlLiteDiscontinuityShapeDAO.deleteAllDiscontinuityShapes();
+    }
+
+    private void clearDiscontinuityRelevances() throws DAOException {
+        LocalDiscontinuityRelevanceDAO sqlLiteDiscontinuityRelevanceDAO = daoFactory.getLocalDiscontinuityRelevanceDAO();
+        sqlLiteDiscontinuityRelevanceDAO.deleteAllDiscontinuityRelevances();
+    }
+
+    private void clearDiscontinuityWaters() throws DAOException {
+        LocalDiscontinuityWaterDAO sqlLiteDiscontinuityWaterDAO = daoFactory.getLocalDiscontinuityWaterDAO();
+        sqlLiteDiscontinuityWaterDAO.deleteAllDiscontinuityWaters();
+    }
+
+    private void syncDiscontinuityTypes() throws DAOException {
+        //Read from DropBox
+        RemoteDiscontinuityTypeDAO dropBoxDiscontinuityTypeDAO = daoFactory.getRemoteDiscontinuityTypeDAO();
+        List<DiscontinuityType> downloadedDiscontinuityTypes = dropBoxDiscontinuityTypeDAO.getAllDiscontinuityTypes();
+        //Write into the SQLLite
+        LocalDiscontinuityTypeDAO sqlLiteDiscontinuityTypeDAO = daoFactory.getLocalDiscontinuityTypeDAO();
+        for (DiscontinuityType downloadedDiscontinuityType : downloadedDiscontinuityTypes) {
+            sqlLiteDiscontinuityTypeDAO.saveDiscontinuityType(downloadedDiscontinuityType);
+        }
+    }
+
+    private void syncDiscontinuityWaters() throws DAOException {
+        //Read from DropBox
+        RemoteDiscontinuityWaterDAO dropBoxDiscontinuityWaterDAO = daoFactory.getRemoteDiscontinuityWaterDAO();
+        List<DiscontinuityWater> downloadedDiscontinuityWaters = dropBoxDiscontinuityWaterDAO.getAllDiscontinuityWaters();
+        //Write into the SQLLite
+        LocalDiscontinuityWaterDAO sqlLiteDiscontinuityWaterDAO = daoFactory.getLocalDiscontinuityWaterDAO();
+        for (DiscontinuityWater downloadedDiscontinuityWater : downloadedDiscontinuityWaters) {
+            sqlLiteDiscontinuityWaterDAO.saveDiscontinuityWater(downloadedDiscontinuityWater);
+        }
+    }
+
+    private void syncDiscontinuityShapes() throws DAOException {
+        //Read from DropBox
+        RemoteDiscontinuityShapeDAO dropBoxDiscontinuityShapeDAO = daoFactory.getRemoteDiscontinuityShapeDAO();
+        List<DiscontinuityShape> downloadedDiscontinuityShapes = dropBoxDiscontinuityShapeDAO.getAllDiscontinuityShapes();
+        //Write into the SQLLite
+        LocalDiscontinuityShapeDAO sqlLiteDiscontinuityShapeDAO = daoFactory.getLocalDiscontinuityShapeDAO();
+        for (DiscontinuityShape downloadedDiscontinuityShape : downloadedDiscontinuityShapes) {
+            sqlLiteDiscontinuityShapeDAO.saveDiscontinuityShape(downloadedDiscontinuityShape);
+        }
+    }
+
+    private void syncDiscontinuityRelevances() throws DAOException {
+        //Read from DropBox
+        RemoteDiscontinuityRelevanceDAO dropBoxDiscontinuityRelevanceDAO = daoFactory.getRemoteDiscontinuityRelevanceDAO();
+        List<DiscontinuityRelevance> downloadedDiscontinuityRelevances = dropBoxDiscontinuityRelevanceDAO.getAllDiscontinuityRelevances();
+        //Write into the SQLLite
+        LocalDiscontinuityRelevanceDAO sqlLiteDiscontinuityRelevanceDAO = daoFactory.getLocalDiscontinuityRelevanceDAO();
+        for (DiscontinuityRelevance downloadedDiscontinuityRelevance : downloadedDiscontinuityRelevances) {
+            sqlLiteDiscontinuityRelevanceDAO.saveDiscontinuityRelevance(downloadedDiscontinuityRelevance);
+        }
+    }
 
     private void syncClients() throws DAOException {
         //Read from DropBox
@@ -229,7 +341,6 @@ public class SyncAgent {
             sqlLiteFaceDAO.saveTunnelFace(downloadedFace);
         }
     }
-
 
 
     private void syncFacesCascade(User user) throws DAOException {

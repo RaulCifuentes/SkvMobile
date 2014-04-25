@@ -11,7 +11,6 @@ public class Groundwater extends MappedIndex {
     public static String JOINT_PRESS_PRINCIPAL = "Joint water press / Major principal(σ)";
     public static String GENERAL_CONDITIONS = "General Conditions";
 
-//    public static final Groundwater DEFAULT_VALUE = MappedIndexDataProvider.getAllGroundwaters().get(0);
 
     public Groundwater(String shortName, String inflow, String jointPress, String general,  Double ratingValue) {
         super();

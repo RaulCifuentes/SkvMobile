@@ -6,7 +6,6 @@ import java.io.Serializable;
 
 public class ConditionDiscontinuities extends MappedIndex implements Serializable {
 
-//	public static final ConditionDiscontinuities DEFAULT_VALUE = MappedIndexDataProvider.getAllConditions().get(0);
 
 	public ConditionDiscontinuities(String shortName, String longDescription, Double value) {
 		super();

@@ -22,7 +22,7 @@ public interface LocalEsrDAO {
 
     public ESR getESR(String code) throws DAOException;
 
-    public void saveESR(ESR jr) throws DAOException;
+    public void saveESR(ESR esr) throws DAOException;
 
     public boolean deleteESR(String indexCode, String groupCode, String code);
 

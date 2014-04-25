@@ -443,7 +443,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:inputType="number"
+            android:inputType="number|numberSigned"
             android:layout_marginLeft="@dimen/form_column_left_margin" />
 
 

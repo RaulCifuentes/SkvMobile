@@ -12,6 +12,7 @@ import com.metric.skava.calculator.barton.logic.QBartonOutput;
 
 public class Q_Calculation implements Parcelable {
 
+    private Long _id;
 	private RQD rqd;
 	private Jn jn;
 	private Jr jr;
@@ -79,6 +80,14 @@ public class Q_Calculation implements Parcelable {
 		this.sRF = sRF;
 	}
 
+    public Long get_id() {
+        return _id;
+    }
+
+    public void set_id(Long _id) {
+        this._id = _id;
+    }
+
     public QBartonOutput getQResult() {
         if (qResult == null) {
             QBartonInput input = new QBartonInput();
@@ -105,7 +114,7 @@ public class Q_Calculation implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
 		if (BuildConfig.DEBUG) {
-			Log.d(SkavaConstants.LOG, "Entering " + this. getClass().getSimpleName()
+			Log.d(SkavaConstants.LOG, "Entering " + Q_Calculation.class.getSimpleName()
 					+ " : writeToParcel ");
 		}
 		out.writeValue(rqd);
@@ -122,15 +131,15 @@ public class Q_Calculation implements Parcelable {
 
 		public Q_Calculation createFromParcel(Parcel in) {
 			if (BuildConfig.DEBUG) {
-				Log.d(SkavaConstants.LOG, "Entering " + this. getClass().getSimpleName()
+				Log.d(SkavaConstants.LOG, "Entering " + Q_Calculation.class.getSimpleName()
 						+ " : createFromParcel ");
 			}
-			RQD rqd = (RQD) in.readValue(getClass().getClassLoader());
-			Jn jn = (Jn) in.readValue(getClass().getClassLoader());
-			Jr jr = (Jr) in.readValue(getClass().getClassLoader());
-			Ja ja = (Ja) in.readValue(getClass().getClassLoader());
-			Jw jw = (Jw) in.readValue(getClass().getClassLoader());
-			SRF sRF = (SRF) in.readValue(getClass().getClassLoader());
+			RQD rqd = (RQD) in.readValue(Q_Calculation.class.getClassLoader());
+			Jn jn = (Jn) in.readValue(Q_Calculation.class.getClassLoader());
+			Jr jr = (Jr) in.readValue(Q_Calculation.class.getClassLoader());
+			Ja ja = (Ja) in.readValue(Q_Calculation.class.getClassLoader());
+			Jw jw = (Jw) in.readValue(Q_Calculation.class.getClassLoader());
+			SRF sRF = (SRF) in.readValue(Q_Calculation.class.getClassLoader());
 			Q_Calculation instance = new Q_Calculation(rqd, jn, jr, ja, jw, sRF);
 			return instance;
 		}
@@ -144,12 +153,12 @@ public class Q_Calculation implements Parcelable {
 	// Private constructor used when demarshalling (unserializing the custom
 	// object)
 	private Q_Calculation(Parcel in) {
-		rqd = (RQD) in.readValue(getClass().getClassLoader());
-		jn = (Jn) in.readValue(getClass().getClassLoader());
-		jr = (Jr) in.readValue(getClass().getClassLoader());
-		ja = (Ja) in.readValue(getClass().getClassLoader());
-		jw = (Jw) in.readValue(getClass().getClassLoader());
-		sRF = (SRF) in.readValue(getClass().getClassLoader());
+		rqd = (RQD) in.readValue(Q_Calculation.class.getClassLoader());
+		jn = (Jn) in.readValue(Q_Calculation.class.getClassLoader());
+		jr = (Jr) in.readValue(Q_Calculation.class.getClassLoader());
+		ja = (Ja) in.readValue(Q_Calculation.class.getClassLoader());
+		jw = (Jw) in.readValue(Q_Calculation.class.getClassLoader());
+		sRF = (SRF) in.readValue(Q_Calculation.class.getClassLoader());
 	}
 
 }

@@ -15,7 +15,7 @@ public class QBartonCalculationDropboxTable {
 
     public QBartonCalculationDropboxTable(DbxDatastore datastore) {
         mDatastore = datastore;
-        mQBartonCalculationTable = datastore.getTable("QBartonCalculationDropboxTable");
+        mQBartonCalculationTable = datastore.getTable("QBartonCalculation");
     }
 
     public DbxRecord persist(DbxFields fields) {

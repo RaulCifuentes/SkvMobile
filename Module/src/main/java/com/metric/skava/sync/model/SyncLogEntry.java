@@ -7,14 +7,16 @@ import java.util.Date;
  */
 public class SyncLogEntry {
 
+    public enum Domain{GLOBAL, USER_SPECIFIC, NON_USER_SPECIFIC}
     public enum Status{SUCCESS, FAIL}
     public enum Source{DROPBOX, DEFAULT}
 
     private Date syncDate;
     private Status status;
     private Source source;
+    private Domain domain;
 
-    public SyncLogEntry(Date syncDate, Source source, Status status) {
+    public SyncLogEntry(Date syncDate, Domain domain, Source source, Status status) {
         this.syncDate = syncDate;
         this.source = source;
         this.status = status;

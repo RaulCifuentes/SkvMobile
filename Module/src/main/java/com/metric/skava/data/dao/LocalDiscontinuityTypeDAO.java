@@ -18,7 +18,7 @@ public interface LocalDiscontinuityTypeDAO {
 
     public boolean deleteDiscontinuityType(String code);
 
-    public int deleteEmptyDiscontinuityTypes(String tableName);
+    public int deleteAllDiscontinuityTypes();
 
 }
 

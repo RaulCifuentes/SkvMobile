@@ -10,7 +10,6 @@ import android.view.MenuItem;
 
 import com.metric.skava.app.SkavaApplication;
 import com.metric.skava.app.context.SkavaContext;
-import com.metric.skava.app.data.SkavaDataProvider;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.navigation.NavigationController;
 import com.metric.skava.calculator.data.MappedIndexDataProvider;
@@ -30,10 +29,10 @@ public class SkavaFragmentActivity extends FragmentActivity {
         return getSkavaContext().getAssessment();
     }
 
-    public SkavaDataProvider getSkavaDataProvider() {
-        return ((SkavaApplication) getApplication()).getSkavaDataProvider();
-    }
-
+//    public SkavaDataProvider getSkavaDataProvider() {
+//        return ((SkavaApplication) getApplication()).getSkavaDataProvider();
+//    }
+//
     public MappedIndexDataProvider getMappedIndexDataProvider() {
         return ((SkavaApplication) getApplication()).getMappedIndexDataProvider();
     }

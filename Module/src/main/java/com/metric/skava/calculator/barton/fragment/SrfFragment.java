@@ -2,6 +2,7 @@ package com.metric.skava.calculator.barton.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,14 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metric.skava.R;
+import com.metric.skava.app.exception.SkavaSystemException;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.calculator.adapter.MultiColumnMappedIndexArrayAdapter;
 import com.metric.skava.calculator.barton.model.SRF;
+import com.metric.skava.data.dao.exception.DAOException;
 
 import java.util.List;
 
@@ -130,7 +135,15 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
 
     public void setupFirstGroupList() {
         final ListView listview = (ListView) getView().findViewById(R.id.listview_a);
-        final List<SRF> listSrf = getMappedIndexDataProvider().getAllSrf(SRF.a);
+        final List<SRF> listSrf;
+        try {
+            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.a);
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            throw new SkavaSystemException(e);
+        }
+
         srfAdapter = new MultiColumnMappedIndexArrayAdapter<SRF>(context,
                 R.layout.calculator_two_column_list_view_row_checked_radio, listSrf);
 
@@ -165,7 +178,15 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
 
     public void setupSecondGroupList() {
         final ListView listview = (ListView) getView().findViewById(R.id.listview_b);
-        final List<SRF> listSrf = getMappedIndexDataProvider().getAllSrf(SRF.b);
+        final List<SRF> listSrf;
+        try {
+            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.b);
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            throw new SkavaSystemException(e);
+        }
+
         final MultiColumnMappedIndexArrayAdapter<SRF> adapter = new MultiColumnMappedIndexArrayAdapter<SRF>(context,
                 R.layout.calculator_two_column_list_view_row_checked_radio, listSrf);
 
@@ -200,7 +221,15 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
 
     public void setupThirdGroupList() {
         final ListView listview = (ListView) getView().findViewById(R.id.listview_c);
-        final List<SRF> listSrf = getMappedIndexDataProvider().getAllSrf(SRF.c);
+        final List<SRF> listSrf;
+        try {
+            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.c);
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            throw new SkavaSystemException(e);
+        }
+
         final MultiColumnMappedIndexArrayAdapter<SRF> adapter = new MultiColumnMappedIndexArrayAdapter<SRF>(context,
                 R.layout.calculator_two_column_list_view_row_checked_radio, listSrf);
 
@@ -235,7 +264,15 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
 
     public void setupFourthGroupList() {
         final ListView listview = (ListView) getView().findViewById(R.id.listview_d);
-        final List<SRF> listSrf = getMappedIndexDataProvider().getAllSrf(SRF.d);
+        final List<SRF> listSrf;
+        try {
+            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.d);
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            throw new SkavaSystemException(e);
+        }
+
         srfAdapter = new MultiColumnMappedIndexArrayAdapter<SRF>(context,
                 R.layout.calculator_two_column_list_view_row_checked_radio, listSrf);
 

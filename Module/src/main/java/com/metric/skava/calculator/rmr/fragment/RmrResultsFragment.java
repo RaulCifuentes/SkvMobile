@@ -53,15 +53,15 @@ public class RmrResultsFragment extends RMRCalculatorBaseFragment {
         input.setStrength(RMRCalculation.getStrengthOfRock().getValue());
         input.setRqd(RMRCalculation.getRqd().getValue());
         input.setSpacing(RMRCalculation.getSpacing().getValue());
-        if (RMRCalculation.getConditionDiscontinuities() != null) {
-            input.setCondition(RMRCalculation.getConditionDiscontinuities().getValue());
-        } else {
+//        if (RMRCalculation.getConditionDiscontinuities() != null) {
+//            input.setCondition(RMRCalculation.getConditionDiscontinuities().getValue());
+//        } else {
             input.setRoughness(RMRCalculation.getRoughness().getValue());
             input.setAperture(RMRCalculation.getAperture().getValue());
             input.setInfilling(RMRCalculation.getInfilling().getValue());
             input.setWeathering(RMRCalculation.getWeathering().getValue());
             input.setPersistence(RMRCalculation.getPersistence().getValue());
-        }
+//        }
         input.setGroundwater(RMRCalculation.getGroundwater().getValue());
         input.setOrientation(RMRCalculation.getOrientationDiscontinuities().getValue());
         if (input.isComplete()){

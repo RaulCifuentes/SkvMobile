@@ -16,10 +16,13 @@ import com.metric.skava.data.dao.exception.DAOException;
  * Created by metricboy on 3/6/14.
  */
 public class DatastoreHelper {
+    // **************** DS RAUL ***********
+//    private static final String APP_SECRET = "pc2wwbqnblh0r53";
+//    private static final String APP_KEY = "bzsvwf0odnoslis";
 
-    private static final String APP_SECRET = "pc2wwbqnblh0r53";
-
-    private static final String APP_KEY = "bzsvwf0odnoslis";
+    // **************** DS FABIAN ***********
+    private static final String APP_SECRET = "rjfwy6os8tbpgin";
+    private static final String APP_KEY = "m375gz1gq6k8vv1";
 
     private static final String APP_DATASTORE_NAME = "skavatunnelapp";
 
@@ -87,6 +90,7 @@ public class DatastoreHelper {
             assertLinkedAccount(getAccountManager());
             if (mAccount == null) {
                 mAccount = getAccountManager().getLinkedAccount();
+            }
                 if (mAccount != null) {
                     if (mDatastore == null || !mDatastore.isOpen()) {
                         mDatastoreManager = DbxDatastoreManager.forAccount(mAccount);
@@ -99,8 +103,6 @@ public class DatastoreHelper {
                 } else {
                     throw new DAOException("Failed getting linked Dropbox user account !! ");
                 }
-
-            }
         } catch (DbxException e) {
             throw new DAOException(e);
         }
@@ -121,7 +123,7 @@ public class DatastoreHelper {
         this.mAccount = linkedAccount;
     }
 
-    private DbxAccountManager getAccountManager() {
+    public DbxAccountManager getAccountManager() {
         if (mDbxAcctMgr == null) {
             mDbxAcctMgr = DbxAccountManager.getInstance(mContext.getApplicationContext(), APP_KEY, APP_SECRET);
         }

@@ -100,10 +100,40 @@ public abstract class SqlLiteBaseDAO {
             ContentValues newValues = new ContentValues();
             // Assign values for each row.
             for (int i = 0; i < columnNames.length; i++) {
-                if (columnValues[i] instanceof String){
-                    newValues.put(columnNames[i], (String) columnValues[i]);
-                } else if (columnValues[i] instanceof Long){
-                    newValues.put(columnNames[i], (Long) columnValues[i]);
+                String columnName = columnNames[i];
+                Object columnValue = columnValues[i];
+
+                if (columnValue == null) {
+                    newValues.put(columnName, (String)null);
+                } else {
+                    // ref.: Sugar ORM https://github.com/satyan/sugar/blob/master/library/src/com/orm/SugarRecord.java#L92
+                    Class<?> columnType = columnValue.getClass();
+                    if (columnType.equals(Short.class) || columnType.equals(short.class)) {
+                        newValues.put(columnName, (Short) columnValue);
+                    }
+                    else if (columnType.equals(Integer.class) || columnType.equals(int.class)) {
+                        newValues.put(columnName, (Integer) columnValue);
+                    }
+                    else if (columnType.equals(Long.class) || columnType.equals(long.class)) {
+                        newValues.put(columnName, (Long) columnValue);
+                    }
+                    else if (columnType.equals(Float.class) || columnType.equals(float.class)) {
+                        newValues.put(columnName, (Float) columnValue);
+                    }
+                    else if (columnType.equals(Double.class) || columnType.equals(double.class)) {
+                        newValues.put(columnName, (Double) columnValue);
+                    }
+                    else if (columnType.equals(Boolean.class) || columnType.equals(boolean.class)) {
+                        newValues.put(columnName, (Boolean) columnValue);
+    //                }
+    //                else if (Date.class.equals(columnType)) {
+    //                    newValues.put(columnName, ((Date) column.get(this)).getTime());
+    //                }
+    //                else if (Calendar.class.equals(columnType)) {
+    //                    newValues.put(columnName, ((Calendar) column.get(this)).getTimeInMillis());
+                    }else{
+                        newValues.put(columnName, String.valueOf(columnValue));
+                    }
                 }
             }
             // [ ... Repeat for each column / value pair ... ]

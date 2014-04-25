@@ -18,7 +18,7 @@ public interface LocalDiscontinuityRelevanceDAO {
 
     public boolean deleteDiscontinuityRelevance(String code);
 
-    public int deleteEmptyDiscontinuityRelevances(String tableName);
+    public int deleteAllDiscontinuityRelevances();
 
 }
 

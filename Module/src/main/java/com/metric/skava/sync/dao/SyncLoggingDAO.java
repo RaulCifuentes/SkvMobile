@@ -9,7 +9,7 @@ import com.metric.skava.sync.model.SyncLogEntry;
 public interface SyncLoggingDAO {
 
 
-    public SyncLogEntry getLastSyncByState(SyncLogEntry.Status state) throws DAOException;
+    public SyncLogEntry getLastSyncByState(SyncLogEntry.Domain domain, SyncLogEntry.Status state) throws DAOException;
 
     public void saveSyncLogEntry(SyncLogEntry newEntity) throws DAOException;
 
