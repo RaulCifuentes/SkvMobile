@@ -2,6 +2,7 @@ package com.metric.skava.calculator.barton.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,17 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metric.skava.R;
+import com.metric.skava.app.exception.SkavaSystemException;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.calculator.adapter.MultiColumnMappedIndexArrayAdapter;
+import com.metric.skava.calculator.barton.model.Ja;
 import com.metric.skava.calculator.barton.model.Jr;
 import com.metric.skava.calculator.data.MappedIndexDataProvider;
 import com.metric.skava.data.dao.DAOFactory;
+import com.metric.skava.data.dao.exception.DAOException;
 
 import java.util.List;
 
@@ -23,7 +29,7 @@ import java.util.List;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass. Activities that
  * contain this fragment must implement the
- * {@link JnFragment.OnFragmentInteractionListener} interface to handle
+ * JnFragment.OnFragmentInteractionListener interface to handle
  * interaction events.
  */
 public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGroup.OnCheckedChangeListener {
@@ -78,7 +84,6 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
         mListThirdGroup.setVisibility(View.INVISIBLE);
 
 
-
         if (selectedJr != null) {
             //what (type) group of Jr is this in order to show the correspondant list
             switch (selectedJr.getGroupType()) {
@@ -119,24 +124,28 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
         radioGroup.setOnCheckedChangeListener(this);
     }
 
-    public void setupFirstGroupList(){
+    public void setupFirstGroupList() {
         final ListView listview = (ListView) getView().findViewById(R.id.listview_a);
         TextView firstTextView = (TextView) headerView.findViewById(R.id.first_column_text_view);
         TextView secondTextView = (TextView) headerView.findViewById(R.id.second_column_text_view);
         secondTextView.setText(Jr.DESCRIPTION);
         listview.addHeaderView(headerView, null, false);
         final int numberOfHeaders = listview.getHeaderViewsCount();
-
-        final List<Jr> listJr = getMappedIndexDataProvider().getAllJr(Jr.a);
-        //TODO Use the DAO to extract from Database
-//        final List<Jr> listJr = daoFactory.getJrDAO().getAllJr();
+        final List<Jr> listJr;
+        try {
+            listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.a);
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            throw new SkavaSystemException(e);
+        }
         jrAdapter = new MultiColumnMappedIndexArrayAdapter<Jr>(context,
                 R.layout.calculator_two_column_list_view_row_checked_radio, listJr);
         listview.setAdapter(jrAdapter);
 
         if (selectedJr != null) {
             int posIndex = jrAdapter.getPosition(selectedJr);
-            if (posIndex!=-1){
+            if (posIndex != -1) {
                 posIndex += numberOfHeaders;
                 listview.setItemChecked(posIndex, true);
                 listview.setSelection(posIndex);
@@ -153,11 +162,16 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
         });
     }
 
-    public void setupSecondGroupList(){
+    public void setupSecondGroupList() {
         final ListView listview = (ListView) getView().findViewById(R.id.listview_b);
-        final List<Jr> listJr = getMappedIndexDataProvider().getAllJr(Jr.b);
-        //TODO Use the DAO to extract from Database
-//        final List<Jr> listJr = daoFactory.getJrDAO().getAllJr();
+        final List<Jr> listJr;
+        try {
+            listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.b);
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            throw new SkavaSystemException(e);
+        }
         jrAdapter = new MultiColumnMappedIndexArrayAdapter<Jr>(context,
                 R.layout.calculator_two_column_list_view_row_checked_radio, listJr);
 
@@ -171,7 +185,7 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
         selectedJr = getQCalculationContext().getJr();
         if (selectedJr != null) {
             int posIndex = jrAdapter.getPosition(selectedJr);
-            if (posIndex != -1){
+            if (posIndex != -1) {
                 posIndex += numberOfHeaders;
                 listview.setItemChecked(posIndex, true);
                 listview.setSelection(posIndex);
@@ -188,11 +202,16 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
         });
     }
 
-    public void setupThirdGroupList(){
+    public void setupThirdGroupList() {
         final ListView listview = (ListView) getView().findViewById(R.id.listview_c);
-        final List<Jr> listJr = getMappedIndexDataProvider().getAllJr(Jr.c);
-        //TODO Use the DAO to extract from Database
-//        final List<Jr> listJr = daoFactory.getJrDAO().getAllJr();
+        final List<Jr> listJr;
+        try {
+            listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.c);
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            throw new SkavaSystemException(e);
+        }
         jrAdapter = new MultiColumnMappedIndexArrayAdapter<Jr>(context,
                 R.layout.calculator_two_column_list_view_row_checked_radio, listJr);
 
@@ -226,8 +245,8 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
         switch (checkedId) {
             case R.id.radioButtonFirst:
                 mListFirstGroup.setVisibility(View.VISIBLE);
-                if (selectedJr == null){
-                 //i though the reset was only for null values but second thoughts on this ..
+                if (selectedJr == null) {
+                    //i though the reset was only for null values but second thoughts on this ..
                 }
                 mListFirstGroup.setSelection(1);
                 mListFirstGroup.setItemChecked(1, true);
@@ -242,11 +261,11 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
                 mListFirstGroup.setVisibility(View.GONE);
                 mListFirstGroup.clearChoices();
                 mListSecondGroup.setVisibility(View.VISIBLE);
-                if (selectedJr == null){
+                if (selectedJr == null) {
                     //i though the reset was only for null values but second thoughts on this ..
                 }
                 mListSecondGroup.setSelection(1);
-                mListSecondGroup.setItemChecked(1,true);
+                mListSecondGroup.setItemChecked(1, true);
                 selectedJr = (Jr) mListSecondGroup.getItemAtPosition(1);
                 getQCalculationContext().setJr(selectedJr);
                 mListThirdGroup.setVisibility(View.GONE);
@@ -258,11 +277,11 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
                 mListSecondGroup.setVisibility(View.GONE);
                 mListSecondGroup.clearChoices();
                 mListThirdGroup.setVisibility(View.VISIBLE);
-                if (selectedJr == null){
+                if (selectedJr == null) {
                     //i though the reset was only for null values but second thoughts on this ..
                 }
                 mListThirdGroup.setSelection(1);
-                mListThirdGroup.setItemChecked(1,true);
+                mListThirdGroup.setItemChecked(1, true);
                 selectedJr = (Jr) mListThirdGroup.getItemAtPosition(1);
                 getQCalculationContext().setJr(selectedJr);
                 break;

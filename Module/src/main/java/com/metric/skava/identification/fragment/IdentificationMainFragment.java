@@ -474,7 +474,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
 
         slopeTextEdit = (EditText) rootView.findViewById(R.id.mapping_gral_info_slope_value);
         slopeTextEdit.setRawInputType(Configuration.KEYBOARD_12KEY);
-        Short slope = getCurrentAssessment().getSlope();
+        Double slope = getCurrentAssessment().getSlope();
         if (slope != null) {
             slopeTextEdit.setText(numberFormatter.format(slope));
         }
@@ -483,10 +483,10 @@ public class IdentificationMainFragment extends SkavaFragment implements
             @Override
             public void validate(TextView textView, java.lang.String text) {
                 /* Validation code here */
-                Short enteredValue = 0;
+                Double enteredValue = 0d;
                 try {
-                    enteredValue = Short.parseShort(text);
-                    if (enteredValue > 0 && enteredValue < 90) {
+                    enteredValue = Double.parseDouble(text);
+                    if (enteredValue > -100 && enteredValue < 100) {
                         getSkavaContext().getAssessment().setSlope(enteredValue);
                     } else {
                         slopeTextEdit.setError("Slope must be a number between 0 and 90!");

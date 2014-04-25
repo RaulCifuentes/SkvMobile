@@ -7,11 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.dropbox.sync.android.DbxAccount;
 import com.metric.skava.R;
 import com.metric.skava.about.activity.AboutMainActivity;
 import com.metric.skava.app.model.Role;
@@ -22,7 +21,6 @@ import com.metric.skava.app.navdrawer.NavDrawerAdapter;
 import com.metric.skava.app.navdrawer.NavDrawerItem;
 import com.metric.skava.app.navdrawer.NavMenuItem;
 import com.metric.skava.app.navdrawer.NavMenuSection;
-import com.metric.skava.app.navigation.NavigationController;
 import com.metric.skava.app.util.DateDisplayFormat;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.assessment.activity.AssessmentsListActivity;
@@ -42,90 +40,149 @@ import java.util.Date;
 
 public class HomeMainActivity extends AbstractNavDrawerActivity {
 
-    private NavigationController navController;
+    private SyncAgent syncAgent;
+    private boolean callbackCompleted = false;
+    private boolean dropboxNeverCalled = true;
+    private boolean assertNeverCalled = true;
 
 
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        if (navController == null) {
+//            navController = NavigationController.getInstance();
+//        }
+        if (savedInstanceState == null) {
+            setUp();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.nav_drawer_main_layout_content_frame, new MainFragment())
+                    .commit();
+        }
+
+        if (syncAgent.isAlreadyLinked() && dropboxNeverCalled){
+            onDropboxReady();
+        }
+
+//        if (callbackCompleted && dropboxNeverCalled){
+//            onDropboxReady();
+//        }
+        if (assertNeverCalled){
+            assertDataAvailable();
+        }
     }
 
-    public void setUp() {
-        //Check internet access
-        boolean connected = isNetworkAvailable();
-        if (connected) {
+
+    private void onDropboxReady() {
+        try {
+            if (syncAgent.shouldUpdate()) {
+                DAOFactory daoFactory = DAOFactory.getInstance(this);
+                SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+                if (syncAgent.downloadGlobalData()) {
+                    SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.GLOBAL, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS);
+                    syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
+                }
+                if (syncAgent.downloadNonSpecificData()) {
+                    SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS);
+                    syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
+                }
+            }
+            dropboxNeverCalled = false;
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            Toast.makeText(this, daoe.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    private void onDropboxFailed() {
+        Toast.makeText(this, "Dropbox cancelled.", Toast.LENGTH_LONG).show();
+        Log.d(SkavaConstants.LOG, "Dropbox cancelled.");
+    }
+
+    public void insertGlobalEmergencyData() throws DAOException {
+        DAOFactory daoFactory = DAOFactory.getInstance(this);
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SQLiteDatabase dbConn = ((SyncLoggingDAOsqlLiteImpl) syncLoggingDAO).getDBConnection();
+        SkavaDBHelper.insertDefaultData(dbConn);
+        SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.GLOBAL, SyncLogEntry.Source.DEFAULT, SyncLogEntry.Status.SUCCESS);
+        syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
+    }
+
+    public void insertNonSpecificEmergencyData() throws DAOException {
+        DAOFactory daoFactory = DAOFactory.getInstance(this);
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SQLiteDatabase dbConn = ((SyncLoggingDAOsqlLiteImpl) syncLoggingDAO).getDBConnection();
+        SkavaDBHelper.insertDefaultData(dbConn);
+        SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Source.DEFAULT, SyncLogEntry.Status.SUCCESS);
+        syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
+    }
+
+
+
+    private void assertDataAvailable() {
+
+        SyncLogEntry lastGlobalData = getSkavaContext().getSyncMetadata().getGlobal();
+        SyncLogEntry lastNonSpecificData = getSkavaContext().getSyncMetadata().getGlobal();
+
+        if (lastGlobalData == null) {
+            try {
+                insertGlobalEmergencyData();
+                Log.d(SkavaConstants.LOG, "Using emergency data. No internet nor local data. Sorry !!");
+                Toast.makeText(this, "Using emergency data. No internet nor local data. Sorry ", Toast.LENGTH_LONG).show();
+            } catch(DAOException daoe){
+                Toast.makeText(this, daoe.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e(SkavaConstants.LOG, daoe.getMessage());
+            }
+        } else {
+            if (lastGlobalData.getSource().equals(SyncLogEntry.Source.DROPBOX)) {
+                Log.d(SkavaConstants.LOG, "Using global data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()));
+                Toast.makeText(this, "Using global data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()), Toast.LENGTH_LONG).show();
+            }
+            if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DEFAULT)) {
+                Log.d(SkavaConstants.LOG, "Operating on previous emergency data created on  " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()));
+                Toast.makeText(this, "Operating on previous emergency data created on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()), Toast.LENGTH_LONG).show();
+            }
+        }
+
+        if (lastNonSpecificData == null) {
+            try {
+                insertNonSpecificEmergencyData();
+                Log.d(SkavaConstants.LOG, "Using emergency data. No internet nor local data. Sorry !!" );
+                Toast.makeText(this, "Using emergency data. No internet nor local data. Sorry ", Toast.LENGTH_LONG).show();
+            } catch(DAOException daoe){
+                Toast.makeText(this, daoe.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e(SkavaConstants.LOG, daoe.getMessage());
+            }
+        } else {
+            if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DROPBOX)) {
+                Log.d(SkavaConstants.LOG, "Using non specific data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()));
+                Toast.makeText(this, "Using non specific data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()), Toast.LENGTH_LONG).show();
+            }
+            if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DEFAULT)) {
+                Log.d(SkavaConstants.LOG, "Operating on previous emergency data created on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()));
+                Toast.makeText(this, "Operating on previous emergency datacreated on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()) , Toast.LENGTH_LONG).show();
+            }
+        }
+
+        assertNeverCalled = false;
+    }
+
+
+    private void setUp() {
+        if (isNetworkAvailable()) {
             //Check the syncronization status
             try {
-                SyncAgent syncAgent = SyncAgent.getInstance(this, this);
-                if (syncAgent.shouldUpdate()) {
-                    syncAgent.downloadGlobalData();
-                    syncAgent.downloadNonSpecificData();
-                }
+                syncAgent = SyncAgent.getInstance(this, this);
             } catch (DAOException daoe) {
                 Log.e(SkavaConstants.LOG, daoe.getMessage());
                 Toast.makeText(this, daoe.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
-
-        SyncLogEntry lastSuccess = null;
-        DAOFactory daoFactory = DAOFactory.getInstance(this);
-        SyncLoggingDAO syncLoggingDAO = null;
-        try {
-            syncLoggingDAO = daoFactory.getSyncLoggingDAO();
-            lastSuccess = syncLoggingDAO.getLastSyncByState(SyncLogEntry.Status.SUCCESS);
-
-            if (lastSuccess != null) {
-                getSkavaContext().setSyncMetadata(lastSuccess);
-                Log.d(SkavaConstants.LOG, "Using data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastSuccess.getSyncDate()));
-                Toast.makeText(this, "Using data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastSuccess.getSyncDate()), Toast.LENGTH_LONG).show();
-            } else {
-                Log.d(SkavaConstants.LOG, "Operating on emergency data. No internet nor local data. Sorry !!");
-                Toast.makeText(this, "Operating on emergency data. No internet nor local data. Sorry ", Toast.LENGTH_LONG).show();
-                //Run an emergency setup data on the local tables
-                SQLiteDatabase dbConn = ((SyncLoggingDAOsqlLiteImpl) syncLoggingDAO).getDBConnection();
-                try {
-                    SkavaDBHelper.insertDefaultData(dbConn);
-                    SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Source.DEFAULT, SyncLogEntry.Status.SUCCESS);
-                    syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
-                    Toast.makeText(this, "Emergency default data successfully loaded.", Toast.LENGTH_LONG).show();
-                    Log.d(SkavaConstants.LOG, "Emergency default data successfully loaded.");
-                } catch (DAOException daoe) {
-                    Toast.makeText(this, daoe.getMessage(), Toast.LENGTH_LONG).show();
-                    SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Source.DEFAULT, SyncLogEntry.Status.FAIL);
-                    syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
-                    Log.e(SkavaConstants.LOG, daoe.getMessage());
-                }
-
-            }
-
-        } catch (DAOException e) {
-            Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (navController == null) {
-            navController = NavigationController.getInstance();
-        }
-        if (savedInstanceState == null) {
-            setUp();
-//            this.navController.goHomeFragment(this);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.nav_drawer_main_layout_content_frame, new MainFragment())
-                    .commit();
-        }
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
+
+
 
     @Override
     protected NavDrawerActivityConfiguration getNavDrawerConfiguration() {
@@ -156,9 +213,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                         NavMenuItem.create(210, getString(R.string.about_label), "ic_action_overflow", true,
                                 true, this)};
             }
-
         }
-
 
         NavDrawerActivityConfiguration navDrawerConfig = new NavDrawerActivityConfiguration();
         navDrawerConfig.setMainLayout(R.layout.nav_drawer_main_layout);
@@ -189,7 +244,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 startActivity(intent);
                 break;
 
-
             case 199: //
                 intent = new Intent(this, SyncMainActivity.class);
                 startActivity(intent);
@@ -210,34 +264,11 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     }
 
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onBackPressed() {
-        // See bug:
-        // http://stackoverflow.com/questions/13418436/android-4-2-back-stack-behaviour-with-nested-fragments/14030872#14030872
-        // If the fragment exists and has some back-stack entry
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment currentFragment = fm
-                .findFragmentById(R.id.nav_drawer_main_layout_content_frame);
-        if (currentFragment != null
-                && currentFragment.getChildFragmentManager()
-                .getBackStackEntryCount() > 0) {
-            // Get the fragment fragment manager - and pop the backstack
-            currentFragment.getChildFragmentManager().popBackStack();
-        }
-        // Else, nothing in the direct fragment back stack
-        else {
-            if (!NavigationController.HOME_FRAGMENT_TAG.equals(currentFragment
-                    .getTag())) {
-                this.navController.goHomeFragment(this);
-            } else {
-                super.onBackPressed();
-            }
-        }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 
@@ -245,16 +276,43 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == DatastoreHelper.REQUEST_LINK_TO_DROPBOX) {
             if (resultCode == Activity.RESULT_OK) {
-//                mAccount = mAccountManager.getLinkedAccount();
-//                mLinkButton.setVisibility(View.GONE);
-                System.out.println("Hola amigos " + HomeMainActivity.class.getCanonicalName());
-                // ... Now display your own UI using the linked account information.
+                // ... Now go on using the linked account information.
+                callbackCompleted = true;
+                DbxAccount accountQueLLego = null;
+                syncAgent.getDatastoreHelper().setAccount(accountQueLLego);
             } else {
                 // ... Link failed or was cancelled by the user.
+                onDropboxFailed();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    //    @Override
+//    public void onBackPressed() {
+//        // See bug:
+//        // http://stackoverflow.com/questions/13418436/android-4-2-back-stack-behaviour-with-nested-fragments/14030872#14030872
+//        // If the fragment exists and has some back-stack entry
+//        FragmentManager fm = getSupportFragmentManager();
+//        Fragment currentFragment = fm
+//                .findFragmentById(R.id.nav_drawer_main_layout_content_frame);
+//        if (currentFragment != null
+//                && currentFragment.getChildFragmentManager()
+//                .getBackStackEntryCount() > 0) {
+//            // Get the fragment fragment manager - and pop the backstack
+//            currentFragment.getChildFragmentManager().popBackStack();
+//        }
+//        // Else, nothing in the direct fragment back stack
+//        else {
+//            if (!NavigationController.HOME_FRAGMENT_TAG.equals(currentFragment
+//                    .getTag())) {
+//                this.navController.goHomeFragment(this);
+//            } else {
+//                super.onBackPressed();
+//            }
+//        }
+//    }
+
 
 }

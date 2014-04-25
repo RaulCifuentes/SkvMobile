@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.metric.skava.BuildConfig;
 import com.metric.skava.R;
+import com.metric.skava.app.exception.SkavaSystemException;
 import com.metric.skava.app.fragment.SkavaFragment;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.calculator.adapter.MultiColumnMappedIndexArrayAdapter;
@@ -82,7 +83,16 @@ public class ESRFragment extends SkavaFragment {
 
         FragmentActivity context = this.getActivity();
 
-        final List<ESR> listESR = getSkavaActivity().getMappedIndexDataProvider().getAllESR();
+//        final List<ESR> listESR = getSkavaActivity().getMappedIndexDataProvider().getAllESR();
+        final List<ESR> listESR ;
+        try {
+            listESR = daoFactory.getLocalEsrDAO(DAOFactory.Flavour.SQLLITE).getAllESRs();
+        } catch (DAOException e){
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            throw new SkavaSystemException(e);
+        }
+
 
         final MultiColumnMappedIndexArrayAdapter<ESR> adapter = new MultiColumnMappedIndexArrayAdapter<ESR>(
                 context, R.layout.calculator_two_column_list_view_row_checked_radio, listESR);

@@ -15,7 +15,7 @@ public class RMRCalculationDropboxTable {
 
     public RMRCalculationDropboxTable(DbxDatastore datastore) {
         mDatastore = datastore;
-        mRMRCalculationTable = datastore.getTable("RMRCalculationDropboxTable");
+        mRMRCalculationTable = datastore.getTable("RMRCalculation");
     }
 
 

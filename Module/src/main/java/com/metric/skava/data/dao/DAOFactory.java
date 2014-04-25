@@ -4,35 +4,54 @@ import android.content.Context;
 
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.ClientDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.DiscontinuityRelevanceDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.DiscontinuityShapeDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.DiscontinuityTypeDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.DiscontinuityWaterDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.ExcavationMethodDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.ExcavationProjectDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.ExcavationSectionDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.RoleDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.SpacingDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.TunnelDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.TunnelFaceDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.UserDAODropboxImpl;
+import com.metric.skava.data.dao.impl.sqllite.ApertureDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.ArchTypeDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.AssessmentDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.BoltTypeDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.ClientDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.CoverageDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.DiscontinuityRelevanceDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.DiscontinuityShapeDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.DiscontinuityTypeDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.DiscontinuityWaterDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.EsrDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.ExcavationMethodDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.ExcavationProjectDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.ExcavationSectionDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.FractureTypeDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.GroundwaterDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.InfillingDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.JaDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.JnDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.JrDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.JwDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.MeshTypeDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.OrientationDiscontinuitiesDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.PermissionDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.PersistenceDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.RoleDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.RoughnessDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.ShotcreteTypeDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.SpacingDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.SrfDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.StrengthDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.SupportRequirementDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.TunnelDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.TunnelFaceDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.UserDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.WeatheringDAOsqlLiteImpl;
 import com.metric.skava.sync.dao.SyncLoggingDAO;
 import com.metric.skava.sync.dao.SyncLoggingDAOsqlLiteImpl;
 
@@ -41,10 +60,13 @@ import com.metric.skava.sync.dao.SyncLoggingDAOsqlLiteImpl;
  */
 public class DAOFactory {
 
-       public static enum Flavour {
-        SQLLITE, DROPBOX;
 
+
+
+    public static enum Flavour {
+        SQLLITE, DROPBOX;
     }
+
     private Context mContext;
 
     private static DAOFactory instance;
@@ -128,7 +150,6 @@ public class DAOFactory {
                 localPermissionDAO = new PermissionDAOsqlLiteImpl(mContext);
                 break;
         }
-
         return localPermissionDAO;
     }
 
@@ -246,27 +267,75 @@ public class DAOFactory {
         return remoteExcavationMethodDAO;
     }
 
-    public LocalBoltTypeDAO getBoltTypeDAO() {
+
+    public LocalDiscontinuityTypeDAO getLocalDiscontinuityTypeDAO() {
+        LocalDiscontinuityTypeDAO localDiscontinuityTypeDAO = new DiscontinuityTypeDAOsqlLiteImpl(mContext);
+        return localDiscontinuityTypeDAO;
+    }
+
+    public RemoteDiscontinuityTypeDAO getRemoteDiscontinuityTypeDAO() throws DAOException {
+        RemoteDiscontinuityTypeDAO remoteDiscontinuityTypeDAO = new DiscontinuityTypeDAODropboxImpl(mContext, null);
+        return remoteDiscontinuityTypeDAO;
+    }
+
+
+    public LocalDiscontinuityRelevanceDAO getLocalDiscontinuityRelevanceDAO() {
+        LocalDiscontinuityRelevanceDAO localDiscontinuityRelevanceDAO = new DiscontinuityRelevanceDAOsqlLiteImpl(mContext);
+        return localDiscontinuityRelevanceDAO;
+    }
+
+    public RemoteDiscontinuityRelevanceDAO getRemoteDiscontinuityRelevanceDAO() throws DAOException {
+        RemoteDiscontinuityRelevanceDAO remoteDiscontinuityRelevanceDAO = new DiscontinuityRelevanceDAODropboxImpl(mContext, null);
+        return remoteDiscontinuityRelevanceDAO;
+    }
+
+    public LocalDiscontinuityWaterDAO getLocalDiscontinuityWaterDAO() throws DAOException {
+        LocalDiscontinuityWaterDAO waterDAO = new DiscontinuityWaterDAOsqlLiteImpl(mContext);
+        return waterDAO;
+    }
+
+    public RemoteDiscontinuityWaterDAO getRemoteDiscontinuityWaterDAO() throws DAOException {
+        RemoteDiscontinuityWaterDAO remoteDiscontinuityWaterDAO = new DiscontinuityWaterDAODropboxImpl(mContext, null);
+        return remoteDiscontinuityWaterDAO;
+    }
+
+    public LocalDiscontinuityShapeDAO getLocalDiscontinuityShapeDAO() throws DAOException {
+        LocalDiscontinuityShapeDAO shapeDAO = new DiscontinuityShapeDAOsqlLiteImpl(mContext);
+        return shapeDAO;
+    }
+
+    public RemoteDiscontinuityShapeDAO getRemoteDiscontinuityShapeDAO() throws DAOException {
+        RemoteDiscontinuityShapeDAO remoteDiscontinuityShapeDAO = new DiscontinuityShapeDAODropboxImpl(mContext, null);
+        return remoteDiscontinuityShapeDAO;
+    }
+
+    public LocalFractureTypeDAO getLocalFractureTypeDAO() throws DAOException {
+        LocalFractureTypeDAO fractureTypeDAO = new FractureTypeDAOsqlLiteImpl(mContext);
+        return fractureTypeDAO;
+    }
+
+
+    public LocalBoltTypeDAO getLocalBoltTypeDAO() {
         LocalBoltTypeDAO localBoltTypeDAO = new BoltTypeDAOsqlLiteImpl(mContext);
         return localBoltTypeDAO;
     }
 
-    public LocalShotcreteTypeDAO getShotcreteTypeDAO() {
+    public LocalShotcreteTypeDAO getLocalShotcreteTypeDAO() {
         LocalShotcreteTypeDAO shotcreteTypeDAO = new ShotcreteTypeDAOsqlLiteImpl(mContext);
         return shotcreteTypeDAO;
     }
 
-    public LocalMeshTypeDAO getMeshTypeDAO() {
+    public LocalMeshTypeDAO getLocalMeshTypeDAO() {
         LocalMeshTypeDAO localMeshTypeDAO = new MeshTypeDAOsqlLiteImpl(mContext);
         return localMeshTypeDAO;
     }
 
-    public LocalCoverageDAO getCoverageDAO() {
+    public LocalCoverageDAO getLocalCoverageDAO() {
         LocalCoverageDAO localCoverageDAO = new CoverageDAOsqlLiteImpl(mContext);
         return localCoverageDAO;
     }
 
-    public LocalArchTypeDAO getArchTypeDAO() {
+    public LocalArchTypeDAO getLocalArchTypeDAO() {
         LocalArchTypeDAO localArchTypeDAO = new ArchTypeDAOsqlLiteImpl(mContext);
         return localArchTypeDAO;
     }
@@ -276,34 +345,89 @@ public class DAOFactory {
         return supportRequirementDAO;
     }
 
-    public LocalFractureTypeDAO getFractureTypeDAO() {
-        LocalFractureTypeDAO localFractureTypeDAO = new FractureTypeDAOsqlLiteImpl(mContext);
-        return localFractureTypeDAO;
-    }
-
 
     public LocalAssessmentDAO getAssessmentDAO(Flavour daoFlavour) throws DAOException {
         LocalAssessmentDAO localAssessmentDAO = new AssessmentDAOsqlLiteImpl(mContext);
         return localAssessmentDAO;
     }
 
-    public LocalJrDAO getJrDAO() throws DAOException {
+
+    public LocalJnDAO getLocalJnDAO() throws DAOException {
+        LocalJnDAO localJnDAO = new JnDAOsqlLiteImpl(mContext);
+        return localJnDAO;
+    }
+
+    public LocalJaDAO getLocalJaDAO() throws DAOException {
+        LocalJaDAO localJaDAO = new JaDAOsqlLiteImpl(mContext);
+        return localJaDAO;
+    }
+
+    public LocalJrDAO getLocalJrDAO() throws DAOException {
         LocalJrDAO localJrDAO = new JrDAOsqlLiteImpl(mContext);
         return localJrDAO;
     }
 
-    public LocalDiscontinuityTypeDAO getDiscontinuityTypeDAO() {
-        LocalDiscontinuityTypeDAO localDiscontinuityTypeDAO = new DiscontinuityTypeDAOsqlLiteImpl(mContext);
-        return localDiscontinuityTypeDAO;
+    public LocalJwDAO getLocalJwDAO() throws DAOException {
+        LocalJwDAO localJwDAO = new JwDAOsqlLiteImpl(mContext);
+        return localJwDAO;
     }
 
-    public LocalDiscontinuityRelevanceDAO getDiscontinuityRelevanceDAO() {
-        LocalDiscontinuityRelevanceDAO localDiscontinuityRelevanceDAO = new DiscontinuityRelevanceDAOsqlLiteImpl(mContext);
-        return localDiscontinuityRelevanceDAO;
+    public LocalSrfDAO getLocalSrfDAO() throws DAOException {
+        LocalSrfDAO localSrfDAO = new SrfDAOsqlLiteImpl(mContext);
+        return localSrfDAO;
     }
 
-    public LocalSpacingDAO getSpacingDAO() throws DAOException {
+
+    public LocalOrientationDiscontinuitiesDAO getLocalOrientationDiscontinuitiesDAO() throws DAOException{
+        LocalOrientationDiscontinuitiesDAO orientationDAO = new OrientationDiscontinuitiesDAOsqlLiteImpl(mContext);
+        return orientationDAO;
+    }
+
+
+    public LocalSpacingDAO getLocalSpacingDAO() throws DAOException {
         LocalSpacingDAO spacingDAO = new SpacingDAOsqlLiteImpl(mContext);
+        return spacingDAO;
+    }
+
+    public LocalPersistenceDAO getLocalPersistenceDAO() throws DAOException {
+        LocalPersistenceDAO persistenceDAO = new PersistenceDAOsqlLiteImpl(mContext);
+        return persistenceDAO;
+    }
+
+    public LocalApertureDAO getLocalApertureDAO() throws DAOException {
+        LocalApertureDAO apertureDAO = new ApertureDAOsqlLiteImpl(mContext);
+        return apertureDAO;
+    }
+
+    public LocalInfillingDAO getLocalInfillingDAO() throws DAOException {
+        LocalInfillingDAO infillingDAO = new InfillingDAOsqlLiteImpl(mContext);
+        return infillingDAO;
+    }
+
+    public LocalWeatheringDAO getLocalWeatheringDAO() throws DAOException {
+        LocalWeatheringDAO weatheringDAO = new WeatheringDAOsqlLiteImpl(mContext);
+        return weatheringDAO;
+    }
+
+    public LocalRoughnessDAO getLocalRoughnessDAO() throws DAOException {
+        LocalRoughnessDAO roughnessDAO = new RoughnessDAOsqlLiteImpl(mContext);
+        return roughnessDAO;
+    }
+
+
+    public LocalGroundwaterDAO getLocalGroundwaterDAO() throws DAOException {
+        LocalGroundwaterDAO groundwaterDAO = new GroundwaterDAOsqlLiteImpl(mContext);
+        return groundwaterDAO;
+    }
+
+    public LocalStrengthDAO getLocalStrengthDAO() throws DAOException {
+        LocalStrengthDAO strengthDAO = new StrengthDAOsqlLiteImpl(mContext);
+        return strengthDAO;
+    }
+
+
+    public RemoteSpacingDAO getRemoteSpacingDAO() throws DAOException {
+        RemoteSpacingDAO spacingDAO = new SpacingDAODropboxImpl(mContext, null);
         return spacingDAO;
     }
 

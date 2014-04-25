@@ -12,10 +12,8 @@ import android.view.MenuItem;
 import com.metric.skava.R;
 import com.metric.skava.app.SkavaApplication;
 import com.metric.skava.app.context.SkavaContext;
-import com.metric.skava.app.data.SkavaDataProvider;
 import com.metric.skava.app.navigation.NavigationController;
 import com.metric.skava.app.style.ThemeChangeListener;
-import com.metric.skava.calculator.data.MappedIndexDataProvider;
 
 public class SkavaActivity extends Activity implements ThemeChangeListener {
 
@@ -38,13 +36,13 @@ public class SkavaActivity extends Activity implements ThemeChangeListener {
     }
 
 
-    public SkavaDataProvider getSkavaDataProvider() {
-        return ((SkavaApplication) getApplication()).getSkavaDataProvider();
-    }
-
-    public MappedIndexDataProvider getMappedIndexDataProvider() {
-        return ((SkavaApplication) getApplication()).getMappedIndexDataProvider();
-    }
+//    public SkavaDataProvider getSkavaDataProvider() {
+//        return ((SkavaApplication) getApplication()).getSkavaDataProvider();
+//    }
+//
+//    public MappedIndexDataProvider getMappedIndexDataProvider() {
+//        return ((SkavaApplication) getApplication()).getMappedIndexDataProvider();
+//    }
 
 
     @Override

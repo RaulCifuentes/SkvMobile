@@ -2,16 +2,22 @@ package com.metric.skava.calculator.rmr.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metric.skava.R;
+import com.metric.skava.app.exception.SkavaSystemException;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.calculator.adapter.MultiColumnMappedIndexArrayAdapter;
 import com.metric.skava.calculator.rmr.model.Groundwater;
+import com.metric.skava.calculator.rmr.model.Spacing;
+import com.metric.skava.data.dao.exception.DAOException;
 
 import java.util.List;
 
@@ -27,9 +33,16 @@ public class GroundwaterFragment extends RMRCalculatorBaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this.getActivity();
-        listGroundwater = getMappedIndexDataProvider().getAllGroundwaters();
+        try {
+            listGroundwater = daoFactory.getLocalGroundwaterDAO().getAllGroundwaters();
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            throw new SkavaSystemException(e);
+        }
         groudwaterAdapter = new MultiColumnMappedIndexArrayAdapter<Groundwater>(mContext, R.layout.calculator_four_column_list_view_row_checked_radio, listGroundwater);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -68,13 +68,20 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
 
         Bitmap originalSizeBitmap = null;
         try {
-            originalSizeBitmap = mPictureFilesUtils.getBitmapFromUri(mSeletedPictureUri);
+            originalSizeBitmap = getBitmapFromUri();
         } catch (SkavaSystemException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
         }
         mImageView.setImageBitmap(originalSizeBitmap);
 
+    }
+
+    private Bitmap getBitmapFromUri() {
+
+        Bitmap bitmapFromUri = mPictureFilesUtils.getBitmapFromUri(mSeletedPictureUri);
+
+        return bitmapFromUri;
     }
 
 
@@ -101,6 +108,11 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
         }
 
         if (id == R.id.action_settings) {
+            return true;
+        }
+
+        if (id == android.R.id.home) {
+            backToPictureMenu();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -138,7 +150,6 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
         //newIntent.putExtra("EXTRA_OUTPUT", Uri.parse("file:///mnt/sdcard/..."));
         newIntent.putExtra("EXTRA_TOOLS_LIST", new String[]{"TEXT","DRAWING"});
     }
-
 
     public void startAviaryApplication() {
         final String AVIARY_PACKAGE_NAME = "com.aviary.android.feather";

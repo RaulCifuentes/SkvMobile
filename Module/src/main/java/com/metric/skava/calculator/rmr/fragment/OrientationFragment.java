@@ -1,6 +1,7 @@
 package com.metric.skava.calculator.rmr.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +10,15 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metric.skava.R;
+import com.metric.skava.app.exception.SkavaSystemException;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.calculator.adapter.MultiColumnMappedIndexArrayAdapter;
 import com.metric.skava.calculator.rmr.model.ConditionDiscontinuities;
 import com.metric.skava.calculator.rmr.model.OrientationDiscontinuities;
+import com.metric.skava.data.dao.exception.DAOException;
 
 import java.util.List;
 
@@ -106,7 +111,16 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
         listview.addHeaderView(headerView, null, false);
         final int numberOfHeaders = listview.getHeaderViewsCount();
 
-        final List<OrientationDiscontinuities> listOrientations = getMappedIndexDataProvider().getAllOrientationDiscontinuities(OrientationDiscontinuities.TUNNEL_MINES);
+//        final List<OrientationDiscontinuities> listOrientations = getMappedIndexDataProvider().getAllOrientationDiscontinuities(OrientationDiscontinuities.TUNNEL_MINES);
+        final List<OrientationDiscontinuities> listOrientations;
+        try {
+            listOrientations = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.TUNNEL_MINES);
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            throw new SkavaSystemException(e);
+        }
+
         final MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities> adapter = new MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities>(getActivity(),
                 R.layout.calculator_two_column_list_view_row_checked_radio, listOrientations);
         listview.setAdapter(adapter);
@@ -140,7 +154,16 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
         listview.addHeaderView(headerView, null, false);
         final int numberOfHeaders = listview.getHeaderViewsCount();
 
-        final List<OrientationDiscontinuities> listOrientations = getMappedIndexDataProvider().getAllOrientationDiscontinuities(OrientationDiscontinuities.SLOPES);
+//        final List<OrientationDiscontinuities> listOrientations = getMappedIndexDataProvider().getAllOrientationDiscontinuities(OrientationDiscontinuities.SLOPES);
+        final List<OrientationDiscontinuities> listOrientations;
+        try {
+            listOrientations = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.SLOPES);
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            throw new SkavaSystemException(e);
+        }
+
         final MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities> adapter = new MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities>(getActivity(),
                 R.layout.calculator_two_column_list_view_row_checked_radio, listOrientations);
         listview.setAdapter(adapter);
@@ -174,7 +197,16 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
         listview.addHeaderView(headerView, null, false);
         final int numberOfHeaders = listview.getHeaderViewsCount();
 
-        final List<OrientationDiscontinuities> listOrientations = getMappedIndexDataProvider().getAllOrientationDiscontinuities(OrientationDiscontinuities.FOUNDATIONS);
+//        final List<OrientationDiscontinuities> listOrientations = getMappedIndexDataProvider().getAllOrientationDiscontinuities(OrientationDiscontinuities.FOUNDATIONS);
+        final List<OrientationDiscontinuities> listOrientations;
+        try {
+            listOrientations = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.FOUNDATIONS);
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            throw new SkavaSystemException(e);
+        }
+
         final MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities> adapter = new MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities>(getActivity(),
                 R.layout.calculator_two_column_list_view_row_checked_radio, listOrientations);
         listview.setAdapter(adapter);

@@ -76,15 +76,15 @@ public class AssessmentBuilder4DropBox {
         Long orientation = assessmentRecord.getLong("orientation");
         babyAssessment.setOrientation(orientation.shortValue());
 
-        Long slope = assessmentRecord.getLong("slope");
-        babyAssessment.setSlope(slope.shortValue());
+        Double slope = assessmentRecord.getDouble("slope");
+        babyAssessment.setSlope(slope);
 
         java.lang.String fractureTypeID = assessmentRecord.getString("fractureType");
         FractureType fractureType = fractureTypeDAO.getFractureTypeByCode(fractureTypeID);
         babyAssessment.setFractureType(fractureType);
 
-        Long blockSize = assessmentRecord.getLong("blockSize");
-        babyAssessment.setBlockSize(blockSize.shortValue());
+        Double blockSize = assessmentRecord.getDouble("blockSize");
+        babyAssessment.setBlockSize(blockSize.doubleValue());
 
         Long numJoints = assessmentRecord.getLong("numJoints");
         babyAssessment.setNumberOfJoints(numJoints.shortValue());

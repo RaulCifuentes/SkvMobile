@@ -31,7 +31,7 @@ import java.util.List;
  * Large screen devices (such as tablets) are supported by replacing the ListView
  * with a GridView.
  * <p />
- * Activities containing this fragment MUST implement the {@link Callbacks}
+ * Activities containing this fragment MUST implement the Callbacks
  * interface.
  */
 public class AssessmentListFragment extends SkavaFragment implements AbsListView.OnItemClickListener {
@@ -121,7 +121,6 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
         TextView thirdTextView = (TextView) listHeaderView.findViewById(R.id.third_column_text_view);
         thirdTextView.setText("Project");
         TextView fourthTextView = (TextView) listHeaderView.findViewById(R.id.fourth_column_text_view);
-        //TODO manage to align headers and content
         fourthTextView.setText("Tunnel");
         TextView fifthTextView = (TextView) listHeaderView.findViewById(R.id.fifth_column_text_view);
         fifthTextView.setText("Face");
@@ -157,7 +156,7 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(mAssessmentAdapter.getItem(position));
+            mListener.onFragmentInteraction(mAssessmentAdapter.getItem(position-1));
         }
     }
 

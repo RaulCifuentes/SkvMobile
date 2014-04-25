@@ -29,14 +29,16 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
         List<SyncLogEntry> list = new ArrayList<SyncLogEntry>();
         while (cursor.moveToNext()) {
             Long dateAsLong = CursorUtils.getLong(SyncLoggingTable.DATE_COLUMN, cursor);
+            String domainAsString = CursorUtils.getString(SyncLoggingTable.DOMAIN_COLUMN, cursor);
             String sourceAsString = CursorUtils.getString(SyncLoggingTable.SOURCE_COLUMN, cursor);
             String statusAsString = CursorUtils.getString(SyncLoggingTable.STATUS_COLUMN, cursor);
 
+            SyncLogEntry.Domain domain = SyncLogEntry.Domain.valueOf(domainAsString);
             SyncLogEntry.Status status = SyncLogEntry.Status.valueOf(statusAsString);
             SyncLogEntry.Source source = SyncLogEntry.Source.valueOf(sourceAsString);
 
             Date date = DateDataFormat.getDateFromFormattedLong(dateAsLong);
-            SyncLogEntry newInstance = new SyncLogEntry(date, source , status);
+            SyncLogEntry newInstance = new SyncLogEntry(date, domain, source , status);
             newInstance.setSyncDate(date);
             list.add(newInstance);
         }
@@ -45,10 +47,12 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
 
 
     @Override
-    public SyncLogEntry getLastSyncByState(SyncLogEntry.Status state) throws DAOException {
-        Cursor cursor = getRecordsFilteredByColumn(SyncLoggingTable.SYNC_LOGGING_TABLE, SyncLoggingTable.STATUS_COLUMN, state.name(), SyncLoggingTable.DATE_COLUMN);
+    public SyncLogEntry getLastSyncByState(SyncLogEntry.Domain domain, SyncLogEntry.Status state) throws DAOException {
+        String[] columns = new String[]{SyncLoggingTable.DOMAIN_COLUMN, SyncLoggingTable.STATUS_COLUMN};
+        String[] values =  new String[]{domain.name(), state.name()};
+        Cursor cursor = getRecordsFilteredByColumns(SyncLoggingTable.SYNC_LOGGING_TABLE, columns, values, SyncLoggingTable.DATE_COLUMN);
         List<SyncLogEntry> list = assemblePersistentEntities(cursor);
-        if (list.isEmpty()){
+        if (list.isEmpty()) {
             return null;
         }
         return list.get(0);

@@ -64,7 +64,7 @@ public class DiscontinuityRelevanceDAOsqlLiteImpl extends SqlLiteBaseIdentifiabl
     }
 
     @Override
-    public int deleteEmptyDiscontinuityRelevances(String tableName) {
+    public int deleteAllDiscontinuityRelevances() {
         return 0;
     }
 

@@ -18,7 +18,7 @@ public interface LocalJrDAO {
     public static final String DESCRIPTION_COLUMN = "DESCRIPTION";
     public static final String VALUE_COLUMN  = "VALUE";
 
-    public List<Jr> getAllJrs() throws DAOException;
+    public List<Jr> getAllJrs(int type) throws DAOException;
 
     public Jr getJr(String indexCode, String groupCode, String code) throws DAOException;
 

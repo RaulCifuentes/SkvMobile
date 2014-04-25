@@ -58,8 +58,21 @@ public class JrDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalJrDAO {
 
 
     @Override
-    public List<Jr> getAllJrs() throws DAOException {
+    public List<Jr> getAllJrs(int type) throws DAOException {
         Cursor cursor = getAllRecords(JrTable.MAPPED_INDEX_DATABASE_TABLE);
+        String groupAsString = null;
+        switch (type) {
+            case Jr.a:
+                groupAsString = "a";
+                break;
+            case Jr.b:
+                groupAsString = "b";
+                break;
+            case Jr.c:
+                groupAsString = "c";
+                break;
+        }
+        getRecordsFilteredByColumn(JrTable.MAPPED_INDEX_DATABASE_TABLE, JrTable.GROUP_CODE_COLUMN, groupAsString, null);
         List<Jr> list = assambleJrs(cursor);
         cursor.close();
         return list;

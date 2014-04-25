@@ -16,7 +16,6 @@ import com.metric.skava.calculator.barton.model.RQD;
 import com.metric.skava.calculator.barton.model.SRF;
 import com.metric.skava.calculator.data.MappedIndexDataProvider;
 import com.metric.skava.calculator.rmr.model.Aperture;
-import com.metric.skava.calculator.rmr.model.ConditionDiscontinuities;
 import com.metric.skava.calculator.rmr.model.Groundwater;
 import com.metric.skava.calculator.rmr.model.Infilling;
 import com.metric.skava.calculator.rmr.model.OrientationDiscontinuities;
@@ -88,31 +87,60 @@ public class SkavaUtils {
         Date date = new Date();
         initialAssessment.setDate(date);
 
-        //Q Barton
+        //Q Barton (Deafault values for eacb one of the components of thr Q process)
 
         RQD rqd = RQDMapper.getInstance().mapJvToRQD(4);
-        SRF sRF = provider.getAllSrf(SRF.a).get(0);
-        Jw jw = provider.getAllJw().get(0);
-        Ja ja = provider.getAllJa(Ja.a).get(0);
-        Jn jn = provider.getAllJn().get(0);
-        Jr jr = provider.getAllJr(Jr.a).get(0);
+
+//        SRF sRF = provider.getAllSrf(SRF.a).get(0);
+        SRF sRF =  daoFactory.getLocalSrfDAO().getAllSrfs(SRF.a).get(0);
+//        Jw jw = provider.getAllJw().get(0);
+        Jw jw = daoFactory.getLocalJwDAO().getAllJws().get(0);
+//        Ja ja = provider.getAllJa(Ja.a).get(0);
+        Ja ja = daoFactory.getLocalJaDAO().getAllJas(Ja.a).get(0);
+//        Jn jn = provider.getAllJn().get(0);
+        Jn jn = daoFactory.getLocalJnDAO().getAllJns().get(0);
+//        Jr jr = provider.getAllJr(Jr.a).get(0);
+        Jr jr = daoFactory.getLocalJrDAO().getAllJrs(Jr.a).get(0);
+
         Q_Calculation mQCalculation = new Q_Calculation(rqd, jn, jr, ja, jw, sRF);
 
         initialAssessment.setQCalculation(mQCalculation);
 
-        //RMR
-        StrengthOfRock strenght = provider.getAllStrenghts().get(0);
+        //RMR (Deafault values for eacb one of the components of thr Q process)
+//        StrengthOfRock strenght = provider.getAllStrenghts().get(0);
+        StrengthOfRock strenght = daoFactory.getLocalStrengthDAO().getAllStrengths().get(0);
+
         RQD_RMR rqdRmr = provider.getAllRqdRmr().get(0);
-        Spacing spacing = provider.getAllSpacings().get(0);
-        ConditionDiscontinuities condition = provider.getAllConditions().get(0);
-        Persistence persistence = provider.getAllPersistences().get(0);
-        Aperture aperture = provider.getAllApertures().get(0);
-        Roughness roughness = provider.getAllRoughness().get(0);
-        Infilling infilling = provider.getAllInfillings().get(0);
-        Weathering weathering = provider.getAllWeatherings().get(0);
-        Groundwater groundwater = provider.getAllGroundwaters().get(0);
-        OrientationDiscontinuities orientation = provider.getAllOrientationDiscontinuities(OrientationDiscontinuities.TUNNEL_MINES).get(0);
-        RMR_Calculation mRMRCalculation = new RMR_Calculation(strenght, rqdRmr, spacing, condition, persistence, aperture, roughness, infilling, weathering, groundwater, orientation);
+
+//        Spacing spacing = provider.getAllSpacings().get(0);
+        Spacing spacing =  daoFactory.getLocalSpacingDAO().getAllSpacings().get(0);
+
+        // ***** Condition was the summarized not needed anymore ****
+        //ConditionDiscontinuities condition = provider.getAllConditions().get(0);
+
+//        Persistence persistence = provider.getAllPersistences().get(0);
+        Persistence persistence = daoFactory.getLocalPersistenceDAO().getAllPersistences().get(0);
+
+//        Aperture aperture = provider.getAllApertures().get(0);
+        Aperture aperture = daoFactory.getLocalApertureDAO().getAllApertures().get(0);
+
+//        Roughness roughness = provider.getAllRoughness().get(0);
+        Roughness roughness = daoFactory.getLocalRoughnessDAO().getAllRoughnesses().get(0);
+
+//        Infilling infilling = provider.getAllInfillings().get(0);
+        Infilling infilling = daoFactory.getLocalInfillingDAO().getAllInfillings().get(0);
+
+//        Weathering weathering = provider.getAllWeatherings().get(0);
+        Weathering weathering = daoFactory.getLocalWeatheringDAO().getAllWeatherings().get(0);
+
+//        Groundwater groundwater = provider.getAllGroundwaters().get(0);
+        Groundwater groundwater = daoFactory.getLocalGroundwaterDAO().getAllGroundwaters().get(0);
+
+//        OrientationDiscontinuities orientation = provider.getAllOrientationDiscontinuities(OrientationDiscontinuities.TUNNEL_MINES).get(0);
+        OrientationDiscontinuities orientation = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.TUNNEL_MINES).get(0);
+
+//        RMR_Calculation mRMRCalculation = new RMR_Calculation(strenght, rqdRmr, spacing, condition, persistence, aperture, roughness, infilling, weathering, groundwater, orientation);
+        RMR_Calculation mRMRCalculation = new RMR_Calculation(strenght, rqdRmr, spacing, persistence, aperture, roughness, infilling, weathering, groundwater, orientation);
 
         initialAssessment.setRmrCalculation(mRMRCalculation);
 
@@ -135,14 +163,12 @@ public class SkavaUtils {
         initialAssessment.setPictureUriList(pictureUriList);
 
         //Discontinuity System
-        ArrayList<DiscontinuityFamily> discontinuitySystem = new ArrayList<DiscontinuityFamily>(7);
-        discontinuitySystem.add(new DiscontinuityFamily());
-        discontinuitySystem.add(new DiscontinuityFamily());
-        discontinuitySystem.add(new DiscontinuityFamily());
-        discontinuitySystem.add(new DiscontinuityFamily());
-        discontinuitySystem.add(new DiscontinuityFamily());
-        discontinuitySystem.add(new DiscontinuityFamily());
-        discontinuitySystem.add(new DiscontinuityFamily());
+        int dfItems = 7;
+        ArrayList<DiscontinuityFamily> discontinuitySystem = new ArrayList<DiscontinuityFamily>(dfItems);
+        for(int i=0; i < dfItems; i++){
+            DiscontinuityFamily df = new DiscontinuityFamily();
+            discontinuitySystem.add(df);
+        }
 
         initialAssessment.setDiscontinuitySystem(discontinuitySystem);
 

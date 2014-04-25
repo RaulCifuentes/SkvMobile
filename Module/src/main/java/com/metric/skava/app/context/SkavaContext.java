@@ -3,7 +3,7 @@ package com.metric.skava.app.context;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.User;
 import com.metric.skava.data.dao.impl.dropbox.datastore.DatastoreHelper;
-import com.metric.skava.sync.model.SyncLogEntry;
+import com.metric.skava.sync.model.SyncStatus;
 
 /**
  * Created by metricboy on 2/23/14.
@@ -12,8 +12,9 @@ public class SkavaContext {
 
     private User loggedUser;
     private Assessment assessment;
-    private SyncLogEntry syncMetadata;
+    private SyncStatus syncMetadata;
     private DatastoreHelper mDatastoreHelper;
+
 
     public User getLoggedUser() {
         return loggedUser;
@@ -31,11 +32,11 @@ public class SkavaContext {
         this.assessment = assessment;
     }
 
-    public SyncLogEntry getSyncMetadata() {
+    public SyncStatus getSyncMetadata() {
         return syncMetadata;
     }
 
-    public void setSyncMetadata(SyncLogEntry syncMetadata) {
+    public void setSyncMetadata(SyncStatus syncMetadata) {
         this.syncMetadata = syncMetadata;
     }
 

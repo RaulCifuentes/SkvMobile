@@ -14,6 +14,7 @@ import com.metric.skava.calculator.rmr.model.Weathering;
  */
 public class DiscontinuityFamily {
 
+    private Long _id;
     private int number;
     private DiscontinuityType type;
     private DiscontinuityRelevance relevance;
@@ -152,5 +153,31 @@ public class DiscontinuityFamily {
 
     public void setAperture(Aperture aperture) {
         this.aperture = aperture;
+    }
+    
+    public boolean isComplete() {
+        return
+            this.getType() != null &&
+            this.getRelevance() != null &&
+            this.getDipDegrees() != null &&
+            this.getDipDirDegrees() != null &&
+            this.getShape() != null &&
+            this.getSpacing() != null &&
+            this.getRoughness() != null &&
+            this.getWeathering() != null &&
+            this.getWater().getCode() != null &&
+            this.getPersistence() != null &&
+            this.getAperture() != null &&
+            this.getInfilling() != null &&
+            this.getJa() != null &&
+            this.getJr() != null;
+    }
+
+    public Long get_id() {
+        return _id;
+    }
+
+    public void set_id(Long _id) {
+        this._id = _id;
     }
 }

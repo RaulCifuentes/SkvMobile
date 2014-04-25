@@ -56,25 +56,24 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnt
             String archTypeCode = CursorUtils.getString(SupportRequirementTable.ARCH_TYPE_CODE_COLUMN, cursor);
             Double separation = CursorUtils.getDouble(SupportRequirementTable.SEPARATION_COLUMN, cursor);
 
-
             DAOFactory daoFactory = DAOFactory.getInstance(getContext());
 
             LocalTunnelDAO localTunnelFaceDAO = daoFactory.getLocalTunnelDAO(DAOFactory.Flavour.SQLLITE);
             Tunnel tunnel = localTunnelFaceDAO.getTunnelByCode(faceCode);
 
-            LocalBoltTypeDAO localBoltTypeDAO = daoFactory.getBoltTypeDAO();
+            LocalBoltTypeDAO localBoltTypeDAO = daoFactory.getLocalBoltTypeDAO();
             BoltType boltType = localBoltTypeDAO.getBoltTypeByCode(boltTypeCode);
 
-            LocalShotcreteTypeDAO shotcreteTypeDAO = daoFactory.getShotcreteTypeDAO();
+            LocalShotcreteTypeDAO shotcreteTypeDAO = daoFactory.getLocalShotcreteTypeDAO();
             ShotcreteType shotcrete = shotcreteTypeDAO.getShotcreteTypeByCode(shotcreteTypeCode);
 
-            LocalMeshTypeDAO localMeshTypeDAO = daoFactory.getMeshTypeDAO();
+            LocalMeshTypeDAO localMeshTypeDAO = daoFactory.getLocalMeshTypeDAO();
             MeshType meshType = localMeshTypeDAO.getMeshTypeByCode(meshTypeCode);
 
-            LocalCoverageDAO localCoverageDAO = daoFactory.getCoverageDAO();
+            LocalCoverageDAO localCoverageDAO = daoFactory.getLocalCoverageDAO();
             Coverage coverage = localCoverageDAO.getCoverageByCode(coverageCode);
 
-            LocalArchTypeDAO localArchTypeDAO = daoFactory.getArchTypeDAO();
+            LocalArchTypeDAO localArchTypeDAO = daoFactory.getLocalArchTypeDAO();
             ArchType archType = localArchTypeDAO.getArchTypeByCode(archTypeCode);
 
             SupportRequirement newInstance = new SupportRequirement(code, name);

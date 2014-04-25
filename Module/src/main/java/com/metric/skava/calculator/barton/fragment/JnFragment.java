@@ -9,12 +9,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metric.skava.BuildConfig;
 import com.metric.skava.R;
+import com.metric.skava.app.exception.SkavaSystemException;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.calculator.adapter.MultiColumnMappedIndexArrayAdapter;
 import com.metric.skava.calculator.barton.model.Jn;
+import com.metric.skava.data.dao.exception.DAOException;
 
 import java.util.List;
 
@@ -28,9 +31,15 @@ public class JnFragment extends QBartonCalculatorBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO Use a DAO instead of hardcoded
-//        daoFactory.getJnDAO().getAllJn();
-        final List<Jn> listJn = getMappedIndexDataProvider().getAllJn();
+        final List<Jn> listJn;
+        try {
+            listJn = daoFactory.getLocalJnDAO().getAllJns();
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            throw new SkavaSystemException(e);
+        }
+
         mContext = this.getActivity();
         jnAdapter = new MultiColumnMappedIndexArrayAdapter<Jn>(
                 mContext, R.layout.calculator_two_column_list_view_row_checked_radio, listJn);

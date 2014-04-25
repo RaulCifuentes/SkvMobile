@@ -6,7 +6,6 @@ import java.io.Serializable;
 
 public class Jn extends MappedIndex implements Serializable {
 
-//	public static final Jn DEFAULT_VALUE = MappedIndexDataProvider.getAllJn().get(0);
 
 	public Jn (String shortName, String longDescription, Double value){
 		super();		

@@ -2,16 +2,21 @@ package com.metric.skava.calculator.rmr.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metric.skava.R;
+import com.metric.skava.app.exception.SkavaSystemException;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.calculator.adapter.MultiColumnMappedIndexArrayAdapter;
 import com.metric.skava.calculator.rmr.model.Spacing;
+import com.metric.skava.data.dao.exception.DAOException;
 
 import java.util.List;
 
@@ -39,7 +44,16 @@ public class SpacingFragment extends RMRCalculatorBaseFragment {
 
         FragmentActivity context = this.getActivity();
 
-        final List<Spacing> listSpacings = getMappedIndexDataProvider().getAllSpacings();
+//        final List<Spacing> listSpacings = getMappedIndexDataProvider().getAllSpacings();
+        final List<Spacing> listSpacings;
+        try {
+            listSpacings = daoFactory.getLocalSpacingDAO().getAllSpacings();
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            throw new SkavaSystemException(e);
+        }
+
 
         final MultiColumnMappedIndexArrayAdapter<Spacing> adapter = new MultiColumnMappedIndexArrayAdapter<Spacing>(context, R.layout.calculator_two_column_list_view_row_checked_radio, listSpacings);
 
