@@ -68,7 +68,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "mySkavaDatabase.db";
 
-    public static final int DATABASE_VERSION = 22;
+    public static final int DATABASE_VERSION = 25;
 
     public SkavaDBHelper(Context context, String name,
                          SQLiteDatabase.CursorFactory factory, int version) {
@@ -142,7 +142,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
         db.execSQL(MappedIndexTable.CREATE_INDEXES_TABLE);
 
-        db.execSQL(MappedIndexGroupsTable.CREATE_GROUP_TABLE);
+        db.execSQL(MappexIndexGroupsTable.CREATE_GROUP_TABLE);
 
         db.execSQL(ESRTable.CREATE_ESR_TABLE);
 
@@ -250,7 +250,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
         // ******************** MappedIndex Base Tables ********************
         db.execSQL("DROP TABLE IF EXISTS " + MappedIndexTable.INDEX_DATABASE_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + MappedIndexGroupsTable.GROUPS_DATABASE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + MappexIndexGroupsTable.GROUPS_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + ESRTable.MAPPED_INDEX_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + OrientationTable.MAPPED_INDEX_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + ApertureTable.MAPPED_INDEX_DATABASE_TABLE);
@@ -518,7 +518,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
     private static void clearIndexGroups(SQLiteDatabase db) throws DAOException {
         try {
-            db.execSQL(MappedIndexGroupsTable.DELETE_GROUPS_TABLE);
+            db.execSQL(MappexIndexGroupsTable.DELETE_GROUPS_TABLE);
         } catch (SQLException e) {
             throw new DAOException(e);
         }
@@ -939,26 +939,26 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
     }
 
     private static void insertIndexGroups(SQLiteDatabase db) {
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_SECOND);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_THIRD);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_FOURTH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_FIFTH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_SIXTH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_SEVENTH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_EIGTH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_NINETH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_TENTH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_ELEVENTH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_TWELFTH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_THIRDTEENTH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_FORTHTEENTH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_FIFTEENTH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_SIXTEENTH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_SEVENTEENTH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_EIGHTEENTH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_NINETEENTH);
-        db.execSQL(MappedIndexGroupsTable.INSERT_GROUPS_TABLE_TWENTIETH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_SECOND);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_THIRD);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_FOURTH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_FIFTH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_SIXTH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_SEVENTH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_EIGTH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_NINETH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_TENTH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_ELEVENTH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_TWELFTH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_THIRDTEENTH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_FORTHTEENTH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_FIFTEENTH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_SIXTEENTH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_SEVENTEENTH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_EIGHTEENTH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_NINETEENTH);
+        db.execSQL(MappexIndexGroupsTable.INSERT_GROUPS_TABLE_TWENTIETH);
     }
 
     private static void insertIndexes(SQLiteDatabase db) {
