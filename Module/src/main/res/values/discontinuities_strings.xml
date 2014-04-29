@@ -10,7 +10,7 @@
 
     <string name="discontinuity_system_type_label">Type</string>
     <string name="discontinuity_system_relevance_label">Relevance</string>
-    <string name="discontinuity_system_dip_dir_label">Dip Dir (°)</string>
+    <string name="discontinuity_system_dip_dir_label">Strike (°)</string>
     <string name="discontinuity_system_dip_label">Dip (°)</string>
     <string name="discontinuity_system_spacing_label">Spacing</string>
     <string name="discontinuity_system_persistence_label">Persistence</string>

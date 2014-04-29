@@ -10,27 +10,27 @@
     <string name="report_fecha">Date</string>
     <string name="report_geologo">Geologist</string>
     <string name="report_pk">Peg Numbers</string>
-    <string name="report_avance">Current Advance</string>
-    <string name="report_accumm_avance">Accum Advance</string>
+    <string name="report_avance">Current Advance (m)</string>
+    <string name="report_accumm_avance">Accum Advance (m)</string>
     <string name="report_metodo">Method</string>
-    <string name="report_orientacion">Orientation</string>
+    <string name="report_orientacion">Orientation (°)</string>
     <string name="report_pendiente">Slope (%)</string>
 
     <string name="report_macizo">Rock Mass</string>
     <string name="report_tipo_fracturacion">Fracture Type</string>
-    <string name="report_medida_bloques">Blocks Dimension</string>
-    <string name="report_juntas_m3">Joints / m3</string>
+    <string name="report_medida_bloques">Blocks Dimension (m)</string>
+    <string name="report_juntas_m3">Joints / m3 (#/m3)</string>
 
 
-    <string name="report_recomenda_soporte">Support Recomendation</string>
+    <string name="report_recomenda_soporte">Support Recommendation</string>
     <string name="report_tipo_perno">Bolt Type</string>
-    <string name="report_largo_perno">Bolt Length</string>
+    <string name="report_largo_perno">Bolt Length (m)</string>
     <string name="report_tipo_shotcrete">Shotcrete Type</string>
-    <string name="report_espesor_shotcrete">Thickness</string>
+    <string name="report_espesor_shotcrete">Thickness (mm)</string>
     <string name="report_tipo_malla">Mesh Type</string>
     <string name="report_cobertura">Coverage</string>
-    <string name="report_tipo_marco">Arch Typo</string>
-    <string name="report_separacion">Separation</string>
+    <string name="report_tipo_marco">Arch Type</string>
+    <string name="report_separacion">Separation (m)</string>
 
 
     <string name="report_clasificacion_rmr">Rock Mass Rating System (RMR)</string>
@@ -72,7 +72,7 @@
     <string name="report_disc_numero">Number</string>
     <string name="report_disc_tipo">Type</string>
     <string name="report_disc_relevancia">Relevance</string>
-    <string name="report_disc_dip_dir">Dip Dir (°)</string>
+    <string name="report_disc_dip_dir">Strike (°)</string>
     <string name="report_disc_dip">Dip (°)</string>
     <string name="report_disc_espaciamiento">Spacing</string>
     <string name="report_disc_persistencia">Persistence</string>
