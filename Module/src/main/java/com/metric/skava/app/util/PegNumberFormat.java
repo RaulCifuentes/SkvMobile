@@ -11,6 +11,7 @@ public class PegNumberFormat extends DecimalFormat {
         DecimalFormatSymbols custom=new DecimalFormatSymbols();
         custom.setGroupingSeparator('+');
         custom.setDecimalSeparator(',');
+        this.setMaximumFractionDigits(2);
         this.setDecimalFormatSymbols(custom);
     }
 }
