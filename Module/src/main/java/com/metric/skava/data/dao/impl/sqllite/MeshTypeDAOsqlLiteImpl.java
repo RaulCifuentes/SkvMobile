@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.data.dao.LocalMeshTypeDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -17,10 +18,9 @@ import java.util.List;
  */
 public class MeshTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<MeshType> implements LocalMeshTypeDAO {
 
-    public MeshTypeDAOsqlLiteImpl(Context context) {
-        super(context);
+    public MeshTypeDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
+        super(context, skavaContext);
     }
-
 
 
     @Override

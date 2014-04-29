@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.calculator.rmr.model.Groundwater;
 import com.metric.skava.data.dao.LocalGroundwaterDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -17,22 +18,21 @@ import java.util.List;
  */
 public class GroundwaterDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalGroundwaterDAO {
 
-    private Context mContext;
+
     private MappedIndexInstanceBuilder4SqlLite mappedIndexInstaceBuilder;
 
     public Context getContext() {
         return mContext;
     }
 
-    public GroundwaterDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
-        mContext = context;
+    public GroundwaterDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
     @Override
     public Groundwater getGroundwater(String indexCode, String groupCode, String code) throws DAOException {
-        String[] names = new String[]{GroundwaterTable.INDEX_CODE_COLUMN, GROUP_CODE_COLUMN, CODE_COLUMN};
+        String[] names = new String[]{GroundwaterTable.INDEX_CODE_COLUMN, GroundwaterTable.GROUP_CODE_COLUMN, GroundwaterTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(GroundwaterTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Groundwater> list = assambleGroundwaters(cursor);
@@ -58,8 +58,8 @@ public class GroundwaterDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalGr
 
 
     @Override
-    public List<Groundwater> getAllGroundwaters() throws DAOException {
-        Cursor cursor = getAllRecords(GroundwaterTable.MAPPED_INDEX_DATABASE_TABLE);
+    public List<Groundwater> getAllGroundwaters(Groundwater.Group group) throws DAOException {
+        Cursor cursor = getRecordsFilteredByColumn(GroundwaterTable.MAPPED_INDEX_DATABASE_TABLE, GroundwaterTable.GROUP_CODE_COLUMN, group.name(), null);
         List<Groundwater> list = assambleGroundwaters(cursor);
         cursor.close();
         return list;

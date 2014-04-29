@@ -88,7 +88,7 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
         Assessment currentAssessment = getSkavaContext().getAssessment();
         if (currentAssessment == null) {
             try {
-                getSkavaContext().setAssessment(SkavaUtils.createInitialAssessment(this));
+                getSkavaContext().setAssessment(SkavaUtils.createInitialAssessment(getSkavaContext()));
             } catch (DAOException e) {
                 e.printStackTrace();
                 Log.d(SkavaConstants.LOG, e.getMessage());

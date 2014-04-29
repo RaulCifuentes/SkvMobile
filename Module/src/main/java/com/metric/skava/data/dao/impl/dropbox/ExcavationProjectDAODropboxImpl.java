@@ -8,7 +8,6 @@ import com.dropbox.sync.android.DbxRecord;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.Client;
 import com.metric.skava.app.model.ExcavationProject;
-import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalClientDAO;
 import com.metric.skava.data.dao.RemoteExcavationProjectDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -43,7 +42,7 @@ public class ExcavationProjectDAODropboxImpl extends DropBoxBaseDAO implements R
                 String codigo = currentDbxRecord.getString("ProjectId");
                 String nombre = currentDbxRecord.getString("Name");
                 String clientCode = currentDbxRecord.getString("FkClientId");
-                LocalClientDAO clientDAO = DAOFactory.getInstance(mContext).getLocalClientDAO(DAOFactory.Flavour.SQLLITE);
+                LocalClientDAO clientDAO = getDAOFactory().getLocalClientDAO();
                 Client client = clientDAO.getClientByCode(clientCode);
                 ExcavationProject newProject = new ExcavationProject(codigo, nombre);
                 newProject.setClient(client);

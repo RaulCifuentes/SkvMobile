@@ -14,6 +14,7 @@ import com.metric.skava.app.SkavaApplication;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.navigation.NavigationController;
 import com.metric.skava.app.style.ThemeChangeListener;
+import com.metric.skava.data.dao.DAOFactory;
 
 public class SkavaActivity extends Activity implements ThemeChangeListener {
 
@@ -35,6 +36,9 @@ public class SkavaActivity extends Activity implements ThemeChangeListener {
         return application.getSkavaContext();
     }
 
+    public DAOFactory getDAOFactory() {
+        return getSkavaContext().getDAOFactory();
+    }
 
 //    public SkavaDataProvider getSkavaDataProvider() {
 //        return ((SkavaApplication) getApplication()).getSkavaDataProvider();

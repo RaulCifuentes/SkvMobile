@@ -32,7 +32,7 @@ public class RoleDAODropboxImpl extends DropBoxBaseDAO implements RemoteRoleDAO 
     public List<Role> getAllRoles() throws DAOException {
         try {
             DbxDatastoreStatus status = getDatastore().getSyncStatus();
-            if (status.hasIncoming) {
+            if (status.hasIncoming || status.isDownloading) {
                 getDatastore().sync();
             }
             List<Role> listRoles = new ArrayList<Role>();

@@ -11,7 +11,6 @@ import com.metric.skava.app.model.Permission;
 import com.metric.skava.app.model.Role;
 import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
-import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalPermissionDAO;
 import com.metric.skava.data.dao.LocalRoleDAO;
 import com.metric.skava.data.dao.LocalTunnelFaceDAO;
@@ -36,9 +35,9 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
     public UserDAODropboxImpl(Context context, SkavaContext skavaContext) throws DAOException {
         super(context, skavaContext);
         this.mUsersTable = new UserDropboxTable(getDatastore());
-        this.mRolDAO = DAOFactory.getInstance(context).getLocalRoleDAO(DAOFactory.Flavour.SQLLITE);
-        this.mLocalTunnelFaceDAO = DAOFactory.getInstance(context).getLocalTunnelFaceDAO(DAOFactory.Flavour.SQLLITE);
-        this.mLocalPermissionDAO = DAOFactory.getInstance(context).getLocalPermissionDAO(DAOFactory.Flavour.SQLLITE);
+        this.mRolDAO = getDAOFactory().getLocalRoleDAO();
+        this.mLocalTunnelFaceDAO = getDAOFactory().getLocalTunnelFaceDAO();
+        this.mLocalPermissionDAO = getDAOFactory().getLocalPermissionDAO();
     }
 
 

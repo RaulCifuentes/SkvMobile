@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.data.dao.LocalDiscontinuityTypeDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -15,10 +16,11 @@ import java.util.List;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class DiscontinuityTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<DiscontinuityType> implements LocalDiscontinuityTypeDAO {
+//public class DiscontinuityTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<DiscontinuityType> implements LocalDiscontinuityTypeDAO {
+public class DiscontinuityTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<DiscontinuityType> implements LocalDiscontinuityTypeDAO {
 
-    public DiscontinuityTypeDAOsqlLiteImpl(Context context) {
-        super(context);
+    public DiscontinuityTypeDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
+        super(context, skavaContext );
     }
 
 
@@ -56,18 +58,18 @@ public class DiscontinuityTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnti
 
     @Override
     protected void savePersistentEntity(String tableName, DiscontinuityType newSkavaEntity) throws DAOException {
-
+        saveSkavaEntity(tableName, newSkavaEntity);
     }
 
 
     @Override
     public boolean deleteDiscontinuityType(String code) {
-        return false;
+        return deleteIdentifiableEntity(DiscontinuityTypeTable.DISCONTINUITY_DATABASE_TABLE, code);
     }
 
     @Override
     public int deleteAllDiscontinuityTypes() {
-        return 0;
+        return deleteAllPersistentEntities(DiscontinuityTypeTable.DISCONTINUITY_DATABASE_TABLE);
     }
 
 

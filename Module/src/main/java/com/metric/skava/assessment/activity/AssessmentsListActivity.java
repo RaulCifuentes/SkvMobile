@@ -13,9 +13,7 @@ import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.Role;
 import com.metric.skava.app.model.User;
 import com.metric.skava.app.util.SkavaConstants;
-import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.assessment.fragment.AssessmentListFragment;
-import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalRoleDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 
@@ -40,7 +38,7 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
         LocalRoleDAO localRoleDAO;
         Role adminRole = null, geologistRole = null, analystRole = null;
         try {
-            localRoleDAO = DAOFactory.getInstance(this).getLocalRoleDAO(DAOFactory.Flavour.SQLLITE);
+            localRoleDAO = getDAOFactory().getLocalRoleDAO();
             adminRole = localRoleDAO.getRoleByCode(SkavaConstants.ROLE_ADMIN_NAME);
             geologistRole = localRoleDAO.getRoleByCode(SkavaConstants.ROLE_GEOLOGIST_NAME);
             analystRole = localRoleDAO.getRoleByCode(SkavaConstants.ROLE_ANALYST_NAME);

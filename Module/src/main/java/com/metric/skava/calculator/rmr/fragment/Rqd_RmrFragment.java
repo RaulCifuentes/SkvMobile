@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.metric.skava.R;
 import com.metric.skava.calculator.adapter.MultiColumnMappedIndexArrayAdapter;
+import com.metric.skava.calculator.barton.model.RQD;
 import com.metric.skava.calculator.rmr.model.RQD_RMR;
 
 import java.util.List;
@@ -39,7 +40,8 @@ public class Rqd_RmrFragment extends RMRCalculatorBaseFragment {
 
 		FragmentActivity context = this.getActivity();
 
-        final List<RQD_RMR> listRQDs = getMappedIndexDataProvider().getAllRqdRmr();
+//        final List<RQD_RMR> listRQDs = getMappedIndexDataProvider().getAllRqdRmr();
+        final List<RQD_RMR> listRQDs = RQD_RMR.getAllRqdRmr();
 
         final MultiColumnMappedIndexArrayAdapter<RQD_RMR> adapter = new MultiColumnMappedIndexArrayAdapter<RQD_RMR>(context, R.layout.calculator_two_column_list_view_row_checked_radio, listRQDs);
 
@@ -51,9 +53,10 @@ public class Rqd_RmrFragment extends RMRCalculatorBaseFragment {
         final int numberOfHeaders = listview.getHeaderViewsCount();
         listview.setAdapter(adapter);
 
-        RQD_RMR rqd = getRMRCalculationContext().getRqd();
+        RQD rqd = getRMRCalculationContext().getRqd();
         if (rqd != null) {
-			int posIndex = adapter.getPosition(rqd);
+            RQD_RMR wrapperRqd = RQD_RMR.findWrapper(rqd);
+            int posIndex = adapter.getPosition(wrapperRqd);
             posIndex += numberOfHeaders;
             listview.setItemChecked(posIndex, true);
         }
@@ -63,7 +66,8 @@ public class Rqd_RmrFragment extends RMRCalculatorBaseFragment {
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
                 RQD_RMR selectedItem = (RQD_RMR) parent.getItemAtPosition(position);
-                getRMRCalculationContext().setRqd(selectedItem);
+                RQD bareRqd = selectedItem.getWrappedRqd();
+                getRMRCalculationContext().setRqd(bareRqd);
             }
 
         });

@@ -152,13 +152,13 @@ public class IdentificationMainFragment extends SkavaFragment implements
 
         numberFormatter = DecimalFormat.getNumberInstance();
 
-        daoFactory = DAOFactory.getInstance(getActivity());
+        daoFactory = getDAOFactory();
 
         geologist = getSkavaContext().getLoggedUser();
         getCurrentAssessment().setGeologist(geologist);
 
         try {
-            UserDataHelper dataDomainHelper = new UserDataHelper(getActivity());
+            UserDataHelper dataDomainHelper = new UserDataHelper(getSkavaContext());
             mUserDataDomain = dataDomainHelper.buildUserDataDomain(geologist);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
@@ -176,7 +176,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
 
         LocalExcavationSectionDAO sectionDAO = null;
         try {
-            sectionDAO = daoFactory.getLocalExcavationSectionDAO(DAOFactory.Flavour.SQLLITE);
+            sectionDAO = daoFactory.getLocalExcavationSectionDAO();
             sectionList = sectionDAO.getAllExcavationSections();
             sectionList.add(new ExcavationSection("HINT", "Select one section ..."));
         } catch (DAOException e) {
@@ -193,7 +193,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
 
         LocalExcavationMethodDAO localExcavationMethodDAO = null;
         try {
-            localExcavationMethodDAO = daoFactory.getLocalExcavationMethodDAO(DAOFactory.Flavour.SQLLITE);
+            localExcavationMethodDAO = daoFactory.getLocalExcavationMethodDAO();
             methodList = localExcavationMethodDAO.getAllExcavationMethods();
             methodList.add(new ExcavationMethod("HINT", "Select one method ..."));
         } catch (DAOException e) {

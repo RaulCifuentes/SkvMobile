@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.Tunnel;
 import com.metric.skava.data.dao.DAOFactory;
@@ -32,8 +33,8 @@ import java.util.List;
  */
 public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<SupportRequirement> implements SupportRequirementDAO {
 
-    public SupportRequirementDAOsqlLiteImpl(Context context) {
-        super(context);
+    public SupportRequirementDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
+        super(context, skavaContext);
     }
 
 
@@ -56,9 +57,9 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnt
             String archTypeCode = CursorUtils.getString(SupportRequirementTable.ARCH_TYPE_CODE_COLUMN, cursor);
             Double separation = CursorUtils.getDouble(SupportRequirementTable.SEPARATION_COLUMN, cursor);
 
-            DAOFactory daoFactory = DAOFactory.getInstance(getContext());
+            DAOFactory daoFactory = getDAOFactory();
 
-            LocalTunnelDAO localTunnelFaceDAO = daoFactory.getLocalTunnelDAO(DAOFactory.Flavour.SQLLITE);
+            LocalTunnelDAO localTunnelFaceDAO = daoFactory.getLocalTunnelDAO();
             Tunnel tunnel = localTunnelFaceDAO.getTunnelByCode(faceCode);
 
             LocalBoltTypeDAO localBoltTypeDAO = daoFactory.getLocalBoltTypeDAO();

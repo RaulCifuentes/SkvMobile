@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite.helper;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.ExcavationMethod;
@@ -44,18 +45,18 @@ public class AssessmentBuilder4SqlLite {
 //    private final java.lang.String DATE_FORMAT = "yyyyMMddHHmmss";
 //    private final SimpleDateFormat dateFormat;
 
-    public AssessmentBuilder4SqlLite(Context context) throws DAOException {
+    public AssessmentBuilder4SqlLite(Context context, SkavaContext skavaContext) throws DAOException {
         this.mContext = context;
 
-        DAOFactory daoFactory = DAOFactory.getInstance(mContext);
+        DAOFactory daoFactory = skavaContext.getDAOFactory();
 
-        localExcavationProjectDAO = daoFactory.getLocalExcavationProjectDAO(DAOFactory.Flavour.SQLLITE);
+        localExcavationProjectDAO = daoFactory.getLocalExcavationProjectDAO();
 
-        localTunnelDAO = daoFactory.getLocalTunnelDAO(DAOFactory.Flavour.SQLLITE);
-        localExcavationSectionDAO = daoFactory.getLocalExcavationSectionDAO(DAOFactory.Flavour.SQLLITE);
-        localTunnelFaceDAO = daoFactory.getLocalTunnelFaceDAO(DAOFactory.Flavour.SQLLITE);
-        localUserDAO = daoFactory.getLocalUserDAO(DAOFactory.Flavour.SQLLITE);
-        localExcavationMethodDAO = daoFactory.getLocalExcavationMethodDAO(DAOFactory.Flavour.SQLLITE);
+        localTunnelDAO = daoFactory.getLocalTunnelDAO();
+        localExcavationSectionDAO = daoFactory.getLocalExcavationSectionDAO();
+        localTunnelFaceDAO = daoFactory.getLocalTunnelFaceDAO();
+        localUserDAO = daoFactory.getLocalUserDAO();
+        localExcavationMethodDAO = daoFactory.getLocalExcavationMethodDAO();
         localFractureTypeDAO = daoFactory.getLocalFractureTypeDAO();
 
     }

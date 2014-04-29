@@ -52,7 +52,7 @@ public class DataExplorerMainActivity extends SkavaActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity_main);
-        daoFactory = DAOFactory.getInstance(this);
+        daoFactory = getDAOFactory();
         setupClientsListView();
         setupRolesListView();
         setupUsersListView();
@@ -66,7 +66,7 @@ public class DataExplorerMainActivity extends SkavaActivity {
         clientsListView = (ListView) findViewById(R.id.listviewClients);
         final List<Client> listClients;
         try {
-            listClients = daoFactory.getLocalClientDAO(DAOFactory.Flavour.SQLLITE).getAllClients();
+            listClients = daoFactory.getLocalClientDAO().getAllClients();
             clientListViewAdapter = new ClientListViewAdapter(this,
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listClients);
 
@@ -91,7 +91,7 @@ public class DataExplorerMainActivity extends SkavaActivity {
         rolesListView = (ListView) findViewById(R.id.listviewRoles);
         final List<Role> listRoles;
         try {
-            listRoles = daoFactory.getLocalRoleDAO(DAOFactory.Flavour.SQLLITE).getAllRoles();
+            listRoles = daoFactory.getLocalRoleDAO().getAllRoles();
             roleListViewAdapter = new RoleListViewAdapter(this,
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listRoles);
 
@@ -117,7 +117,7 @@ public class DataExplorerMainActivity extends SkavaActivity {
         usersListView = (ListView) findViewById(R.id.listviewUsers);
         final List<User> listUsers;
         try {
-            listUsers = daoFactory.getLocalUserDAO(DAOFactory.Flavour.SQLLITE).getAllUsers();
+            listUsers = daoFactory.getLocalUserDAO().getAllUsers();
             userListViewAdapter = new UserListViewAdapter(this,
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listUsers);
 
@@ -142,7 +142,7 @@ public class DataExplorerMainActivity extends SkavaActivity {
         projectsListView = (ListView) findViewById(R.id.listviewProjects);
         final List<ExcavationProject> listProjects;
         try {
-            listProjects = daoFactory.getLocalExcavationProjectDAO(DAOFactory.Flavour.SQLLITE).getAllExcavationProjects();
+            listProjects = daoFactory.getLocalExcavationProjectDAO().getAllExcavationProjects();
             projectListAdapter = new SkavaEntityListViewAdapter(this,
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listProjects);
 
@@ -167,7 +167,7 @@ public class DataExplorerMainActivity extends SkavaActivity {
         tunnelsListView = (ListView) findViewById(R.id.listviewTunnels);
         final List<Tunnel> listTunnels;
         try {
-            listTunnels = daoFactory.getLocalTunnelDAO(DAOFactory.Flavour.SQLLITE).getAllTunnels();
+            listTunnels = daoFactory.getLocalTunnelDAO().getAllTunnels();
             tunnelListViewAdapter = new TunnelListViewAdapter(this,
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listTunnels);
 
@@ -193,7 +193,7 @@ public class DataExplorerMainActivity extends SkavaActivity {
         facesListView = (ListView) findViewById(R.id.listviewFaces);
         final List<TunnelFace> listFaces;
         try {
-            listFaces = daoFactory.getLocalTunnelFaceDAO(DAOFactory.Flavour.SQLLITE).getAllTunnelFaces();
+            listFaces = daoFactory.getLocalTunnelFaceDAO().getAllTunnelFaces();
             facesListViewAdapter = new TunnelFaceListViewAdapter(this,
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listFaces);
 
@@ -227,17 +227,17 @@ public class DataExplorerMainActivity extends SkavaActivity {
         switch (menuItem.getItemId()) {
             case R.id.action_clear_tables:
                 try {
-                    daoFactory.getLocalClientDAO(DAOFactory.Flavour.SQLLITE).deleteAllClients();
+                    daoFactory.getLocalClientDAO().deleteAllClients();
                     ((SkavaEntityListViewAdapter)clientListViewAdapter).notifyDataSetChanged();
-                    daoFactory.getLocalRoleDAO(DAOFactory.Flavour.SQLLITE).deleteAllRoles();
+                    daoFactory.getLocalRoleDAO().deleteAllRoles();
                     ((SkavaEntityListViewAdapter)roleListViewAdapter).notifyDataSetChanged();
-                    daoFactory.getLocalUserDAO(DAOFactory.Flavour.SQLLITE).deleteAllUsers();
+                    daoFactory.getLocalUserDAO().deleteAllUsers();
                     ((SkavaEntityListViewAdapter)userListViewAdapter).notifyDataSetChanged();
-                    daoFactory.getLocalExcavationProjectDAO(DAOFactory.Flavour.SQLLITE).deleteAllExcavationProjects();
+                    daoFactory.getLocalExcavationProjectDAO().deleteAllExcavationProjects();
                     ((SkavaEntityListViewAdapter)projectListAdapter).notifyDataSetChanged();
-                    daoFactory.getLocalTunnelDAO(DAOFactory.Flavour.SQLLITE).deleteAllTunnels();
+                    daoFactory.getLocalTunnelDAO().deleteAllTunnels();
                     ((SkavaEntityListViewAdapter)tunnelListViewAdapter).notifyDataSetChanged();
-                    daoFactory.getLocalTunnelFaceDAO(DAOFactory.Flavour.SQLLITE).deleteAllTunnelFaces();
+                    daoFactory.getLocalTunnelFaceDAO().deleteAllTunnelFaces();
                     ((SkavaEntityListViewAdapter)facesListViewAdapter).notifyDataSetChanged();
                 } catch (DAOException e) {
                     e.printStackTrace();

@@ -29,7 +29,6 @@ import com.metric.skava.calculator.rmr.model.Infilling;
 import com.metric.skava.calculator.rmr.model.OrientationDiscontinuities;
 import com.metric.skava.calculator.rmr.model.Persistence;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
-import com.metric.skava.calculator.rmr.model.RQD_RMR;
 import com.metric.skava.calculator.rmr.model.Roughness;
 import com.metric.skava.calculator.rmr.model.Spacing;
 import com.metric.skava.calculator.rmr.model.StrengthOfRock;
@@ -50,8 +49,8 @@ import com.metric.skava.instructions.model.ArchType;
 import com.metric.skava.instructions.model.BoltType;
 import com.metric.skava.instructions.model.Coverage;
 import com.metric.skava.instructions.model.MeshType;
-import com.metric.skava.instructions.model.SupportRecomendation;
 import com.metric.skava.instructions.model.ShotcreteType;
+import com.metric.skava.instructions.model.SupportRecomendation;
 import com.metric.skava.rockmass.model.FractureType;
 
 import java.util.ArrayList;
@@ -76,7 +75,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         this.mDiscontinuitiesFamilyDropBoxTable = new DiscontinuitiesFamilyDropboxTable(getDatastore());
         this.mRMRCalculationDropBoxTable = new RMRCalculationDropboxTable(getDatastore());
         this.mQBartonCalculationDropBoxTable = new QBartonCalculationDropboxTable(getDatastore());
-        this.assessmentBuilder = new AssessmentBuilder4DropBox(context);
+        this.assessmentBuilder = new AssessmentBuilder4DropBox(skavaContext);
     }
 
     @Override
@@ -409,9 +408,9 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     rmrCalculationFields.set("orientation", orientationDiscontinuities.getKey());
                 }
 
-                RQD_RMR rqd = rmrCalculation.getRqd();
+                RQD rqd = rmrCalculation.getRqd();
                 if (rqd != null) {
-                rmrCalculationFields.set("rqd", rqd.getKey());
+                rmrCalculationFields.set("rqd", rqd.getValue());
                 }
 
                 mRMRCalculationDropBoxTable.persist(rmrCalculationFields);

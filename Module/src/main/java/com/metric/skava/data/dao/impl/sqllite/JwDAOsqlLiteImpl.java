@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.calculator.barton.model.Jw;
 import com.metric.skava.data.dao.LocalJwDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -17,22 +18,17 @@ import java.util.List;
  */
 public class JwDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalJwDAO {
 
-    private Context mContext;
     private MappedIndexInstanceBuilder4SqlLite mappedIndexInstaceBuilder;
 
-    public Context getContext() {
-        return mContext;
-    }
 
-    public JwDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
-        mContext = context;
+    public JwDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
     @Override
     public Jw getJw(String indexCode, String groupCode, String code) throws DAOException {
-        String[] names = new String[]{JwTable.INDEX_CODE_COLUMN, GROUP_CODE_COLUMN, CODE_COLUMN};
+        String[] names = new String[]{JwTable.INDEX_CODE_COLUMN, JwTable.GROUP_CODE_COLUMN, JwTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(JwTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Jw> list = assambleJws(cursor);

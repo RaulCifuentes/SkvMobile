@@ -51,7 +51,7 @@ public class RmrResultsFragment extends RMRCalculatorBaseFragment {
         RMR_Calculation RMRCalculation = getRMRCalculationContext();
         RMRInput input = new RMRInput();
         input.setStrength(RMRCalculation.getStrengthOfRock().getValue());
-        input.setRqd(RMRCalculation.getRqd().getValue());
+        input.setRqd(Double.valueOf(RMRCalculation.getRqd().getValue()));
         input.setSpacing(RMRCalculation.getSpacing().getValue());
 //        if (RMRCalculation.getConditionDiscontinuities() != null) {
 //            input.setCondition(RMRCalculation.getConditionDiscontinuities().getValue());

@@ -10,15 +10,8 @@ import java.util.List;
  */
 public interface LocalOrientationDiscontinuitiesDAO {
 
-    public static final String INDEX_CODE_COLUMN = "INDEX_CODE";
-    public static final String GROUP_CODE_COLUMN = "GROUP_CODE";
-    public static final String CODE_COLUMN = "CODE";
 
-    public static final String KEYWORDS_COLUMN = "KEYWORDS";
-    public static final String DESCRIPTION_COLUMN = "DESCRIPTION";
-    public static final String VALUE_COLUMN  = "VALUE";
-
-    public List<OrientationDiscontinuities> getAllOrientationDiscontinuities(int type) throws DAOException;
+    public List<OrientationDiscontinuities> getAllOrientationDiscontinuities(OrientationDiscontinuities.Group group) throws DAOException;
 
     public OrientationDiscontinuities getOrientationDiscontinuities(String indexCode, String groupCode, String code) throws DAOException;
 
@@ -27,8 +20,6 @@ public interface LocalOrientationDiscontinuitiesDAO {
     public boolean deleteOrientationDiscontinuities(String indexCode, String groupCode, String code);
 
     public int deleteAllOrientationDiscontinuities();
-
-
 
 
 }

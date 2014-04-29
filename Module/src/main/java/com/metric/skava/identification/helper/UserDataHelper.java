@@ -1,7 +1,6 @@
 package com.metric.skava.identification.helper;
 
-import android.content.Context;
-
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
 import com.metric.skava.data.dao.DAOFactory;
@@ -16,14 +15,12 @@ import java.util.List;
  */
 public class UserDataHelper {
 
-    private Context mContext;
     private DAOFactory daoFactory;
     private final LocalTunnelFaceDAO localTunnelFaceDAO;
 
-    public UserDataHelper(Context context) throws DAOException {
-        mContext = context;
-        daoFactory = DAOFactory.getInstance(mContext);
-        localTunnelFaceDAO = daoFactory.getLocalTunnelFaceDAO(DAOFactory.Flavour.SQLLITE);
+    public UserDataHelper(SkavaContext skavaContext) throws DAOException {
+        daoFactory = skavaContext.getDAOFactory();
+        localTunnelFaceDAO = daoFactory.getLocalTunnelFaceDAO();
     }
 
 

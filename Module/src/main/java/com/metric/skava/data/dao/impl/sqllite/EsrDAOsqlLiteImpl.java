@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.data.dao.LocalEsrDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.helper.MappedIndexInstanceBuilder4SqlLite;
@@ -24,15 +25,15 @@ public class EsrDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalEsrDAO {
         return mContext;
     }
 
-    public EsrDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
+    public EsrDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
         mContext = context;
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
     @Override
     public ESR getESR(String code) throws DAOException {
-        String[] names = new String[]{ESRTable.INDEX_CODE_COLUMN, CODE_COLUMN};
+        String[] names = new String[]{ESRTable.INDEX_CODE_COLUMN, ESRTable.CODE_COLUMN};
         String[] values = new String[]{ESR.ESR_CODE, code};
         Cursor cursor = getRecordsFilteredByColumns(ESRTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<ESR> list = assambleESRs(cursor);
@@ -58,8 +59,8 @@ public class EsrDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalEsrDAO {
 
 
     @Override
-    public List<ESR> getAllESRs() throws DAOException {
-        Cursor cursor = getAllRecords(ESRTable.MAPPED_INDEX_DATABASE_TABLE);
+    public List<ESR> getAllESRs(ESR.Group group) throws DAOException {
+        Cursor cursor = getRecordsFilteredByColumn(ESRTable.MAPPED_INDEX_DATABASE_TABLE, ESRTable.GROUP_CODE_COLUMN, group.name(), null);
         List<ESR> list = assambleESRs(cursor);
         cursor.close();
         return list;

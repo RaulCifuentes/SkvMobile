@@ -11,7 +11,7 @@ public class RMRCalculatorBaseFragment extends SkavaFragment {
 
     public RMRCalculatorBaseFragment() {
 		super();
-        daoFactory = DAOFactory.getInstance(getActivity());
+        daoFactory = getDAOFactory();
 	}
 
     public MappedIndexDataProvider getMappedIndexDataProvider(){

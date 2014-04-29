@@ -63,7 +63,7 @@ public class MultiColumnMappedIndexArrayAdapter<T extends MappedIndex> extends A
         TextView defaultSpinnerTextView = (TextView) wholeRowView.findViewById(android.R.id.text1);
 
         MappedIndex whatArrrives = values.get(position);
-        String[][] mapa = whatArrrives.getCategoriesAndValues();
+//        String[][] mapa = whatArrrives.getCategoriesAndValues();
         NumberFormat nf = DecimalFormat.getInstance();
         nf.setMaximumFractionDigits(1);
         if (whatArrrives != null) {
@@ -71,16 +71,20 @@ public class MultiColumnMappedIndexArrayAdapter<T extends MappedIndex> extends A
                 radioText.setText(whatArrrives.getKey() + " (" + nf.format(whatArrrives.getValue()) + ")");
             }
             if (secondColumnText != null) {
-                secondColumnText.setText(mapa[1][0]);
+//                secondColumnText.setText(mapa[1][0]);
+                secondColumnText.setText(whatArrrives.getDescription());
             }
             if (thirdColumnText != null) {
-                thirdColumnText.setText(mapa[1][1]);
+//                thirdColumnText.setText(mapa[1][1]);
+                thirdColumnText.setText(whatArrrives.getGroupName());
             }
             if (fourthColumnText != null) {
-                fourthColumnText.setText(mapa[1][2]);
+//                fourthColumnText.setText(mapa[1][2]);
+                fourthColumnText.setText(whatArrrives.getShortDescription());
             }
             if (defaultSpinnerTextView != null){
-                defaultSpinnerTextView.setText(mapa[1][0]);
+//                defaultSpinnerTextView.setText(mapa[1][0]);
+                defaultSpinnerTextView.setText(whatArrrives.getShortDescription());
             }
 
         }

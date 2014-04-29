@@ -218,10 +218,10 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
 
         @Override
         protected Boolean doInBackground(String... params) {
-            DAOFactory daoFactory = DAOFactory.getInstance(mContext);
+            DAOFactory daoFactory = getDAOFactory();
             LocalUserDAO userDAO = null;
             try {
-                userDAO = daoFactory.getLocalUserDAO(DAOFactory.Flavour.SQLLITE);
+                userDAO = daoFactory.getLocalUserDAO();
                 mUser = userDAO.getUserByEmail(params[0]);
             } catch (DAOException e) {
                 e.printStackTrace();

@@ -32,7 +32,7 @@ public class TunnelFaceDAODropboxImpl extends DropBoxBaseDAO implements RemoteTu
         super(context, skavaContext);
         mTunnelsFaceTable = new TunnelFaceDropboxTable(getDatastore());
         mUsersTable = new UserDropboxTable(getDatastore());
-        remoteTunnelDAO = DAOFactory.getInstance(mContext).getRemoteTunnelDAO(DAOFactory.Flavour.DROPBOX);
+        remoteTunnelDAO = getDAOFactory().getRemoteTunnelDAO(DAOFactory.Flavour.DROPBOX);
     }
 
     @Override

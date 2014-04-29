@@ -74,14 +74,14 @@ public class SyncMainFragment extends SkavaFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        daoFactory = DAOFactory.getInstance(getActivity());
+        daoFactory = getDAOFactory();
         try {
-            clientsDAO = daoFactory.getLocalClientDAO(DAOFactory.Flavour.SQLLITE);
-            rolesDAO = daoFactory.getLocalRoleDAO(DAOFactory.Flavour.SQLLITE);
-            usersDAO = daoFactory.getLocalUserDAO(DAOFactory.Flavour.SQLLITE);
-            projectsDAO = daoFactory.getLocalExcavationProjectDAO(DAOFactory.Flavour.SQLLITE);
-            tunnelsDAO = daoFactory.getLocalTunnelDAO(DAOFactory.Flavour.SQLLITE);
-            facesDAO = daoFactory.getLocalTunnelFaceDAO(DAOFactory.Flavour.SQLLITE);
+            clientsDAO = daoFactory.getLocalClientDAO();
+            rolesDAO = daoFactory.getLocalRoleDAO();
+            usersDAO = daoFactory.getLocalUserDAO();
+            projectsDAO = daoFactory.getLocalExcavationProjectDAO();
+            tunnelsDAO = daoFactory.getLocalTunnelDAO();
+            facesDAO = daoFactory.getLocalTunnelFaceDAO();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
         }
@@ -111,7 +111,7 @@ public class SyncMainFragment extends SkavaFragment {
         clientsListView = (ListView) getView().findViewById(R.id.listviewClients);
         final List<Client> listClients;
         try {
-            listClients = daoFactory.getLocalClientDAO(DAOFactory.Flavour.SQLLITE).getAllClients();
+            listClients = daoFactory.getLocalClientDAO().getAllClients();
             clientListViewAdapter = new ClientListViewAdapter(getActivity(),
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listClients);
 
@@ -136,7 +136,7 @@ public class SyncMainFragment extends SkavaFragment {
         rolesListView = (ListView) getView().findViewById(R.id.listviewRoles);
         final List<Role> listRoles;
         try {
-            listRoles = daoFactory.getLocalRoleDAO(DAOFactory.Flavour.SQLLITE).getAllRoles();
+            listRoles = daoFactory.getLocalRoleDAO().getAllRoles();
             roleListViewAdapter = new RoleListViewAdapter(getActivity(),
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listRoles);
 
@@ -162,7 +162,7 @@ public class SyncMainFragment extends SkavaFragment {
         usersListView = (ListView) getView().findViewById(R.id.listviewUsers);
         final List<User> listUsers;
         try {
-            listUsers = daoFactory.getLocalUserDAO(DAOFactory.Flavour.SQLLITE).getAllUsers();
+            listUsers = daoFactory.getLocalUserDAO().getAllUsers();
             userListViewAdapter = new UserListViewAdapter(getActivity(),
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listUsers);
 
@@ -187,7 +187,7 @@ public class SyncMainFragment extends SkavaFragment {
         projectsListView = (ListView) getView().findViewById(R.id.listviewProjects);
         final List<ExcavationProject> listProjects;
         try {
-            listProjects = daoFactory.getLocalExcavationProjectDAO(DAOFactory.Flavour.SQLLITE).getAllExcavationProjects();
+            listProjects = daoFactory.getLocalExcavationProjectDAO().getAllExcavationProjects();
             projectListAdapter = new ProjectListViewAdapter(getActivity(),
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listProjects);
 
@@ -212,7 +212,7 @@ public class SyncMainFragment extends SkavaFragment {
         tunnelsListView = (ListView) getView().findViewById(R.id.listviewTunnels);
         final List<Tunnel> listTunnels;
         try {
-            listTunnels = daoFactory.getLocalTunnelDAO(DAOFactory.Flavour.SQLLITE).getAllTunnels();
+            listTunnels = daoFactory.getLocalTunnelDAO().getAllTunnels();
             tunnelListViewAdapter = new TunnelListViewAdapter(getActivity(),
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listTunnels);
 
@@ -238,7 +238,7 @@ public class SyncMainFragment extends SkavaFragment {
         facesListView = (ListView) getView().findViewById(R.id.listviewFaces);
         final List<TunnelFace> listFaces;
         try {
-            listFaces = daoFactory.getLocalTunnelFaceDAO(DAOFactory.Flavour.SQLLITE).getAllTunnelFaces();
+            listFaces = daoFactory.getLocalTunnelFaceDAO().getAllTunnelFaces();
             facesListViewAdapter = new TunnelFaceListViewAdapter(getActivity(),
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listFaces);
 

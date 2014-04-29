@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.metric.skava.app.context.SkavaContext;
+import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
 
 /**
@@ -12,14 +14,21 @@ import com.metric.skava.data.dao.exception.DAOException;
  */
 public abstract class SqlLiteBaseDAO {
 
+    private final SkavaContext mSkavaContext;
     protected Context mContext;
 
     public Context getContext() {
         return mContext;
     }
 
-    public SqlLiteBaseDAO(Context mContext) {
+    DAOFactory getDAOFactory() {
+        return mSkavaContext.getDAOFactory();
+    }
+
+
+    public SqlLiteBaseDAO(Context mContext, SkavaContext skavaContext) {
         this.mContext = mContext;
+        this.mSkavaContext = skavaContext;
     }
 
 
@@ -41,9 +50,9 @@ public abstract class SqlLiteBaseDAO {
         if (columnValue != null) {
             // Specify the where clause that will limit our results.
             where = columnName + "=?";
-            if (columnValue instanceof String){
-                whereArgs = new String[]{(String)columnValue};
-            } else if (columnValue instanceof Long){
+            if (columnValue instanceof String) {
+                whereArgs = new String[]{(String) columnValue};
+            } else if (columnValue instanceof Long) {
                 whereArgs = new String[]{columnValue.toString()};
             }
         }
@@ -63,8 +72,7 @@ public abstract class SqlLiteBaseDAO {
             if (columnNames.length == columnValues.length) {
                 if (columnNames.length == 1) {
                     return getRecordsFilteredByColumn(tableName, columnNames[0], columnValues[0], orderBy);
-                }
-                else{
+                } else {
                     String firstWhere = columnNames[0] + "=?";
                     String finalCriteria = firstWhere;
                     for (int i = 1; i < columnNames.length - 1; i++) {
@@ -78,10 +86,10 @@ public abstract class SqlLiteBaseDAO {
                     String whereArgs[] = new String[columnValues.length];
                     for (int i = 0; i < columnValues.length; i++) {
                         Object columnValue = columnValues[i];
-                        if (columnValues[i] instanceof String){
+                        if (columnValues[i] instanceof String) {
                             whereArgs[i] = (String) columnValues[i];
-                        } else if (columnValues[i] instanceof Long){
-                            whereArgs[i] =  ((Long) columnValues[i]).toString();
+                        } else if (columnValues[i] instanceof Long) {
+                            whereArgs[i] = ((Long) columnValues[i]).toString();
                         }
                     }
                     String groupBy = null;
@@ -104,34 +112,29 @@ public abstract class SqlLiteBaseDAO {
                 Object columnValue = columnValues[i];
 
                 if (columnValue == null) {
-                    newValues.put(columnName, (String)null);
+                    newValues.put(columnName, (String) null);
                 } else {
                     // ref.: Sugar ORM https://github.com/satyan/sugar/blob/master/library/src/com/orm/SugarRecord.java#L92
                     Class<?> columnType = columnValue.getClass();
                     if (columnType.equals(Short.class) || columnType.equals(short.class)) {
                         newValues.put(columnName, (Short) columnValue);
-                    }
-                    else if (columnType.equals(Integer.class) || columnType.equals(int.class)) {
+                    } else if (columnType.equals(Integer.class) || columnType.equals(int.class)) {
                         newValues.put(columnName, (Integer) columnValue);
-                    }
-                    else if (columnType.equals(Long.class) || columnType.equals(long.class)) {
+                    } else if (columnType.equals(Long.class) || columnType.equals(long.class)) {
                         newValues.put(columnName, (Long) columnValue);
-                    }
-                    else if (columnType.equals(Float.class) || columnType.equals(float.class)) {
+                    } else if (columnType.equals(Float.class) || columnType.equals(float.class)) {
                         newValues.put(columnName, (Float) columnValue);
-                    }
-                    else if (columnType.equals(Double.class) || columnType.equals(double.class)) {
+                    } else if (columnType.equals(Double.class) || columnType.equals(double.class)) {
                         newValues.put(columnName, (Double) columnValue);
-                    }
-                    else if (columnType.equals(Boolean.class) || columnType.equals(boolean.class)) {
+                    } else if (columnType.equals(Boolean.class) || columnType.equals(boolean.class)) {
                         newValues.put(columnName, (Boolean) columnValue);
-    //                }
-    //                else if (Date.class.equals(columnType)) {
-    //                    newValues.put(columnName, ((Date) column.get(this)).getTime());
-    //                }
-    //                else if (Calendar.class.equals(columnType)) {
-    //                    newValues.put(columnName, ((Calendar) column.get(this)).getTimeInMillis());
-                    }else{
+                        //                }
+                        //                else if (Date.class.equals(columnType)) {
+                        //                    newValues.put(columnName, ((Date) column.get(this)).getTime());
+                        //                }
+                        //                else if (Calendar.class.equals(columnType)) {
+                        //                    newValues.put(columnName, ((Calendar) column.get(this)).getTimeInMillis());
+                    } else {
                         newValues.put(columnName, String.valueOf(columnValue));
                     }
                 }

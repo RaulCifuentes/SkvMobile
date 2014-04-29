@@ -9,7 +9,7 @@ public class QBartonCalculatorBaseFragment extends SkavaFragment {
 
 	public QBartonCalculatorBaseFragment() {
         super();
-        daoFactory = DAOFactory.getInstance(getActivity());
+        daoFactory = getDAOFactory();
 	}
 
 //    public MappedIndexDataProvider getMappedIndexDataProvider() {

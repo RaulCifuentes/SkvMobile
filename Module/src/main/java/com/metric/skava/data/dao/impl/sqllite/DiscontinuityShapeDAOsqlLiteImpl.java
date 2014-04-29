@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.data.dao.LocalDiscontinuityShapeDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -15,12 +16,11 @@ import java.util.List;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class DiscontinuityShapeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<DiscontinuityShape> implements LocalDiscontinuityShapeDAO {
+public class DiscontinuityShapeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<DiscontinuityShape> implements LocalDiscontinuityShapeDAO {
 
-    public DiscontinuityShapeDAOsqlLiteImpl(Context context) {
-        super(context);
+    public DiscontinuityShapeDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
+        super(context, skavaContext);
     }
-
 
 
     @Override
@@ -39,11 +39,12 @@ public class DiscontinuityShapeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnt
 
     @Override
     public DiscontinuityShape getDiscontinuityShapeByCode(String code) throws DAOException {
+        //TODO check if this if is necessary
         // HACK: Para cuando se olviden de llenar el fracture
-        if (!code.equals("HINT")){
-        DiscontinuityShape entity = getIdentifiableEntityByCode(DiscontinuityShapeTable.SHAPE_DATABASE_TABLE, code);
-        return entity;
-        }else {
+        if (!code.equals("HINT")) {
+            DiscontinuityShape entity = getIdentifiableEntityByCode(DiscontinuityShapeTable.SHAPE_DATABASE_TABLE, code);
+            return entity;
+        } else {
             return null;
         }
     }
@@ -55,24 +56,23 @@ public class DiscontinuityShapeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnt
     }
 
     @Override
+    protected void savePersistentEntity(String tableName, DiscontinuityShape newSkavaEntity) throws DAOException {
+        saveSkavaEntity(tableName, newSkavaEntity);
+    }
+
+    @Override
     public void saveDiscontinuityShape(DiscontinuityShape newEntity) throws DAOException {
         savePersistentEntity(DiscontinuityShapeTable.SHAPE_DATABASE_TABLE, newEntity);
     }
 
     @Override
-    protected void savePersistentEntity(String tableName, DiscontinuityShape newSkavaEntity) throws DAOException {
-
-    }
-
-    @Override
     public boolean deleteDiscontinuityShape(String code) {
-        return false;
+        return deleteIdentifiableEntity(DiscontinuityShapeTable.SHAPE_DATABASE_TABLE, code);
     }
 
     @Override
     public int deleteAllDiscontinuityShapes() {
-        return 0;
+        return deleteAllPersistentEntities(DiscontinuityShapeTable.SHAPE_DATABASE_TABLE);
     }
-
 
 }

@@ -3,8 +3,8 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.calculator.rmr.model.Roughness;
-import com.metric.skava.data.dao.LocalRoughnessDAO;
 import com.metric.skava.data.dao.LocalRoughnessDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.helper.MappedIndexInstanceBuilder4SqlLite;
@@ -25,15 +25,15 @@ public class RoughnessDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalRoug
         return mContext;
     }
 
-    public RoughnessDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
+    public RoughnessDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
         mContext = context;
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
     @Override
     public Roughness getRoughness(String indexCode, String groupCode, String code) throws DAOException {
-        String[] names = new String[]{RoughnessTable.INDEX_CODE_COLUMN, GROUP_CODE_COLUMN, CODE_COLUMN};
+        String[] names = new String[]{RoughnessTable.INDEX_CODE_COLUMN, RoughnessTable.GROUP_CODE_COLUMN, RoughnessTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(RoughnessTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Roughness> list = assambleRoughnesss(cursor);

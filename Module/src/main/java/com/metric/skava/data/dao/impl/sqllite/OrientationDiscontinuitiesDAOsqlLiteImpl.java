@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.calculator.rmr.model.OrientationDiscontinuities;
 import com.metric.skava.data.dao.LocalOrientationDiscontinuitiesDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -17,22 +18,21 @@ import java.util.List;
  */
 public class OrientationDiscontinuitiesDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalOrientationDiscontinuitiesDAO {
 
-    private Context mContext;
+
     private MappedIndexInstanceBuilder4SqlLite mappedIndexInstaceBuilder;
 
     public Context getContext() {
         return mContext;
     }
 
-    public OrientationDiscontinuitiesDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
-        mContext = context;
+    public OrientationDiscontinuitiesDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
     @Override
     public OrientationDiscontinuities getOrientationDiscontinuities(String indexCode, String groupCode, String code) throws DAOException {
-        String[] names = new String[]{OrientationTable.INDEX_CODE_COLUMN, GROUP_CODE_COLUMN, CODE_COLUMN};
+        String[] names = new String[]{OrientationTable.INDEX_CODE_COLUMN, OrientationTable.GROUP_CODE_COLUMN, OrientationTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(OrientationTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<OrientationDiscontinuities> list = assambleOrientationDiscontinuities(cursor);
@@ -58,10 +58,8 @@ public class OrientationDiscontinuitiesDAOsqlLiteImpl extends SqlLiteBaseDAO imp
 
 
     @Override
-    public List<OrientationDiscontinuities> getAllOrientationDiscontinuities(int type) throws DAOException {
-        //TODO hacer el lookup considerando el group que viene como OrientationDiscontinuities.SLOPES, etc
-
-        Cursor cursor = getAllRecords(OrientationTable.MAPPED_INDEX_DATABASE_TABLE);
+    public List<OrientationDiscontinuities> getAllOrientationDiscontinuities(OrientationDiscontinuities.Group group) throws DAOException {
+        Cursor cursor = getRecordsFilteredByColumn(OrientationTable.MAPPED_INDEX_DATABASE_TABLE, OrientationTable.GROUP_CODE_COLUMN, group.name(), null );
         List<OrientationDiscontinuities> list = assambleOrientationDiscontinuities(cursor);
         cursor.close();
         return list;

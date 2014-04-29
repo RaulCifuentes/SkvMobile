@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.calculator.rmr.model.Infilling;
 import com.metric.skava.data.dao.LocalInfillingDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -24,15 +25,15 @@ public class InfillingDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalInfi
         return mContext;
     }
 
-    public InfillingDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
+    public InfillingDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
         mContext = context;
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
     @Override
     public Infilling getInfilling(String indexCode, String groupCode, String code) throws DAOException {
-        String[] names = new String[]{InfillingTable.INDEX_CODE_COLUMN, GROUP_CODE_COLUMN, CODE_COLUMN};
+        String[] names = new String[]{InfillingTable.INDEX_CODE_COLUMN, InfillingTable.GROUP_CODE_COLUMN, InfillingTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(InfillingTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Infilling> list = assambleInfillings(cursor);

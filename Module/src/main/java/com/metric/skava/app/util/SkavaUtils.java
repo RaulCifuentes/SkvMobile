@@ -1,10 +1,10 @@
 package com.metric.skava.app.util;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.calculator.barton.helper.RQDMapper;
 import com.metric.skava.calculator.barton.model.Ja;
@@ -14,14 +14,12 @@ import com.metric.skava.calculator.barton.model.Jw;
 import com.metric.skava.calculator.barton.model.Q_Calculation;
 import com.metric.skava.calculator.barton.model.RQD;
 import com.metric.skava.calculator.barton.model.SRF;
-import com.metric.skava.calculator.data.MappedIndexDataProvider;
 import com.metric.skava.calculator.rmr.model.Aperture;
 import com.metric.skava.calculator.rmr.model.Groundwater;
 import com.metric.skava.calculator.rmr.model.Infilling;
 import com.metric.skava.calculator.rmr.model.OrientationDiscontinuities;
 import com.metric.skava.calculator.rmr.model.Persistence;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
-import com.metric.skava.calculator.rmr.model.RQD_RMR;
 import com.metric.skava.calculator.rmr.model.Roughness;
 import com.metric.skava.calculator.rmr.model.Spacing;
 import com.metric.skava.calculator.rmr.model.StrengthOfRock;
@@ -70,7 +68,7 @@ public class SkavaUtils {
         return Build.VERSION.SDK_INT >= VERSION_CODES.KITKAT;
     }
 
-    public static Assessment createInitialAssessment(Context context) throws DAOException {
+    public static Assessment createInitialAssessment(SkavaContext skavaContext) throws DAOException {
 
         int assesmentNumber = SkavaUtils.getRandom(1, 10);
 
@@ -80,67 +78,49 @@ public class SkavaUtils {
         Assessment initialAssessment = new Assessment(code);
         initialAssessment.setInternalCode(internalCode);
 
-        DAOFactory daoFactory = DAOFactory.getInstance(context);
+        DAOFactory daoFactory = skavaContext.getDAOFactory();
 
-        MappedIndexDataProvider provider = MappedIndexDataProvider.getInstance(context);
 
         Date date = new Date();
         initialAssessment.setDate(date);
 
-        //Q Barton (Deafault values for eacb one of the components of thr Q process)
+        //Q Barton (Deafault values for each one of the components of thr Q process)
 
         RQD rqd = RQDMapper.getInstance().mapJvToRQD(4);
 
-//        SRF sRF = provider.getAllSrf(SRF.a).get(0);
-        SRF sRF =  daoFactory.getLocalSrfDAO().getAllSrfs(SRF.a).get(0);
-//        Jw jw = provider.getAllJw().get(0);
+        SRF sRF =  daoFactory.getLocalSrfDAO().getAllSrfs(SRF.Group.a).get(0);
         Jw jw = daoFactory.getLocalJwDAO().getAllJws().get(0);
-//        Ja ja = provider.getAllJa(Ja.a).get(0);
-        Ja ja = daoFactory.getLocalJaDAO().getAllJas(Ja.a).get(0);
-//        Jn jn = provider.getAllJn().get(0);
+        Ja ja = daoFactory.getLocalJaDAO().getAllJas(Ja.Group.a).get(0);
         Jn jn = daoFactory.getLocalJnDAO().getAllJns().get(0);
-//        Jr jr = provider.getAllJr(Jr.a).get(0);
-        Jr jr = daoFactory.getLocalJrDAO().getAllJrs(Jr.a).get(0);
+        Jr jr = daoFactory.getLocalJrDAO().getAllJrs(Jr.Group.a).get(0);
 
         Q_Calculation mQCalculation = new Q_Calculation(rqd, jn, jr, ja, jw, sRF);
 
         initialAssessment.setQCalculation(mQCalculation);
 
-        //RMR (Deafault values for eacb one of the components of thr Q process)
-//        StrengthOfRock strenght = provider.getAllStrenghts().get(0);
-        StrengthOfRock strenght = daoFactory.getLocalStrengthDAO().getAllStrengths().get(0);
 
-        RQD_RMR rqdRmr = provider.getAllRqdRmr().get(0);
+        StrengthOfRock strenght = daoFactory.getLocalStrengthDAO().getAllStrengths(StrengthOfRock.Group.POINT_LOAD_KEY).get(0);
 
-//        Spacing spacing = provider.getAllSpacings().get(0);
         Spacing spacing =  daoFactory.getLocalSpacingDAO().getAllSpacings().get(0);
 
         // ***** Condition was the summarized not needed anymore ****
         //ConditionDiscontinuities condition = provider.getAllConditions().get(0);
 
-//        Persistence persistence = provider.getAllPersistences().get(0);
         Persistence persistence = daoFactory.getLocalPersistenceDAO().getAllPersistences().get(0);
 
-//        Aperture aperture = provider.getAllApertures().get(0);
         Aperture aperture = daoFactory.getLocalApertureDAO().getAllApertures().get(0);
 
-//        Roughness roughness = provider.getAllRoughness().get(0);
         Roughness roughness = daoFactory.getLocalRoughnessDAO().getAllRoughnesses().get(0);
 
-//        Infilling infilling = provider.getAllInfillings().get(0);
         Infilling infilling = daoFactory.getLocalInfillingDAO().getAllInfillings().get(0);
 
-//        Weathering weathering = provider.getAllWeatherings().get(0);
         Weathering weathering = daoFactory.getLocalWeatheringDAO().getAllWeatherings().get(0);
 
-//        Groundwater groundwater = provider.getAllGroundwaters().get(0);
-        Groundwater groundwater = daoFactory.getLocalGroundwaterDAO().getAllGroundwaters().get(0);
+        Groundwater groundwater = daoFactory.getLocalGroundwaterDAO().getAllGroundwaters(Groundwater.Group.INFLOW_LENGHT).get(0);
 
-//        OrientationDiscontinuities orientation = provider.getAllOrientationDiscontinuities(OrientationDiscontinuities.TUNNEL_MINES).get(0);
-        OrientationDiscontinuities orientation = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.TUNNEL_MINES).get(0);
+        OrientationDiscontinuities orientation = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.TUNNELS_MINES).get(0);
 
-//        RMR_Calculation mRMRCalculation = new RMR_Calculation(strenght, rqdRmr, spacing, condition, persistence, aperture, roughness, infilling, weathering, groundwater, orientation);
-        RMR_Calculation mRMRCalculation = new RMR_Calculation(strenght, rqdRmr, spacing, persistence, aperture, roughness, infilling, weathering, groundwater, orientation);
+        RMR_Calculation mRMRCalculation = new RMR_Calculation(strenght, rqd, spacing, persistence, aperture, roughness, infilling, weathering, groundwater, orientation);
 
         initialAssessment.setRmrCalculation(mRMRCalculation);
 

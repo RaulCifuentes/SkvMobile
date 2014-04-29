@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.Role;
 import com.metric.skava.data.dao.LocalRoleDAO;
@@ -16,11 +17,12 @@ import java.util.List;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class RoleDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Role> implements LocalRoleDAO {
+//public class RoleDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Role> implements LocalRoleDAO {
+public class RoleDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Role> implements LocalRoleDAO {
 
 
-    public RoleDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
+    public RoleDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
     }
 
 
@@ -68,7 +70,7 @@ public class RoleDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Role> i
 
     @Override
     protected void savePersistentEntity(String tableName, Role newSkavaEntity) throws DAOException {
-
+        saveSkavaEntity(tableName, newSkavaEntity);
     }
 
 

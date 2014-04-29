@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.calculator.rmr.model.Aperture;
 import com.metric.skava.data.dao.LocalApertureDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -24,15 +25,15 @@ public class ApertureDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalApert
         return mContext;
     }
 
-    public ApertureDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
+    public ApertureDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
         mContext = context;
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
     @Override
     public Aperture getAperture(String indexCode, String groupCode, String code) throws DAOException {
-        String[] names = new String[]{ApertureTable.INDEX_CODE_COLUMN, GROUP_CODE_COLUMN, CODE_COLUMN};
+        String[] names = new String[]{ApertureTable.INDEX_CODE_COLUMN, ApertureTable.GROUP_CODE_COLUMN, ApertureTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(ApertureTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Aperture> list = assambleApertures(cursor);

@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.data.dao.LocalArchTypeDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -17,8 +18,8 @@ import java.util.List;
  */
 public class ArchTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<ArchType> implements LocalArchTypeDAO {
 
-    public ArchTypeDAOsqlLiteImpl(Context context) {
-        super(context);
+    public ArchTypeDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
+        super(context, skavaContext);
     }
 
 
@@ -32,7 +33,6 @@ public class ArchTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<ArchType> imple
             list.add(newInstance);
         }
         return list;
-
     }
 
 
@@ -53,20 +53,19 @@ public class ArchTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<ArchType> imple
         savePersistentEntity(ArchTypeTable.ARCH_DATABASE_TABLE, newEntity);
     }
 
+    @Override
+    protected void savePersistentEntity(String tableName, ArchType newSkavaEntity) throws DAOException {
+        saveSkavaEntity(tableName, newSkavaEntity);
+    }
 
     @Override
     public boolean deleteArchType(String code) {
-        return false;
+        return deleteIdentifiableEntity(ArchTypeTable.ARCH_DATABASE_TABLE, code);
     }
 
     @Override
     public int deleteAllArchTypes() {
-        return 0;
-    }
-
-    @Override
-    protected void savePersistentEntity(String tableName, ArchType newSkavaEntity) throws DAOException {
-        saveSkavaEntity(tableName, newSkavaEntity);
+        return deleteAllPersistentEntities(ArchTypeTable.ARCH_DATABASE_TABLE);
     }
 
 }

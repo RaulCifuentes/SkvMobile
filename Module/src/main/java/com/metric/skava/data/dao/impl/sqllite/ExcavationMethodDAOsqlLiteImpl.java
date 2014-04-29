@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.ExcavationMethod;
 import com.metric.skava.data.dao.LocalExcavationMethodDAO;
@@ -15,10 +16,11 @@ import java.util.List;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class ExcavationMethodDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<ExcavationMethod> implements LocalExcavationMethodDAO {
+//public class ExcavationMethodDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<ExcavationMethod> implements LocalExcavationMethodDAO {
+public class ExcavationMethodDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<ExcavationMethod> implements LocalExcavationMethodDAO {
 
-    public ExcavationMethodDAOsqlLiteImpl(Context context) {
-        super(context);
+    public ExcavationMethodDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
+        super(context, skavaContext);
     }
 
     @Override
@@ -55,17 +57,17 @@ public class ExcavationMethodDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntit
 
     @Override
     protected void savePersistentEntity(String tableName, ExcavationMethod newSkavaEntity) throws DAOException {
-
+        saveSkavaEntity(tableName, newSkavaEntity);
     }
 
     @Override
     public boolean deleteExcavationMethod(String code) {
-        return false;
+        return deleteIdentifiableEntity(ExcavationMethodTable.METHOD_DATABASE_TABLE, code);
     }
 
     @Override
     public int deleteAllExcavationMethods() {
-        return 0;
+        return deleteAllPersistentEntities(ExcavationMethodTable.METHOD_DATABASE_TABLE);
     }
 
 
