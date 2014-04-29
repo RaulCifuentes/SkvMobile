@@ -88,7 +88,7 @@ public class ConditionFragment extends RMRCalculatorBaseFragment /* implements R
         mSummarizedConditionViewContainer = view.findViewById(R.id.listview_summarized_conditions);
         mSummarizedConditionViewContainer.setVisibility(View.GONE);
         mDetailedConditionViewContainer = view.findViewById(R.id.listview_detailed_conditions);
-        mDetailedConditionViewContainer.setVisibility(View.GONE);
+        mDetailedConditionViewContainer.setVisibility(View.VISIBLE);
 
 //        radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
 //        radioGroup.setOnCheckedChangeListener(this);
@@ -100,7 +100,7 @@ public class ConditionFragment extends RMRCalculatorBaseFragment /* implements R
 //            radioGroup.check(R.id.radioButtonDetailed);
 //        }
 
-        showDetailedConditions();
+        //showDetailedConditions();
 
     }
 
