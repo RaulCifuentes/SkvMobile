@@ -2,11 +2,6 @@ package com.metric.skava.calculator.data;
 
 import android.content.Context;
 
-import com.metric.skava.calculator.rmr.model.RQD_RMR;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class MappedIndexDataProvider {
 
@@ -280,31 +275,31 @@ public class MappedIndexDataProvider {
 //        return list;
 //    }
 
-    public List<RQD_RMR> getAllRqdRmr() {
-        ArrayList<RQD_RMR> list = new ArrayList<RQD_RMR>();
-        list.add(new RQD_RMR(
-                "A",
-                "< 25 %",
-                3d));
-        list.add(new RQD_RMR(
-                "B",
-                "25 % - 50 %",
-                8d));
-        list.add(new RQD_RMR(
-                "C",
-                "50 % - 75 %",
-                13d));
-        list.add(new RQD_RMR(
-                "D",
-                "75 % - 90 %",
-                17d));
-        list.add(new RQD_RMR(
-                "E",
-                "90 % - 100 %",
-                20d));
-
-        return list;
-    }
+//    public List<RQD_RMR> getAllRqdRmr() {
+//        ArrayList<RQD_RMR> list = new ArrayList<RQD_RMR>();
+//        list.add(new RQD_RMR(
+//                "A",
+//                "< 25 %",
+//                3d));
+//        list.add(new RQD_RMR(
+//                "B",
+//                "25 % - 50 %",
+//                8d));
+//        list.add(new RQD_RMR(
+//                "C",
+//                "50 % - 75 %",
+//                13d));
+//        list.add(new RQD_RMR(
+//                "D",
+//                "75 % - 90 %",
+//                17d));
+//        list.add(new RQD_RMR(
+//                "E",
+//                "90 % - 100 %",
+//                20d));
+//
+//        return list;
+//    }
 //
 //    public List<Spacing> getAllSpacings() {
 //        ArrayList<Spacing> list = new ArrayList<Spacing>();

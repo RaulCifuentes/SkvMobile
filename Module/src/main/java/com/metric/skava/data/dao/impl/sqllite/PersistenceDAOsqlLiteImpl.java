@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.calculator.rmr.model.Persistence;
 import com.metric.skava.data.dao.LocalPersistenceDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -17,16 +18,11 @@ import java.util.List;
  */
 public class PersistenceDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalPersistenceDAO {
 
-    private Context mContext;
     private MappedIndexInstanceBuilder4SqlLite mappedIndexInstaceBuilder;
 
-    public Context getContext() {
-        return mContext;
-    }
 
-    public PersistenceDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
-        mContext = context;
+    public PersistenceDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 

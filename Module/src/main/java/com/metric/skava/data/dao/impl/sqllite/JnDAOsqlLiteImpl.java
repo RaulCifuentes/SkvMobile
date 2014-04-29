@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.calculator.barton.model.Jn;
 import com.metric.skava.data.dao.LocalJnDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -24,15 +25,15 @@ public class JnDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalJnDAO {
         return mContext;
     }
 
-    public JnDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
+    public JnDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
         mContext = context;
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
     @Override
     public Jn getJn(String indexCode, String groupCode, String code) throws DAOException {
-        String[] names = new String[]{JnTable.INDEX_CODE_COLUMN, GROUP_CODE_COLUMN, CODE_COLUMN};
+        String[] names = new String[]{JnTable.INDEX_CODE_COLUMN, JnTable.GROUP_CODE_COLUMN, JnTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(JnTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Jn> list = assambleJns(cursor);

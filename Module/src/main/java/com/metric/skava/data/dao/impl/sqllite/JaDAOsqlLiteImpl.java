@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.calculator.barton.model.Ja;
 import com.metric.skava.data.dao.LocalJaDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -24,15 +25,15 @@ public class JaDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalJaDAO {
         return mContext;
     }
 
-    public JaDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
+    public JaDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
         mContext = context;
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
     @Override
     public Ja getJa(String indexCode, String groupCode, String code) throws DAOException {
-        String[] names = new String[]{JaTable.INDEX_CODE_COLUMN, GROUP_CODE_COLUMN, CODE_COLUMN};
+        String[] names = new String[]{JaTable.INDEX_CODE_COLUMN, JaTable.GROUP_CODE_COLUMN, JaTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(JaTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Ja> list = assambleJas(cursor);
@@ -58,10 +59,8 @@ public class JaDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalJaDAO {
 
 
     @Override
-    public List<Ja> getAllJas(int type) throws DAOException {
-        //Ja.
-
-        Cursor cursor = getAllRecords(JaTable.MAPPED_INDEX_DATABASE_TABLE);
+    public List<Ja> getAllJas(Ja.Group group) throws DAOException {
+        Cursor cursor = getRecordsFilteredByColumn(JaTable.MAPPED_INDEX_DATABASE_TABLE, JaTable.GROUP_CODE_COLUMN, group.name(), null);
         List<Ja> list = assambleJas(cursor);
         cursor.close();
         return list;

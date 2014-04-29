@@ -3,16 +3,16 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.data.IdentifiableEntity;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.Permission;
 import com.metric.skava.app.model.User;
-import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalExcavationProjectDAO;
-import com.metric.skava.data.dao.LocalUserDAO;
 import com.metric.skava.data.dao.LocalPermissionDAO;
 import com.metric.skava.data.dao.LocalTunnelDAO;
 import com.metric.skava.data.dao.LocalTunnelFaceDAO;
+import com.metric.skava.data.dao.LocalUserDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.table.PermissionTable;
 
@@ -30,12 +30,12 @@ public class PermissionDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Per
     private LocalTunnelDAO localTunnelDAO;
     private LocalTunnelFaceDAO localTunnelFaceDAO;
 
-    public PermissionDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
-        localUserDAO = DAOFactory.getInstance(mContext).getLocalUserDAO(DAOFactory.Flavour.SQLLITE);
-        projectDAO = DAOFactory.getInstance(mContext).getLocalExcavationProjectDAO(DAOFactory.Flavour.SQLLITE);
-        localTunnelDAO = DAOFactory.getInstance(mContext).getLocalTunnelDAO(DAOFactory.Flavour.SQLLITE);
-        localTunnelFaceDAO = DAOFactory.getInstance(mContext).getLocalTunnelFaceDAO(DAOFactory.Flavour.SQLLITE);
+    public PermissionDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
+        localUserDAO = getDAOFactory().getLocalUserDAO();
+        projectDAO = getDAOFactory().getLocalExcavationProjectDAO();
+        localTunnelDAO = getDAOFactory().getLocalTunnelDAO();
+        localTunnelFaceDAO = getDAOFactory().getLocalTunnelFaceDAO();
     }
 
 

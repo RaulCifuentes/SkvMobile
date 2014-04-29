@@ -20,7 +20,6 @@ import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.assessment.dialog.adapter.AssessmentListAdapter;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
-import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
 
 import java.util.List;
@@ -94,7 +93,7 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
 
         mContext = getActivity();
         try {
-            localAssessmentDAO = DAOFactory.getInstance(mContext).getAssessmentDAO(DAOFactory.Flavour.SQLLITE);
+            localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);

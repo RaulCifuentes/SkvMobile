@@ -10,15 +10,7 @@ import java.util.List;
  */
 public interface LocalEsrDAO {
 
-    public static final String INDEX_CODE_COLUMN = "INDEX_CODE";
-    public static final String GROUP_CODE_COLUMN = "GROUP_CODE";
-    public static final String CODE_COLUMN = "CODE";
-
-    public static final String KEYWORDS_COLUMN = "KEYWORDS";
-    public static final String DESCRIPTION_COLUMN = "DESCRIPTION";
-    public static final String VALUE_COLUMN  = "VALUE";
-
-    public List<ESR> getAllESRs() throws DAOException;
+    public List<ESR> getAllESRs(ESR.Group group) throws DAOException;
 
     public ESR getESR(String code) throws DAOException;
 

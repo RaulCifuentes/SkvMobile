@@ -38,15 +38,19 @@ public class SpacingDAODropboxImpl extends DropBoxBaseDAO implements RemoteSpaci
     public List<Spacing> getAllSpacings() throws DAOException {
         String spacingparameterId = getSpaceParameterId();
         List<Spacing> listSpacings = new ArrayList<Spacing>();
-        String[] names = new String[]{"ParameterId"};
+        String[] names = new String[]{"FkParameterId"};
         String[] values = new String[]{spacingparameterId};
         List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
         for (DbxRecord currentDbxRecord : recordList) {
-            String codigo = currentDbxRecord.getString("IndexCode");
-            String nombre = currentDbxRecord.getString("IndexName");
+            String code = currentDbxRecord.getString("IndexId");
+            String key = currentDbxRecord.getString("IndexCode");
+            String shortDescription = currentDbxRecord.getString("IndexShortName");
+            String description = currentDbxRecord.getString("IndexName");
             Double value = currentDbxRecord.getDouble("IndexScore");
-            Spacing newType = new Spacing(codigo, nombre, value);
-            listSpacings.add(newType);
+            Spacing newSpacing = new Spacing(code, key, shortDescription, description, value);
+            newSpacing.setShortDescription(shortDescription);
+
+            listSpacings.add(newSpacing);
         }
         return listSpacings;
     }

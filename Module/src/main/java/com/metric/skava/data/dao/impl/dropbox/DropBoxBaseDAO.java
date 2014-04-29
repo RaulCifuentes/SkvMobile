@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.dropbox.sync.android.DbxDatastore;
 import com.metric.skava.app.context.SkavaContext;
+import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
 
 /**
@@ -28,6 +29,10 @@ public class DropBoxBaseDAO {
     }
 
     public DbxDatastore getDatastore() throws DAOException {
-        return getSkavaContext().getDatastoreHelper().getDatastore();
+        return skavaContext.getDatastore();
+    }
+
+    public DAOFactory getDAOFactory() {
+        return skavaContext.getDAOFactory();
     }
 }

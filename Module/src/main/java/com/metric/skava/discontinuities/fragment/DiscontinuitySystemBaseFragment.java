@@ -89,7 +89,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        daoFactory = DAOFactory.getInstance(getActivity());
+        daoFactory = getDAOFactory();
         if (savedInstanceState != null) {
             mDiscontinuityFamilyNumber = savedInstanceState.getInt(ARG_BASKET_ID, 0);
         }
@@ -154,7 +154,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
         }
-        discSpacingsList.add(new Spacing("HINT", "Select spacing ...", 0d));
+        discSpacingsList.add(new Spacing(null, "HINT", "Select spacing ...", "Select spacing ...", 0d));
         discSpacingsAdapter = new MappedIndexSpinnerArrayAdapter<Spacing>(
                 getActivity(),
                 android.R.layout.simple_spinner_item, android.R.id.text1, discSpacingsList);
@@ -170,7 +170,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
         }
-        discPersistencesList.add(new Persistence("HINT", "Select persistence ...", 0d));
+        discPersistencesList.add(new Persistence(null, "HINT", "Select persistence ...", "Select persistence ...", 0d));
         discPersistenceAdapter = new MappedIndexSpinnerArrayAdapter<Persistence>(
                 getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, discPersistencesList);
         // Specify the layout to use when the list of choices appears
@@ -185,7 +185,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
         }
-        discAperturesList.add(new Aperture("HINT", "Select aperture ...", 0d));
+        discAperturesList.add(new Aperture(null, "HINT", "Select aperture ...",  "Select aperture ...", 0d));
         discApertureAdapter = new MappedIndexSpinnerArrayAdapter<Aperture>(
                 getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, discAperturesList);
         // Specify the layout to use when the list of choices appears
@@ -214,7 +214,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
         }
-        discRoughnessList.add(new Roughness("HINT", "Select roughness ...", 0d));
+        discRoughnessList.add(new Roughness(null, "HINT", "Select roughness ...", "Select roughness ...", 0d));
         discRoughnessAdapter = new MappedIndexSpinnerArrayAdapter<Roughness>(
                 getActivity(),
                 android.R.layout.simple_spinner_item, android.R.id.text1, discRoughnessList);
@@ -230,7 +230,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
         }
-        discInfillingList.add(new Infilling("HINT", "Select an infilling ...", 0d));
+        discInfillingList.add(new Infilling(null, "HINT", "Select an infilling ...", "Select an infilling ...", 0d));
         // Create an ArrayAdapter using the string array and a default spinner layout
         discInfillingAdapter = new MappedIndexSpinnerArrayAdapter<Infilling>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, discInfillingList);
         // Specify the layout to use when the list of choices appears
@@ -240,12 +240,12 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
 //        List<Jr> discJrList = getSkavaActivity().getMappedIndexDataProvider().getAllJr(Jr.a);
         List<Jr> discJrList = null;
         try {
-            discJrList = daoFactory.getLocalJrDAO().getAllJrs(Jr.a);
+            discJrList = daoFactory.getLocalJrDAO().getAllJrs(Jr.Group.a);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
         }
-        discJrList.add(new Jr("HINT", "Select Jr ...", 1d));
+        discJrList.add(new Jr(null, null, "HINT", "Select Jr ...", "Select Jr ...", 1d));
         // Create an ArrayAdapter using the string array and a default spinner layout
         discJrAdapter = new MappedIndexSpinnerArrayAdapter<Jr>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, discJrList);
         // Specify the layout to use when the list of choices appears
@@ -254,12 +254,12 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
 //        List<Ja> discJaList = getSkavaActivity().getMappedIndexDataProvider().getAllJa(Ja.a);
         List<Ja> discJaList = null;
         try {
-            discJaList = daoFactory.getLocalJaDAO().getAllJas(Ja.a);
+            discJaList = daoFactory.getLocalJaDAO().getAllJas(Ja.Group.a);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
         }
-        discJaList.add(new Ja("HINT", "Select Ja ...", 10d));
+        discJaList.add(new Ja(null, null, "HINT", "Select Ja ...", "Select Ja ...", 10d));
         // Create an ArrayAdapter using the string array and a default spinner layout
         discJaAdapter = new MappedIndexSpinnerArrayAdapter<Ja>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, discJaList);
         // Specify the layout to use when the list of choices appears
@@ -274,7 +274,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
         }
-        discWeatheringList.add(new Weathering("HINT", "Select weathering ...", 0d));
+        discWeatheringList.add(new Weathering(null, "HINT", "Select weathering ...", "Select weathering ...", 0d));
         // Create an ArrayAdapter using the string array and a default spinner layout
         discWeatheringAdapter = new MappedIndexSpinnerArrayAdapter<Weathering>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, discWeatheringList);
 

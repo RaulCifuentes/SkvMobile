@@ -13,6 +13,8 @@ import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.navigation.NavigationController;
 import com.metric.skava.calculator.data.MappedIndexDataProvider;
+import com.metric.skava.data.dao.DAOFactory;
+import com.metric.skava.sync.helper.SyncHelper;
 
 public class SkavaFragmentActivity extends FragmentActivity {
 
@@ -23,6 +25,14 @@ public class SkavaFragmentActivity extends FragmentActivity {
     public SkavaContext getSkavaContext(){
         SkavaApplication application = (SkavaApplication) (getApplication());
         return application.getSkavaContext();
+    }
+
+    public SyncHelper getSyncHelper() {
+        return getSkavaContext().getSyncHelper();
+    }
+
+    public DAOFactory getDAOFactory() {
+        return getSkavaContext().getDAOFactory();
     }
 
     public Assessment getCurrentAssessment() {

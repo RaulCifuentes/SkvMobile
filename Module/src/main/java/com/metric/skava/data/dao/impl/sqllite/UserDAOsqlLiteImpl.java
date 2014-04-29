@@ -3,12 +3,12 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.Role;
 import com.metric.skava.app.model.User;
-import com.metric.skava.data.dao.DAOFactory;
-import com.metric.skava.data.dao.LocalUserDAO;
 import com.metric.skava.data.dao.LocalRoleDAO;
+import com.metric.skava.data.dao.LocalUserDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.table.UserRolesTable;
 import com.metric.skava.data.dao.impl.sqllite.table.UserTable;
@@ -23,9 +23,9 @@ public class UserDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<User> i
 
     private LocalRoleDAO localRoleDAO;
 
-    public UserDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
-        localRoleDAO = DAOFactory.getInstance(context).getLocalRoleDAO(DAOFactory.Flavour.SQLLITE);
+    public UserDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
+        localRoleDAO = getDAOFactory().getLocalRoleDAO();
     }
 
 
@@ -85,7 +85,9 @@ public class UserDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<User> i
 
     @Override
     public boolean deleteUser(String code) {
-        return false;
+        deletePersistentEntitiesFilteredByColumn(UserRolesTable.USER_ROLES_DATABASE_TABLE, UserRolesTable.USER_CODE_COLUMN, code);
+        //find user roles record to delete
+        return deleteIdentifiableEntity(UserTable.USER_DATABASE_TABLE, code);
     }
 
     @Override

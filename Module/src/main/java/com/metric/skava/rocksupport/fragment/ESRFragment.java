@@ -18,7 +18,6 @@ import com.metric.skava.app.fragment.SkavaFragment;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.calculator.adapter.MultiColumnMappedIndexArrayAdapter;
 import com.metric.skava.calculator.barton.model.Jn;
-import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalEsrDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.discontinuities.adapter.MappedIndexSpinnerArrayAdapter;
@@ -31,7 +30,6 @@ import java.util.List;
 */
 public class ESRFragment extends SkavaFragment {
 
-    private DAOFactory daoFactory;
     private View headerView;
     private MappedIndexSpinnerArrayAdapter esrAdapter;
     private ESR selectedESR;
@@ -42,9 +40,9 @@ public class ESRFragment extends SkavaFragment {
         super.onCreate(savedInstanceState);
         LocalEsrDAO localEsrDAO = null;
         try {
-            localEsrDAO = daoFactory.getLocalEsrDAO(DAOFactory.Flavour.SQLLITE);
-            esrList = localEsrDAO.getAllESRs();
-            esrList.add(new ESR("HINT", "Select one ESR ...", 1d));
+            localEsrDAO = getDAOFactory().getLocalEsrDAO();
+            esrList = localEsrDAO.getAllESRs(ESR.Group.i);
+            esrList.add(new ESR(null, null, "HINT", "Select one ESR ...", "Select one ESR ...", 1d));
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -61,12 +59,10 @@ public class ESRFragment extends SkavaFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (BuildConfig.DEBUG) {
-            Log.d(SkavaConstants.LOG, "Entering " + ESRFragment.class.getSimpleName()
-                    + " : onCreateView ");
-        }
 
         headerView = inflater.inflate(R.layout.calculator_two_column_list_view_header_checked_radio, null, false);
+
+
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.calculator_mapped_index_list_base_fragment, container, false);
@@ -83,10 +79,9 @@ public class ESRFragment extends SkavaFragment {
 
         FragmentActivity context = this.getActivity();
 
-//        final List<ESR> listESR = getSkavaActivity().getMappedIndexDataProvider().getAllESR();
         final List<ESR> listESR ;
         try {
-            listESR = daoFactory.getLocalEsrDAO(DAOFactory.Flavour.SQLLITE).getAllESRs();
+            listESR = getDAOFactory().getLocalEsrDAO().getAllESRs(ESR.Group.i);
         } catch (DAOException e){
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();

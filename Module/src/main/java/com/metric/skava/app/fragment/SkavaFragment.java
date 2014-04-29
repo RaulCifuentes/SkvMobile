@@ -16,6 +16,7 @@ import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.calculator.barton.model.Q_Calculation;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
+import com.metric.skava.data.dao.DAOFactory;
 
 /**
  * Created by metricboy on 2/21/14.
@@ -38,6 +39,10 @@ public class SkavaFragment extends Fragment {
 
     public Assessment getCurrentAssessment() {
         return getSkavaContext().getAssessment();
+    }
+
+    public DAOFactory getDAOFactory() {
+        return getSkavaContext().getDAOFactory();
     }
 
 

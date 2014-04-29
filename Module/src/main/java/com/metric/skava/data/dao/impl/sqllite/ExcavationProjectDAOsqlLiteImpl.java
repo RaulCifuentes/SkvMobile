@@ -4,13 +4,13 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.metric.skava.R;
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.Client;
 import com.metric.skava.app.model.ExcavationProject;
 import com.metric.skava.app.model.Tunnel;
 import com.metric.skava.app.model.User;
 import com.metric.skava.data.dao.LocalClientDAO;
-import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalExcavationProjectDAO;
 import com.metric.skava.data.dao.LocalTunnelDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -26,9 +26,9 @@ public class ExcavationProjectDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnti
 
     private LocalClientDAO localClientDAO;
 
-    public ExcavationProjectDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
-        localClientDAO = DAOFactory.getInstance(context).getLocalClientDAO(DAOFactory.Flavour.SQLLITE);
+    public ExcavationProjectDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
+        localClientDAO = getDAOFactory().getLocalClientDAO();
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ExcavationProjectDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnti
         if (user == null) {
             throw new DAOException(mContext.getString(R.string.null_parameter, "getExcavationProjectsByUser", "user"));
         }
-        LocalTunnelDAO localTunnelDAO = DAOFactory.getInstance(getContext()).getLocalTunnelDAO(DAOFactory.Flavour.SQLLITE);
+        LocalTunnelDAO localTunnelDAO = getDAOFactory().getLocalTunnelDAO();
         List<ExcavationProject> projectsList = new ArrayList<ExcavationProject>();
         //find the faces of this user
         List<Tunnel> tunnels = localTunnelDAO.getTunnelsByUser(user);
@@ -91,7 +91,7 @@ public class ExcavationProjectDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnti
 
     @Override
     public boolean deleteExcavationProject(String code) {
-        return false;
+        return deleteIdentifiableEntity(ExcavationProjectTable.PROJECT_DATABASE_TABLE, code);
     }
 
     @Override

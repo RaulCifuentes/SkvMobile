@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.data.dao.LocalFractureTypeDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -17,8 +18,8 @@ import java.util.List;
  */
 public class FractureTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<FractureType> implements LocalFractureTypeDAO {
 
-    public FractureTypeDAOsqlLiteImpl(Context context) {
-        super(context);
+    public FractureTypeDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
+        super(context, skavaContext);
     }
 
 

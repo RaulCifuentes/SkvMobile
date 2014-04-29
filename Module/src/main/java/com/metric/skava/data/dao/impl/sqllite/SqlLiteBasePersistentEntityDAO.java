@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.data.dao.exception.DAOException;
 
 import java.util.List;
@@ -14,8 +15,8 @@ import java.util.List;
 public abstract class SqlLiteBasePersistentEntityDAO<T> extends SqlLiteBaseDAO {
 
 
-    public SqlLiteBasePersistentEntityDAO(Context context) {
-        super(context);
+    public SqlLiteBasePersistentEntityDAO(Context context, SkavaContext skavaContext) {
+        super(context, skavaContext);
     }
 
     protected abstract void savePersistentEntity(String tableName, T newSkavaEntity) throws DAOException;
@@ -52,5 +53,53 @@ public abstract class SqlLiteBasePersistentEntityDAO<T> extends SqlLiteBaseDAO {
         return db.delete(tableName, where, whereArgs);
     }
 
+    public int deletePersistentEntitiesFilteredByColumn(String tableName, String columnName, Object columnValue) {
+        // Specify a where clause that determines which row(s) to delete.
+        // Specify where arguments as necessary.
+        String where = null;
+        String whereArgs[] = null;
+        if (columnValue != null) {
+            // Specify the where clause that will limit our results.
+            where = columnName + "=?";
+            if (columnValue instanceof String) {
+                whereArgs = new String[]{(String) columnValue};
+            } else if (columnValue instanceof Long) {
+                whereArgs = new String[]{columnValue.toString()};
+            }
+        }
+        // Delete the rows that match the where clause.
+        SQLiteDatabase db = getDBConnection();
+        return db.delete(tableName, where, whereArgs);
+    }
+
+    public int deletePersistentEntitiesFilteredByColumns(String tableName, String[] columnNames, Object[] columnValues) {
+        if (columnNames.length == columnValues.length) {
+            if (columnNames.length == 1) {
+                return deletePersistentEntitiesFilteredByColumn(tableName, columnNames[0], columnValues[0]);
+            } else {
+                String firstWhere = columnNames[0] + "=?";
+                String finalCriteria = firstWhere;
+                for (int i = 1; i < columnNames.length - 1; i++) {
+                    finalCriteria += " AND " + columnNames[i] + "=?  ";
+                }
+                String lastWhere = columnNames[columnNames.length - 1] + "=?";
+                finalCriteria += " AND " + lastWhere;
+
+                String[] result_columns = null; // this brings me all columns (select *)
+                String where = finalCriteria;
+                String whereArgs[] = new String[columnValues.length];
+                for (int i = 0; i < columnValues.length; i++) {
+                    Object columnValue = columnValues[i];
+                    if (columnValues[i] instanceof String) {
+                        whereArgs[i] = (String) columnValues[i];
+                    } else if (columnValues[i] instanceof Long) {
+                        whereArgs[i] = ((Long) columnValues[i]).toString();
+                    }
+                }
+                return getDBConnection().delete(tableName, where, whereArgs);
+            }
+        }
+        return -1;
+    }
 
 }

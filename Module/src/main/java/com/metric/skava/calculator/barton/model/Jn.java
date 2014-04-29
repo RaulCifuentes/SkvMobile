@@ -7,12 +7,17 @@ import java.io.Serializable;
 public class Jn extends MappedIndex implements Serializable {
 
 
-	public Jn (String shortName, String longDescription, Double value){
-		super();		
-		setKey(shortName);
-		getCategoriesAndValues()[0][0] = MappedIndex.DESCRIPTION;
-        getCategoriesAndValues()[1][0] = longDescription;
-        setValue(value);
+	public Jn (String code,String key, String shortDescription, String longDescription, Double value){
+        super(code, key, shortDescription, longDescription,value);
+//		setKey(key);
+//		getCategoriesAndValues()[0][0] = MappedIndex.DESCRIPTION;
+//        getCategoriesAndValues()[1][0] = longDescription;
+//        setValue(value);
 	}
-	
+
+
+    @Override
+    public String getGroupName() {
+        return null;
+    }
 }

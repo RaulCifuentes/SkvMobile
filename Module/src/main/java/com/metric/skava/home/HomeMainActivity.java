@@ -11,6 +11,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxAccount;
+import com.dropbox.sync.android.DbxAccountManager;
+import com.dropbox.sync.android.DbxDatastore;
+import com.dropbox.sync.android.DbxDatastoreManager;
+import com.dropbox.sync.android.DbxException;
 import com.metric.skava.R;
 import com.metric.skava.about.activity.AboutMainActivity;
 import com.metric.skava.app.model.Role;
@@ -29,62 +33,123 @@ import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.datastore.DatastoreHelper;
 import com.metric.skava.data.dao.impl.sqllite.SkavaDBHelper;
-import com.metric.skava.settings.activity.SettingsMainActivity;
-import com.metric.skava.sync.activity.SyncMainActivity;
 import com.metric.skava.sync.dao.SyncLoggingDAO;
 import com.metric.skava.sync.dao.SyncLoggingDAOsqlLiteImpl;
-import com.metric.skava.sync.helper.SyncAgent;
+import com.metric.skava.sync.helper.SyncHelper;
 import com.metric.skava.sync.model.SyncLogEntry;
 
 import java.util.Date;
 
 public class HomeMainActivity extends AbstractNavDrawerActivity {
 
-    private SyncAgent syncAgent;
-    private boolean callbackCompleted = false;
+
     private boolean dropboxNeverCalled = true;
     private boolean assertNeverCalled = true;
+    private DbxAccountManager mDbxAcctMgr;
+    private DbxAccount mAccount;
+    private DbxDatastoreManager mDatastoreManager;
+    private DbxDatastore mDatastore;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (navController == null) {
-//            navController = NavigationController.getInstance();
-//        }
         if (savedInstanceState == null) {
-            setUp();
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.nav_drawer_main_layout_content_frame, new MainFragment())
                     .commit();
         }
-
-        if (syncAgent.isAlreadyLinked() && dropboxNeverCalled){
-            onDropboxReady();
+        if (dropboxNeverCalled && isNetworkAvailable()) {
+            try {
+                //Abrir el acount manager que Dropbox ofrece para esta app
+                mDbxAcctMgr = DbxAccountManager.getInstance(this.getApplicationContext(), DatastoreHelper.APP_KEY, DatastoreHelper.APP_SECRET);
+                //Connect y tener la referencia al account
+                if (!mDbxAcctMgr.hasLinkedAccount()) {
+                    mDbxAcctMgr.startLink(this, DatastoreHelper.REQUEST_LINK_TO_DROPBOX);
+                } else {
+                    //Connect y tener la referencia al account
+                    mAccount = mDbxAcctMgr.getLinkedAccount();
+                    //Con eso obtener la lista de Datastores
+                    mDatastoreManager = DbxDatastoreManager.forAccount(mAccount);
+//                    Set<DbxDatastoreInfo> listDatastores = mDatastoreManager.listDatastores();
+//                    for (DbxDatastoreInfo currDatastore : listDatastores) {
+//                        String datastore = currDatastore.toString();
+//                    }
+//                    //Abrir el datastore
+//                    mDatastore = mDatastoreManager.openDatastore(DatastoreHelper.APP_DATASTORE_NAME);
+                    mDatastore = mDatastoreManager.openDefaultDatastore();
+                    getSkavaContext().setDatastore(mDatastore);
+                }
+                downloadAndPopulateDataModel();
+            } catch (DbxException e) {
+                Log.e(SkavaConstants.LOG, e.getMessage());
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
         }
-
-//        if (callbackCompleted && dropboxNeverCalled){
-//            onDropboxReady();
-//        }
         if (assertNeverCalled){
             assertDataAvailable();
         }
     }
 
 
-    private void onDropboxReady() {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == DatastoreHelper.REQUEST_LINK_TO_DROPBOX) {
+            if (resultCode == Activity.RESULT_OK) {
+                try {
+                    // ... Now go on using the linked account information.
+                    //Connect y tener la referencia al account
+                    mAccount = mDbxAcctMgr.getLinkedAccount();
+                    //Con eso obtener la lista de Datastores
+                    mDatastoreManager = DbxDatastoreManager.forAccount(mAccount);
+//                    Set<DbxDatastoreInfo> listDatastores = mDatastoreManager.listDatastores();
+//                    for (DbxDatastoreInfo currDatastore : listDatastores) {
+//                        String datastore = currDatastore.toString();
+//                    }
+//                    //Abrir el datastore
+//                    mDatastore = mDatastoreManager.openDatastore(DatastoreHelper.APP_DATASTORE_NAME);
+                    mDatastore = mDatastoreManager.openDefaultDatastore();
+                    getSkavaContext().setDatastore(mDatastore);
+                    downloadAndPopulateDataModel();
+                } catch (DbxException e) {
+                    Log.e(SkavaConstants.LOG, e.getMessage());
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            } else {
+                // ... Link failed or was cancelled by the user.
+                onDropboxFailed();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDbxAcctMgr.unlink();
+    }
+
+
+    private void downloadAndPopulateDataModel() {
         try {
-            if (syncAgent.shouldUpdate()) {
-                DAOFactory daoFactory = DAOFactory.getInstance(this);
-                SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
-                if (syncAgent.downloadGlobalData()) {
-                    SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.GLOBAL, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS);
-                    syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
-                }
-                if (syncAgent.downloadNonSpecificData()) {
-                    SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS);
-                    syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
-                }
+            DAOFactory daoFactory = getDAOFactory();
+            SyncHelper syncHelper = getSyncHelper();
+
+            SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+            if (syncHelper.downloadGlobalData()) {
+                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.GLOBAL, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS);
+                syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
+                getSkavaContext().getSyncMetadata().setGlobal(newSyncLogEntry);
+            }
+            if (syncHelper.downloadNonSpecificData()) {
+                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS);
+                syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
+                getSkavaContext().getSyncMetadata().setNonUserSpecific(newSyncLogEntry);
             }
             dropboxNeverCalled = false;
         } catch (DAOException daoe) {
@@ -95,12 +160,15 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 
 
     private void onDropboxFailed() {
-        Toast.makeText(this, "Dropbox cancelled.", Toast.LENGTH_LONG).show();
-        Log.d(SkavaConstants.LOG, "Dropbox cancelled.");
+        Toast.makeText(this, "Dropbox linking cancelled by user or failed.", Toast.LENGTH_LONG).show();
+        if (assertNeverCalled) {
+            assertDataAvailable();
+        }
+        Log.d(SkavaConstants.LOG, "Dropbox linking cancelled by user or failed.");
     }
 
     public void insertGlobalEmergencyData() throws DAOException {
-        DAOFactory daoFactory = DAOFactory.getInstance(this);
+        DAOFactory daoFactory = getDAOFactory();
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         SQLiteDatabase dbConn = ((SyncLoggingDAOsqlLiteImpl) syncLoggingDAO).getDBConnection();
         SkavaDBHelper.insertDefaultData(dbConn);
@@ -109,14 +177,13 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     }
 
     public void insertNonSpecificEmergencyData() throws DAOException {
-        DAOFactory daoFactory = DAOFactory.getInstance(this);
+        DAOFactory daoFactory = getDAOFactory();
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         SQLiteDatabase dbConn = ((SyncLoggingDAOsqlLiteImpl) syncLoggingDAO).getDBConnection();
         SkavaDBHelper.insertDefaultData(dbConn);
         SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Source.DEFAULT, SyncLogEntry.Status.SUCCESS);
         syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
     }
-
 
 
     private void assertDataAvailable() {
@@ -127,9 +194,9 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         if (lastGlobalData == null) {
             try {
                 insertGlobalEmergencyData();
-                Log.d(SkavaConstants.LOG, "Using emergency data. No internet nor local data. Sorry !!");
-                Toast.makeText(this, "Using emergency data. No internet nor local data. Sorry ", Toast.LENGTH_LONG).show();
-            } catch(DAOException daoe){
+                Log.d(SkavaConstants.LOG, "Using emergency data. Use of appliaction on this state is discouraged as data could be outdated and corrupted . !!");
+                Toast.makeText(this, "Using emergency data. Use of appliaction on this state is discouraged as data could be outdated and corrupted. ", Toast.LENGTH_LONG).show();
+            } catch (DAOException daoe) {
                 Toast.makeText(this, daoe.getMessage(), Toast.LENGTH_LONG).show();
                 Log.e(SkavaConstants.LOG, daoe.getMessage());
             }
@@ -147,9 +214,9 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         if (lastNonSpecificData == null) {
             try {
                 insertNonSpecificEmergencyData();
-                Log.d(SkavaConstants.LOG, "Using emergency data. No internet nor local data. Sorry !!" );
+                Log.d(SkavaConstants.LOG, "Using emergency data. No internet nor local data. Sorry !!");
                 Toast.makeText(this, "Using emergency data. No internet nor local data. Sorry ", Toast.LENGTH_LONG).show();
-            } catch(DAOException daoe){
+            } catch (DAOException daoe) {
                 Toast.makeText(this, daoe.getMessage(), Toast.LENGTH_LONG).show();
                 Log.e(SkavaConstants.LOG, daoe.getMessage());
             }
@@ -160,27 +227,11 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             }
             if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DEFAULT)) {
                 Log.d(SkavaConstants.LOG, "Operating on previous emergency data created on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()));
-                Toast.makeText(this, "Operating on previous emergency datacreated on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()) , Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Operating on previous emergency datacreated on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()), Toast.LENGTH_LONG).show();
             }
         }
-
         assertNeverCalled = false;
     }
-
-
-    private void setUp() {
-        if (isNetworkAvailable()) {
-            //Check the syncronization status
-            try {
-                syncAgent = SyncAgent.getInstance(this, this);
-            } catch (DAOException daoe) {
-                Log.e(SkavaConstants.LOG, daoe.getMessage());
-                Toast.makeText(this, daoe.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-
 
 
 
@@ -244,15 +295,15 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 startActivity(intent);
                 break;
 
-            case 199: //
-                intent = new Intent(this, SyncMainActivity.class);
-                startActivity(intent);
-                break;
+//            case 199: //
+//                intent = new Intent(this, SyncMainActivity.class);
+//                startActivity(intent);
+//                break;
 
-            case 205: // "Settings"
-                intent = new Intent(this, SettingsMainActivity.class);
-                startActivity(intent);
-                break;
+//            case 205: // "Settings"
+//                intent = new Intent(this, SettingsMainActivity.class);
+//                startActivity(intent);
+//                break;
 
 
             case 210: // "About"
@@ -271,23 +322,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == DatastoreHelper.REQUEST_LINK_TO_DROPBOX) {
-            if (resultCode == Activity.RESULT_OK) {
-                // ... Now go on using the linked account information.
-                callbackCompleted = true;
-                DbxAccount accountQueLLego = null;
-                syncAgent.getDatastoreHelper().setAccount(accountQueLLego);
-            } else {
-                // ... Link failed or was cancelled by the user.
-                onDropboxFailed();
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
 
     //    @Override
 //    public void onBackPressed() {

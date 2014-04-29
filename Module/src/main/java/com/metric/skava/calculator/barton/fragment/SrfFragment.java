@@ -54,13 +54,13 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
         title.setText("Stress Reduction Factor");
 
         RadioButton firstRadio = (RadioButton) view.findViewById(R.id.radioButtonFirst);
-        firstRadio.setText("a. Weak zones");
+        firstRadio.setText(SRF.Group.a.toString());
         RadioButton secondRadio = (RadioButton) view.findViewById(R.id.radioButtonSecond);
-        secondRadio.setText("b. Competent");
+        secondRadio.setText(SRF.Group.b.toString());
         RadioButton thirdRadio = (RadioButton) view.findViewById(R.id.radioButtonThird);
-        thirdRadio.setText("c. Squeezing rock");
+        thirdRadio.setText(SRF.Group.c.toString());
         RadioButton fourthRadio = (RadioButton) view.findViewById(R.id.radioButtonFourth);
-        fourthRadio.setText("d. Swelling rock");
+        fourthRadio.setText(SRF.Group.d.toString());
 
 
         mListFirstGroup = (ListView) view.findViewById(R.id.listview_a);
@@ -75,8 +75,8 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
 
         if (selectedSRF != null) {
             //what (type) group of Jr is this in order to show the correspondant list
-            switch (selectedSRF.getGroupType()) {
-                case SRF.a:
+            switch (selectedSRF.getGroup()) {
+                case a:
 //                    radioGroup.check(R.id.radioButtonFirst);
                     firstRadio.setChecked(true);
                     secondRadio.setChecked(false);
@@ -87,7 +87,7 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
                     mListThirdGroup.setVisibility(View.GONE);
                     mListFourthGroup.setVisibility(View.GONE);
                     break;
-                case SRF.b:
+                case b:
 //                    radioGroup.check(R.id.radioButtonSecond);
                     firstRadio.setChecked(false);
                     secondRadio.setChecked(true);
@@ -98,7 +98,7 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
                     mListThirdGroup.setVisibility(View.GONE);
                     mListFourthGroup.setVisibility(View.GONE);
                     break;
-                case SRF.c:
+                case c:
 //                    radioGroup.check(R.id.radioButtonThird);
                     firstRadio.setChecked(false);
                     secondRadio.setChecked(false);
@@ -109,7 +109,7 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
                     mListThirdGroup.setVisibility(View.VISIBLE);
                     mListFourthGroup.setVisibility(View.GONE);
                     break;
-                case SRF.d:
+                case d:
 //                    radioGroup.check(R.id.radioButtonFourth);
                     firstRadio.setChecked(false);
                     secondRadio.setChecked(false);
@@ -137,7 +137,7 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
         final ListView listview = (ListView) getView().findViewById(R.id.listview_a);
         final List<SRF> listSrf;
         try {
-            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.a);
+            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.Group.a);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -180,7 +180,7 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
         final ListView listview = (ListView) getView().findViewById(R.id.listview_b);
         final List<SRF> listSrf;
         try {
-            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.b);
+            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.Group.b);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -223,7 +223,7 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
         final ListView listview = (ListView) getView().findViewById(R.id.listview_c);
         final List<SRF> listSrf;
         try {
-            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.c);
+            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.Group.c);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -266,7 +266,7 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
         final ListView listview = (ListView) getView().findViewById(R.id.listview_d);
         final List<SRF> listSrf;
         try {
-            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.d);
+            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.Group.d);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();

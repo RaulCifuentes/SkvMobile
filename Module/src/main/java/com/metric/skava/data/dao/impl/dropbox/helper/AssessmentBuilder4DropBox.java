@@ -1,8 +1,7 @@
 package com.metric.skava.data.dao.impl.dropbox.helper;
 
-import android.content.Context;
-
 import com.dropbox.sync.android.DbxRecord;
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.ExcavationMethod;
 import com.metric.skava.app.model.ExcavationSection;
@@ -26,7 +25,6 @@ import java.util.Date;
  */
 public class AssessmentBuilder4DropBox {
 
-    private final Context mContext;
 
     private LocalTunnelDAO localTunnelDAO;
     private LocalExcavationProjectDAO excavationProjectDAO;
@@ -36,16 +34,16 @@ public class AssessmentBuilder4DropBox {
     private LocalExcavationMethodDAO excavationMethodDAO;
     private LocalFractureTypeDAO fractureTypeDAO;
 
-    public AssessmentBuilder4DropBox(Context context) throws DAOException {
+    public AssessmentBuilder4DropBox(SkavaContext skavaContext) throws DAOException {
 
-        this.mContext = context;
-        DAOFactory daoFactory = DAOFactory.getInstance(mContext);
-        excavationProjectDAO = daoFactory.getLocalExcavationProjectDAO(DAOFactory.Flavour.SQLLITE);
-        excavationSectionDAO = daoFactory.getLocalExcavationSectionDAO(DAOFactory.Flavour.SQLLITE);
-        excavationMethodDAO = daoFactory.getLocalExcavationMethodDAO(DAOFactory.Flavour.SQLLITE);
-        localTunnelFaceDAO = daoFactory.getLocalTunnelFaceDAO(DAOFactory.Flavour.SQLLITE);
-        localTunnelDAO = daoFactory.getLocalTunnelDAO(DAOFactory.Flavour.SQLLITE);
-        localUserDAO = daoFactory.getLocalUserDAO(DAOFactory.Flavour.SQLLITE);
+//        this.mContext = context;
+        DAOFactory daoFactory = skavaContext.getDAOFactory();
+        excavationProjectDAO = daoFactory.getLocalExcavationProjectDAO();
+        excavationSectionDAO = daoFactory.getLocalExcavationSectionDAO();
+        excavationMethodDAO = daoFactory.getLocalExcavationMethodDAO();
+        localTunnelFaceDAO = daoFactory.getLocalTunnelFaceDAO();
+        localTunnelDAO = daoFactory.getLocalTunnelDAO();
+        localUserDAO = daoFactory.getLocalUserDAO();
     }
 
 

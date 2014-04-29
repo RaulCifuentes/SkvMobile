@@ -9,20 +9,25 @@ import com.metric.skava.calculator.data.MappedIndexDataProvider;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.sync.dao.SyncLoggingDAO;
+import com.metric.skava.sync.helper.SyncHelper;
 import com.metric.skava.sync.model.SyncLogEntry;
 import com.metric.skava.sync.model.SyncStatus;
 
 
 public class SkavaApplication extends MetricApplication {
 
-
     private int customThemeId;
     private boolean requiresRestart;
-
     private SkavaContext mSkavaContext;
 
 //    private SkavaDataProvider mSkavaDataProvider;
+    //    public SkavaDataProvider getSkavaDataProvider() {
+//        return mSkavaDataProvider;
+//    }
     private MappedIndexDataProvider mMappedIndexDataProvider;
+    public MappedIndexDataProvider getMappedIndexDataProvider() {
+        return mMappedIndexDataProvider;
+    }
 
     public boolean isRequiresRestart() {
         return requiresRestart;
@@ -32,17 +37,8 @@ public class SkavaApplication extends MetricApplication {
         this.requiresRestart = requiresRestart;
     }
 
-
     public SkavaContext getSkavaContext() {
         return mSkavaContext;
-    }
-
-//    public SkavaDataProvider getSkavaDataProvider() {
-//        return mSkavaDataProvider;
-//    }
-
-    public MappedIndexDataProvider getMappedIndexDataProvider() {
-        return mMappedIndexDataProvider;
     }
 
     public int getCustomThemeId() {
@@ -55,26 +51,30 @@ public class SkavaApplication extends MetricApplication {
 
 
 
+
     @Override
     public void onCreate() {
         super.onCreate();
-
         mSkavaContext = new SkavaContext();
+        DAOFactory daoFactory = DAOFactory.getInstance(this, mSkavaContext);
+        mSkavaContext.setDAOFactory(daoFactory);
+        SyncHelper syncHelper = SyncHelper.getInstance(mSkavaContext);
+        mSkavaContext.setSyncHelper(syncHelper);
 
-        DAOFactory daoFactory = DAOFactory.getInstance(this);
         SyncLoggingDAO syncLoggingDAO = null;
         try {
             syncLoggingDAO = daoFactory.getSyncLoggingDAO();
             SyncLogEntry globalLastSuccess = syncLoggingDAO.getLastSyncByState(SyncLogEntry.Domain.GLOBAL, SyncLogEntry.Status.SUCCESS);
+            SyncLogEntry userSpecificLastSuccess = syncLoggingDAO.getLastSyncByState(SyncLogEntry.Domain.USER_SPECIFIC, SyncLogEntry.Status.SUCCESS);
             SyncLogEntry nonSpecificLastSuccess = syncLoggingDAO.getLastSyncByState(SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Status.SUCCESS);
             SyncStatus syncStatus = new SyncStatus();
             syncStatus.setGlobal(globalLastSuccess);
             syncStatus.setNonUserSpecific(nonSpecificLastSuccess);
+            syncStatus.setUserSpecific(userSpecificLastSuccess);
             mSkavaContext.setSyncMetadata(syncStatus);
         } catch (DAOException daoe){
             Log.d(SkavaConstants.LOG, "DAO Exception " + daoe.getMessage());
         }
-
 
         /// TODO: Ver que se le pasa como segundo parámetro a este setter. Definir tb que SkavaContext tenga valores por defecto
 //        mSkavaContext.setDatastoreHelper(DatastoreHelper.getInstance(this,));
@@ -83,7 +83,13 @@ public class SkavaApplication extends MetricApplication {
 
         Thread.getDefaultUncaughtExceptionHandler();
         SkavaExceptionHandler handler = new SkavaExceptionHandler(this);
-//        Thread.setDefaultUncaughtExceptionHandler(handler);
+        Thread.setDefaultUncaughtExceptionHandler(handler);
+
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
 
     }
 }

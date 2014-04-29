@@ -28,7 +28,7 @@ public class TunnelDAODropboxImpl extends DropBoxBaseDAO implements RemoteTunnel
     public TunnelDAODropboxImpl(Context context, SkavaContext skavaContext) throws DAOException {
         super(context, skavaContext);
         this.mTunnelsTable = new TunnelDropboxTable(getDatastore());
-        this.remoteExcavationProjectDAO = DAOFactory.getInstance(mContext).getRemoteExcavationProjectDAO(DAOFactory.Flavour.DROPBOX);
+        this.remoteExcavationProjectDAO = getDAOFactory().getRemoteExcavationProjectDAO(DAOFactory.Flavour.DROPBOX);
     }
 
 

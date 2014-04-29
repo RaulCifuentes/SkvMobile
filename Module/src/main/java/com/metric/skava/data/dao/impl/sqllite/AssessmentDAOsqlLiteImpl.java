@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.TunnelFace;
@@ -39,20 +40,14 @@ import java.util.List;
  */
 public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Assessment> implements LocalAssessmentDAO {
 
-    private Context mContext;
     private LocalPermissionDAO mLocalPermissionDAO;
     private LocalTunnelFaceDAO mLocalTunnelFaceDAO;
     private AssessmentBuilder4SqlLite assessmentBuilder;
 
-    public Context getContext() {
-        return mContext;
-    }
-
-    public AssessmentDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
-        mContext = context;
-        assessmentBuilder = new AssessmentBuilder4SqlLite(mContext);
-        mLocalPermissionDAO = DAOFactory.getInstance(context).getLocalPermissionDAO(DAOFactory.Flavour.SQLLITE);
+    public AssessmentDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
+        assessmentBuilder = new AssessmentBuilder4SqlLite(mContext, skavaContext);
+        mLocalPermissionDAO = getDAOFactory().getLocalPermissionDAO();
     }
 
     @Override
@@ -159,7 +154,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
 
     private SupportRecomendation assembleSupportRecommendation(Cursor cursor) throws DAOException {
         List<SupportRecomendation> resultList = new ArrayList<SupportRecomendation>();
-        DAOFactory daoFactory = DAOFactory.getInstance(mContext);
+        DAOFactory daoFactory = getDAOFactory();
         while (cursor.moveToNext()) {
             String assessment = CursorUtils.getString(SupportRecomendationTable.ASSESSMENT_CODE_COLUMN, cursor);
 
@@ -343,7 +338,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                     rmrCalculation.get_id(),
                     newSkavaEntity.getCode(),
                     rmrCalculation.getStrengthOfRock().getKey(),
-                    rmrCalculation.getRqd().getKey(),
+                    rmrCalculation.getRqd().getValue(),
                     rmrCalculation.getSpacing().getKey(),
 //                    rmrCalculation.getConditionDiscontinuities().getKey(),
                     rmrCalculation.getPersistence().getKey(),

@@ -71,8 +71,8 @@ public class JaFragment extends QBartonCalculatorBaseFragment implements RadioGr
 
         if (selectedJa != null) {
             //what (type) group of Jr is this in order to show the correspondant list
-            switch (selectedJa.getGroupType()) {
-                case Ja.a:
+            switch (selectedJa.getGroup()) {
+                case a:
 //                    radioGroup.check(R.id.radioButtonFirst);
                     firstRadio.setChecked(true);
                     secondRadio.setChecked(false);
@@ -81,7 +81,7 @@ public class JaFragment extends QBartonCalculatorBaseFragment implements RadioGr
                     mListSecondGroup.setVisibility(View.GONE);
                     mListThirdGroup.setVisibility(View.GONE);
                     break;
-                case Ja.b:
+                case b:
 //                    radioGroup.check(R.id.radioButtonSecond);
                     firstRadio.setChecked(false);
                     secondRadio.setChecked(true);
@@ -90,7 +90,7 @@ public class JaFragment extends QBartonCalculatorBaseFragment implements RadioGr
                     mListSecondGroup.setVisibility(View.VISIBLE);
                     mListThirdGroup.setVisibility(View.GONE);
                     break;
-                case Ja.c:
+                case c:
 //                    radioGroup.check(R.id.radioButtonThird);
                     firstRadio.setChecked(false);
                     secondRadio.setChecked(false);
@@ -114,7 +114,7 @@ public class JaFragment extends QBartonCalculatorBaseFragment implements RadioGr
         final ListView listview = (ListView) getView().findViewById(R.id.listview_a);
         final List<Ja> listJa;
         try {
-            listJa = daoFactory.getLocalJaDAO().getAllJas(Ja.a);
+            listJa = daoFactory.getLocalJaDAO().getAllJas(Ja.Group.a);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -159,7 +159,7 @@ public class JaFragment extends QBartonCalculatorBaseFragment implements RadioGr
         final ListView listview = (ListView) getView().findViewById(R.id.listview_b);
         final List<Ja> listJa;
         try {
-            listJa = daoFactory.getLocalJaDAO().getAllJas(Ja.b);
+            listJa = daoFactory.getLocalJaDAO().getAllJas(Ja.Group.b);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -203,7 +203,7 @@ public class JaFragment extends QBartonCalculatorBaseFragment implements RadioGr
         final ListView listview = (ListView) getView().findViewById(R.id.listview_c);
         final List<Ja> listJa;
         try {
-            listJa = daoFactory.getLocalJaDAO().getAllJas(Ja.c);
+            listJa = daoFactory.getLocalJaDAO().getAllJas(Ja.Group.c);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();

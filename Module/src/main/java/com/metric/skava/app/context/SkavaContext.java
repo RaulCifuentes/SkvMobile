@@ -1,8 +1,11 @@
 package com.metric.skava.app.context;
 
+import com.dropbox.sync.android.DbxDatastore;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.User;
+import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.impl.dropbox.datastore.DatastoreHelper;
+import com.metric.skava.sync.helper.SyncHelper;
 import com.metric.skava.sync.model.SyncStatus;
 
 /**
@@ -14,7 +17,25 @@ public class SkavaContext {
     private Assessment assessment;
     private SyncStatus syncMetadata;
     private DatastoreHelper mDatastoreHelper;
+    private DbxDatastore mDatastore;
+    private DAOFactory daoFactory;
+    private SyncHelper syncHelper;
 
+    public SyncHelper getSyncHelper() {
+        return syncHelper;
+    }
+
+    public void setSyncHelper(SyncHelper syncHelper) {
+        this.syncHelper = syncHelper;
+    }
+
+    public DAOFactory getDAOFactory() {
+        return daoFactory;
+    }
+
+    public void setDAOFactory(DAOFactory daoFactory) {
+        this.daoFactory = daoFactory;
+    }
 
     public User getLoggedUser() {
         return loggedUser;
@@ -46,5 +67,13 @@ public class SkavaContext {
 
     public void setDatastoreHelper(DatastoreHelper mDatastoreHelper) {
         this.mDatastoreHelper = mDatastoreHelper;
+    }
+
+    public void setDatastore(DbxDatastore myDatastore) {
+        this.mDatastore = myDatastore;
+    }
+
+    public DbxDatastore getDatastore() {
+        return mDatastore;
     }
 }

@@ -214,7 +214,7 @@ public class MappingReportMainFragment extends SkavaFragment {
         int orientationType = rmrCalculation.getOrientationType();
         OrientationDiscontinuities orientationDiscontinuities = rmrCalculation.getOrientationDiscontinuities();
         if (orientationDiscontinuities != null) {
-            ((TextView) rootView.findViewById(R.id.report_rmr_ajuste_value)).setText(orientationDiscontinuities.getGroupTypeName() + " - " + orientationDiscontinuities.getKey());
+            ((TextView) rootView.findViewById(R.id.report_rmr_ajuste_value)).setText(orientationDiscontinuities.getGroupName() + " - " + orientationDiscontinuities.getKey());
             ((TextView) rootView.findViewById(R.id.report_rmr_ajuste_value_rating)).setText(numberFormat.format(orientationDiscontinuities.getValue()));
         }
 
@@ -289,13 +289,13 @@ public class MappingReportMainFragment extends SkavaFragment {
 
         Jr jr = qCalculation.getJr();
         if (jr != null) {
-            ((TextView) rootView.findViewById(R.id.report_q_jr_value)).setText(jr.getGroupTypeName() +" "+ jr.getKey());
+            ((TextView) rootView.findViewById(R.id.report_q_jr_value)).setText(jr.getGroupName() +" "+ jr.getKey());
             ((TextView) rootView.findViewById(R.id.report_q_jr_rating)).setText(numberFormat.format(jr.getValue()));
         }
 
         Ja ja = qCalculation.getJa();
         if (ja != null) {
-            ((TextView) rootView.findViewById(R.id.report_q_ja_value)).setText(ja.getGroupTypeName() +" "+ja.getKey());
+            ((TextView) rootView.findViewById(R.id.report_q_ja_value)).setText(ja.getGroupName() +" "+ja.getKey());
             ((TextView) rootView.findViewById(R.id.report_q_ja_rating)).setText(numberFormat.format(ja.getValue()));
         }
 
@@ -307,7 +307,7 @@ public class MappingReportMainFragment extends SkavaFragment {
 
         SRF srf = qCalculation.getSrf();
         if (srf != null) {
-            ((TextView) rootView.findViewById(R.id.report_q_srf_value)).setText(srf.getGroupTypeName() +" "+ srf.getKey());
+            ((TextView) rootView.findViewById(R.id.report_q_srf_value)).setText(srf.getGroupName() +" "+ srf.getKey());
             ((TextView) rootView.findViewById(R.id.report_q_srf_rating)).setText(numberFormat.format(srf.getValue()));
         }
 

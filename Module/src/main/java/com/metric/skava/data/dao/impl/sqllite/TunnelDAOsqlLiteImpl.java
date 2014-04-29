@@ -3,12 +3,12 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.ExcavationProject;
 import com.metric.skava.app.model.Tunnel;
 import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
-import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalEsrDAO;
 import com.metric.skava.data.dao.LocalExcavationProjectDAO;
 import com.metric.skava.data.dao.LocalTunnelDAO;
@@ -29,9 +29,9 @@ public class TunnelDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Tunne
 
     private LocalTunnelFaceDAO faceDAO;
 
-    public TunnelDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
-        faceDAO = DAOFactory.getInstance(getContext()).getLocalTunnelFaceDAO(DAOFactory.Flavour.SQLLITE);
+    public TunnelDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
+        faceDAO = getDAOFactory().getLocalTunnelFaceDAO();
     }
 
 
@@ -45,7 +45,7 @@ public class TunnelDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Tunne
             String name = CursorUtils.getString(TunnelTable.NAME_COLUMN, cursor);
             String projectCode = CursorUtils.getString(TunnelTable.PROJECT_CODE_COLUMN, cursor);
 
-            LocalExcavationProjectDAO projectDAO = DAOFactory.getInstance(getContext()).getLocalExcavationProjectDAO(DAOFactory.Flavour.SQLLITE);
+            LocalExcavationProjectDAO projectDAO = getDAOFactory().getLocalExcavationProjectDAO();
             ExcavationProject project = projectDAO.getExcavationProjectByCode(projectCode);
 
             Tunnel newInstance = new Tunnel(code, name);
@@ -64,7 +64,7 @@ public class TunnelDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Tunne
         while (excavationFactorsCursor.moveToNext()) {
             String esrCode = CursorUtils.getString(ExcavationFactorTable.ESR_CODE_COLUMN, excavationFactorsCursor);
             Double span = CursorUtils.getDouble(ExcavationFactorTable.SPAN_COLUMN, excavationFactorsCursor);
-            LocalEsrDAO localEsrDAO = DAOFactory.getInstance(getContext()).getLocalEsrDAO(DAOFactory.Flavour.SQLLITE);
+            LocalEsrDAO localEsrDAO = getDAOFactory().getLocalEsrDAO();
             ESR esr = localEsrDAO.getESR(esrCode);
             ExcavationFactors factor = new ExcavationFactors(esr);
             factor.setSpan(span);
@@ -149,7 +149,7 @@ public class TunnelDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Tunne
 
     @Override
     public boolean deleteTunnel(String code) {
-        return false;
+        return deleteIdentifiableEntity(TunnelTable.TUNNEL_DATABASE_TABLE, code);
     }
 
     @Override

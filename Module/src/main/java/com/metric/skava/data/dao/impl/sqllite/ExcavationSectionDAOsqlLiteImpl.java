@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.ExcavationSection;
 import com.metric.skava.data.dao.LocalExcavationSectionDAO;
@@ -16,12 +17,12 @@ import java.util.List;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class ExcavationSectionDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<ExcavationSection> implements LocalExcavationSectionDAO {
+//public class ExcavationSectionDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<ExcavationSection> implements LocalExcavationSectionDAO {
+public class ExcavationSectionDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<ExcavationSection> implements LocalExcavationSectionDAO {
 
-    public ExcavationSectionDAOsqlLiteImpl(Context context) {
-        super(context);
+    public ExcavationSectionDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
+        super(context, skavaContext);
     }
-
 
 
     @Override
@@ -59,16 +60,16 @@ public class ExcavationSectionDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnti
 
     @Override
     protected void savePersistentEntity(String tableName, ExcavationSection newSkavaEntity) throws DAOException {
-
+        saveSkavaEntity(tableName, newSkavaEntity);
     }
 
     @Override
     public boolean deleteExcavationSection(String code) {
-        return false;
+        return deleteIdentifiableEntity(ExcavationSectionTable.SECTION_DATABASE_TABLE, code);
     }
 
     @Override
     public int deleteAllExcavationSections() {
-        return 0;
+        return deleteAllPersistentEntities(ExcavationSectionTable.SECTION_DATABASE_TABLE);
     }
 }

@@ -14,7 +14,6 @@ import com.metric.skava.app.activity.SkavaFragmentActivity;
 import com.metric.skava.app.exception.SkavaSystemException;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.util.SkavaConstants;
-import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.RemoteAssessmentDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -98,7 +97,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
     private void saveDraft(){
         LocalAssessmentDAO localAssessmentDAO;
         try {
-            localAssessmentDAO = DAOFactory.getInstance(this).getAssessmentDAO(DAOFactory.Flavour.SQLLITE);
+            localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
             Assessment currentAssessment = getCurrentAssessment();
             localAssessmentDAO.saveDraft(currentAssessment);
         } catch (DAOException e) {
@@ -115,7 +114,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
         try {
             Assessment assessment = getCurrentAssessment();
 
-            localAssessmentDAO = DAOFactory.getInstance(this).getAssessmentDAO(DAOFactory.Flavour.SQLLITE);
+            localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
             localAssessmentDAO.send(assessment);
 
             remoteAssessmentDAO = new AssessmentDAODropboxImpl(this, getSkavaContext());

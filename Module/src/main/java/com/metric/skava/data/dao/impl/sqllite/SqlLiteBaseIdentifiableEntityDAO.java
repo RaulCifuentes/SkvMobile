@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.data.IdentifiableEntity;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.table.SkavaEntityTable;
@@ -14,8 +15,8 @@ import com.metric.skava.data.dao.impl.sqllite.table.SkavaEntityTable;
 public abstract class SqlLiteBaseIdentifiableEntityDAO<T extends IdentifiableEntity> extends SqlLiteBasePersistentEntityDAO<T> {
 
 
-    public SqlLiteBaseIdentifiableEntityDAO(Context context) {
-     super(context);
+    public SqlLiteBaseIdentifiableEntityDAO(Context context, SkavaContext skavaContext) {
+     super(context, skavaContext);
     }
 
 

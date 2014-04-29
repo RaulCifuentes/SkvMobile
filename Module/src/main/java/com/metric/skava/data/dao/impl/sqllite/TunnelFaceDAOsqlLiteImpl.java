@@ -3,18 +3,17 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.Permission;
 import com.metric.skava.app.model.Tunnel;
 import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
-import com.metric.skava.data.dao.DAOFactory;
-import com.metric.skava.data.dao.LocalTunnelFaceDAO;
 import com.metric.skava.data.dao.LocalTunnelDAO;
+import com.metric.skava.data.dao.LocalTunnelFaceDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.table.PermissionTable;
 import com.metric.skava.data.dao.impl.sqllite.table.TunnelFaceTable;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +23,9 @@ import java.util.List;
  */
 public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<TunnelFace> implements LocalTunnelFaceDAO {
 
-    public TunnelFaceDAOsqlLiteImpl(Context context) {
-        super(context);
+    public TunnelFaceDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
+        super(context, skavaContext);
     }
-
 
 
     @Override
@@ -42,7 +40,7 @@ public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<T
             Integer orientation = CursorUtils.getInt(TunnelFaceTable.ORIENTATION_COLUMN, cursor);
             Integer slope = CursorUtils.getInt(TunnelFaceTable.SLOPE_COLUMN, cursor);
 
-            LocalTunnelDAO localTunnelDAO = DAOFactory.getInstance(getContext()).getLocalTunnelDAO(DAOFactory.Flavour.SQLLITE);
+            LocalTunnelDAO localTunnelDAO = getDAOFactory().getLocalTunnelDAO();
             Tunnel tunnel = localTunnelDAO.getTunnelByCode(tunnelCode);
 
             TunnelFace newInstance = new TunnelFace(code, name);
@@ -134,7 +132,7 @@ public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<T
 
     @Override
     public boolean deleteTunnelFace(String code) {
-        return false;
+        return deleteIdentifiableEntity(TunnelFaceTable.FACE_DATABASE_TABLE, code);
     }
 
     @Override

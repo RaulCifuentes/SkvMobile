@@ -16,7 +16,6 @@ import com.metric.skava.R;
 import com.metric.skava.app.exception.SkavaSystemException;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.calculator.adapter.MultiColumnMappedIndexArrayAdapter;
-import com.metric.skava.calculator.rmr.model.ConditionDiscontinuities;
 import com.metric.skava.calculator.rmr.model.OrientationDiscontinuities;
 import com.metric.skava.data.dao.exception.DAOException;
 
@@ -62,8 +61,8 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
 
 
         if (selectedOrientation != null){
-            switch (selectedOrientation.getGroupType()){
-                case OrientationDiscontinuities.TUNNEL_MINES:
+            switch (selectedOrientation.getGroup()){
+                case TUNNELS_MINES:
                     tunnelsRadio.setChecked(true);
                     foundationsRadio.setChecked(false);
                     slopesRadio.setChecked(false);
@@ -71,7 +70,7 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
                     mListFoundations.setVisibility(View.GONE);
                     mListSlopes.setVisibility(View.GONE);
                     break;
-                case OrientationDiscontinuities.FOUNDATIONS:
+                case FOUNDATIONS:
                     tunnelsRadio.setChecked(false);
                     foundationsRadio.setChecked(true);
                     slopesRadio.setChecked(false);
@@ -79,7 +78,7 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
                     mListFoundations.setVisibility(View.VISIBLE);
                     mListSlopes.setVisibility(View.GONE);
                     break;
-                case OrientationDiscontinuities.SLOPES:
+                case SLOPES:
                     tunnelsRadio.setChecked(false);
                     foundationsRadio.setChecked(false);
                     slopesRadio.setChecked(true);
@@ -104,17 +103,16 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
 
     public void setupTunnelsOrientations() {
 
-        final ListView listview = (ListView) getView().findViewById(R.id.listview_tunnels);
+        mListTunnels = (ListView) getView().findViewById(R.id.listview_tunnels);
         TextView firstTextView = (TextView) headerView.findViewById(R.id.first_column_text_view);
         TextView secondTextView = (TextView) headerView.findViewById(R.id.second_column_text_view);
-        secondTextView.setText(ConditionDiscontinuities.DESCRIPTION);
-        listview.addHeaderView(headerView, null, false);
-        final int numberOfHeaders = listview.getHeaderViewsCount();
+        secondTextView.setText(OrientationDiscontinuities.DESCRIPTION);
+        mListTunnels.addHeaderView(headerView, null, false);
+        final int numberOfHeaders = mListTunnels.getHeaderViewsCount();
 
-//        final List<OrientationDiscontinuities> listOrientations = getMappedIndexDataProvider().getAllOrientationDiscontinuities(OrientationDiscontinuities.TUNNEL_MINES);
         final List<OrientationDiscontinuities> listOrientations;
         try {
-            listOrientations = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.TUNNEL_MINES);
+            listOrientations = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.TUNNELS_MINES);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
@@ -123,19 +121,19 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
 
         final MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities> adapter = new MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities>(getActivity(),
                 R.layout.calculator_two_column_list_view_row_checked_radio, listOrientations);
-        listview.setAdapter(adapter);
+        mListTunnels.setAdapter(adapter);
 
 
         if (selectedOrientation != null) {
             int posIndex = adapter.getPosition(selectedOrientation);
             if (posIndex!=-1){
                 posIndex += numberOfHeaders;
-                listview.setItemChecked(posIndex, true);
-                listview.setSelection(posIndex);
+                mListTunnels.setItemChecked(posIndex, true);
+                mListTunnels.setSelection(posIndex);
             }
         }
 
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListTunnels.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
@@ -147,17 +145,16 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
 
     public void setupSlopesOrientations() {
 
-        final ListView listview = (ListView) getView().findViewById(R.id.listview_slopes);
+        mListSlopes = (ListView) getView().findViewById(R.id.listview_slopes);
         TextView firstTextView = (TextView) headerView.findViewById(R.id.first_column_text_view);
         TextView secondTextView = (TextView) headerView.findViewById(R.id.second_column_text_view);
-        secondTextView.setText(ConditionDiscontinuities.DESCRIPTION);
-        listview.addHeaderView(headerView, null, false);
-        final int numberOfHeaders = listview.getHeaderViewsCount();
+        secondTextView.setText(OrientationDiscontinuities.DESCRIPTION);
+        mListSlopes.addHeaderView(headerView, null, false);
+        final int numberOfHeaders = mListSlopes.getHeaderViewsCount();
 
-//        final List<OrientationDiscontinuities> listOrientations = getMappedIndexDataProvider().getAllOrientationDiscontinuities(OrientationDiscontinuities.SLOPES);
         final List<OrientationDiscontinuities> listOrientations;
         try {
-            listOrientations = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.SLOPES);
+            listOrientations = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.SLOPES);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
@@ -166,19 +163,19 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
 
         final MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities> adapter = new MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities>(getActivity(),
                 R.layout.calculator_two_column_list_view_row_checked_radio, listOrientations);
-        listview.setAdapter(adapter);
+        mListSlopes.setAdapter(adapter);
 
         selectedOrientation = getRMRCalculationContext().getOrientationDiscontinuities();
         if (selectedOrientation != null) {
             int posIndex = adapter.getPosition(selectedOrientation);
             if (posIndex!=-1){
                 posIndex += numberOfHeaders;
-                listview.setItemChecked(posIndex, true);
-                listview.setSelection(posIndex);
+                mListSlopes.setItemChecked(posIndex, true);
+                mListSlopes.setSelection(posIndex);
             }
         }
 
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListSlopes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
@@ -190,17 +187,16 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
 
     public void setupFoundationsOrientations() {
 
-        final ListView listview = (ListView) getView().findViewById(R.id.listview_foundations);
+        mListFoundations = (ListView) getView().findViewById(R.id.listview_foundations);
         TextView firstTextView = (TextView) headerView.findViewById(R.id.first_column_text_view);
         TextView secondTextView = (TextView) headerView.findViewById(R.id.second_column_text_view);
-        secondTextView.setText(ConditionDiscontinuities.DESCRIPTION);
-        listview.addHeaderView(headerView, null, false);
-        final int numberOfHeaders = listview.getHeaderViewsCount();
+        secondTextView.setText(OrientationDiscontinuities.DESCRIPTION);
+        mListFoundations.addHeaderView(headerView, null, false);
+        final int numberOfHeaders = mListFoundations.getHeaderViewsCount();
 
-//        final List<OrientationDiscontinuities> listOrientations = getMappedIndexDataProvider().getAllOrientationDiscontinuities(OrientationDiscontinuities.FOUNDATIONS);
         final List<OrientationDiscontinuities> listOrientations;
         try {
-            listOrientations = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.FOUNDATIONS);
+            listOrientations = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.FOUNDATIONS);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
@@ -209,19 +205,19 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
 
         final MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities> adapter = new MultiColumnMappedIndexArrayAdapter<OrientationDiscontinuities>(getActivity(),
                 R.layout.calculator_two_column_list_view_row_checked_radio, listOrientations);
-        listview.setAdapter(adapter);
+        mListFoundations.setAdapter(adapter);
 
         selectedOrientation = getRMRCalculationContext().getOrientationDiscontinuities();
         if (selectedOrientation != null) {
             int posIndex = adapter.getPosition(selectedOrientation);
             if (posIndex!=-1){
                 posIndex += numberOfHeaders;
-                listview.setItemChecked(posIndex, true);
-                listview.setSelection(posIndex);
+                mListFoundations.setItemChecked(posIndex, true);
+                mListFoundations.setSelection(posIndex);
             }
         }
 
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListFoundations.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {

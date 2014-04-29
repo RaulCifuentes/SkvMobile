@@ -7,19 +7,43 @@ import com.metric.skava.calculator.model.MappedIndex;
  */
 public class StrengthOfRock extends MappedIndex {
 
-    public static String POINT_LOAD_KEY = "Point-load strenght index";
-    public static String UNIAXIAL_KEY = "Uniaxial compression strenght";
+    private Group group;
 
-    //public static final StrengthOfRock DEFAULT_VALUE = MappedIndexDataProvider.getAllStrenghts().get(0);
+    public enum Group {
+        POINT_LOAD_KEY("Point-load strenght index"),
+        UNIAXIAL_KEY("Uniaxial compression strenght");
 
-    public StrengthOfRock(String shortName, String pointLoad, String uniaxial, Double ratingValue) {
-        super();
-        setKey(shortName);
-        getCategoriesAndValues()[0][0] = StrengthOfRock.POINT_LOAD_KEY;
-        getCategoriesAndValues()[1][0] = pointLoad;
-        getCategoriesAndValues()[0][1] = StrengthOfRock.UNIAXIAL_KEY;
-        getCategoriesAndValues()[1][1] = uniaxial;
-        setValue(ratingValue);
+        private final String value;
+
+        Group(String value) {
+            this.value = value;
+        }
+
+        public String toString() {
+            return value;
+        }
     }
 
+    public StrengthOfRock(Group group, String code, String key, String shortDescription, String longDescription, Double ratingValue) {
+        super(code, key, shortDescription, longDescription, ratingValue);
+        setGroup(group);
+//        setKey(key);
+//        getCategoriesAndValues()[0][0] = MappedIndex.DESCRIPTION;
+//        getCategoriesAndValues()[1][0] = longDescription;
+//        setValue(ratingValue);
+    }
+
+
+    @Override
+    public String getGroupName() {
+        return this.group.name();
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
 }

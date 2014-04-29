@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.calculator.rmr.model.Weathering;
 import com.metric.skava.data.dao.LocalWeatheringDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -24,15 +25,15 @@ public class WeatheringDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalWea
         return mContext;
     }
 
-    public WeatheringDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
+    public WeatheringDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
         mContext = context;
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
     @Override
     public Weathering getWeathering(String indexCode, String groupCode, String code) throws DAOException {
-        String[] names = new String[]{WeatheringTable.INDEX_CODE_COLUMN, GROUP_CODE_COLUMN, CODE_COLUMN};
+        String[] names = new String[]{WeatheringTable.INDEX_CODE_COLUMN, WeatheringTable.GROUP_CODE_COLUMN, WeatheringTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(WeatheringTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Weathering> list = assambleWeatherings(cursor);

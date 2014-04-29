@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.calculator.barton.model.Jr;
 import com.metric.skava.data.dao.LocalJrDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -17,22 +18,18 @@ import java.util.List;
  */
 public class JrDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalJrDAO {
 
-    private Context mContext;
     private MappedIndexInstanceBuilder4SqlLite mappedIndexInstaceBuilder;
 
-    public Context getContext() {
-        return mContext;
-    }
 
-    public JrDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
+    public JrDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
         mContext = context;
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
     @Override
     public Jr getJr(String indexCode, String groupCode, String code) throws DAOException {
-        String[] names = new String[]{JrTable.INDEX_CODE_COLUMN, GROUP_CODE_COLUMN, CODE_COLUMN};
+        String[] names = new String[]{JrTable.INDEX_CODE_COLUMN, JrTable.GROUP_CODE_COLUMN, JrTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(JrTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Jr> list = assambleJrs(cursor);
@@ -58,21 +55,21 @@ public class JrDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalJrDAO {
 
 
     @Override
-    public List<Jr> getAllJrs(int type) throws DAOException {
-        Cursor cursor = getAllRecords(JrTable.MAPPED_INDEX_DATABASE_TABLE);
-        String groupAsString = null;
-        switch (type) {
-            case Jr.a:
-                groupAsString = "a";
-                break;
-            case Jr.b:
-                groupAsString = "b";
-                break;
-            case Jr.c:
-                groupAsString = "c";
-                break;
-        }
-        getRecordsFilteredByColumn(JrTable.MAPPED_INDEX_DATABASE_TABLE, JrTable.GROUP_CODE_COLUMN, groupAsString, null);
+    public List<Jr> getAllJrs(Jr.Group group) throws DAOException {
+//        Cursor cursor = getAllRecords(JrTable.MAPPED_INDEX_DATABASE_TABLE);
+//        String groupAsString = null;
+//        switch (group) {
+//            case a:
+//                groupAsString = "a";
+//                break;
+//            case b:
+//                groupAsString = "b";
+//                break;
+//            case c:
+//                groupAsString = "c";
+//                break;
+//        }
+        Cursor cursor = getRecordsFilteredByColumn(JrTable.MAPPED_INDEX_DATABASE_TABLE, JrTable.GROUP_CODE_COLUMN, group.name(), null);
         List<Jr> list = assambleJrs(cursor);
         cursor.close();
         return list;

@@ -17,10 +17,7 @@ import com.metric.skava.R;
 import com.metric.skava.app.exception.SkavaSystemException;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.calculator.adapter.MultiColumnMappedIndexArrayAdapter;
-import com.metric.skava.calculator.barton.model.Ja;
 import com.metric.skava.calculator.barton.model.Jr;
-import com.metric.skava.calculator.data.MappedIndexDataProvider;
-import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
 
 import java.util.List;
@@ -86,8 +83,8 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
 
         if (selectedJr != null) {
             //what (type) group of Jr is this in order to show the correspondant list
-            switch (selectedJr.getGroupType()) {
-                case Jr.a:
+            switch (selectedJr.getGroup()) {
+                case a:
 //                    radioGroup.check(R.id.radioButtonFirst);
                     firstRadio.setChecked(true);
                     secondRadio.setChecked(false);
@@ -96,7 +93,7 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
                     mListSecondGroup.setVisibility(View.GONE);
                     mListThirdGroup.setVisibility(View.GONE);
                     break;
-                case Jr.b:
+                case b:
 //                    radioGroup.check(R.id.radioButtonSecond);
                     firstRadio.setChecked(false);
                     secondRadio.setChecked(true);
@@ -105,7 +102,7 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
                     mListSecondGroup.setVisibility(View.VISIBLE);
                     mListThirdGroup.setVisibility(View.GONE);
                     break;
-                case Jr.c:
+                case c:
 //                    radioGroup.check(R.id.radioButtonThird);
                     firstRadio.setChecked(false);
                     secondRadio.setChecked(false);
@@ -133,7 +130,7 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
         final int numberOfHeaders = listview.getHeaderViewsCount();
         final List<Jr> listJr;
         try {
-            listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.a);
+            listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.Group.a);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -166,7 +163,7 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
         final ListView listview = (ListView) getView().findViewById(R.id.listview_b);
         final List<Jr> listJr;
         try {
-            listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.b);
+            listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.Group.b);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -206,7 +203,7 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
         final ListView listview = (ListView) getView().findViewById(R.id.listview_c);
         final List<Jr> listJr;
         try {
-            listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.c);
+            listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.Group.c);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();

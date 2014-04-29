@@ -1,29 +1,41 @@
 package com.metric.skava.calculator.model;
 
 
-public abstract class MappedIndex  {
+import com.metric.skava.app.data.IdentifiableEntity;
+
+public abstract class MappedIndex implements IdentifiableEntity {
 
     public static String DESCRIPTION = "Description";
 
-	private Double value;
-	private String key;
-    private String[][] categoriesAndValues;
+    private String code;
+    private String key;
+    private Double value;
+    private String shortDescription;
+    private String description;
 
-    private int groupType;
 
-//    public abstract String getGroupTypeName();
-
-    protected MappedIndex(){
-        categoriesAndValues = new String[2][3];
+    private MappedIndex(){
+        super();
 	}
 
-	public MappedIndex(String key, Double value) {
-		super();
-		this.value = value;
-		this.key = key;
-	}
+	public MappedIndex(String code, String key, String shortDescription, String description, Double value) {
+        this();
+        this.code = code;
+        this.key = key;
+        this.shortDescription = shortDescription;
+        this.description = description;
+        this.value = value;
+    }
 
-	public String getKey() {
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getKey() {
 		return key;
 	}
 
@@ -45,17 +57,28 @@ public abstract class MappedIndex  {
      *  DESCRIPTION Value      |     Value                   |     Value
      * @return
      */
-    public String[][] getCategoriesAndValues() {
-        return categoriesAndValues;
+//    public String[][] getCategoriesAndValues() {
+//        return categoriesAndValues;
+//    }
+
+    public abstract String getGroupName();
+
+    public String getDescription() {
+        return description;
     }
 
-    public int getGroupType() {
-        return groupType;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setGroupType(int groupType) {
-        this.groupType = groupType;
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
     }
+
+    public String getShortDescription() {
+        return this.shortDescription;
+    }
+
 
 //
 	@Override
@@ -91,15 +114,6 @@ public abstract class MappedIndex  {
 		return true;
 	}
 
-
-    public String getShortDescription() {
-        String description = getCategoriesAndValues()[1][0];
-        int length = description.length();
-        if (length > 25){
-            return description.substring(0,25);
-        }
-        return description;
-    }
 
 	@Override
 	public String toString() {

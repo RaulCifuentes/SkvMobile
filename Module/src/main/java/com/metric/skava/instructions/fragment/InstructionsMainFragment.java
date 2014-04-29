@@ -46,7 +46,7 @@ public class InstructionsMainFragment extends SkavaFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.instructions_main_fragment, container, false);
 
-        DAOFactory daoFactory = DAOFactory.getInstance(getActivity());
+        DAOFactory daoFactory = getDAOFactory();
 
         SupportRequirementDAO supportRequirementDAO = daoFactory.getSupportRequirementDAO();
 

@@ -3,6 +3,7 @@ package com.metric.skava.sync.dao;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.util.DateDataFormat;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -20,8 +21,8 @@ import java.util.List;
 public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<SyncLogEntry> implements SyncLoggingDAO {
 
 
-    public SyncLoggingDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
+    public SyncLoggingDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
     }
 
     @Override

@@ -49,7 +49,7 @@ public class RockMassDescriptionMainFragment extends SkavaFragment implements Ad
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        daoFactory = DAOFactory.getInstance(getActivity());
+        daoFactory = getDAOFactory();
 
         fractureTypeSpinnerLastPosition = -1;
 

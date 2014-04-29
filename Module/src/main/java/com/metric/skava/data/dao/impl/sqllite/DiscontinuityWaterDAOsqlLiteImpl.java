@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.data.dao.LocalDiscontinuityWaterDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -15,10 +16,11 @@ import java.util.List;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class DiscontinuityWaterDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<DiscontinuityWater> implements LocalDiscontinuityWaterDAO {
+//public class DiscontinuityWaterDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<DiscontinuityWater> implements LocalDiscontinuityWaterDAO {
+public class DiscontinuityWaterDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<DiscontinuityWater> implements LocalDiscontinuityWaterDAO {
 
-    public DiscontinuityWaterDAOsqlLiteImpl(Context context) {
-        super(context);
+    public DiscontinuityWaterDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
+        super(context, skavaContext);
     }
 
 
@@ -55,17 +57,17 @@ public class DiscontinuityWaterDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnt
 
     @Override
     protected void savePersistentEntity(String tableName, DiscontinuityWater newSkavaEntity) throws DAOException {
-
+        saveSkavaEntity(tableName, newSkavaEntity);
     }
 
     @Override
     public boolean deleteDiscontinuityWater(String code) {
-        return false;
+        return deleteIdentifiableEntity(DiscontinuityWaterTable.WATER_DATABASE_TABLE, code);
     }
 
     @Override
     public int deleteAllDiscontinuityWaters() {
-        return 0;
+        return deleteAllPersistentEntities(DiscontinuityWaterTable.WATER_DATABASE_TABLE);
     }
 
 

@@ -3,12 +3,12 @@ package com.metric.skava.data.dao.impl.sqllite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.Client;
 import com.metric.skava.data.dao.LocalClientDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.table.ClientTable;
-import com.metric.skava.data.dao.impl.sqllite.table.UserTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +16,12 @@ import java.util.List;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class ClientDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Client> implements LocalClientDAO {
+//public class ClientDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Client> implements LocalClientDAO {
+public class ClientDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Client> implements LocalClientDAO {
 
 
-    public ClientDAOsqlLiteImpl(Context context) throws DAOException {
-        super(context);
+    public ClientDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
+        super(context, skavaContext);
     }
 
 
@@ -58,14 +59,15 @@ public class ClientDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Clien
 
     @Override
     protected void savePersistentEntity(String tableName, Client newSkavaEntity) throws DAOException {
-        String[] colNames = {ClientTable.CODE_COLUMN, UserTable.NAME_COLUMN};
-        String[] colValues = {newSkavaEntity.getCode(), newSkavaEntity.getName()};
-        saveRecord(tableName, colNames, colValues);
+//        String[] colNames = {ClientTable.CODE_COLUMN, UserTable.NAME_COLUMN};
+//        String[] colValues = {newSkavaEntity.getCode(), newSkavaEntity.getName()};
+//        saveRecord(tableName, colNames, colValues);
+        saveSkavaEntity(tableName, newSkavaEntity);
     }
 
     @Override
     public boolean deleteClient(String code) {
-        return false;
+        return deleteIdentifiableEntity(ClientTable.CODE_COLUMN, code);
     }
 
     @Override
