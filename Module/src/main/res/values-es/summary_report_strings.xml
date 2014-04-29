@@ -73,7 +73,7 @@
     <string name="report_disc_numero">Número</string>
     <string name="report_disc_tipo">Tipo</string>
     <string name="report_disc_relevancia">Relevancia</string>
-    <string name="report_disc_dip_dir">Dip Dir (°)</string>
+    <string name="report_disc_dip_dir">Strike (°)</string>
     <string name="report_disc_dip">Dip (°)</string>
     <string name="report_disc_espaciamiento">Espaciamiento</string>
     <string name="report_disc_persistencia">Persistencia</string>

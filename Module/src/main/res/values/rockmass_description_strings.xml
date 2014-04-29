@@ -2,8 +2,8 @@
 <resources>
 
     <string name="rockmass_desc_fracture_type">Type of Fracturing</string>
-    <string name="rockmass_desc_block_size">Blocks Dimension</string>
-    <string name="rockmass_desc_joints_m3">Joints / m3</string>
+    <string name="rockmass_desc_block_size">Blocks Dimension (m)</string>
+    <string name="rockmass_desc_joints_m3">Joints / m3 (#/m3)</string>
     <string name="rockmass_desc_details">Outcrop Geological Description</string>
 
 
