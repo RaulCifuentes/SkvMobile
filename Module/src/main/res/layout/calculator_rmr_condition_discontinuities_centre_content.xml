@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
+<!--
     <RadioGroup
         android:id="@+id/radioGroup"
         android:orientation="horizontal"
@@ -31,7 +31,7 @@
 
 
     </RadioGroup>
-
+-->
     <Space
         android:layout_width="@dimen/grid_space_separation_width"
         android:layout_height="@dimen/grid_space_separation_height" />
