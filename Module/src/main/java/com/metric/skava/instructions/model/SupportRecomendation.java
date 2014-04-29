@@ -5,6 +5,7 @@ package com.metric.skava.instructions.model;
  */
 public class SupportRecomendation {
 
+    private Long _id;
     private BoltType boltType;
     private Double boltDiameter;
     private Double boltLength;
@@ -15,6 +16,14 @@ public class SupportRecomendation {
     private ArchType archType;
     private Double separation;
     private String observations;
+
+    public Long get_id() {
+        return _id;
+    }
+
+    public void set_id(Long _id) {
+        this._id = _id;
+    }
 
     public BoltType getBoltType() {
         return boltType;

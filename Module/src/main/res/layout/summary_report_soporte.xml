@@ -43,7 +43,7 @@
                     android:layout_weight="2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Value"
+                    android:text=""
                     android:id="@+id/report_tipo_perno_value"
                     android:background="@drawable/text_box" />
 
@@ -51,7 +51,7 @@
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Value"
+                    android:text=""
                     android:id="@+id/report_diametro_perno_value"
                     android:background="@drawable/text_box" />
 
@@ -68,7 +68,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Value"
+                android:text=""
                 android:id="@+id/report_tipo_shotcrete_value"
                 android:background="@drawable/text_box" />
 
@@ -82,7 +82,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Value"
+                android:text=""
                 android:id="@+id/report_tipo_malla_value"
                 android:background="@drawable/text_box" />
 
@@ -96,7 +96,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Value"
+                android:text=""
                 android:id="@+id/report_tipo_marco_value"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -116,7 +116,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Value"
+                android:text=""
                 android:id="@+id/report_largo_perno_value"
                 android:background="@drawable/text_box" />
 
@@ -130,7 +130,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Value"
+                android:text=""
                 android:id="@+id/report_espesor_shotcrete_value"
                 android:background="@drawable/text_box" />
 
@@ -144,7 +144,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Value"
+                android:text=""
                 android:id="@+id/report_cobertura_value"
                 android:background="@drawable/text_box" />
 
@@ -158,7 +158,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Value"
+                android:text=""
                 android:id="@+id/report_separacion_value"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -179,7 +179,7 @@
                 android:layout_span="7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Value"
+                android:text=""
                 android:id="@+id/report_observaciones_soporte_value"
                 android:background="@drawable/text_box" />
         </TableRow>
