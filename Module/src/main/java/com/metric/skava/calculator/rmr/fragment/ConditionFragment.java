@@ -21,7 +21,7 @@ import com.metric.skava.calculator.rmr.model.Weathering;
 
 import java.util.List;
 
-public class ConditionFragment extends RMRCalculatorBaseFragment implements RadioGroup.OnCheckedChangeListener {
+public class ConditionFragment extends RMRCalculatorBaseFragment /* implements RadioGroup.OnCheckedChangeListener */ {
 
     private View generalHeaderView;
     private View persistenceHeaderView;
@@ -90,15 +90,17 @@ public class ConditionFragment extends RMRCalculatorBaseFragment implements Radi
         mDetailedConditionViewContainer = view.findViewById(R.id.listview_detailed_conditions);
         mDetailedConditionViewContainer.setVisibility(View.GONE);
 
-        radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
-        radioGroup.setOnCheckedChangeListener(this);
+//        radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
+//        radioGroup.setOnCheckedChangeListener(this);
 
         //selects the tunnels as default if theres no previous info
-        if (selectedConditions != null) {
-            radioGroup.check(R.id.radioButtonSummarized);
-        } else {
-            radioGroup.check(R.id.radioButtonDetailed);
-        }
+//        if (selectedConditions != null) {
+//            radioGroup.check(R.id.radioButtonSummarized);
+//        } else {
+//            radioGroup.check(R.id.radioButtonDetailed);
+//        }
+
+        showDetailedConditions();
 
     }
 
@@ -137,7 +139,7 @@ public class ConditionFragment extends RMRCalculatorBaseFragment implements Radi
                 selectedConditions = (ConditionDiscontinuities) parent.getItemAtPosition(position);
                 getRMRCalculationContext().setConditionDiscontinuities(selectedConditions);
                 //transform this into a separated version
-                radioGroup.check(R.id.radioButtonDetailed);
+                //radioGroup.check(R.id.radioButtonDetailed);
                 if (selectedConditions != null) {
 
 
@@ -409,90 +411,98 @@ public class ConditionFragment extends RMRCalculatorBaseFragment implements Radi
         ViewUtils.adjustListViewHeightBasedOnChildren(weatheringListView);
     }
 
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId) {
-            case R.id.radioButtonSummarized:
-                mSummarizedConditionViewContainer.setVisibility(View.VISIBLE);
-                selectedConditions = (ConditionDiscontinuities) summarizedListview.getItemAtPosition(1);
-                getRMRCalculationContext().setConditionDiscontinuities(selectedConditions);
-                persistenceListView.clearChoices();
-                apertureListView.clearChoices();
-                roughnessListView.clearChoices();
-                infillingListView.clearChoices();
-                weatheringListView.clearChoices();
-                mDetailedConditionViewContainer.setVisibility(View.GONE);
-                break;
-            case R.id.radioButtonDetailed:
-                mSummarizedConditionViewContainer.setVisibility(View.GONE);
-                getRMRCalculationContext().setConditionDiscontinuities(null);
-                mDetailedConditionViewContainer.setVisibility(View.VISIBLE);
-                if (selectedConditions != null) {
-                    Integer summarizedKey = selectedConditions.getValue().intValue();
-                    int firstIndex = 1;
-                    switch (summarizedKey) {
-                        //Find the persistence object through a DAO
-                        case 30:
-                            selectedPpersistence = (Persistence) persistenceListView.getAdapter().getItem(firstIndex);
-                            selectedAperture = (Aperture) apertureListView.getAdapter().getItem(firstIndex);
-                            selectedRoughness = (Roughness) roughnessListView.getAdapter().getItem(firstIndex);
-                            selectedInfilling = (Infilling) infillingListView.getAdapter().getItem(firstIndex);
-                            selectedWeathering = (Weathering) weatheringListView.getAdapter().getItem(firstIndex);
-                            break;
+//    @Override
+//    public void onCheckedChanged(RadioGroup group, int checkedId) {
+//        switch (checkedId) {
+//            case R.id.radioButtonSummarized:
+//                showSummarizedConditions();
+//                break;
+//            case R.id.radioButtonDetailed:
+//                showDetailedConditions();
+//                break;
+//
+//        }
+//    }
 
-                        case 25:
-                            selectedPpersistence = (Persistence) persistenceListView.getAdapter().getItem(firstIndex + 1);
-                            selectedAperture = (Aperture) apertureListView.getAdapter().getItem(firstIndex + 1);
-                            selectedRoughness = (Roughness) roughnessListView.getAdapter().getItem(firstIndex + 1);
-                            selectedInfilling = (Infilling) infillingListView.getAdapter().getItem(firstIndex + 1);
-                            selectedWeathering = (Weathering) weatheringListView.getAdapter().getItem(firstIndex + 1);
-                            break;
+    private void showDetailedConditions() {
+        mSummarizedConditionViewContainer.setVisibility(View.GONE);
+        getRMRCalculationContext().setConditionDiscontinuities(null);
+        mDetailedConditionViewContainer.setVisibility(View.VISIBLE);
+        if (selectedConditions != null) {
+            Integer summarizedKey = selectedConditions.getValue().intValue();
+            int firstIndex = 1;
+            switch (summarizedKey) {
+                //Find the persistence object through a DAO
+                case 30:
+                    selectedPpersistence = (Persistence) persistenceListView.getAdapter().getItem(firstIndex);
+                    selectedAperture = (Aperture) apertureListView.getAdapter().getItem(firstIndex);
+                    selectedRoughness = (Roughness) roughnessListView.getAdapter().getItem(firstIndex);
+                    selectedInfilling = (Infilling) infillingListView.getAdapter().getItem(firstIndex);
+                    selectedWeathering = (Weathering) weatheringListView.getAdapter().getItem(firstIndex);
+                    break;
 
-                        case 20:
-                            selectedPpersistence = (Persistence) persistenceListView.getAdapter().getItem(firstIndex + 2);
-                            selectedAperture = (Aperture) apertureListView.getAdapter().getItem(firstIndex + 2);
-                            selectedRoughness = (Roughness) roughnessListView.getAdapter().getItem(firstIndex + 2);
-                            selectedInfilling = (Infilling) infillingListView.getAdapter().getItem(firstIndex + 2);
-                            selectedWeathering = (Weathering) weatheringListView.getAdapter().getItem(firstIndex + 2);
-                            break;
+                case 25:
+                    selectedPpersistence = (Persistence) persistenceListView.getAdapter().getItem(firstIndex + 1);
+                    selectedAperture = (Aperture) apertureListView.getAdapter().getItem(firstIndex + 1);
+                    selectedRoughness = (Roughness) roughnessListView.getAdapter().getItem(firstIndex + 1);
+                    selectedInfilling = (Infilling) infillingListView.getAdapter().getItem(firstIndex + 1);
+                    selectedWeathering = (Weathering) weatheringListView.getAdapter().getItem(firstIndex + 1);
+                    break;
 
-                        case 10:
-                            selectedPpersistence = (Persistence) persistenceListView.getAdapter().getItem(firstIndex + 3);
-                            selectedAperture = (Aperture) apertureListView.getAdapter().getItem(firstIndex + 3);
-                            selectedRoughness = (Roughness) roughnessListView.getAdapter().getItem(firstIndex + 3);
-                            selectedInfilling = (Infilling) infillingListView.getAdapter().getItem(firstIndex + 3);
-                            selectedWeathering = (Weathering) weatheringListView.getAdapter().getItem(firstIndex + 3);
-                            break;
+                case 20:
+                    selectedPpersistence = (Persistence) persistenceListView.getAdapter().getItem(firstIndex + 2);
+                    selectedAperture = (Aperture) apertureListView.getAdapter().getItem(firstIndex + 2);
+                    selectedRoughness = (Roughness) roughnessListView.getAdapter().getItem(firstIndex + 2);
+                    selectedInfilling = (Infilling) infillingListView.getAdapter().getItem(firstIndex + 2);
+                    selectedWeathering = (Weathering) weatheringListView.getAdapter().getItem(firstIndex + 2);
+                    break;
 
-                        case 0:
-                            selectedPpersistence = (Persistence) persistenceListView.getAdapter().getItem(firstIndex + 4);
-                            selectedAperture = (Aperture) apertureListView.getAdapter().getItem(firstIndex + 4);
-                            selectedRoughness = (Roughness) roughnessListView.getAdapter().getItem(firstIndex + 4);
-                            selectedInfilling = (Infilling) infillingListView.getAdapter().getItem(firstIndex + 4);
-                            selectedWeathering = (Weathering) weatheringListView.getAdapter().getItem(firstIndex + 4);
-                            break;
+                case 10:
+                    selectedPpersistence = (Persistence) persistenceListView.getAdapter().getItem(firstIndex + 3);
+                    selectedAperture = (Aperture) apertureListView.getAdapter().getItem(firstIndex + 3);
+                    selectedRoughness = (Roughness) roughnessListView.getAdapter().getItem(firstIndex + 3);
+                    selectedInfilling = (Infilling) infillingListView.getAdapter().getItem(firstIndex + 3);
+                    selectedWeathering = (Weathering) weatheringListView.getAdapter().getItem(firstIndex + 3);
+                    break;
 
-                    }
-                    getRMRCalculationContext().setWeathering(selectedWeathering);
-                    setupWeatheringListView();
-                    getRMRCalculationContext().setPersistence(selectedPpersistence);
-                    setupPersistenceListView();
-                    getRMRCalculationContext().setAperture(selectedAperture);
-                    setupApertureListView();
-                    getRMRCalculationContext().setRoughness(selectedRoughness);
-                    setupRoughnessListView();
-                    getRMRCalculationContext().setInfilling(selectedInfilling);
-                    setupInfillingListView();
-                    getRMRCalculationContext().setConditionDiscontinuities(null);
-                    setupGeneralConditionListView();
-                }
-                mSummarizedConditionViewContainer.setVisibility(View.GONE);
-                summarizedListview.clearChoices();
-                selectedConditions = null;
-                mDetailedConditionViewContainer.setVisibility(View.VISIBLE);
-                break;
+                case 0:
+                    selectedPpersistence = (Persistence) persistenceListView.getAdapter().getItem(firstIndex + 4);
+                    selectedAperture = (Aperture) apertureListView.getAdapter().getItem(firstIndex + 4);
+                    selectedRoughness = (Roughness) roughnessListView.getAdapter().getItem(firstIndex + 4);
+                    selectedInfilling = (Infilling) infillingListView.getAdapter().getItem(firstIndex + 4);
+                    selectedWeathering = (Weathering) weatheringListView.getAdapter().getItem(firstIndex + 4);
+                    break;
 
+            }
+            getRMRCalculationContext().setWeathering(selectedWeathering);
+            setupWeatheringListView();
+            getRMRCalculationContext().setPersistence(selectedPpersistence);
+            setupPersistenceListView();
+            getRMRCalculationContext().setAperture(selectedAperture);
+            setupApertureListView();
+            getRMRCalculationContext().setRoughness(selectedRoughness);
+            setupRoughnessListView();
+            getRMRCalculationContext().setInfilling(selectedInfilling);
+            setupInfillingListView();
+            getRMRCalculationContext().setConditionDiscontinuities(null);
+            setupGeneralConditionListView();
         }
+        mSummarizedConditionViewContainer.setVisibility(View.GONE);
+        summarizedListview.clearChoices();
+        selectedConditions = null;
+        mDetailedConditionViewContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void showSummarizedConditions() {
+        mSummarizedConditionViewContainer.setVisibility(View.VISIBLE);
+        selectedConditions = (ConditionDiscontinuities) summarizedListview.getItemAtPosition(1);
+        getRMRCalculationContext().setConditionDiscontinuities(selectedConditions);
+        persistenceListView.clearChoices();
+        apertureListView.clearChoices();
+        roughnessListView.clearChoices();
+        infillingListView.clearChoices();
+        weatheringListView.clearChoices();
+        mDetailedConditionViewContainer.setVisibility(View.GONE);
     }
 
 }
