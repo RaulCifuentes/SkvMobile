@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.metric.skava.BuildConfig;
 import com.metric.skava.app.util.SkavaConstants;
-import com.metric.skava.calculator.barton.model.RQD;
 import com.metric.skava.calculator.rmr.logic.RMRCalculator;
 import com.metric.skava.calculator.rmr.logic.RMRInput;
 import com.metric.skava.calculator.rmr.logic.RMROutput;
@@ -15,7 +14,7 @@ public class RMR_Calculation implements Parcelable {
 
     private Long _id;
     private StrengthOfRock strengthOfRock;
-    private RQD rqd;
+    private RQD_RMR rqd;
     private Spacing spacing;
     //    private ConditionDiscontinuities conditionDiscontinuities;
     private Persistence persistence;
@@ -36,8 +35,8 @@ public class RMR_Calculation implements Parcelable {
 
 
     //    public RMR_Calculation(StrengthOfRock strenght, RQD_RMR rqd, Spacing spacing, ConditionDiscontinuities condition, Persistence persistence, Aperture aperture, Roughness roughness, Infilling infilling, Weathering weathering, Groundwater groundwater, OrientationDiscontinuities orientation) {
-//    public RMR_Calculation(StrengthOfRock strenght, RQD_RMR rqd, Spacing spacing, Persistence persistence, Aperture aperture, Roughness roughness, Infilling infilling, Weathering weathering, Groundwater groundwater, OrientationDiscontinuities orientation) {
-    public RMR_Calculation(StrengthOfRock strenght, RQD rqd, Spacing spacing, Persistence persistence, Aperture aperture, Roughness roughness, Infilling infilling, Weathering weathering, Groundwater groundwater, OrientationDiscontinuities orientation) {
+    public RMR_Calculation(StrengthOfRock strenght, RQD_RMR rqd, Spacing spacing, Persistence persistence, Aperture aperture, Roughness roughness, Infilling infilling, Weathering weathering, Groundwater groundwater, OrientationDiscontinuities orientation) {
+//    public RMR_Calculation(StrengthOfRock strenght, RQD rqd, Spacing spacing, Persistence persistence, Aperture aperture, Roughness roughness, Infilling infilling, Weathering weathering, Groundwater groundwater, OrientationDiscontinuities orientation) {
         super();
         this.strengthOfRock = strenght;
         this.rqd = rqd;
@@ -100,11 +99,11 @@ public class RMR_Calculation implements Parcelable {
         this.orientationDiscontinuities = orientationDiscontinuities;
     }
 
-    public RQD getRqd() {
+    public RQD_RMR getRqd() {
         return rqd;
     }
 
-    public void setRqd(RQD rqd) {
+    public void setRqd(RQD_RMR rqd) {
         this.rqd = rqd;
     }
 
@@ -224,7 +223,7 @@ public class RMR_Calculation implements Parcelable {
                         + " : createFromParcel ");
             }
             StrengthOfRock strength = (StrengthOfRock) in.readValue(RMR_Calculation.class.getClassLoader());
-            RQD rqd = (RQD) in.readValue(RMR_Calculation.class.getClassLoader());
+            RQD_RMR rqd = (RQD_RMR) in.readValue(RMR_Calculation.class.getClassLoader());
             Spacing spacing = (Spacing) in.readValue(RMR_Calculation.class.getClassLoader());
 //            ConditionDiscontinuities condition = (ConditionDiscontinuities) in.readValue(RMR_Calculation.class.getClassLoader());
             Persistence persistence = (Persistence) in.readValue(RMR_Calculation.class.getClassLoader());
@@ -250,7 +249,7 @@ public class RMR_Calculation implements Parcelable {
     // object)
     private RMR_Calculation(Parcel in) {
         strengthOfRock = (StrengthOfRock) in.readValue(RMR_Calculation.class.getClassLoader());
-        rqd = (RQD) in.readValue(RMR_Calculation.class.getClassLoader());
+        rqd = (RQD_RMR) in.readValue(RMR_Calculation.class.getClassLoader());
         spacing = (Spacing) in.readValue(RMR_Calculation.class.getClassLoader());
 //        conditionDiscontinuities = (ConditionDiscontinuities) in.readValue(RMR_Calculation.class.getClassLoader());
         persistence = (Persistence) in.readValue(RMR_Calculation.class.getClassLoader());

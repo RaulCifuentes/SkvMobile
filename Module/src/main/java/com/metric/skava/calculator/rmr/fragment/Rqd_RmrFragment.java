@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.metric.skava.R;
 import com.metric.skava.calculator.adapter.MultiColumnMappedIndexArrayAdapter;
-import com.metric.skava.calculator.barton.model.RQD;
 import com.metric.skava.calculator.rmr.model.RQD_RMR;
 
 import java.util.List;
@@ -53,10 +52,11 @@ public class Rqd_RmrFragment extends RMRCalculatorBaseFragment {
         final int numberOfHeaders = listview.getHeaderViewsCount();
         listview.setAdapter(adapter);
 
-        RQD rqd = getRMRCalculationContext().getRqd();
+        RQD_RMR rqd = getRMRCalculationContext().getRqd();
         if (rqd != null) {
-            RQD_RMR wrapperRqd = RQD_RMR.findWrapper(rqd);
-            int posIndex = adapter.getPosition(wrapperRqd);
+//            RQD_RMR wrapperRqd = RQD_RMR.findWrapper(rqd);
+//            int posIndex = adapter.getPosition(wrapperRqd);
+            int posIndex = adapter.getPosition(rqd);
             posIndex += numberOfHeaders;
             listview.setItemChecked(posIndex, true);
         }
@@ -66,8 +66,9 @@ public class Rqd_RmrFragment extends RMRCalculatorBaseFragment {
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
                 RQD_RMR selectedItem = (RQD_RMR) parent.getItemAtPosition(position);
-                RQD bareRqd = selectedItem.getWrappedRqd();
-                getRMRCalculationContext().setRqd(bareRqd);
+//                RQD bareRqd = selectedItem.getWrappedRqd();
+//                getRMRCalculationContext().setRqd(bareRqd);
+                getRMRCalculationContext().setRqd(selectedItem);
             }
 
         });

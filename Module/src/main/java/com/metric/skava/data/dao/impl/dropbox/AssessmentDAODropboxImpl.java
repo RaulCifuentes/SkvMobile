@@ -29,6 +29,7 @@ import com.metric.skava.calculator.rmr.model.Infilling;
 import com.metric.skava.calculator.rmr.model.OrientationDiscontinuities;
 import com.metric.skava.calculator.rmr.model.Persistence;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
+import com.metric.skava.calculator.rmr.model.RQD_RMR;
 import com.metric.skava.calculator.rmr.model.Roughness;
 import com.metric.skava.calculator.rmr.model.Spacing;
 import com.metric.skava.calculator.rmr.model.StrengthOfRock;
@@ -408,7 +409,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     rmrCalculationFields.set("orientation", orientationDiscontinuities.getKey());
                 }
 
-                RQD rqd = rmrCalculation.getRqd();
+                RQD_RMR rqd = rmrCalculation.getRqd();
                 if (rqd != null) {
                 rmrCalculationFields.set("rqd", rqd.getValue());
                 }
