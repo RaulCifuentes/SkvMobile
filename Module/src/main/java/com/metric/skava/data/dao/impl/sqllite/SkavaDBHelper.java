@@ -68,7 +68,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "mySkavaDatabase.db";
 
-    public static final int DATABASE_VERSION = 25;
+    public static final int DATABASE_VERSION = 26;
 
     public SkavaDBHelper(Context context, String name,
                          SQLiteDatabase.CursorFactory factory, int version) {
@@ -181,6 +181,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         db.execSQL(QCalculationTable.CREATE_QCALCULATION_TABLE);
         db.execSQL(RMRCalculationTable.CREATE_RMRCALCULATION_TABLE);
         db.execSQL(DiscontinuityFamilyTable.CREATE_DISCONTINUITY_FAMILIES_TABLE);
+        db.execSQL(SupportRecomendationTable.CREATE_RECOMENDATIONS_TABLE);
 
         // ******************** Assessment ********************
 

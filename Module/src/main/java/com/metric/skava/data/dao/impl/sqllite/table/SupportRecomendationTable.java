@@ -29,11 +29,11 @@ public class SupportRecomendationTable extends SkavaTable {
             BOLT_DIAMETER_COLUMN + " real not null, " +
             BOLT_LENGTH_COLUMN + " real not null, " +
             SHOTCRETE_TYPE_CODE_COLUMN + " text not null, " +
-            THICKNESS_COLUMN + " text not null, " +
+            THICKNESS_COLUMN + " real not null, " +
             MESH_TYPE_CODE_COLUMN + " text not null, " +
             COVERAGE_CODE_COLUMN + " text not null, " +
             ARCH_TYPE_CODE_COLUMN + " text not null, " +
-            SEPARATION_COLUMN + " real not null " +
+            SEPARATION_COLUMN + " real not null, " +
             OBSERVATIONS_COLUMN + " text null " +
             " );";
 

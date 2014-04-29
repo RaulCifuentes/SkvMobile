@@ -362,6 +362,11 @@ public class MappingReportMainFragment extends SkavaFragment {
             if (separation != null) {
                 ((TextView) rootView.findViewById(R.id.report_separacion_value)).setText(numberFormat.format(separation));
             }
+
+            String observations = recomendation.getObservations();
+            if (observations != null) {
+                ((TextView) rootView.findViewById(R.id.report_observaciones_soporte_value)).setText(observations);
+            }
         }
 
         List<DiscontinuityFamily> discontinuitiesSystem = currentAssessment.getDiscontinuitySystem();

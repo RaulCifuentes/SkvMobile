@@ -277,7 +277,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 SupportRecomendationTable.ARCH_TYPE_CODE_COLUMN,
                 SupportRecomendationTable.SEPARATION_COLUMN
         };
-//        SupportRecomendation recomendation = newSkavaEntity.getRecomendation();
+        SupportRecomendation recomendation = newSkavaEntity.getRecomendation();
 //        Object[] recomendationValues = new Object[]{
 //                newSkavaEntity.getCode(),
 //                recomendation.getBoltType().getCode(),
