@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class CoverageDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Coverage> implements LocalCoverageDAO {
+public class CoverageDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Coverage> implements LocalCoverageDAO {
 
     public CoverageDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
         super(context, skavaContext);
@@ -34,7 +34,6 @@ public class CoverageDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Cov
             list.add(newInstance);
         }
         return list;
-
     }
 
 
@@ -57,17 +56,17 @@ public class CoverageDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Cov
 
     @Override
     protected void savePersistentEntity(String tableName, Coverage newSkavaEntity) throws DAOException {
-
+        saveSkavaEntity(tableName, newSkavaEntity);
     }
 
     @Override
     public boolean deleteCoverage(String code) {
-        return false;
+        return deleteIdentifiableEntity(CoverageTable.COVERAGE_DATABASE_TABLE, code);
     }
 
     @Override
     public int deleteAllCoverages() {
-        return 0;
+        return deleteAllPersistentEntities(CoverageTable.COVERAGE_DATABASE_TABLE);
     }
 
 

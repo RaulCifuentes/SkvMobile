@@ -4,9 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.metric.skava.app.context.SkavaContext;
-import com.metric.skava.calculator.model.Index;
 import com.metric.skava.calculator.rmr.model.Spacing;
-import com.metric.skava.data.dao.LocalIndexDAO;
 import com.metric.skava.data.dao.LocalSpacingDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.helper.MappedIndexInstanceBuilder4SqlLite;
@@ -71,10 +69,11 @@ public class SpacingDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Spac
 
     @Override
     protected void savePersistentEntity(String tableName, Spacing newSkavaEntity) throws DAOException {
-
-        LocalIndexDAO indexDAO = getDAOFactory().getLocalIndexDAO();
-        Index index = indexDAO.getIndexByCode(Spacing.INDEX_CODE);
-        String indexCode = index.getCode();
+        //  LocalIndexDAO indexDAO = getDAOFactory().getLocalIndexDAO();
+        //  Index index = indexDAO.getIndexByCode(Spacing.INDEX_CODE);
+        //  Test if this is to map the indexes and grop codes on Fabian model is necessary
+        //  String indexCode = index.getCode();
+        String indexCode = Spacing.INDEX_CODE;
 
         String[] colNames = {SpacingTable.INDEX_CODE_COLUMN,
                 SpacingTable.GROUP_CODE_COLUMN,

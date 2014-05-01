@@ -18,6 +18,15 @@ public class RmrIndexesDropboxTable extends DropboxBaseTable implements DropboxT
         return mDatastore.getTable("RmrIndexes");
     }
 
+    @Override
+    public boolean shouldSortByOrdinalColumn() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldSortByKeyColumn() {
+        return true;
+    }
 
 
 }

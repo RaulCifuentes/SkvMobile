@@ -10,10 +10,14 @@ public class MappedIndexTable extends SkavaEntityTable {
 
     public static final String INDEX_DATABASE_TABLE = "Indexes";
 
+    public static final String KEY_COLUMN = "KEY";
+
+
     public static final String CREATE_INDEXES_TABLE = "create table " +
             INDEX_DATABASE_TABLE + " (" + GLOBAL_KEY_ID +
             " integer primary key autoincrement, " +
             CODE_COLUMN + " text not null, " +
+            KEY_COLUMN + " text not null, " +
             NAME_COLUMN + " text not null  );";
 
     public static final String INSERT_INDEXES_TABLE = "insert into " + INDEX_DATABASE_TABLE + "(" + CODE_COLUMN + "," + NAME_COLUMN + ") values('RQD','Rock Quality Designation')";

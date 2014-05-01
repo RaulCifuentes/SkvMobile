@@ -28,17 +28,17 @@ public class PersistenceDAODropboxImpl extends DropBoxBaseDAO implements RemoteP
     }
 
 
-    private String getSpaceParameterId() throws DAOException {
-        DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "RMR_Persistence");
+    private String getPersistenceParameterId() throws DAOException {
+        DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "RMR_Persistance");
         String codigo = foundRecord.getString("ParameterId");
         return codigo;
     }
 
     @Override
     public List<Persistence> getAllPersistences() throws DAOException {
-        String spacingparameterId = getSpaceParameterId();
+        String spacingparameterId = getPersistenceParameterId();
         List<Persistence> listPersistences = new ArrayList<Persistence>();
-        String[] names = new String[]{"ParameterId"};
+        String[] names = new String[]{"FkParameterId"};
         String[] values = new String[]{spacingparameterId};
         List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
         for (DbxRecord currentDbxRecord : recordList) {

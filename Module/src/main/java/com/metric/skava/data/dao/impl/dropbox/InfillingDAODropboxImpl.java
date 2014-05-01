@@ -38,7 +38,7 @@ public class InfillingDAODropboxImpl extends DropBoxBaseDAO implements RemoteInf
     public List<Infilling> getAllInfillings() throws DAOException {
         String spacingparameterId = getSpaceParameterId();
         List<Infilling> listInfillings = new ArrayList<Infilling>();
-        String[] names = new String[]{"ParameterId"};
+        String[] names = new String[]{"FkParameterId"};
         String[] values = new String[]{spacingparameterId};
         List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
         for (DbxRecord currentDbxRecord : recordList) {

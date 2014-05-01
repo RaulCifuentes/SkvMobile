@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/18/14.
  */
-public class RoughnessDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalRoughnessDAO {
+public class RoughnessDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Roughness> implements LocalRoughnessDAO {
 
     private Context mContext;
     private MappedIndexInstanceBuilder4SqlLite mappedIndexInstaceBuilder;
@@ -29,6 +29,13 @@ public class RoughnessDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalRoug
         super(context, skavaContext);
         mContext = context;
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
+    }
+
+
+
+    @Override
+    protected List<Roughness> assemblePersistentEntities(Cursor cursor) throws DAOException {
+        return null;
     }
 
     @Override
@@ -68,18 +75,54 @@ public class RoughnessDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalRoug
 
 
     @Override
-    public void saveRoughness(Roughness assessment) throws DAOException {
+    public void saveRoughness(Roughness newRoughness) throws DAOException {
+        savePersistentEntity(RoughnessTable.MAPPED_INDEX_DATABASE_TABLE, newRoughness);
+    }
 
+    @Override
+    protected void savePersistentEntity(String tableName, Roughness newSkavaEntity) throws DAOException {
+        //  LocalIndexDAO indexDAO = getDAOFactory().getLocalIndexDAO();
+        //  Index index = indexDAO.getIndexByCode(Spacing.INDEX_CODE);
+        //  Test if this is to map the indexes and grop codes on Fabian model is necessary
+        //  String indexCode = index.getCode();
+        String indexCode = Roughness.INDEX_CODE;
+
+        String[] colNames = {RoughnessTable.INDEX_CODE_COLUMN,
+                RoughnessTable.GROUP_CODE_COLUMN,
+                RoughnessTable.CODE_COLUMN,
+                RoughnessTable.KEY_COLUMN,
+                RoughnessTable.SHORT_DESCRIPTION_COLUMN,
+                RoughnessTable.DESCRIPTION_COLUMN,
+                RoughnessTable.VALUE_COLUMN};
+
+        Object[] colValues = {
+                indexCode,
+                newSkavaEntity.getGroupName(),
+                newSkavaEntity.getCode(),
+                newSkavaEntity.getKey(),
+                newSkavaEntity.getShortDescription(),
+                newSkavaEntity.getDescription(),
+                newSkavaEntity.getValue()
+        };
+        saveRecord(tableName, colNames, colValues);
     }
 
     @Override
     public boolean deleteRoughness(String indexCode, String groupCode, String code) {
-        return false;
+        String[] colNames = {RoughnessTable.INDEX_CODE_COLUMN,
+                RoughnessTable.GROUP_CODE_COLUMN,
+                RoughnessTable.CODE_COLUMN};
+        Object[] colValues = {
+                indexCode,
+                groupCode,
+                code};
+        int howMany = deletePersistentEntitiesFilteredByColumns(RoughnessTable.MAPPED_INDEX_DATABASE_TABLE, colNames, colValues);
+        return (howMany == 1);
     }
 
     @Override
     public int deleteAllRoughnesses() {
-        return 0;
+        return deleteAllPersistentEntities(RoughnessTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
 

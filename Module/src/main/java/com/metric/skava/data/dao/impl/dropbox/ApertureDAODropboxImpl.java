@@ -38,7 +38,7 @@ public class ApertureDAODropboxImpl extends DropBoxBaseDAO implements RemoteAper
     public List<Aperture> getAllApertures() throws DAOException {
         String spacingparameterId = getSpaceParameterId();
         List<Aperture> listApertures = new ArrayList<Aperture>();
-        String[] names = new String[]{"ParameterId"};
+        String[] names = new String[]{"FkParameterId"};
         String[] values = new String[]{spacingparameterId};
         List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
         for (DbxRecord currentDbxRecord : recordList) {

@@ -18,6 +18,15 @@ public class ParametersDropboxTable extends DropboxBaseTable implements DropboxT
         return mDatastore.getTable("Parameters");
     }
 
+    @Override
+    public boolean shouldSortByOrdinalColumn() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldSortByKeyColumn() {
+        return false;
+    }
 
 
 }

@@ -29,8 +29,9 @@ public class GroupDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Group>
         List<Group> list = new ArrayList<Group>();
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(MappedIndexGroupsTable.CODE_COLUMN, cursor);
+            String key = CursorUtils.getString(MappedIndexGroupsTable.KEY_COLUMN, cursor);
             String name = CursorUtils.getString(MappedIndexGroupsTable.NAME_COLUMN, cursor);
-            Group newInstance = new Group(code, name);
+            Group newInstance = new Group(code, key, name);
             list.add(newInstance);
         }
         return list;
@@ -39,7 +40,7 @@ public class GroupDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Group>
 
     @Override
     public Group getGroupByCode(String code) throws DAOException {
-        Group entity = getIdentifiableEntityByCode(MappedIndexGroupsTable.CODE_COLUMN, code);
+        Group entity = getIdentifiableEntityByCode(MappedIndexGroupsTable.GROUPS_DATABASE_TABLE, code);
         return entity;
     }
 
@@ -58,8 +59,8 @@ public class GroupDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Group>
 
     @Override
     protected void savePersistentEntity(String tableName, Group newSkavaEntity) throws DAOException {
-        String[] colNames = {MappedIndexGroupsTable.INDEX_CODE_COLUMN, MappedIndexGroupsTable.CODE_COLUMN, MappedIndexGroupsTable.NAME_COLUMN};
-        String[] colValues = {newSkavaEntity.getIndex().getCode(), newSkavaEntity.getCode(), newSkavaEntity.getName() };
+        String[] colNames = {MappedIndexGroupsTable.INDEX_CODE_COLUMN, MappedIndexGroupsTable.CODE_COLUMN, MappedIndexGroupsTable.KEY_COLUMN, MappedIndexGroupsTable.NAME_COLUMN};
+        String[] colValues = {newSkavaEntity.getIndex().getCode(), newSkavaEntity.getCode(), newSkavaEntity.getKey(), newSkavaEntity.getName() };
         saveRecord(tableName, colNames, colValues);
     }
 

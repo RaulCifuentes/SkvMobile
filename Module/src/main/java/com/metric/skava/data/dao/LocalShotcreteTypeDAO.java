@@ -18,7 +18,7 @@ public interface LocalShotcreteTypeDAO {
 
     public boolean deleteShotcreteType(String code);
 
-    public int deleteEmptyShotcreteTypes(String tableName);
+    public int deleteAllShotcreteTypes();
 
 
 }

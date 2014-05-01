@@ -12,12 +12,14 @@ public class MappedIndexGroupsTable extends SkavaEntityTable {
 
 
     public static final String INDEX_CODE_COLUMN = "INDEX_CODE";
+    public static final String KEY_COLUMN = "KEY";
 
     public static final String CREATE_GROUP_TABLE = "create table " +
             GROUPS_DATABASE_TABLE + " (" + GLOBAL_KEY_ID +
             " integer primary key autoincrement, " +
             INDEX_CODE_COLUMN + " text not null, " +
             CODE_COLUMN + " text not null, " +
+            KEY_COLUMN + " text not null, " +
             NAME_COLUMN + " text not null  );";
 
 

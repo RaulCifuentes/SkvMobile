@@ -6,9 +6,7 @@ import java.io.Serializable;
 
 public class Ja extends MappedIndex implements Serializable {
 
-//    public static final int a = 10;
-//    public static final int b = 20;
-//    public static final int c = 30;
+    public static final String INDEX_CODE = "Ja";
 
     private Group group;
 
@@ -30,29 +28,9 @@ public class Ja extends MappedIndex implements Serializable {
 
 
 	public Ja(Group group, String code, String key, String shortDescription, String longDescription, Double value) {
-        super(code, key, shortDescription, longDescription,value);
+        super(code, key, shortDescription, longDescription, value);
         setGroup(group);
-//		setKey(key);
-//        getCategoriesAndValues()[0][0] = MappedIndex.DESCRIPTION;
-//        getCategoriesAndValues()[1][0] = longDescription;
-//		setValue(value);
 	}
-
-//    public String getGroupTypeName(){
-//        String text = null;
-//        switch (getGroupType()){
-//            case Ja.a:
-//                text = "a.";
-//                break;
-//            case Ja.b:
-//                text = "b.";
-//                break;
-//            case Ja.c:
-//                text = "c.";
-//                break;
-//        }
-//        return text;
-//    }
 
     public void setGroup(Group group) {
         this.group = group;

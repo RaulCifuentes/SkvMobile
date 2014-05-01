@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/18/14.
  */
-public class JrDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalJrDAO {
+public class JrDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Jr> implements LocalJrDAO {
 
     private MappedIndexInstanceBuilder4SqlLite mappedIndexInstaceBuilder;
 
@@ -32,7 +32,7 @@ public class JrDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalJrDAO {
         String[] names = new String[]{JrTable.INDEX_CODE_COLUMN, JrTable.GROUP_CODE_COLUMN, JrTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(JrTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
-        List<Jr> list = assambleJrs(cursor);
+        List<Jr> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
             throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
@@ -44,7 +44,8 @@ public class JrDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalJrDAO {
     }
 
 
-    protected List<Jr> assambleJrs(Cursor cursor) throws DAOException {
+    @Override
+    protected List<Jr> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<Jr> list = new ArrayList<Jr>();
         while (cursor.moveToNext()) {
             Jr newInstance = mappedIndexInstaceBuilder.buildJrFromCursorRecord(cursor);
@@ -56,39 +57,63 @@ public class JrDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalJrDAO {
 
     @Override
     public List<Jr> getAllJrs(Jr.Group group) throws DAOException {
-//        Cursor cursor = getAllRecords(JrTable.MAPPED_INDEX_DATABASE_TABLE);
-//        String groupAsString = null;
-//        switch (group) {
-//            case a:
-//                groupAsString = "a";
-//                break;
-//            case b:
-//                groupAsString = "b";
-//                break;
-//            case c:
-//                groupAsString = "c";
-//                break;
-//        }
         Cursor cursor = getRecordsFilteredByColumn(JrTable.MAPPED_INDEX_DATABASE_TABLE, JrTable.GROUP_CODE_COLUMN, group.name(), null);
-        List<Jr> list = assambleJrs(cursor);
+        List<Jr> list = assemblePersistentEntities(cursor);
         cursor.close();
         return list;
     }
 
 
     @Override
-    public void saveJr(Jr assessment) throws DAOException {
-
+    public void saveJr(Jr newJr) throws DAOException {
+        savePersistentEntity(JrTable.MAPPED_INDEX_DATABASE_TABLE, newJr);
     }
 
     @Override
+    protected void savePersistentEntity(String tableName, Jr newSkavaEntity) throws DAOException {
+        //  LocalIndexDAO indexDAO = getDAOFactory().getLocalIndexDAO();
+        //  Index index = indexDAO.getIndexByCode(Spacing.INDEX_CODE);
+        //  Test if this is to map the indexes and grop codes on Fabian model is necessary
+        //  String indexCode = index.getCode();
+        String indexCode = Jr.INDEX_CODE;
+
+        String[] colNames = {JrTable.INDEX_CODE_COLUMN,
+                JrTable.GROUP_CODE_COLUMN,
+                JrTable.CODE_COLUMN,
+                JrTable.KEY_COLUMN,
+                JrTable.SHORT_DESCRIPTION_COLUMN,
+                JrTable.DESCRIPTION_COLUMN,
+                JrTable.VALUE_COLUMN};
+
+        Object[] colValues = {
+                indexCode,
+                newSkavaEntity.getGroupName(),
+                newSkavaEntity.getCode(),
+                newSkavaEntity.getKey(),
+                newSkavaEntity.getShortDescription(),
+                newSkavaEntity.getDescription(),
+                newSkavaEntity.getValue()
+        };
+        saveRecord(tableName, colNames, colValues);
+    }
+
+
+    @Override
     public boolean deleteJr(String indexCode, String groupCode, String code) {
-        return false;
+        String[] colNames = {JrTable.INDEX_CODE_COLUMN,
+                JrTable.GROUP_CODE_COLUMN,
+                JrTable.CODE_COLUMN};
+        Object[] colValues = {
+                indexCode,
+                groupCode,
+                code};
+        int howMany = deletePersistentEntitiesFilteredByColumns(JrTable.MAPPED_INDEX_DATABASE_TABLE, colNames, colValues);
+        return (howMany == 1);
     }
 
     @Override
     public int deleteAllJrs() {
-        return 0;
+        return deleteAllPersistentEntities(JrTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
 

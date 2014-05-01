@@ -18,8 +18,15 @@ public class ClientDropboxTable extends DropboxBaseTable implements DropboxTable
         return mDatastore.getTable("Clients");
     }
 
+    @Override
+    public boolean shouldSortByOrdinalColumn() {
+        return false;
+    }
 
-
+    @Override
+    public boolean shouldSortByKeyColumn() {
+        return false;
+    }
 
 
 }

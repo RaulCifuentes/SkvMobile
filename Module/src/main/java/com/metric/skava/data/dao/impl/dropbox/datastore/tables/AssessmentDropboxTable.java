@@ -22,6 +22,15 @@ public class AssessmentDropboxTable extends DropboxBaseTable implements DropboxT
         return mDatastore.getTable("Assessment");
     }
 
+    @Override
+    public boolean shouldSortByOrdinalColumn() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldSortByKeyColumn() {
+        return false;
+    }
 
 
     public DbxRecord findRecordByInternalCode(String internalCode) throws DAOException {

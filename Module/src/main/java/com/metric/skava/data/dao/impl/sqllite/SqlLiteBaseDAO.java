@@ -128,12 +128,6 @@ public abstract class SqlLiteBaseDAO {
                         newValues.put(columnName, (Double) columnValue);
                     } else if (columnType.equals(Boolean.class) || columnType.equals(boolean.class)) {
                         newValues.put(columnName, (Boolean) columnValue);
-                        //                }
-                        //                else if (Date.class.equals(columnType)) {
-                        //                    newValues.put(columnName, ((Date) column.get(this)).getTime());
-                        //                }
-                        //                else if (Calendar.class.equals(columnType)) {
-                        //                    newValues.put(columnName, ((Calendar) column.get(this)).getTimeInMillis());
                     } else {
                         newValues.put(columnName, String.valueOf(columnValue));
                     }
@@ -145,6 +139,9 @@ public abstract class SqlLiteBaseDAO {
             //just in case newId is needed sometime in the future
 //            long newId = db.insert(tableName, null, newValues);
             long newId = db.replace(tableName, null, newValues);
+            if (newId == -1 ){
+                throw new DAOException("Insert on "+ tableName + " failed when attemping to insert " + columnValues);
+            }
             return newId;
         } else {
             throw new DAOException("Criteria names[] and values[] must have the same number of elements.");

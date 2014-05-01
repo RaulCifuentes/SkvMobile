@@ -27,7 +27,6 @@ public class SpacingDAODropboxImpl extends DropBoxBaseDAO implements RemoteSpaci
         this.mIndexesTable = new RmrIndexesDropboxTable(getDatastore());
     }
 
-
     private String getSpaceParameterId() throws DAOException {
         DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "RMR_Spacing");
         String codigo = foundRecord.getString("ParameterId");
@@ -48,8 +47,6 @@ public class SpacingDAODropboxImpl extends DropBoxBaseDAO implements RemoteSpaci
             String description = currentDbxRecord.getString("IndexName");
             Double value = currentDbxRecord.getDouble("IndexScore");
             Spacing newSpacing = new Spacing(code, key, shortDescription, description, value);
-            newSpacing.setShortDescription(shortDescription);
-
             listSpacings.add(newSpacing);
         }
         return listSpacings;

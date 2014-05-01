@@ -38,7 +38,7 @@ public class WeatheringDAODropboxImpl extends DropBoxBaseDAO implements RemoteWe
     public List<Weathering> getAllWeatherings() throws DAOException {
         String spacingparameterId = getSpaceParameterId();
         List<Weathering> listWeatherings = new ArrayList<Weathering>();
-        String[] names = new String[]{"ParameterId"};
+        String[] names = new String[]{"FkParameterId"};
         String[] values = new String[]{spacingparameterId};
         List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
         for (DbxRecord currentDbxRecord : recordList) {

@@ -17,6 +17,15 @@ public class TunnelDropboxTable extends DropboxBaseTable implements DropboxTable
         return mDatastore.getTable("Tunnels");
     }
 
+    @Override
+    public boolean shouldSortByOrdinalColumn() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldSortByKeyColumn() {
+        return false;
+    }
 
 
 }

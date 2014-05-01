@@ -18,6 +18,15 @@ public class RmrParametersDropboxTable extends DropboxBaseTable implements Dropb
         return mDatastore.getTable("RmrParameters");
     }
 
+    @Override
+    public boolean shouldSortByOrdinalColumn() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldSortByKeyColumn() {
+        return false;
+    }
 
 
 }
