@@ -11,10 +11,7 @@ import java.util.List;
 public interface RemoteJrDAO {
 
 
-
     public List<Jr> getAllJrs() throws DAOException;
-
-
 
 
 }

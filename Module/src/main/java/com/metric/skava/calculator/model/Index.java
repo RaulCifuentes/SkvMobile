@@ -7,7 +7,18 @@ import com.metric.skava.app.data.SkavaEntity;
  */
 public class Index extends SkavaEntity {
 
-    public Index(String code, String name) {
+    private String key;
+
+    public Index(String code, String key, String name) {
         super(code, name);
+        setKey(key);
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

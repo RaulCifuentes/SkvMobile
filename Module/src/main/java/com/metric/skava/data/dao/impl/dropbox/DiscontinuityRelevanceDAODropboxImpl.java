@@ -30,11 +30,12 @@ public class DiscontinuityRelevanceDAODropboxImpl extends DropBoxBaseDAO impleme
     public List<DiscontinuityRelevance> getAllDiscontinuityRelevances() throws DAOException {
         List<DiscontinuityRelevance> listDiscontinuityRelevances = new ArrayList<DiscontinuityRelevance>();
         String[] names = new String[]{"ParameterName"} ;
-        String[] values = new String[]{"DSystem_Type"};
+        String[] values = new String[]{"DSystem_Relevance"};
         List<DbxRecord> recordList = mParametersTable.findRecordsByCriteria(names, values);
         for (DbxRecord currentDbxRecord : recordList) {
             String codigo = currentDbxRecord.getString("ParameterId");
             String nombre = currentDbxRecord.getString("ParameterValue");
+            Long ordinal = currentDbxRecord.getLong("ParameterOrder");
             DiscontinuityRelevance newType = new DiscontinuityRelevance(codigo, nombre);
             listDiscontinuityRelevances.add(newType);
         }

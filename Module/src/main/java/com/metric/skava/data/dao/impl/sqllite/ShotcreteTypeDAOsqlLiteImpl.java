@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class ShotcreteTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<ShotcreteType> implements LocalShotcreteTypeDAO {
+public class ShotcreteTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<ShotcreteType> implements LocalShotcreteTypeDAO {
 
     public ShotcreteTypeDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
         super(context, skavaContext);
@@ -56,17 +56,17 @@ public class ShotcreteTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDA
 
     @Override
     protected void savePersistentEntity(String tableName, ShotcreteType newSkavaEntity) throws DAOException {
-
+        saveSkavaEntity(tableName, newSkavaEntity);
     }
 
     @Override
     public boolean deleteShotcreteType(String code) {
-        return false;
+        return deleteIdentifiableEntity(ShotcreteTypeTable.SHOTCRETE_DATABASE_TABLE, code);
     }
 
     @Override
-    public int deleteEmptyShotcreteTypes(String tableName) {
-        return 0;
+    public int deleteAllShotcreteTypes() {
+        return deleteAllPersistentEntities(ShotcreteTypeTable.SHOTCRETE_DATABASE_TABLE);
     }
 
 

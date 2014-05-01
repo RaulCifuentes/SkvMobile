@@ -18,8 +18,15 @@ public class RoleDropboxTable extends DropboxBaseTable implements DropboxTable {
         return mDatastore.getTable("Roles");
     }
 
+    @Override
+    public boolean shouldSortByOrdinalColumn() {
+        return false;
+    }
 
-
+    @Override
+    public boolean shouldSortByKeyColumn() {
+        return false;
+    }
 
 
 }

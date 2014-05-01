@@ -12,5 +12,4 @@ public interface RemoteGroundwaterDAO {
 
     public List<Groundwater> getAllGroundwaters() throws DAOException;
 
-
 }

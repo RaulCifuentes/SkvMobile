@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/18/14.
  */
-public class GroundwaterDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalGroundwaterDAO {
+public class GroundwaterDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Groundwater> implements LocalGroundwaterDAO {
 
 
     private MappedIndexInstanceBuilder4SqlLite mappedIndexInstaceBuilder;
@@ -30,17 +30,23 @@ public class GroundwaterDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalGr
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
+
+    @Override
+    protected List<Groundwater> assemblePersistentEntities(Cursor cursor) throws DAOException {
+        return null;
+    }
+
     @Override
     public Groundwater getGroundwater(String indexCode, String groupCode, String code) throws DAOException {
         String[] names = new String[]{GroundwaterTable.INDEX_CODE_COLUMN, GroundwaterTable.GROUP_CODE_COLUMN, GroundwaterTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
-        Cursor cursor = getRecordsFilteredByColumns(GroundwaterTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
+        Cursor cursor = getRecordsFilteredByColumns(GroundwaterTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
         List<Groundwater> list = assambleGroundwaters(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
         }
         cursor.close();
         return list.get(0);
@@ -67,18 +73,54 @@ public class GroundwaterDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalGr
 
 
     @Override
-    public void saveGroundwater(Groundwater assessment) throws DAOException {
+    public void saveGroundwater(Groundwater newGroundwater) throws DAOException {
+        savePersistentEntity(GroundwaterTable.MAPPED_INDEX_DATABASE_TABLE, newGroundwater);
+    }
 
+    @Override
+    protected void savePersistentEntity(String tableName, Groundwater newSkavaEntity) throws DAOException {
+        //  LocalIndexDAO indexDAO = getDAOFactory().getLocalIndexDAO();
+        //  Index index = indexDAO.getIndexByCode(Spacing.INDEX_CODE);
+        //  Test if this is to map the indexes and grop codes on Fabian model is necessary
+        //  String indexCode = index.getCode();
+        String indexCode = Groundwater.INDEX_CODE;
+
+        String[] colNames = {GroundwaterTable.INDEX_CODE_COLUMN,
+                GroundwaterTable.GROUP_CODE_COLUMN,
+                GroundwaterTable.CODE_COLUMN,
+                GroundwaterTable.KEY_COLUMN,
+                GroundwaterTable.SHORT_DESCRIPTION_COLUMN,
+                GroundwaterTable.DESCRIPTION_COLUMN,
+                GroundwaterTable.VALUE_COLUMN};
+
+        Object[] colValues = {
+                indexCode,
+                newSkavaEntity.getGroupName(),
+                newSkavaEntity.getCode(),
+                newSkavaEntity.getKey(),
+                newSkavaEntity.getShortDescription(),
+                newSkavaEntity.getDescription(),
+                newSkavaEntity.getValue()
+        };
+        saveRecord(tableName, colNames, colValues);
     }
 
     @Override
     public boolean deleteGroundwater(String indexCode, String groupCode, String code) {
-        return false;
+        String[] colNames = {GroundwaterTable.INDEX_CODE_COLUMN,
+                GroundwaterTable.GROUP_CODE_COLUMN,
+                GroundwaterTable.CODE_COLUMN};
+        Object[] colValues = {
+                indexCode,
+                groupCode,
+                code};
+        int howMany = deletePersistentEntitiesFilteredByColumns(GroundwaterTable.MAPPED_INDEX_DATABASE_TABLE, colNames, colValues);
+        return (howMany == 1);
     }
 
     @Override
     public int deleteAllGroundwaters() {
-        return 0;
+        return deleteAllPersistentEntities(GroundwaterTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
 

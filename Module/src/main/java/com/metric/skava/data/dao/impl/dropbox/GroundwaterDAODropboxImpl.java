@@ -50,7 +50,19 @@ public class GroundwaterDAODropboxImpl extends DropBoxBaseDAO implements RemoteG
             Double value = currentDbxRecord.getDouble("IndexScore");
             String groupCode = currentDbxRecord.getString("FkCategoryId");
             Group group = getDAOFactory().getLocalGroupDAO().getGroupByCode(groupCode);
-            String groupName = group.getName();
+            String groupName = group.getKey();
+
+            //tx the model.group into the Class.Group
+            if (groupName.equalsIgnoreCase("a")) {
+                groupName = Groundwater.Group.INFLOW_LENGHT.name();
+            }
+            if (groupName.equalsIgnoreCase("b")){
+                groupName = Groundwater.Group.JOINT_PRESS_PRINCIPAL.name();
+            }
+            if (groupName.equalsIgnoreCase("c")){
+                groupName = Groundwater.Group.GENERAL_CONDITIONS.name();
+            }
+
             Groundwater.Group groundwaterGroup = Groundwater.Group.valueOf(groupName);
             Groundwater newGroundwater = new Groundwater(groundwaterGroup, code, key, shortDescription, description, value);
             newGroundwater.setShortDescription(shortDescription);

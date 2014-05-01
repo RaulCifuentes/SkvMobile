@@ -61,6 +61,8 @@ public abstract class MappedIndex implements IdentifiableEntity {
 //        return categoriesAndValues;
 //    }
 
+//    public abstract Group getGroup();
+
     public abstract String getGroupName();
 
     public String getDescription() {

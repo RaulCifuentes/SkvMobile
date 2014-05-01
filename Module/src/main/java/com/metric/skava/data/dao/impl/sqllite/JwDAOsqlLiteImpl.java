@@ -8,6 +8,7 @@ import com.metric.skava.calculator.barton.model.Jw;
 import com.metric.skava.data.dao.LocalJwDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.helper.MappedIndexInstanceBuilder4SqlLite;
+import com.metric.skava.data.dao.impl.sqllite.table.JrTable;
 import com.metric.skava.data.dao.impl.sqllite.table.JwTable;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/18/14.
  */
-public class JwDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalJwDAO {
+public class JwDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Jw> implements LocalJwDAO {
 
     private MappedIndexInstanceBuilder4SqlLite mappedIndexInstaceBuilder;
 
@@ -31,7 +32,7 @@ public class JwDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalJwDAO {
         String[] names = new String[]{JwTable.INDEX_CODE_COLUMN, JwTable.GROUP_CODE_COLUMN, JwTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(JwTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
-        List<Jw> list = assambleJws(cursor);
+        List<Jw> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
             throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
@@ -43,7 +44,8 @@ public class JwDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalJwDAO {
     }
 
 
-    protected List<Jw> assambleJws(Cursor cursor) throws DAOException {
+    @Override
+    protected List<Jw> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<Jw> list = new ArrayList<Jw>();
         while (cursor.moveToNext()) {
             Jw newInstance = mappedIndexInstaceBuilder.buildJwFromCursorRecord(cursor);
@@ -56,26 +58,62 @@ public class JwDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalJwDAO {
     @Override
     public List<Jw> getAllJws() throws DAOException {
         Cursor cursor = getAllRecords(JwTable.MAPPED_INDEX_DATABASE_TABLE);
-        List<Jw> list = assambleJws(cursor);
+        List<Jw> list = assemblePersistentEntities(cursor);
         cursor.close();
         return list;
     }
 
 
     @Override
-    public void saveJw(Jw assessment) throws DAOException {
-
+    public void saveJw(Jw newJw) throws DAOException {
+        savePersistentEntity(JrTable.MAPPED_INDEX_DATABASE_TABLE, newJw);
     }
 
     @Override
+    protected void savePersistentEntity(String tableName, Jw newSkavaEntity) throws DAOException {
+        //  LocalIndexDAO indexDAO = getDAOFactory().getLocalIndexDAO();
+        //  Index index = indexDAO.getIndexByCode(Spacing.INDEX_CODE);
+        //  Test if this is to map the indexes and grop codes on Fabian model is necessary
+        //  String indexCode = index.getCode();
+        String indexCode = Jw.INDEX_CODE;
+
+        String[] colNames = {JwTable.INDEX_CODE_COLUMN,
+                JwTable.GROUP_CODE_COLUMN,
+                JwTable.CODE_COLUMN,
+                JwTable.KEY_COLUMN,
+                JwTable.SHORT_DESCRIPTION_COLUMN,
+                JwTable.DESCRIPTION_COLUMN,
+                JwTable.VALUE_COLUMN};
+
+        Object[] colValues = {
+                indexCode,
+                newSkavaEntity.getGroupName(),
+                newSkavaEntity.getCode(),
+                newSkavaEntity.getKey(),
+                newSkavaEntity.getShortDescription(),
+                newSkavaEntity.getDescription(),
+                newSkavaEntity.getValue()
+        };
+        saveRecord(tableName, colNames, colValues);
+    }
+
+
+    @Override
     public boolean deleteJw(String indexCode, String groupCode, String code) {
-        return false;
+        String[] colNames = {JwTable.INDEX_CODE_COLUMN,
+                JwTable.GROUP_CODE_COLUMN,
+                JwTable.CODE_COLUMN};
+        Object[] colValues = {
+                indexCode,
+                groupCode,
+                code};
+        int howMany = deletePersistentEntitiesFilteredByColumns(JwTable.MAPPED_INDEX_DATABASE_TABLE, colNames, colValues);
+        return (howMany == 1);
     }
 
     @Override
     public int deleteAllJws() {
-        return 0;
+        return deleteAllPersistentEntities(JwTable.MAPPED_INDEX_DATABASE_TABLE);
     }
-
 
 }

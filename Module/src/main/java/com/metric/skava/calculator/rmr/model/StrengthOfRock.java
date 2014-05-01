@@ -7,6 +7,7 @@ import com.metric.skava.calculator.model.MappedIndex;
  */
 public class StrengthOfRock extends MappedIndex {
 
+    public static final String INDEX_CODE = "Strength";
     private Group group;
 
     public enum Group {
@@ -27,10 +28,6 @@ public class StrengthOfRock extends MappedIndex {
     public StrengthOfRock(Group group, String code, String key, String shortDescription, String longDescription, Double ratingValue) {
         super(code, key, shortDescription, longDescription, ratingValue);
         setGroup(group);
-//        setKey(key);
-//        getCategoriesAndValues()[0][0] = MappedIndex.DESCRIPTION;
-//        getCategoriesAndValues()[1][0] = longDescription;
-//        setValue(ratingValue);
     }
 
 

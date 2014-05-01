@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class IndexDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Index> implements LocalIndexDAO {
+public class IndexDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Index> implements LocalIndexDAO {
 
 
     public IndexDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
@@ -29,8 +29,9 @@ public class IndexDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Index> implements 
         List<Index> list = new ArrayList<Index>();
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(MappedIndexTable.CODE_COLUMN, cursor);
+            String key = CursorUtils.getString(MappedIndexTable.KEY_COLUMN, cursor);
             String name = CursorUtils.getString(MappedIndexTable.NAME_COLUMN, cursor);
-            Index newInstance = new Index(code, name);
+            Index newInstance = new Index(code, key, name);
             list.add(newInstance);
         }
         return list;
@@ -39,7 +40,7 @@ public class IndexDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Index> implements 
 
     @Override
     public Index getIndexByCode(String code) throws DAOException {
-        Index entity = getIdentifiableEntityByCode(MappedIndexTable.CODE_COLUMN, code);
+        Index entity = getIdentifiableEntityByCode(MappedIndexTable.INDEX_DATABASE_TABLE, code);
         return entity;
     }
 
@@ -58,7 +59,9 @@ public class IndexDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Index> implements 
 
     @Override
     protected void savePersistentEntity(String tableName, Index newSkavaEntity) throws DAOException {
-        saveSkavaEntity(tableName, newSkavaEntity);
+        String[] colNames = {MappedIndexTable.CODE_COLUMN, MappedIndexTable.KEY_COLUMN, MappedIndexTable.NAME_COLUMN};
+        String[] colValues = {newSkavaEntity.getCode(), newSkavaEntity.getKey(), newSkavaEntity.getName() };
+        saveRecord(tableName, colNames, colValues);
     }
 
 

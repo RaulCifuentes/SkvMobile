@@ -18,6 +18,15 @@ public class TunnelFaceDropboxTable extends DropboxBaseTable implements DropboxT
         return mDatastore.getTable("Faces");
     }
 
+    @Override
+    public boolean shouldSortByOrdinalColumn() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldSortByKeyColumn() {
+        return false;
+    }
 
 
 }

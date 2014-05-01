@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class MeshTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<MeshType> implements LocalMeshTypeDAO {
+public class MeshTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<MeshType> implements LocalMeshTypeDAO {
 
     public MeshTypeDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
         super(context, skavaContext);
@@ -56,17 +56,17 @@ public class MeshTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Mes
 
     @Override
     protected void savePersistentEntity(String tableName, MeshType newSkavaEntity) throws DAOException {
-
+        saveSkavaEntity(tableName, newSkavaEntity);
     }
 
     @Override
     public boolean deleteMeshType(String code) {
-        return false;
+        return deleteIdentifiableEntity(MeshTypeTable.MESH_DATABASE_TABLE, code);
     }
 
     @Override
     public int deleteAllMeshTypes() {
-        return 0;
+        return deleteAllPersistentEntities(MeshTypeTable.MESH_DATABASE_TABLE);
     }
 
 

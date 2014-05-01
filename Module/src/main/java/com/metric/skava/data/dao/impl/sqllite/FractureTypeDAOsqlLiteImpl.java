@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class FractureTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<FractureType> implements LocalFractureTypeDAO {
+public class FractureTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<FractureType> implements LocalFractureTypeDAO {
 
     public FractureTypeDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
         super(context, skavaContext);
@@ -60,20 +60,20 @@ public class FractureTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO
         savePersistentEntity(FractureTypeTable.FRACTURE_DATABASE_TABLE, newEntity);
     }
 
+
     @Override
     protected void savePersistentEntity(String tableName, FractureType newSkavaEntity) throws DAOException {
-
+        saveSkavaEntity(tableName, newSkavaEntity);
     }
 
     @Override
     public boolean deleteFractureType(String code) {
-        return false;
+        return deleteIdentifiableEntity(FractureTypeTable.FRACTURE_DATABASE_TABLE, code);
     }
 
     @Override
     public int deleteAllFractureTypes() {
-        return 0;
+        return deleteAllPersistentEntities(FractureTypeTable.FRACTURE_DATABASE_TABLE);
     }
-
 
 }

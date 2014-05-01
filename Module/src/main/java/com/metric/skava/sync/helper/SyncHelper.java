@@ -9,8 +9,17 @@ import com.metric.skava.app.model.Role;
 import com.metric.skava.app.model.Tunnel;
 import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
+import com.metric.skava.calculator.barton.model.Ja;
+import com.metric.skava.calculator.barton.model.Jn;
+import com.metric.skava.calculator.barton.model.Jr;
+import com.metric.skava.calculator.barton.model.Jw;
+import com.metric.skava.calculator.barton.model.SRF;
+import com.metric.skava.calculator.model.Group;
+import com.metric.skava.calculator.model.Index;
 import com.metric.skava.calculator.rmr.model.Aperture;
+import com.metric.skava.calculator.rmr.model.Groundwater;
 import com.metric.skava.calculator.rmr.model.Infilling;
+import com.metric.skava.calculator.rmr.model.OrientationDiscontinuities;
 import com.metric.skava.calculator.rmr.model.Persistence;
 import com.metric.skava.calculator.rmr.model.Roughness;
 import com.metric.skava.calculator.rmr.model.Spacing;
@@ -18,7 +27,10 @@ import com.metric.skava.calculator.rmr.model.StrengthOfRock;
 import com.metric.skava.calculator.rmr.model.Weathering;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalApertureDAO;
+import com.metric.skava.data.dao.LocalArchTypeDAO;
+import com.metric.skava.data.dao.LocalBoltTypeDAO;
 import com.metric.skava.data.dao.LocalClientDAO;
+import com.metric.skava.data.dao.LocalCoverageDAO;
 import com.metric.skava.data.dao.LocalDiscontinuityRelevanceDAO;
 import com.metric.skava.data.dao.LocalDiscontinuityShapeDAO;
 import com.metric.skava.data.dao.LocalDiscontinuityTypeDAO;
@@ -26,20 +38,33 @@ import com.metric.skava.data.dao.LocalDiscontinuityWaterDAO;
 import com.metric.skava.data.dao.LocalExcavationMethodDAO;
 import com.metric.skava.data.dao.LocalExcavationProjectDAO;
 import com.metric.skava.data.dao.LocalExcavationSectionDAO;
+import com.metric.skava.data.dao.LocalFractureTypeDAO;
 import com.metric.skava.data.dao.LocalGroundwaterDAO;
+import com.metric.skava.data.dao.LocalGroupDAO;
+import com.metric.skava.data.dao.LocalIndexDAO;
 import com.metric.skava.data.dao.LocalInfillingDAO;
+import com.metric.skava.data.dao.LocalJaDAO;
+import com.metric.skava.data.dao.LocalJnDAO;
+import com.metric.skava.data.dao.LocalJrDAO;
+import com.metric.skava.data.dao.LocalJwDAO;
+import com.metric.skava.data.dao.LocalMeshTypeDAO;
 import com.metric.skava.data.dao.LocalOrientationDiscontinuitiesDAO;
 import com.metric.skava.data.dao.LocalPersistenceDAO;
 import com.metric.skava.data.dao.LocalRoleDAO;
 import com.metric.skava.data.dao.LocalRoughnessDAO;
+import com.metric.skava.data.dao.LocalShotcreteTypeDAO;
 import com.metric.skava.data.dao.LocalSpacingDAO;
+import com.metric.skava.data.dao.LocalSrfDAO;
 import com.metric.skava.data.dao.LocalStrengthDAO;
 import com.metric.skava.data.dao.LocalTunnelDAO;
 import com.metric.skava.data.dao.LocalTunnelFaceDAO;
 import com.metric.skava.data.dao.LocalUserDAO;
 import com.metric.skava.data.dao.LocalWeatheringDAO;
 import com.metric.skava.data.dao.RemoteApertureDAO;
+import com.metric.skava.data.dao.RemoteArchTypeDAO;
+import com.metric.skava.data.dao.RemoteBoltTypeDAO;
 import com.metric.skava.data.dao.RemoteClientDAO;
+import com.metric.skava.data.dao.RemoteCoverageDAO;
 import com.metric.skava.data.dao.RemoteDiscontinuityRelevanceDAO;
 import com.metric.skava.data.dao.RemoteDiscontinuityShapeDAO;
 import com.metric.skava.data.dao.RemoteDiscontinuityTypeDAO;
@@ -47,11 +72,23 @@ import com.metric.skava.data.dao.RemoteDiscontinuityWaterDAO;
 import com.metric.skava.data.dao.RemoteExcavationMethodDAO;
 import com.metric.skava.data.dao.RemoteExcavationProjectDAO;
 import com.metric.skava.data.dao.RemoteExcavationSectionDAO;
+import com.metric.skava.data.dao.RemoteFractureTypeDAO;
+import com.metric.skava.data.dao.RemoteGroundwaterDAO;
+import com.metric.skava.data.dao.RemoteGroupDAO;
+import com.metric.skava.data.dao.RemoteIndexDAO;
 import com.metric.skava.data.dao.RemoteInfillingDAO;
+import com.metric.skava.data.dao.RemoteJaDAO;
+import com.metric.skava.data.dao.RemoteJnDAO;
+import com.metric.skava.data.dao.RemoteJrDAO;
+import com.metric.skava.data.dao.RemoteJwDAO;
+import com.metric.skava.data.dao.RemoteMeshTypeDAO;
+import com.metric.skava.data.dao.RemoteOrientationDiscontinuitiesDAO;
 import com.metric.skava.data.dao.RemotePersistenceDAO;
 import com.metric.skava.data.dao.RemoteRoleDAO;
 import com.metric.skava.data.dao.RemoteRoughnessDAO;
+import com.metric.skava.data.dao.RemoteShotcreteTypeDAO;
 import com.metric.skava.data.dao.RemoteSpacingDAO;
+import com.metric.skava.data.dao.RemoteSrfDAO;
 import com.metric.skava.data.dao.RemoteStrengthDAO;
 import com.metric.skava.data.dao.RemoteTunnelDAO;
 import com.metric.skava.data.dao.RemoteTunnelFaceDAO;
@@ -62,6 +99,12 @@ import com.metric.skava.discontinuities.model.DiscontinuityRelevance;
 import com.metric.skava.discontinuities.model.DiscontinuityShape;
 import com.metric.skava.discontinuities.model.DiscontinuityType;
 import com.metric.skava.discontinuities.model.DiscontinuityWater;
+import com.metric.skava.instructions.model.ArchType;
+import com.metric.skava.instructions.model.BoltType;
+import com.metric.skava.instructions.model.Coverage;
+import com.metric.skava.instructions.model.MeshType;
+import com.metric.skava.instructions.model.ShotcreteType;
+import com.metric.skava.rockmass.model.FractureType;
 
 import java.util.List;
 
@@ -93,17 +136,23 @@ public class SyncHelper {
             clearRoles();
             syncRoles();
 
-            clearMethods();
-            syncMethods();
+            clearExcavationMethods();
+            syncExcavationMethods();
 
-            clearSections();
-            syncSections();
+            clearExcavationSections();
+            syncExcavationSections();
 
             clearDiscontinuityTypes();
             syncDiscontinuityTypes();
 
             clearDiscontinuityRelevances();
             syncDiscontinuityRelevances();
+
+            clearIndexes();
+            syncIndexes();
+
+            clearGroups();
+            syncGroups();
 
             clearSpacings();
             syncSpacings();
@@ -138,24 +187,38 @@ public class SyncHelper {
             clearOrientation();
             syncOrientation();
 
-//            clearJn();
-//            syncJn();
-//
-//            clearJr();
-//            syncJr();
-//
-//            clearJa();
-//            syncJa();
-//
-//            clearJw();
-//            syncJw();
-//
-//            clearSRF();
-//            syncSRF();
-//
-//            clearFractureTypes();
-//            syncFractureTypes();
+            clearJn();
+            syncJn();
 
+            clearJr();
+            syncJr();
+
+            clearJa();
+            syncJa();
+
+            clearJw();
+            syncJw();
+
+            clearSRF();
+            syncSRF();
+
+            clearFractureTypes();
+            syncFractureTypes();
+
+            clearBoltTypes();
+            syncBoltTypes();
+
+            clearShotcreteTypes();
+            syncShotcreteTypes();
+
+            clearMeshTypes();
+            syncMeshTypes();
+
+            clearCoverages();
+            syncCoverages();
+
+            clearArchTypes();
+            syncArchTypes();
 
 
             success = true;
@@ -187,7 +250,6 @@ public class SyncHelper {
             throw e;
         }
         return success;
-
     }
 
     //TODO Use the user information to pull just the faces, tunnels, projects anc clients for that user
@@ -195,12 +257,12 @@ public class SyncHelper {
         syncFacesCascade(user);
     }
 
-    private void clearSections() throws DAOException {
-        LocalUserDAO sqlLiteLocalUserDAO = daoFactory.getLocalUserDAO();
-        sqlLiteLocalUserDAO.deleteAllUsers();
+    private void clearExcavationSections() throws DAOException {
+        LocalExcavationSectionDAO sqlLiteLocalSectionDAO = daoFactory.getLocalExcavationSectionDAO();
+        sqlLiteLocalSectionDAO.deleteAllExcavationSections();
     }
 
-    private void syncSections() throws DAOException {
+    private void syncExcavationSections() throws DAOException {
         //Read from DropBox
         RemoteExcavationSectionDAO dropBoxSectionDAO = daoFactory.getRemoteExcavationSectionDAO(DAOFactory.Flavour.DROPBOX);
         List<ExcavationSection> downloadedSections = dropBoxSectionDAO.getAllExcavationSections();
@@ -211,12 +273,12 @@ public class SyncHelper {
         }
     }
 
-    private void clearMethods() throws DAOException {
+    private void clearExcavationMethods() throws DAOException {
         LocalExcavationMethodDAO sqlLiteMethodDAO = daoFactory.getLocalExcavationMethodDAO();
         sqlLiteMethodDAO.deleteAllExcavationMethods();
     }
 
-    private void syncMethods() throws DAOException {
+    private void syncExcavationMethods() throws DAOException {
         /**Update the excavation methods data*/
         RemoteExcavationMethodDAO dropBoxMethodDAO = daoFactory.getRemoteExcavationMethodDAO(DAOFactory.Flavour.DROPBOX);
         LocalExcavationMethodDAO sqlLiteMethodDAO = daoFactory.getLocalExcavationMethodDAO();
@@ -372,6 +434,118 @@ public class SyncHelper {
     }
 
 
+    private void clearIndexes() throws DAOException {
+        LocalIndexDAO sqlLiteIndexDAO = daoFactory.getLocalIndexDAO();
+        sqlLiteIndexDAO.deleteAllIndexes();
+    }
+
+    private void syncIndexes() throws DAOException {
+        //Read from DropBox
+        RemoteIndexDAO dropBoxIndexDAO = daoFactory.getRemoteIndexDAO(DAOFactory.Flavour.DROPBOX);
+        List<Index> downloadedIndexes = dropBoxIndexDAO.getAllIndexes();
+        //Write into the SQLLite
+        LocalIndexDAO sqlLiteIndexDAO = daoFactory.getLocalIndexDAO();
+        for (Index downloadedIndex : downloadedIndexes) {
+            sqlLiteIndexDAO.saveIndex(downloadedIndex);
+        }
+    }
+
+    private void clearGroups() throws DAOException {
+        LocalGroupDAO sqlLiteStrengthDAO = daoFactory.getLocalGroupDAO();
+        sqlLiteStrengthDAO.deleteAllGroups();
+    }
+
+    private void syncGroups() throws DAOException {
+        //Read from DropBox
+        RemoteGroupDAO dropBoxRemoteGroupDAO = daoFactory.getRemoteGroupDAO(DAOFactory.Flavour.DROPBOX);
+        List<Group> downloadedGroups = dropBoxRemoteGroupDAO.getAllGroups();
+        //Write into the SQLLite
+        LocalGroupDAO sqlLiteLocalGroupDAO = daoFactory.getLocalGroupDAO();
+        for (Group downloadedGroup : downloadedGroups) {
+            sqlLiteLocalGroupDAO.saveGroup(downloadedGroup);
+        }
+    }
+
+    private void clearJn() throws DAOException {
+        LocalJnDAO sqlLiteJnDAO = daoFactory.getLocalJnDAO();
+        sqlLiteJnDAO.deleteAllJns();
+    }
+
+    private void syncJn() throws DAOException {
+        //Read from DropBox
+        RemoteJnDAO dropBoxJnDAO = daoFactory.getRemoteJnDAO(DAOFactory.Flavour.DROPBOX);
+        List<Jn> dowloadedJns = dropBoxJnDAO.getAllJns();
+        //Write into the SQLLite
+        LocalJnDAO sqlLiteJnDAO = daoFactory.getLocalJnDAO();
+        for (Jn dowloadedJn : dowloadedJns) {
+            sqlLiteJnDAO.saveJn(dowloadedJn);
+        }
+    }
+
+    private void clearJr() throws DAOException {
+        LocalJrDAO sqlLiteJrDAO = daoFactory.getLocalJrDAO();
+        sqlLiteJrDAO.deleteAllJrs();
+    }
+
+    private void syncJr() throws DAOException {
+        //Read from DropBox
+        RemoteJrDAO dropBoxJrDAO = daoFactory.getRemoteJrDAO(DAOFactory.Flavour.DROPBOX);
+        List<Jr> dowloadedJrs = dropBoxJrDAO.getAllJrs();
+        //Write into the SQLLite
+        LocalJrDAO sqlLiteJrDAO = daoFactory.getLocalJrDAO();
+        for (Jr dowloadedJr : dowloadedJrs) {
+            sqlLiteJrDAO.saveJr(dowloadedJr);
+        }
+    }
+
+    private void clearJa() throws DAOException {
+        LocalJaDAO sqlLiteJaDAO = daoFactory.getLocalJaDAO();
+        sqlLiteJaDAO.deleteAllJas();
+    }
+
+    private void syncJa() throws DAOException {
+        //Read from DropBox
+        RemoteJaDAO dropBoxJaDAO = daoFactory.getRemoteJaDAO(DAOFactory.Flavour.DROPBOX);
+        List<Ja> dowloadedJas = dropBoxJaDAO.getAllJas();
+        //Write into the SQLLite
+        LocalJaDAO sqlLiteJaDAO = daoFactory.getLocalJaDAO();
+        for (Ja dowloadedJa : dowloadedJas) {
+            sqlLiteJaDAO.saveJa(dowloadedJa);
+        }
+    }
+
+    private void clearJw() throws DAOException {
+        LocalJnDAO sqlLiteJnDAO = daoFactory.getLocalJnDAO();
+        sqlLiteJnDAO.deleteAllJns();
+    }
+
+    private void syncJw() throws DAOException {
+        //Read from DropBox
+        RemoteJwDAO dropBoxJwDAO = daoFactory.getRemoteJwDAO(DAOFactory.Flavour.DROPBOX);
+        List<Jw> dowloadedJws = dropBoxJwDAO.getAllJws();
+        //Write into the SQLLite
+        LocalJwDAO sqlLiteJwDAO = daoFactory.getLocalJwDAO();
+        for (Jw dowloadedJw : dowloadedJws) {
+            sqlLiteJwDAO.saveJw(dowloadedJw);
+        }
+    }
+
+    private void clearSRF() throws DAOException {
+        LocalSrfDAO sqlLiteJnDAO = daoFactory.getLocalSrfDAO();
+        sqlLiteJnDAO.deleteAllSrfs();
+    }
+
+    private void syncSRF() throws DAOException {
+        //Read from DropBox
+        RemoteSrfDAO dropBoxSrfDAO = daoFactory.getRemoteSrfDAO(DAOFactory.Flavour.DROPBOX);
+        List<SRF> dowloadedSrfs = dropBoxSrfDAO.getAllSrfs();
+        //Write into the SQLLite
+        LocalSrfDAO sqlLiteSrfDAO = daoFactory.getLocalSrfDAO();
+        for (SRF dowloadedSrf : dowloadedSrfs) {
+            sqlLiteSrfDAO.saveSrf(dowloadedSrf);
+        }
+    }
+
     private void clearStrengths() throws DAOException {
         LocalStrengthDAO sqlLiteStrengthDAO = daoFactory.getLocalStrengthDAO();
         sqlLiteStrengthDAO.deleteAllStrengths();
@@ -393,8 +567,15 @@ public class SyncHelper {
         sqlLiteGroudwaterDAO.deleteAllGroundwaters();
     }
 
-    private void syncGroundwaters() {
-
+    private void syncGroundwaters() throws DAOException {
+        //Read from DropBox
+        RemoteGroundwaterDAO dropBoxGroundwaterDAO = daoFactory.getRemoteGroundwaterDAO(DAOFactory.Flavour.DROPBOX);
+        List<Groundwater> dowloadedGroundwaters = dropBoxGroundwaterDAO.getAllGroundwaters();
+        //Write into the SQLLite
+        LocalGroundwaterDAO sqlLiteGroundwaterDAO = daoFactory.getLocalGroundwaterDAO();
+        for (Groundwater dowloadedGroundwater : dowloadedGroundwaters) {
+            sqlLiteGroundwaterDAO.saveGroundwater(dowloadedGroundwater);
+        }
     }
 
     private void clearOrientation() throws DAOException {
@@ -403,7 +584,14 @@ public class SyncHelper {
     }
 
     private void syncOrientation() throws DAOException {
-
+        //Read from DropBox
+        RemoteOrientationDiscontinuitiesDAO dropBoxOrientationDiscontinuitiesDAO = daoFactory.getRemoteOrientationDiscontinuitiesDAO(DAOFactory.Flavour.DROPBOX);
+        List<OrientationDiscontinuities> dowloadedOrientationsDiscontinuities = dropBoxOrientationDiscontinuitiesDAO.getAllOrientationsDiscontinuities();
+        //Write into the SQLLite
+        LocalOrientationDiscontinuitiesDAO sqlLiteOrientationDiscontinuitiesDAO = daoFactory.getLocalOrientationDiscontinuitiesDAO();
+        for (OrientationDiscontinuities dowloadedOrientationDiscontinuities : dowloadedOrientationsDiscontinuities) {
+            sqlLiteOrientationDiscontinuitiesDAO.saveOrientationDiscontinuities(dowloadedOrientationDiscontinuities);
+        }
     }
 
 
@@ -535,6 +723,99 @@ public class SyncHelper {
         LocalDiscontinuityWaterDAO sqlLiteDiscontinuityWaterDAO = daoFactory.getLocalDiscontinuityWaterDAO();
         for (DiscontinuityWater downloadedDiscontinuityWater : downloadedDiscontinuityWaters) {
             sqlLiteDiscontinuityWaterDAO.saveDiscontinuityWater(downloadedDiscontinuityWater);
+        }
+    }
+
+    private void clearFractureTypes() throws DAOException {
+        LocalFractureTypeDAO sqlLiteFractureDAO = daoFactory.getLocalFractureTypeDAO();
+        sqlLiteFractureDAO.deleteAllFractureTypes();
+    }
+
+    private void syncFractureTypes() throws DAOException {
+        //Read from DropBox
+        RemoteFractureTypeDAO dropBoxFractureTypeDAO = daoFactory.getRemoteFractureTypeDAO(DAOFactory.Flavour.DROPBOX);
+        List<FractureType> downloadedFractureTypes = dropBoxFractureTypeDAO.getAllFractureTypes();
+        //Write into the SQLLite
+        LocalFractureTypeDAO sqlLiteFractureTypeDAO = daoFactory.getLocalFractureTypeDAO();
+        for (FractureType downloadedFractureType : downloadedFractureTypes) {
+            sqlLiteFractureTypeDAO.saveFractureType(downloadedFractureType);
+        }
+    }
+
+    private void clearBoltTypes(){
+        LocalBoltTypeDAO sqlLiteBoltTypesDAO = daoFactory.getLocalBoltTypeDAO();
+        sqlLiteBoltTypesDAO.deleteAllBoltTypes();
+    }
+    private void syncBoltTypes() throws DAOException {
+        //Read from DropBox
+        RemoteBoltTypeDAO dropBoxBoltTypeDAO = daoFactory.getRemoteBoltTypeDAO(DAOFactory.Flavour.DROPBOX);
+        List<BoltType> downloadedBoltTypes = dropBoxBoltTypeDAO.getAllBoltTypes();
+        //Write into the SQLLite
+        LocalBoltTypeDAO sqlLiteBoltTypeDAO = daoFactory.getLocalBoltTypeDAO();
+        for (BoltType downloadedBoltType : downloadedBoltTypes) {
+            sqlLiteBoltTypeDAO.saveBoltType(downloadedBoltType);
+        }
+    }
+
+    private void clearShotcreteTypes(){
+        LocalShotcreteTypeDAO sqlLiteShotcreteDAO = daoFactory.getLocalShotcreteTypeDAO();
+        sqlLiteShotcreteDAO.deleteAllShotcreteTypes();
+    }
+    private void syncShotcreteTypes() throws DAOException {
+        //Read from DropBox
+        RemoteShotcreteTypeDAO dropBoxShotcreteTypeDAO = daoFactory.getRemoteShotcreteTypeDAO(DAOFactory.Flavour.DROPBOX);
+        List<ShotcreteType> downloadedShotcreteTypes = dropBoxShotcreteTypeDAO.getAllShotcreteTypes();
+        //Write into the SQLLite
+        LocalShotcreteTypeDAO sqlLiteShotcreteTypeDAO = daoFactory.getLocalShotcreteTypeDAO();
+        for (ShotcreteType downloadedShotcreteType : downloadedShotcreteTypes) {
+            sqlLiteShotcreteTypeDAO.saveShotcreteType(downloadedShotcreteType);
+        }
+    }
+
+
+    private void clearMeshTypes(){
+        LocalMeshTypeDAO sqlLiteMeshTypeDAO = daoFactory.getLocalMeshTypeDAO();
+        sqlLiteMeshTypeDAO.deleteAllMeshTypes();
+    }
+    private void syncMeshTypes() throws DAOException {
+        //Read from DropBox
+        RemoteMeshTypeDAO dropBoxMeshTypeDAO = daoFactory.getRemoteMeshTypeDAO(DAOFactory.Flavour.DROPBOX);
+        List<MeshType> downloadedMeshTypes = dropBoxMeshTypeDAO.getAllMeshTypes();
+        //Write into the SQLLite
+        LocalMeshTypeDAO sqlLiteMeshTypeDAO = daoFactory.getLocalMeshTypeDAO();
+        for (MeshType downloadedMeshType : downloadedMeshTypes) {
+            sqlLiteMeshTypeDAO.saveMeshType(downloadedMeshType);
+        }
+    }
+
+
+    private void clearCoverages(){
+        LocalCoverageDAO sqlLiteCoverageDAO = daoFactory.getLocalCoverageDAO();
+        sqlLiteCoverageDAO.deleteAllCoverages();
+    }
+    private void syncCoverages() throws DAOException {
+        //Read from DropBox
+        RemoteCoverageDAO dropBoxCoverageDAO = daoFactory.getRemoteCoverageDAO(DAOFactory.Flavour.DROPBOX);
+        List<Coverage> downloadedCoverages = dropBoxCoverageDAO.getAllCoverages();
+        //Write into the SQLLite
+        LocalCoverageDAO sqlLiteCoverageDAO = daoFactory.getLocalCoverageDAO();
+        for (Coverage downloadedCoverage : downloadedCoverages) {
+            sqlLiteCoverageDAO.saveCoverage(downloadedCoverage);
+        }
+    }
+
+    private void clearArchTypes(){
+        LocalArchTypeDAO sqlLiteArchDAO = daoFactory.getLocalArchTypeDAO();
+        sqlLiteArchDAO.deleteAllArchTypes();
+    }
+    private void syncArchTypes() throws DAOException {
+        //Read from DropBox
+        RemoteArchTypeDAO dropBoxArchTypeDAO = daoFactory.getRemoteArchTypeDAO(DAOFactory.Flavour.DROPBOX);
+        List<ArchType> downloadedArchTypes = dropBoxArchTypeDAO.getAllArchTypes();
+        //Write into the SQLLite
+        LocalArchTypeDAO sqlLiteArchTypeDAO = daoFactory.getLocalArchTypeDAO();
+        for (ArchType downloadedArchType : downloadedArchTypes) {
+            sqlLiteArchTypeDAO.saveArchType(downloadedArchType);
         }
     }
 

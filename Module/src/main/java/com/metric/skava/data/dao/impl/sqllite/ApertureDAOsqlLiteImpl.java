@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/18/14.
  */
-public class ApertureDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalApertureDAO {
+public class ApertureDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Aperture> implements LocalApertureDAO {
 
     private Context mContext;
     private MappedIndexInstanceBuilder4SqlLite mappedIndexInstaceBuilder;
@@ -31,12 +31,13 @@ public class ApertureDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalApert
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
+
     @Override
     public Aperture getAperture(String indexCode, String groupCode, String code) throws DAOException {
         String[] names = new String[]{ApertureTable.INDEX_CODE_COLUMN, ApertureTable.GROUP_CODE_COLUMN, ApertureTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(ApertureTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
-        List<Aperture> list = assambleApertures(cursor);
+        List<Aperture> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
             throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
@@ -48,7 +49,8 @@ public class ApertureDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalApert
     }
 
 
-    protected List<Aperture> assambleApertures(Cursor cursor) throws DAOException {
+    @Override
+    protected List<Aperture> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<Aperture> list = new ArrayList<Aperture>();
         while (cursor.moveToNext()) {
             Aperture newInstance = mappedIndexInstaceBuilder.buildApertureFromCursorRecord(cursor);
@@ -61,25 +63,61 @@ public class ApertureDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalApert
     @Override
     public List<Aperture> getAllApertures() throws DAOException {
         Cursor cursor = getAllRecords(ApertureTable.MAPPED_INDEX_DATABASE_TABLE);
-        List<Aperture> list = assambleApertures(cursor);
+        List<Aperture> list = assemblePersistentEntities(cursor);
         cursor.close();
         return list;
     }
 
-
     @Override
-    public void saveAperture(Aperture assessment) throws DAOException {
+    protected void savePersistentEntity(String tableName, Aperture newSkavaEntity) throws DAOException {
+        //  LocalIndexDAO indexDAO = getDAOFactory().getLocalIndexDAO();
+        //  Index index = indexDAO.getIndexByCode(Spacing.INDEX_CODE);
+        //  Test if this is to map the indexes and grop codes on Fabian model is necessary
+        //  String indexCode = index.getCode();
+        String indexCode = Aperture.INDEX_CODE;
 
+        String[] colNames = {ApertureTable.INDEX_CODE_COLUMN,
+                ApertureTable.GROUP_CODE_COLUMN,
+                ApertureTable.CODE_COLUMN,
+                ApertureTable.KEY_COLUMN,
+                ApertureTable.SHORT_DESCRIPTION_COLUMN,
+                ApertureTable.DESCRIPTION_COLUMN,
+                ApertureTable.VALUE_COLUMN};
+
+        Object[] colValues = {
+                indexCode,
+                newSkavaEntity.getGroupName(),
+                newSkavaEntity.getCode(),
+                newSkavaEntity.getKey(),
+                newSkavaEntity.getShortDescription(),
+                newSkavaEntity.getDescription(),
+                newSkavaEntity.getValue()
+        };
+        saveRecord(tableName, colNames, colValues);
     }
 
     @Override
+    public void saveAperture(Aperture aperture) throws DAOException {
+        savePersistentEntity(ApertureTable.MAPPED_INDEX_DATABASE_TABLE, aperture);
+    }
+
+
+    @Override
     public boolean deleteAperture(String indexCode, String groupCode, String code) {
-        return false;
+        String[] colNames = {ApertureTable.INDEX_CODE_COLUMN,
+                ApertureTable.GROUP_CODE_COLUMN,
+                ApertureTable.CODE_COLUMN};
+        Object[] colValues = {
+                indexCode,
+                groupCode,
+                code};
+        int howMany = deletePersistentEntitiesFilteredByColumns(ApertureTable.MAPPED_INDEX_DATABASE_TABLE, colNames, colValues);
+        return (howMany == 1);
     }
 
     @Override
     public int deleteAllApertures() {
-        return 0;
+        return deleteAllPersistentEntities(ApertureTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
 

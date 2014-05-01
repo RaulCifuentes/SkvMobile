@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/18/14.
  */
-public class StrengthDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalStrengthDAO {
+public class StrengthDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<StrengthOfRock> implements LocalStrengthDAO {
 
     private Context mContext;
     private MappedIndexInstanceBuilder4SqlLite mappedIndexInstaceBuilder;
@@ -31,12 +31,13 @@ public class StrengthDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalStren
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
+
     @Override
     public StrengthOfRock getStrength(String indexCode, String groupCode, String code) throws DAOException {
         String[] names = new String[]{StrengthTable.INDEX_CODE_COLUMN, StrengthTable.GROUP_CODE_COLUMN, StrengthTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(StrengthTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
-        List<StrengthOfRock> list = assambleStrengths(cursor);
+        List<StrengthOfRock> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
             throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
         }
@@ -47,8 +48,8 @@ public class StrengthDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalStren
         return list.get(0);
     }
 
-
-    protected List<StrengthOfRock> assambleStrengths(Cursor cursor) throws DAOException {
+    @Override
+    protected List<StrengthOfRock> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<StrengthOfRock> list = new ArrayList<StrengthOfRock>();
         while (cursor.moveToNext()) {
             StrengthOfRock newInstance = mappedIndexInstaceBuilder.buildStrengthFromCursorRecord(cursor);
@@ -61,25 +62,61 @@ public class StrengthDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalStren
     @Override
     public List<StrengthOfRock> getAllStrengths(StrengthOfRock.Group group) throws DAOException {
         Cursor cursor = getRecordsFilteredByColumn(StrengthTable.MAPPED_INDEX_DATABASE_TABLE, StrengthTable.GROUP_CODE_COLUMN, group.name(), null);
-        List<StrengthOfRock> list = assambleStrengths(cursor);
+        List<StrengthOfRock> list = assemblePersistentEntities(cursor);
         cursor.close();
         return list;
     }
 
 
     @Override
-    public void saveStrength(StrengthOfRock assessment) throws DAOException {
+    public void saveStrength(StrengthOfRock newStrenght) throws DAOException {
+        savePersistentEntity(StrengthTable.MAPPED_INDEX_DATABASE_TABLE, newStrenght);
+    }
 
+    @Override
+    protected void savePersistentEntity(String tableName, StrengthOfRock newSkavaEntity) throws DAOException {
+        //  LocalIndexDAO indexDAO = getDAOFactory().getLocalIndexDAO();
+        //  Index index = indexDAO.getIndexByCode(Spacing.INDEX_CODE);
+        //  Test if this is to map the indexes and grop codes on Fabian model is necessary
+        //  String indexCode = index.getCode();
+        String indexCode = StrengthOfRock.INDEX_CODE;
+
+        String[] colNames = {StrengthTable.INDEX_CODE_COLUMN,
+                StrengthTable.GROUP_CODE_COLUMN,
+                StrengthTable.CODE_COLUMN,
+                StrengthTable.KEY_COLUMN,
+                StrengthTable.SHORT_DESCRIPTION_COLUMN,
+                StrengthTable.DESCRIPTION_COLUMN,
+                StrengthTable.VALUE_COLUMN};
+
+        Object[] colValues = {
+                indexCode,
+                newSkavaEntity.getGroupName(),
+                newSkavaEntity.getCode(),
+                newSkavaEntity.getKey(),
+                newSkavaEntity.getShortDescription(),
+                newSkavaEntity.getDescription(),
+                newSkavaEntity.getValue()
+        };
+        saveRecord(tableName, colNames, colValues);
     }
 
     @Override
     public boolean deleteStrength(String indexCode, String groupCode, String code) {
-        return false;
+        String[] colNames = {StrengthTable.INDEX_CODE_COLUMN,
+                StrengthTable.GROUP_CODE_COLUMN,
+                StrengthTable.CODE_COLUMN};
+        Object[] colValues = {
+                indexCode,
+                groupCode,
+                code};
+        int howMany = deletePersistentEntitiesFilteredByColumns(StrengthTable.MAPPED_INDEX_DATABASE_TABLE, colNames, colValues);
+        return (howMany == 1);
     }
 
     @Override
     public int deleteAllStrengths() {
-        return 0;
+        return deleteAllPersistentEntities(StrengthTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
 

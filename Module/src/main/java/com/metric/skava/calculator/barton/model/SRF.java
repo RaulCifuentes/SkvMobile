@@ -6,10 +6,7 @@ import java.io.Serializable;
 
 public class SRF extends MappedIndex implements Serializable {
 
-//    public static final int a = 10;
-//    public static final int b = 20;
-//    public static final int c = 30;
-//    public static final int d = 40;
+    public static final String INDEX_CODE = "SRF";
 
     private Group group;
 
@@ -33,30 +30,8 @@ public class SRF extends MappedIndex implements Serializable {
     public SRF(Group group, String code, String key, String shortDescription, String longDescription, Double value) {
         super(code, key, shortDescription, longDescription,value);
         setGroup(group);
-//        setKey(key);
-//        getCategoriesAndValues()[0][0] = MappedIndex.DESCRIPTION;
-//        getCategoriesAndValues()[1][0] = longDescription;
-//        setValue(value);
     }
 
-    //    public String getGroupTypeName(){
-//        String text = null;
-//        switch (getGroupType()){
-//            case SRF.a:
-//                text = "a.";
-//                break;
-//            case SRF.b:
-//                text = "b.";
-//                break;
-//            case SRF.c:
-//                text = "c.";
-//                break;
-//            case SRF.d:
-//                text = "d.";
-//                break;
-//        }
-//        return text;
-//    }
 
     @Override
     public String getGroupName() {

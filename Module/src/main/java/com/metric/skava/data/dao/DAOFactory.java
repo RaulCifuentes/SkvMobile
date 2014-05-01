@@ -5,7 +5,10 @@ import android.content.Context;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.ApertureDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.ArchTypeDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.BoltTypeDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.ClientDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.CoverageDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.DiscontinuityRelevanceDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.DiscontinuityShapeDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.DiscontinuityTypeDAODropboxImpl;
@@ -13,12 +16,23 @@ import com.metric.skava.data.dao.impl.dropbox.DiscontinuityWaterDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.ExcavationMethodDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.ExcavationProjectDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.ExcavationSectionDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.FractureTypeDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.GroundwaterDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.GroupDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.IndexDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.InfillingDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.JaDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.JnDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.JrDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.JwDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.MeshTypeDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.OrientationDiscontinuitiesDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.PersistenceDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.RoleDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.RoughnessDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.ShotcreteTypeDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.SpacingDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.SrfDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.StrengthDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.TunnelDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.TunnelFaceDAODropboxImpl;
@@ -69,6 +83,7 @@ import com.metric.skava.sync.dao.SyncLoggingDAOsqlLiteImpl;
  * Created by metricboy on 3/14/14.
  */
 public class DAOFactory {
+
 
     //Placeholder enumeration for future remote implementations
     public static enum Flavour {
@@ -237,9 +252,27 @@ public class DAOFactory {
         return sqlLiteIndexDAO;
     }
 
+    public RemoteIndexDAO getRemoteIndexDAO(Flavour daoFlavour) throws DAOException {
+        RemoteIndexDAO remoteIndexDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteIndexDAO = new IndexDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteIndexDAO;
+    }
+
     public LocalGroupDAO getLocalGroupDAO() throws DAOException {
         LocalGroupDAO sqlLiteIndexDAO = new GroupDAOsqlLiteImpl(mContext, mSkavaContext);
         return sqlLiteIndexDAO;
+    }
+
+    public RemoteGroupDAO getRemoteGroupDAO(Flavour daoFlavour) throws DAOException {
+        RemoteGroupDAO remoteGroupDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteGroupDAO = new GroupDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteGroupDAO;
     }
 
     public LocalDiscontinuityTypeDAO getLocalDiscontinuityTypeDAO() {
@@ -304,10 +337,27 @@ public class DAOFactory {
         return fractureTypeDAO;
     }
 
+    public RemoteFractureTypeDAO getRemoteFractureTypeDAO(Flavour daoFlavour) throws DAOException {
+        RemoteFractureTypeDAO remoteFractureTypeDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteFractureTypeDAO = new FractureTypeDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteFractureTypeDAO;
+    }
 
     public LocalBoltTypeDAO getLocalBoltTypeDAO() {
         LocalBoltTypeDAO localBoltTypeDAO = new BoltTypeDAOsqlLiteImpl(mContext, mSkavaContext);
         return localBoltTypeDAO;
+    }
+
+    public RemoteBoltTypeDAO getRemoteBoltTypeDAO(Flavour daoFlavour) throws DAOException {
+        RemoteBoltTypeDAO remoteBoltTypeDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteBoltTypeDAO = new BoltTypeDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteBoltTypeDAO;
     }
 
     public LocalShotcreteTypeDAO getLocalShotcreteTypeDAO() {
@@ -315,19 +365,56 @@ public class DAOFactory {
         return shotcreteTypeDAO;
     }
 
+    public RemoteShotcreteTypeDAO getRemoteShotcreteTypeDAO(Flavour daoFlavour) throws DAOException {
+        RemoteShotcreteTypeDAO remoteShotcreteTypeDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteShotcreteTypeDAO = new ShotcreteTypeDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteShotcreteTypeDAO;
+    }
+
     public LocalMeshTypeDAO getLocalMeshTypeDAO() {
         LocalMeshTypeDAO localMeshTypeDAO = new MeshTypeDAOsqlLiteImpl(mContext, mSkavaContext);
         return localMeshTypeDAO;
     }
+
+    public RemoteMeshTypeDAO getRemoteMeshTypeDAO(Flavour daoFlavour) throws DAOException {
+        RemoteMeshTypeDAO remoteMeshTypeDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteMeshTypeDAO = new MeshTypeDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteMeshTypeDAO;
+    }
+
 
     public LocalCoverageDAO getLocalCoverageDAO() {
         LocalCoverageDAO localCoverageDAO = new CoverageDAOsqlLiteImpl(mContext, mSkavaContext);
         return localCoverageDAO;
     }
 
+    public RemoteCoverageDAO getRemoteCoverageDAO(Flavour daoFlavour) throws DAOException {
+        RemoteCoverageDAO remoteCoverageDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteCoverageDAO = new CoverageDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteCoverageDAO;
+    }
+
     public LocalArchTypeDAO getLocalArchTypeDAO() {
         LocalArchTypeDAO localArchTypeDAO = new ArchTypeDAOsqlLiteImpl(mContext, mSkavaContext);
         return localArchTypeDAO;
+    }
+
+    public RemoteArchTypeDAO getRemoteArchTypeDAO(Flavour daoFlavour) throws DAOException {
+        RemoteArchTypeDAO remoteArchTypeDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteArchTypeDAO = new ArchTypeDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteArchTypeDAO;
     }
 
     public SupportRequirementDAO getSupportRequirementDAO() {
@@ -347,9 +434,28 @@ public class DAOFactory {
         return localJnDAO;
     }
 
+    public RemoteJnDAO getRemoteJnDAO(Flavour daoFlavour) throws DAOException {
+        RemoteJnDAO remoteJnDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteJnDAO = new JnDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteJnDAO;
+    }
+
+
     public LocalJaDAO getLocalJaDAO() throws DAOException {
         LocalJaDAO localJaDAO = new JaDAOsqlLiteImpl(mContext, mSkavaContext);
         return localJaDAO;
+    }
+
+    public RemoteJaDAO getRemoteJaDAO(Flavour daoFlavour) throws DAOException {
+        RemoteJaDAO remoteJaDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteJaDAO = new JaDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteJaDAO;
     }
 
     public LocalJrDAO getLocalJrDAO() throws DAOException {
@@ -357,9 +463,27 @@ public class DAOFactory {
         return localJrDAO;
     }
 
+    public RemoteJrDAO getRemoteJrDAO(Flavour daoFlavour) throws DAOException {
+        RemoteJrDAO remoteJrDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteJrDAO = new JrDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteJrDAO;
+    }
+
     public LocalJwDAO getLocalJwDAO() throws DAOException {
         LocalJwDAO localJwDAO = new JwDAOsqlLiteImpl(mContext, mSkavaContext);
         return localJwDAO;
+    }
+
+    public RemoteJwDAO getRemoteJwDAO(Flavour daoFlavour) throws DAOException {
+        RemoteJwDAO remoteJwDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteJwDAO = new JwDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteJwDAO;
     }
 
     public LocalSrfDAO getLocalSrfDAO() throws DAOException {
@@ -367,12 +491,28 @@ public class DAOFactory {
         return localSrfDAO;
     }
 
+    public RemoteSrfDAO getRemoteSrfDAO(Flavour daoFlavour) throws DAOException {
+        RemoteSrfDAO remoteSrfDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteSrfDAO = new SrfDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteSrfDAO;
+    }
 
     public LocalOrientationDiscontinuitiesDAO getLocalOrientationDiscontinuitiesDAO() throws DAOException {
         LocalOrientationDiscontinuitiesDAO orientationDAO = new OrientationDiscontinuitiesDAOsqlLiteImpl(mContext, mSkavaContext);
         return orientationDAO;
     }
 
+    public RemoteOrientationDiscontinuitiesDAO getRemoteOrientationDiscontinuitiesDAO(Flavour daoFlavour) throws DAOException {
+        RemoteOrientationDiscontinuitiesDAO orientationDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                orientationDAO = new OrientationDiscontinuitiesDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return orientationDAO;
+    }
 
     public LocalSpacingDAO getLocalSpacingDAO() throws DAOException {
         LocalSpacingDAO spacingDAO = new SpacingDAOsqlLiteImpl(mContext, mSkavaContext);

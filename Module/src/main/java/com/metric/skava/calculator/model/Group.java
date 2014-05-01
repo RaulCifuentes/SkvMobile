@@ -8,9 +8,11 @@ import com.metric.skava.app.data.SkavaEntity;
 public class Group extends SkavaEntity {
 
     private Index index;
+    private String key;
 
-    public Group(String code, String name) {
+    public Group(String code, String key, String name) {
         super(code, name);
+        this.key = key;
     }
 
     public Index getIndex() {
@@ -19,5 +21,13 @@ public class Group extends SkavaEntity {
 
     public void setIndex(Index index) {
         this.index = index;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

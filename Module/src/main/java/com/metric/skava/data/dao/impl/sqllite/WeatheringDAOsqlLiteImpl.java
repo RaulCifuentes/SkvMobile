@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/18/14.
  */
-public class WeatheringDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalWeatheringDAO {
+public class WeatheringDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Weathering> implements LocalWeatheringDAO {
 
     private Context mContext;
     private MappedIndexInstanceBuilder4SqlLite mappedIndexInstaceBuilder;
@@ -31,24 +31,25 @@ public class WeatheringDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalWea
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
+
     @Override
     public Weathering getWeathering(String indexCode, String groupCode, String code) throws DAOException {
         String[] names = new String[]{WeatheringTable.INDEX_CODE_COLUMN, WeatheringTable.GROUP_CODE_COLUMN, WeatheringTable.CODE_COLUMN};
         String[] values = new String[]{indexCode, groupCode, code};
-        Cursor cursor = getRecordsFilteredByColumns(WeatheringTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
-        List<Weathering> list = assambleWeatherings(cursor);
+        Cursor cursor = getRecordsFilteredByColumns(WeatheringTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
+        List<Weathering> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
         }
         cursor.close();
         return list.get(0);
     }
 
-
-    protected List<Weathering> assambleWeatherings(Cursor cursor) throws DAOException {
+    @Override
+    protected List<Weathering> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<Weathering> list = new ArrayList<Weathering>();
         while (cursor.moveToNext()) {
             Weathering newInstance = mappedIndexInstaceBuilder.buildWeatheringFromCursorRecord(cursor);
@@ -61,25 +62,61 @@ public class WeatheringDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalWea
     @Override
     public List<Weathering> getAllWeatherings() throws DAOException {
         Cursor cursor = getAllRecords(WeatheringTable.MAPPED_INDEX_DATABASE_TABLE);
-        List<Weathering> list = assambleWeatherings(cursor);
+        List<Weathering> list = assemblePersistentEntities(cursor);
         cursor.close();
         return list;
     }
 
 
     @Override
-    public void saveWeathering(Weathering assessment) throws DAOException {
+    public void saveWeathering(Weathering newWeathering) throws DAOException {
+        savePersistentEntity(WeatheringTable.MAPPED_INDEX_DATABASE_TABLE, newWeathering);
+    }
 
+    @Override
+    protected void savePersistentEntity(String tableName, Weathering newSkavaEntity) throws DAOException {
+//  LocalIndexDAO indexDAO = getDAOFactory().getLocalIndexDAO();
+        //  Index index = indexDAO.getIndexByCode(Spacing.INDEX_CODE);
+        //  Test if this is to map the indexes and grop codes on Fabian model is necessary
+        //  String indexCode = index.getCode();
+        String indexCode = Weathering.INDEX_CODE;
+
+        String[] colNames = {WeatheringTable.INDEX_CODE_COLUMN,
+                WeatheringTable.GROUP_CODE_COLUMN,
+                WeatheringTable.CODE_COLUMN,
+                WeatheringTable.KEY_COLUMN,
+                WeatheringTable.SHORT_DESCRIPTION_COLUMN,
+                WeatheringTable.DESCRIPTION_COLUMN,
+                WeatheringTable.VALUE_COLUMN};
+
+        Object[] colValues = {
+                indexCode,
+                newSkavaEntity.getGroupName(),
+                newSkavaEntity.getCode(),
+                newSkavaEntity.getKey(),
+                newSkavaEntity.getShortDescription(),
+                newSkavaEntity.getDescription(),
+                newSkavaEntity.getValue()
+        };
+        saveRecord(tableName, colNames, colValues);
     }
 
     @Override
     public boolean deleteWeathering(String indexCode, String groupCode, String code) {
-        return false;
+        String[] colNames = {WeatheringTable.INDEX_CODE_COLUMN,
+                WeatheringTable.GROUP_CODE_COLUMN,
+                WeatheringTable.CODE_COLUMN};
+        Object[] colValues = {
+                indexCode,
+                groupCode,
+                code};
+        int howMany = deletePersistentEntitiesFilteredByColumns(WeatheringTable.MAPPED_INDEX_DATABASE_TABLE, colNames, colValues);
+        return (howMany == 1);
     }
 
     @Override
     public int deleteAllWeatherings() {
-        return 0;
+        return deleteAllPersistentEntities(WeatheringTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
 

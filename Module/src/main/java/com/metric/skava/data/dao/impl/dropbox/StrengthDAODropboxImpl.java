@@ -30,7 +30,7 @@ public class StrengthDAODropboxImpl extends DropBoxBaseDAO implements RemoteStre
 
 
     private String getStrengthParameterId() throws DAOException {
-        DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "RMR_Strength");
+        DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "RMR_UCS");
         String codigo = foundRecord.getString("ParameterId");
         return codigo;
     }
@@ -49,8 +49,18 @@ public class StrengthDAODropboxImpl extends DropBoxBaseDAO implements RemoteStre
             String description = currentDbxRecord.getString("IndexName");
             Double value = currentDbxRecord.getDouble("IndexScore");
             String groupCode = currentDbxRecord.getString("FkCategoryId");
+
             Group group = getDAOFactory().getLocalGroupDAO().getGroupByCode(groupCode);
-            String groupName = group.getName();
+            String groupName = group.getKey();
+
+            //tx the model.group into the Class.Group
+            if (groupName.equalsIgnoreCase("a")) {
+                groupName = StrengthOfRock.Group.UNIAXIAL_KEY.name();
+            }
+            if (groupName.equalsIgnoreCase("b")){
+                groupName = StrengthOfRock.Group.POINT_LOAD_KEY.name();
+            }
+
             StrengthOfRock.Group strengthGroup = StrengthOfRock.Group.valueOf(groupName);
             StrengthOfRock newStrength = new StrengthOfRock(strengthGroup, code, key, shortDescription, description, value);
             newStrength.setShortDescription(shortDescription);

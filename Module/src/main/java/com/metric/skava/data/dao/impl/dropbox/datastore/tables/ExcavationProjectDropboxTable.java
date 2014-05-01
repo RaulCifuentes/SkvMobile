@@ -18,8 +18,15 @@ public class ExcavationProjectDropboxTable extends DropboxBaseTable implements D
         return mDatastore.getTable("Projects");
     }
 
+    @Override
+    public boolean shouldSortByOrdinalColumn() {
+        return false;
+    }
 
-
+    @Override
+    public boolean shouldSortByKeyColumn() {
+        return false;
+    }
 
 
 }

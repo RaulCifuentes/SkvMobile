@@ -28,7 +28,7 @@ public class RoughnessDAODropboxImpl extends DropBoxBaseDAO implements RemoteRou
     }
 
 
-    private String getSpaceParameterId() throws DAOException {
+    private String getRoughnessParameterId() throws DAOException {
         DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "RMR_Roughness");
         String codigo = foundRecord.getString("ParameterId");
         return codigo;
@@ -36,10 +36,10 @@ public class RoughnessDAODropboxImpl extends DropBoxBaseDAO implements RemoteRou
 
     @Override
     public List<Roughness> getAllRoughnesses() throws DAOException {
-        String spacingparameterId = getSpaceParameterId();
+        String roughnessParameterId = getRoughnessParameterId();
         List<Roughness> listRoughnesss = new ArrayList<Roughness>();
-        String[] names = new String[]{"ParameterId"};
-        String[] values = new String[]{spacingparameterId};
+        String[] names = new String[]{"FkParameterId"};
+        String[] values = new String[]{roughnessParameterId};
         List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
         for (DbxRecord currentDbxRecord : recordList) {
             String code = currentDbxRecord.getString("IndexId");
