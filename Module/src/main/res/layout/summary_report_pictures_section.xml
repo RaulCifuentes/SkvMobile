@@ -87,7 +87,6 @@
 
         <TextView
             android:id="@+id/summary_report_outcrop_description_value"
-            android:gravity="center"
             android:text="@string/sumary_report_outcrop_default_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
