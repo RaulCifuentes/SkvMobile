@@ -430,7 +430,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
                         finalPegFormattedEditText.setText(finalPegFormatted);
                     }
                     if (finalPeg != null && initialPeg != null) {
-                        advance = finalPeg - initialPeg;
+                        advance = Math.abs(finalPeg - initialPeg);
                     }
                     if (advance != null) {
                         getCurrentAssessment().setCurrentAdvance(advance);
