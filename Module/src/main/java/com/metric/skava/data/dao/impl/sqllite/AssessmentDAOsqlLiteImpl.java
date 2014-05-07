@@ -238,7 +238,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 AssessmentTable.FRACTURE_TYPE_CODE_COLUMN,
                 AssessmentTable.BLOCKS_SIZE_COLUMN,
                 AssessmentTable.NUMBER_JOINTS_COLUMN,
-                AssessmentTable.OUTCROP_COLUMN
+                AssessmentTable.OUTCROP_COLUMN,
+                AssessmentTable.ROCK_SAMPLE_IDENTIFICATION_COLUMN
         };
 
         Object[] values = new Object[]{
@@ -258,7 +259,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 newSkavaEntity.getFractureType() != null ? newSkavaEntity.getFractureType().getCode() : null,
                 newSkavaEntity.getBlockSize(),
                 newSkavaEntity.getNumberOfJoints(),
-                newSkavaEntity.getOutcropDescription()
+                newSkavaEntity.getOutcropDescription(),
+                newSkavaEntity.getRockSampleIdentification()
         };
 
         Long assesmentId = saveRecord(tableName, names, values);

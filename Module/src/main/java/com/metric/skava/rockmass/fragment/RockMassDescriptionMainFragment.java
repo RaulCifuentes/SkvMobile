@@ -41,6 +41,7 @@ public class RockMassDescriptionMainFragment extends SkavaFragment implements Ad
     private EditText blocksSizeEditText;
     private EditText numOfJointsEditText;
     private EditText outcropEditText;
+    private EditText rockSampleIdentificationText;
 
     private int fractureTypeSpinnerLastPosition;
     private FractureType selectedFractureType;
@@ -152,6 +153,29 @@ public class RockMassDescriptionMainFragment extends SkavaFragment implements Ad
             @Override
             public void afterTextChanged(Editable editable) {
                 getCurrentAssessment().setOutcropDescription(editable.toString());
+            }
+        });
+
+        rockSampleIdentificationText = (EditText) rootView.findViewById(R.id.rockmass_desc_rock_sample_identification_value);
+        String rockSampleIdentification = getCurrentAssessment().getRockSampleIdentification();
+        if (rockSampleIdentification != null) {
+            rockSampleIdentificationText.setText(rockSampleIdentification);
+        }
+
+        rockSampleIdentificationText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                // Implementation left blank
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                // Implementation left blank
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                getCurrentAssessment().setRockSampleIdentification(editable.toString());
             }
         });
 

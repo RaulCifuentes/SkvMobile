@@ -67,7 +67,8 @@
     <TableRow android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/summary_report_pictures_section" android:layout_span="2" />
+        <include layout="@layout/summary_report_pictures_section" android:layout_span="2"
+            android:layout_width="match_parent" />
 
 
     </TableRow>
