@@ -8,7 +8,6 @@ import com.metric.skava.calculator.barton.model.Jw;
 import com.metric.skava.data.dao.LocalJwDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.helper.MappedIndexInstanceBuilder4SqlLite;
-import com.metric.skava.data.dao.impl.sqllite.table.JrTable;
 import com.metric.skava.data.dao.impl.sqllite.table.JwTable;
 
 import java.util.ArrayList;
@@ -28,16 +27,22 @@ public class JwDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Jw> imple
     }
 
     @Override
-    public Jw getJw(String indexCode, String groupCode, String code) throws DAOException {
+    public Jw getJwByUniqueCode(String code) throws DAOException {
+        return getPersistentEntityByCandidateKey(JwTable.MAPPED_INDEX_DATABASE_TABLE, JwTable.CODE_COLUMN, code);
+    }
+
+
+    @Override
+    public Jw getJw(String groupCode, String code) throws DAOException {
         String[] names = new String[]{JwTable.INDEX_CODE_COLUMN, JwTable.GROUP_CODE_COLUMN, JwTable.CODE_COLUMN};
-        String[] values = new String[]{indexCode, groupCode, code};
+        String[] values = new String[]{Jw.INDEX_CODE, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(JwTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Jw> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + Jw.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Multiple records for same code. [Index Code : " + Jw.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
         cursor.close();
         return list.get(0);
@@ -66,7 +71,7 @@ public class JwDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Jw> imple
 
     @Override
     public void saveJw(Jw newJw) throws DAOException {
-        savePersistentEntity(JrTable.MAPPED_INDEX_DATABASE_TABLE, newJw);
+        savePersistentEntity(JwTable.MAPPED_INDEX_DATABASE_TABLE, newJw);
     }
 
     @Override

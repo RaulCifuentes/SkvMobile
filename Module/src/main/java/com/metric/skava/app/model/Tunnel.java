@@ -12,8 +12,10 @@ public class Tunnel extends SkavaEntity {
 
     private ExcavationFactors excavationFactors;
 
-    public Tunnel(String id, String name) {
+    public Tunnel(ExcavationProject project, String id, String name, ExcavationFactors excavationFactors) {
         super(id, name);
+        this.project = project;
+        this.excavationFactors = excavationFactors;
     }
 
     public ExcavationProject getProject() {

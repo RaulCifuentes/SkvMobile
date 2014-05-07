@@ -18,7 +18,9 @@
             android:id="@+id/radioButtonFirst"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="First" />
+            android:text="First"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            />
 
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
@@ -28,7 +30,9 @@
             android:id="@+id/radioButtonSecond"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Second" />
+            android:text="Second"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            />
 
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
@@ -38,7 +42,9 @@
             android:id="@+id/radioButtonThird"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Third" />
+            android:text="Third"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            />
 
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
@@ -48,7 +54,9 @@
             android:id="@+id/radioButtonFourth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fourth" />
+            android:text="Fourth"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            />
 
     </RadioGroup>
 

@@ -10,22 +10,21 @@
              <!--/>-->
     <!--</PreferenceCategory>-->
 
-    <PreferenceCategory android:title="@string/preferences_gui_label" >
-        <ListPreference
-            android:key="PREFERENCE_THEME"
-            android:title="Theme"
-            android:summary="Dress the app with diferent colors..."
-            android:defaultValue="DAY_THEME"
-            android:dialogTitle="What's your choice?"
-            android:entries="@array/change_theme_options"
-            android:entryValues="@array/change_theme_values"
-             />
-    </PreferenceCategory>
+    <!--<PreferenceCategory android:title="@string/preferences_gui_label" >-->
+        <!--<ListPreference-->
+            <!--android:key="PREFERENCE_THEME"-->
+            <!--android:title="Theme"-->
+            <!--android:summary="Dress the app with diferent colors..."-->
+            <!--android:defaultValue="DAY_THEME"-->
+            <!--android:dialogTitle="What's your choice?"-->
+            <!--android:entries="@array/change_theme_options"-->
+            <!--android:entryValues="@array/change_theme_values"-->
+             <!--/>-->
+    <!--</PreferenceCategory>-->
 
     <PreferenceCategory android:title="Skava Preferences" />
-    <CheckBoxPreference android:title="Use debug server"
-        android:key="isDebug"
-        android:summary="Connecting to a debug server instead of prod server"/>
-    <SwitchPreference android:title="Debug Logs" android:key="logsVerbose" android:summary="Show debug logs on LogCat"/>
+    <CheckBoxPreference android:title="Update data model automatically on start"
+        android:key="UPDATE_AUTO"
+        android:summary="Connecting to a dropbox server and download de Data Model automatically every tmie the app starts"/>
 
 </PreferenceScreen>

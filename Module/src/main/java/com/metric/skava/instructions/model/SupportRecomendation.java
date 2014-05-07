@@ -1,13 +1,18 @@
 package com.metric.skava.instructions.model;
 
+import com.metric.skava.app.util.SkavaUtils;
+
 /**
  * Created by metricboy on 3/4/14.
  */
 public class SupportRecomendation {
 
+    private Long _id;
     private BoltType boltType;
     private Double boltDiameter;
     private Double boltLength;
+    private SupportPattern roofPattern;
+    private SupportPattern wallPattern;
     private ShotcreteType shotcreteType;
     private Double thickness;
     private MeshType meshType;
@@ -15,6 +20,14 @@ public class SupportRecomendation {
     private ArchType archType;
     private Double separation;
     private String observations;
+
+    public Long get_id() {
+        return _id;
+    }
+
+    public void set_id(Long _id) {
+        this._id = _id;
+    }
 
     public BoltType getBoltType() {
         return boltType;
@@ -38,6 +51,22 @@ public class SupportRecomendation {
 
     public void setBoltLength(Double boltLength) {
         this.boltLength = boltLength;
+    }
+
+    public SupportPattern getRoofPattern() {
+        return roofPattern;
+    }
+
+    public void setRoofPattern(SupportPattern roofPattern) {
+        this.roofPattern = roofPattern;
+    }
+
+    public SupportPattern getWallPattern() {
+        return wallPattern;
+    }
+
+    public void setWallPattern(SupportPattern wallPattern) {
+        this.wallPattern = wallPattern;
     }
 
     public ShotcreteType getShotcreteType() {
@@ -94,5 +123,36 @@ public class SupportRecomendation {
 
     public void setObservations(String observations) {
         this.observations = observations;
+    }
+
+    public boolean isComplete() {
+        return getArchType() != null &&
+                getBoltDiameter() != null &&
+                getBoltLength() != null &&
+                getBoltType() != null &&
+                getCoverage() != null &&
+                getMeshType() != null &&
+                getObservations() != null &&
+                getRoofPattern() != null &&
+                getSeparation() != null &&
+                getShotcreteType() != null &&
+                getThickness() != null &&
+                getWallPattern() != null;
+
+    }
+
+    public boolean hasSelectedAnything() {
+        return SkavaUtils.isDefined(getArchType()) ||
+                (getBoltDiameter() != null) ||
+                (getBoltLength() != null) ||
+                SkavaUtils.isDefined(getBoltType()) ||
+                SkavaUtils.isDefined(getCoverage()) ||
+                SkavaUtils.isDefined(getMeshType()) ||
+                (getObservations() != null) ||
+                (getRoofPattern() != null) ||
+                (getSeparation() != null) ||
+                SkavaUtils.isDefined(getShotcreteType()) ||
+                (getThickness() != null) ||
+                (getWallPattern() != null);
     }
 }

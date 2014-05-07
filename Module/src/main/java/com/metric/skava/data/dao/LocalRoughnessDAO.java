@@ -13,13 +13,13 @@ public interface LocalRoughnessDAO {
 
     public List<Roughness> getAllRoughnesses() throws DAOException;
 
-    public Roughness getRoughness(String indexCode, String groupCode, String code) throws DAOException;
+    public Roughness getRoughness(String groupCode, String code) throws DAOException;
+
+    public Roughness getRoughnessByUniqueCode(String roughnessCode) throws DAOException;
 
     public void saveRoughness(Roughness roughness) throws DAOException;
 
-    public boolean deleteRoughness(String indexCode, String groupCode, String code);
+    public boolean deleteRoughness(String groupCode, String code);
 
     public int deleteAllRoughnesses();
-
-
 }

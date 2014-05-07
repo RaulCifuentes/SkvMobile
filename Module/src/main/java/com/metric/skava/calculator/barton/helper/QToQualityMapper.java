@@ -1,6 +1,13 @@
 package com.metric.skava.calculator.barton.helper;
 
-import com.metric.skava.rockmass.model.RockMass;
+
+import com.metric.skava.app.context.SkavaContext;
+import com.metric.skava.app.exception.SkavaSystemException;
+import com.metric.skava.calculator.barton.model.RockQuality;
+import com.metric.skava.data.dao.DAOFactory;
+import com.metric.skava.data.dao.exception.DAOException;
+
+import java.util.List;
 
 /**
  * Created by metricboy on 3/9/14.
@@ -8,44 +15,31 @@ import com.metric.skava.rockmass.model.RockMass;
 public class QToQualityMapper {
 
     private static QToQualityMapper mInstance;
+    private final SkavaContext mSkavaContext;
+    private DAOFactory daoFactory;
 
-    private QToQualityMapper(){
+    private QToQualityMapper(SkavaContext skavaContext) {
+        this.mSkavaContext = skavaContext;
+        this.daoFactory = skavaContext.getDAOFactory();
     }
 
-    public static QToQualityMapper getInstance () {
+    public static QToQualityMapper getInstance (SkavaContext skavaContext) {
         if (mInstance == null){
-            mInstance = new QToQualityMapper();
+            mInstance = new QToQualityMapper(skavaContext);
         }
         return mInstance;
     }
 
-    public RockMass.RockMassQualityType mapQToRockMassQuality(Double qBarton){
-        if ((qBarton > 400)) {
-            return RockMass.RockMassQualityType.EXCEPTIONALLY_GOOD;
-        }
-        if ((100 <= qBarton ) && (qBarton <= 400)) {
-            return RockMass.RockMassQualityType.EXTREMELY_GOOD;
-        }
-        if ((40 <= qBarton ) && (qBarton <= 100)) {
-            return RockMass.RockMassQualityType.VERY_GOOD;
-        }
-        if ((10 <= qBarton ) && (qBarton <= 40)) {
-            return RockMass.RockMassQualityType.GOOD;
-        }
-        if ((4 <= qBarton ) && (qBarton <= 10)) {
-            return RockMass.RockMassQualityType.FAIR;
-        }
-        if ((1 <= qBarton ) && (qBarton <= 4)) {
-            return RockMass.RockMassQualityType.POOR;
-        }
-        if ((0.4 <= qBarton ) && (qBarton <= 1)) {
-            return RockMass.RockMassQualityType.VERY_POOR;
-        }
-        if ((0.01 <= qBarton ) && (qBarton <= 0.04)) {
-            return RockMass.RockMassQualityType.EXTREMELY_POOR;
-        }
-        if ((0.001 <= qBarton ) && (qBarton <= 0.01)) {
-            return RockMass.RockMassQualityType.EXCEPTIONALLY_POOR;
+    public RockQuality mapQToRockMassQuality(Double qBarton) {
+        try {
+            List<RockQuality> qualities = daoFactory.getLocalRockQualityDAO().getAllRockQualities(RockQuality.AccordingTo.Q);
+            for (RockQuality currQuality : qualities) {
+                if (currQuality.getLowerBoundary() < qBarton && qBarton <currQuality.getHigherBoundary() ) {
+                    return currQuality;
+                }
+            }
+        } catch (DAOException e) {
+            throw new SkavaSystemException("It was not possible to find the rock quality for Q value " + qBarton, e);
         }
         return null;
     }

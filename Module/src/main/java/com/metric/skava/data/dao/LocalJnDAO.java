@@ -13,7 +13,9 @@ public interface LocalJnDAO {
 
     public List<Jn> getAllJns() throws DAOException;
 
-    public Jn getJn(String indexCode, String groupCode, String code) throws DAOException;
+    public Jn getJnByUniqueCode(String code) throws DAOException;
+
+    public Jn getJn(String groupCode, String code) throws DAOException;
 
     public void saveJn(Jn jn) throws DAOException;
 

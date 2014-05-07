@@ -45,8 +45,6 @@ public class Assessment implements IdentifiableEntity {
     private Q_Calculation qCalculation;
     private RMR_Calculation rmrCalculation;
 
-    //These belong to the tunnel and seems to be non editable
-//    private ExcavationFactors excavationFactors;
 
     public Assessment(String code) {
         this.code = code;
@@ -258,13 +256,6 @@ public class Assessment implements IdentifiableEntity {
         this._id = _id;
     }
 
-//    public ExcavationFactors getExcavationFactors() {
-//        return excavationFactors;
-//    }
-//
-//    public void setExcavationFactors(ExcavationFactors excavationFactors) {
-//        this.excavationFactors = excavationFactors;
-//    }
 
 
     @Override

@@ -130,7 +130,7 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
         final int numberOfHeaders = listview.getHeaderViewsCount();
         final List<Jr> listJr;
         try {
-            listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.Group.a);
+            listJr = getDAOFactory().getLocalJrDAO().getAllJrs(Jr.Group.a);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -163,7 +163,7 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
         final ListView listview = (ListView) getView().findViewById(R.id.listview_b);
         final List<Jr> listJr;
         try {
-            listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.Group.b);
+            listJr = getDAOFactory().getLocalJrDAO().getAllJrs(Jr.Group.b);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -203,7 +203,7 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
         final ListView listview = (ListView) getView().findViewById(R.id.listview_c);
         final List<Jr> listJr;
         try {
-            listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.Group.c);
+            listJr = getDAOFactory().getLocalJrDAO().getAllJrs(Jr.Group.c);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();

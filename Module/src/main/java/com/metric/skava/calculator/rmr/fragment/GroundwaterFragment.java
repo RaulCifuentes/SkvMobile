@@ -43,7 +43,7 @@ public class GroundwaterFragment extends RMRCalculatorBaseFragment implements Ra
 
         selectedGroundwater = getRMRCalculationContext().getGroundwater();
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.calculator_mapped_index_list_base_fragment,
+        return inflater.inflate(R.layout.calculator_mapped_index_list_radios_fragment,
                 container, false);
     }
 
@@ -60,7 +60,8 @@ public class GroundwaterFragment extends RMRCalculatorBaseFragment implements Ra
         jointPressRadio.setText(Groundwater.Group.JOINT_PRESS_PRINCIPAL.toString());
         RadioButton generalRadio = (RadioButton) view.findViewById(R.id.radioButtonThird);
         generalRadio.setText(Groundwater.Group.GENERAL_CONDITIONS.toString());
-
+        RadioButton fourthRadio = (RadioButton) view.findViewById(R.id.radioButtonFourth);
+        fourthRadio.setVisibility(View.GONE);
 
         inflowListView = (ListView) getView().findViewById(R.id.listview_a);
         jointPressListView = (ListView) getView().findViewById(R.id.listview_b);
@@ -109,7 +110,7 @@ public class GroundwaterFragment extends RMRCalculatorBaseFragment implements Ra
         final int numberOfHeaders = inflowListView.getHeaderViewsCount();
         List<Groundwater> listGroundwater;
         try {
-            listGroundwater = daoFactory.getLocalGroundwaterDAO().getAllGroundwaters(Groundwater.Group.INFLOW_LENGHT);
+            listGroundwater = getDAOFactory().getLocalGroundwaterDAO().getAllGroundwaters(Groundwater.Group.INFLOW_LENGHT);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
@@ -147,7 +148,7 @@ public class GroundwaterFragment extends RMRCalculatorBaseFragment implements Ra
         final int numberOfHeaders = jointPressListView.getHeaderViewsCount();
         List<Groundwater> listGroundwater;
         try {
-            listGroundwater = daoFactory.getLocalGroundwaterDAO().getAllGroundwaters(Groundwater.Group.JOINT_PRESS_PRINCIPAL);
+            listGroundwater = getDAOFactory().getLocalGroundwaterDAO().getAllGroundwaters(Groundwater.Group.JOINT_PRESS_PRINCIPAL);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
@@ -185,7 +186,7 @@ public class GroundwaterFragment extends RMRCalculatorBaseFragment implements Ra
         final int numberOfHeaders = generalListView.getHeaderViewsCount();
         List<Groundwater> listGroundwater;
         try {
-            listGroundwater = daoFactory.getLocalGroundwaterDAO().getAllGroundwaters(Groundwater.Group.GENERAL_CONDITIONS);
+            listGroundwater = getDAOFactory().getLocalGroundwaterDAO().getAllGroundwaters(Groundwater.Group.GENERAL_CONDITIONS);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);

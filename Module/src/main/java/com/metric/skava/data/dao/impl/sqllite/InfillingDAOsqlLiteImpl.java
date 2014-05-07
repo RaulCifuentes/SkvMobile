@@ -5,7 +5,6 @@ import android.database.Cursor;
 
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.calculator.rmr.model.Infilling;
-import com.metric.skava.calculator.rmr.model.Roughness;
 import com.metric.skava.data.dao.LocalInfillingDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.helper.MappedIndexInstanceBuilder4SqlLite;
@@ -34,16 +33,32 @@ public class InfillingDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<In
 
 
     @Override
-    public Infilling getInfilling(String indexCode, String groupCode, String code) throws DAOException {
+    public Infilling getInfilling( String groupCode, String code) throws DAOException {
         String[] names = new String[]{InfillingTable.INDEX_CODE_COLUMN, InfillingTable.GROUP_CODE_COLUMN, InfillingTable.CODE_COLUMN};
-        String[] values = new String[]{indexCode, groupCode, code};
+        String[] values = new String[]{Infilling.INDEX_CODE, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(InfillingTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Infilling> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + Infilling.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Multiple records for same code. [Index Code : " + Infilling.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+        }
+        cursor.close();
+        return list.get(0);
+    }
+
+    @Override
+    public Infilling getInfillingByUniqueCode(String infillingCode) throws DAOException {
+        String[] names = new String[]{InfillingTable.INDEX_CODE_COLUMN, InfillingTable.CODE_COLUMN};
+        String[] values = new String[]{Infilling.INDEX_CODE, infillingCode};
+        Cursor cursor = getRecordsFilteredByColumns(InfillingTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
+        List<Infilling> list = assemblePersistentEntities(cursor);
+        if (list.isEmpty()) {
+            throw new DAOException("Entity not found. [Infilling Code : " + infillingCode + " ]");
+        }
+        if (list.size() > 1) {
+            throw new DAOException("Multiple records for same code. [Index Code : " + infillingCode + " ]");
         }
         cursor.close();
         return list.get(0);

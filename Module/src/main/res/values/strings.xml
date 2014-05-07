@@ -75,5 +75,7 @@
     <string name="title_activity_save_assessment">SaveAssessmentActivity</string>
     <string name="action_report_send">Send</string>
     <string name="action_report_save_draft">Save draft</string>
+    <string name="syncing_progress">Syncing data from internet</string>
+    <string name="connecting_dropbox">Linking to Dropbox</string>
 
 </resources>

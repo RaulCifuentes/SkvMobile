@@ -27,7 +27,6 @@ public class PersistenceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<
     }
 
 
-
     @Override
     protected List<Persistence> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<Persistence> list = new ArrayList<Persistence>();
@@ -38,22 +37,38 @@ public class PersistenceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<
         return list;
     }
 
+
     @Override
-    public Persistence getPersistence(String indexCode, String groupCode, String code) throws DAOException {
-        String[] names = new String[]{PersistenceTable.INDEX_CODE_COLUMN, GROUP_CODE_COLUMN, CODE_COLUMN};
-        String[] values = new String[]{indexCode, groupCode, code};
+    public Persistence getPersistence(String groupCode, String code) throws DAOException {
+        String[] names = new String[]{PersistenceTable.INDEX_CODE_COLUMN, PersistenceTable.GROUP_CODE_COLUMN, PersistenceTable.CODE_COLUMN};
+        String[] values = new String[]{Persistence.INDEX_CODE, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(PersistenceTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Persistence> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + Persistence.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Multiple records for same code. [Index Code : " + Persistence.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
         cursor.close();
         return list.get(0);
     }
 
+    @Override
+    public Persistence getPersistenceByUniqueCode(String persistenceCode) throws DAOException {
+        String[] names = new String[]{PersistenceTable.INDEX_CODE_COLUMN, PersistenceTable.CODE_COLUMN};
+        String[] values = new String[]{Persistence.INDEX_CODE, persistenceCode};
+        Cursor cursor = getRecordsFilteredByColumns(PersistenceTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
+        List<Persistence> list = assemblePersistentEntities(cursor);
+        if (list.isEmpty()) {
+            throw new DAOException("Entity not found. [Persistence Code : " + persistenceCode + " ]");
+        }
+        if (list.size() > 1) {
+            throw new DAOException("Multiple records for same code. [Index Code : " + persistenceCode + " ]");
+        }
+        cursor.close();
+        return list.get(0);
+    }
 
 
     @Override
@@ -99,12 +114,12 @@ public class PersistenceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<
     }
 
     @Override
-    public boolean deletePersistence(String indexCode, String groupCode, String code) {
+    public boolean deletePersistence(String groupCode, String code) {
         String[] colNames = {PersistenceTable.INDEX_CODE_COLUMN,
                 PersistenceTable.GROUP_CODE_COLUMN,
                 PersistenceTable.CODE_COLUMN};
         Object[] colValues = {
-                indexCode,
+                Persistence.INDEX_CODE,
                 groupCode,
                 code};
         int howMany = deletePersistentEntitiesFilteredByColumns(PersistenceTable.MAPPED_INDEX_DATABASE_TABLE, colNames, colValues);

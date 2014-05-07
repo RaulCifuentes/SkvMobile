@@ -20,7 +20,7 @@ public interface LocalPermissionDAO {
 
     public void savePermission(Permission newEntity) throws DAOException;
 
-    public boolean deletePermission(String code);
+    public boolean deletePermissionsByUser(User user);
 
     public int deleteAllPermissions() throws DAOException;
 

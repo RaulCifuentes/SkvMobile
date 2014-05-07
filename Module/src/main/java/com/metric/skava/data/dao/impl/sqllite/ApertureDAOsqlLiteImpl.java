@@ -33,16 +33,32 @@ public class ApertureDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Ape
 
 
     @Override
-    public Aperture getAperture(String indexCode, String groupCode, String code) throws DAOException {
+    public Aperture getAperture(String groupCode, String code) throws DAOException {
         String[] names = new String[]{ApertureTable.INDEX_CODE_COLUMN, ApertureTable.GROUP_CODE_COLUMN, ApertureTable.CODE_COLUMN};
-        String[] values = new String[]{indexCode, groupCode, code};
+        String[] values = new String[]{Aperture.INDEX_CODE, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(ApertureTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Aperture> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + Aperture.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Multiple records for same code. [Index Code : " + Aperture.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+        }
+        cursor.close();
+        return list.get(0);
+    }
+
+    @Override
+    public Aperture getApertureByUniqueCode(String apertureCode) throws DAOException {
+        String[] names = new String[]{ApertureTable.INDEX_CODE_COLUMN, ApertureTable.CODE_COLUMN};
+        String[] values = new String[]{Aperture.INDEX_CODE, apertureCode};
+        Cursor cursor = getRecordsFilteredByColumns(ApertureTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
+        List<Aperture> list = assemblePersistentEntities(cursor);
+        if (list.isEmpty()) {
+            throw new DAOException("Entity not found. [Aperture Code : " + apertureCode + " ]");
+        }
+        if (list.size() > 1) {
+            throw new DAOException("Multiple records for same code. [Index Code : " + apertureCode + " ]");
         }
         cursor.close();
         return list.get(0);

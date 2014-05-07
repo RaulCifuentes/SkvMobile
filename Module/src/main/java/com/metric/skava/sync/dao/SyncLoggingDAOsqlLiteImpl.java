@@ -66,8 +66,8 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
 
     @Override
     protected void savePersistentEntity(String tableName, SyncLogEntry newSkavaEntity) throws DAOException {
-        String[] columnNames = new String[]{SyncLoggingTable.DATE_COLUMN, SyncLoggingTable.SOURCE_COLUMN, SyncLoggingTable.STATUS_COLUMN};
-        Object[] values = new Object[]{DateDataFormat.formatDateAsLong(newSkavaEntity.getSyncDate()), newSkavaEntity.getSource().name(), newSkavaEntity.getStatus().name()};
+        String[] columnNames = new String[]{SyncLoggingTable.DATE_COLUMN, SyncLoggingTable.DOMAIN_COLUMN, SyncLoggingTable.SOURCE_COLUMN, SyncLoggingTable.STATUS_COLUMN};
+        Object[] values = new Object[]{DateDataFormat.formatDateAsLong(newSkavaEntity.getSyncDate()), newSkavaEntity.getDomain().name(),  newSkavaEntity.getSource().name(), newSkavaEntity.getStatus().name()};
         saveRecord(tableName, columnNames, values);
     }
 

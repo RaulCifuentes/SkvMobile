@@ -574,6 +574,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
             if (position != faceSpinnerLastPosition) {
                 selectedFace = (TunnelFace) parent.getItemAtPosition(position);
                 getSkavaContext().getAssessment().setFace(selectedFace);
+                getSkavaContext().getAssessment().setInternalCode(selectedProject.getCode());
                 faceSpinnerLastPosition = position;
                 //use the orientation from the face as initial value
                 orientationEditText.setText(selectedFace.getOrientation().toString());
@@ -610,7 +611,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
     private SkavaEntityAdapter prepareTunnelAdapter(ExcavationProject project) {
 
         tunnelList = mUserDataDomain.getTunnels(project);
-        tunnelList.add(new Tunnel("HINT", "Select a tunnel ..."));
+        tunnelList.add(new Tunnel(null, "HINT", "Select a tunnel ...", null));
         tunnelAdapter = new SkavaEntityAdapter<Tunnel>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, tunnelList);
         // Specify the layout to use when the list of choices appears
         tunnelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -622,7 +623,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
 
     private SkavaEntityAdapter prepareFaceAdapter(Tunnel tunnel) {
         faceList = mUserDataDomain.getFaces(tunnel);
-        faceList.add(new TunnelFace("HINT", "Select a face ..."));
+        faceList.add(new TunnelFace(null, "HINT", "Select a face ...", Short.MIN_VALUE, Double.MIN_VALUE));
         faceAdapter = new SkavaEntityAdapter<TunnelFace>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, faceList);
         // Specify the layout to use when the list of choices appears
         faceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

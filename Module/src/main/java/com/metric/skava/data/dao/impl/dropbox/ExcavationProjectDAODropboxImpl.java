@@ -54,6 +54,27 @@ public class ExcavationProjectDAODropboxImpl extends DropBoxBaseDAO implements R
         }
     }
 
+    @Override
+    public ExcavationProject getExcavationProjectByCode(String code) throws DAOException {
+        try {
+            DbxDatastoreStatus status = getDatastore().getSyncStatus();
+            if (status.hasIncoming || status.isDownloading) {
+                getDatastore().sync();
+            }
+            DbxRecord projectRecord = mProjectsTable.findRecordByCode(code);
+            String codigo = projectRecord.getString("ProjectId");
+            String nombre = projectRecord.getString("Name");
+            String clientCode = projectRecord.getString("FkClientId");
+            LocalClientDAO clientDAO = getDAOFactory().getLocalClientDAO();
+            Client client = clientDAO.getClientByCode(clientCode);
+            ExcavationProject newProject = new ExcavationProject(codigo, nombre);
+            newProject.setClient(client);
+            return newProject;
+        } catch (DbxException e) {
+            throw new DAOException(e);
+        }
+    }
+
 //    @Override
 //    public List<ExcavationProject> getExcavationProjectsByUser(User user) throws DAOException {
 //        List<ExcavationProject> projectsList = new ArrayList<ExcavationProject>();
@@ -69,22 +90,7 @@ public class ExcavationProjectDAODropboxImpl extends DropBoxBaseDAO implements R
 //    }
 
 
-    @Override
-    public ExcavationProject getExcavationProjectByCode(String code) throws DAOException {
-        try {
-            DbxDatastoreStatus status = getDatastore().getSyncStatus();
-            if (status.hasIncoming || status.isDownloading) {
-                getDatastore().sync();
-            }
-            DbxRecord projectRecord = mProjectsTable.findRecordByCode(code);
-            String codigo = projectRecord.getString("ProjectId");
-            String nombre = projectRecord.getString("Name");
-            ExcavationProject project = new ExcavationProject(codigo, nombre);
-            return project;
-        } catch (DbxException e) {
-            throw new DAOException(e);
-        }
-    }
+
 
 
 

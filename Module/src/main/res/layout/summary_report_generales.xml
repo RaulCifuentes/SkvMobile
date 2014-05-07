@@ -27,6 +27,8 @@
 
 
     <TableRow
+        android:gravity="fill"
+        android:layout_gravity="fill"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

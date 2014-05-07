@@ -38,15 +38,12 @@ public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<T
             String name = CursorUtils.getString(TunnelFaceTable.NAME_COLUMN, cursor);
             String tunnelCode = CursorUtils.getString(TunnelFaceTable.TUNNEL_CODE_COLUMN, cursor);
             Integer orientation = CursorUtils.getInt(TunnelFaceTable.ORIENTATION_COLUMN, cursor);
-            Integer slope = CursorUtils.getInt(TunnelFaceTable.SLOPE_COLUMN, cursor);
+            Double slope = CursorUtils.getDouble(TunnelFaceTable.SLOPE_COLUMN, cursor);
 
             LocalTunnelDAO localTunnelDAO = getDAOFactory().getLocalTunnelDAO();
-            Tunnel tunnel = localTunnelDAO.getTunnelByCode(tunnelCode);
+            Tunnel tunnel = localTunnelDAO.getTunnelByUniqueCode(tunnelCode);
 
-            TunnelFace newInstance = new TunnelFace(code, name);
-            newInstance.setTunnel(tunnel);
-            newInstance.setOrientation(orientation.shortValue());
-            newInstance.setSlope(slope.shortValue());
+            TunnelFace newInstance = new TunnelFace(tunnel, code, name, orientation.shortValue(), slope);
             list.add(newInstance);
         }
         return list;
@@ -120,8 +117,8 @@ public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<T
 
     @Override
     protected void savePersistentEntity(String tableName, TunnelFace newSkavaEntity) throws DAOException {
-        String[] colNames = {TunnelFaceTable.TUNNEL_CODE_COLUMN, TunnelFaceTable.CODE_COLUMN, TunnelFaceTable.NAME_COLUMN, };
-        String[] colValues = {newSkavaEntity.getTunnel().getCode(), newSkavaEntity.getCode(),newSkavaEntity.getName() };
+        String[] colNames = {TunnelFaceTable.TUNNEL_CODE_COLUMN, TunnelFaceTable.CODE_COLUMN, TunnelFaceTable.NAME_COLUMN, TunnelFaceTable.ORIENTATION_COLUMN, TunnelFaceTable.SLOPE_COLUMN};
+        Object[] colValues = {newSkavaEntity.getTunnel().getCode(), newSkavaEntity.getCode(),newSkavaEntity.getName(), newSkavaEntity.getOrientation(), newSkavaEntity.getSlope() };
         saveRecord(TunnelFaceTable.FACE_DATABASE_TABLE, colNames, colValues);
     }
 

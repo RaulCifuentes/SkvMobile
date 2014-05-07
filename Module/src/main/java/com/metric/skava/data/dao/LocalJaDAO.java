@@ -13,7 +13,9 @@ public interface LocalJaDAO {
 
     public List<Ja> getAllJas(Ja.Group group) throws DAOException;
 
-    public Ja getJa(String indexCode, String groupCode, String code) throws DAOException;
+    public Ja getJaByUniqueCode(String code) throws DAOException;
+
+    public Ja getJa(String groupCode, String code) throws DAOException;
 
     public void saveJa(Ja jr) throws DAOException;
 

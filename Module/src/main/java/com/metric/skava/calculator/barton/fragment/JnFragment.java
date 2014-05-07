@@ -33,7 +33,7 @@ public class JnFragment extends QBartonCalculatorBaseFragment {
         super.onCreate(savedInstanceState);
         final List<Jn> listJn;
         try {
-            listJn = daoFactory.getLocalJnDAO().getAllJns();
+            listJn = getDAOFactory().getLocalJnDAO().getAllJns();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();

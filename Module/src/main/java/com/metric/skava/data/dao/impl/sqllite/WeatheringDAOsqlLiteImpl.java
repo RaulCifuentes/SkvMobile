@@ -33,20 +33,37 @@ public class WeatheringDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<W
 
 
     @Override
-    public Weathering getWeathering(String indexCode, String groupCode, String code) throws DAOException {
+    public Weathering getWeathering(String groupCode, String code) throws DAOException {
         String[] names = new String[]{WeatheringTable.INDEX_CODE_COLUMN, WeatheringTable.GROUP_CODE_COLUMN, WeatheringTable.CODE_COLUMN};
-        String[] values = new String[]{indexCode, groupCode, code};
+        String[] values = new String[]{Weathering.INDEX_CODE, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(WeatheringTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
         List<Weathering> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + Weathering.INDEX_CODE + ", Group Code: " + groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
+                     throw new DAOException("Multiple records for same code. [Index Code : " + Weathering.INDEX_CODE + ", Group Code: " + groupCode + ", Code: " + code + " ]");
+                 }
+        cursor.close();
+        return list.get(0);
+    }
+
+    @Override
+    public Weathering getWeatheringByUniqueCode(String weatheringCode) throws DAOException {
+        String[] names = new String[]{WeatheringTable.INDEX_CODE_COLUMN, WeatheringTable.CODE_COLUMN};
+        String[] values = new String[]{Weathering.INDEX_CODE, weatheringCode};
+        Cursor cursor = getRecordsFilteredByColumns(WeatheringTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
+        List<Weathering> list = assemblePersistentEntities(cursor);
+        if (list.isEmpty()) {
+            throw new DAOException("Entity not found. [Weathering Code : " + weatheringCode + " ]");
+        }
+        if (list.size() > 1) {
+            throw new DAOException("Multiple records for same code. [Index Code : " + weatheringCode + " ]");
         }
         cursor.close();
         return list.get(0);
     }
+
 
     @Override
     protected List<Weathering> assemblePersistentEntities(Cursor cursor) throws DAOException {
@@ -102,17 +119,17 @@ public class WeatheringDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<W
     }
 
     @Override
-    public boolean deleteWeathering(String indexCode, String groupCode, String code) {
-        String[] colNames = {WeatheringTable.INDEX_CODE_COLUMN,
-                WeatheringTable.GROUP_CODE_COLUMN,
-                WeatheringTable.CODE_COLUMN};
-        Object[] colValues = {
-                indexCode,
-                groupCode,
-                code};
-        int howMany = deletePersistentEntitiesFilteredByColumns(WeatheringTable.MAPPED_INDEX_DATABASE_TABLE, colNames, colValues);
-        return (howMany == 1);
-    }
+         public boolean deleteWeathering( String groupCode, String code) {
+             String[] colNames = {WeatheringTable.INDEX_CODE_COLUMN,
+                     WeatheringTable.GROUP_CODE_COLUMN,
+                     WeatheringTable.CODE_COLUMN};
+             Object[] colValues = {
+                     Weathering.INDEX_CODE,
+                     groupCode,
+                     code};
+             int howMany = deletePersistentEntitiesFilteredByColumns(WeatheringTable.MAPPED_INDEX_DATABASE_TABLE, colNames, colValues);
+             return (howMany == 1);
+         }
 
     @Override
     public int deleteAllWeatherings() {

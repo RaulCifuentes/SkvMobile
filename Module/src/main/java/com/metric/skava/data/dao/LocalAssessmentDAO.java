@@ -22,9 +22,9 @@ public interface LocalAssessmentDAO {
 
     public List<Assessment> getAllAssessments() throws DAOException;
 
-    public void saveDraft(Assessment assessment) throws DAOException;
-
-    public void send(Assessment assessment) throws DAOException;
+//    public void saveDraft(Assessment assessment) throws DAOException;
+//    public void send(Assessment assessment) throws DAOException;
+    public void saveAssessment(Assessment assessment) throws DAOException;
 
     public boolean deleteAssessment(String code);
 

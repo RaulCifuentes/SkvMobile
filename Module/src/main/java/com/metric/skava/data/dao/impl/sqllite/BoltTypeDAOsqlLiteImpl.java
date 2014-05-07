@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class BoltTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<BoltType> implements LocalBoltTypeDAO {
+public class BoltTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<BoltType> implements LocalBoltTypeDAO {
 
     public BoltTypeDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
         super(context, skavaContext);
@@ -57,17 +57,17 @@ public class BoltTypeDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Bol
 
     @Override
     protected void savePersistentEntity(String tableName, BoltType newSkavaEntity) throws DAOException {
-
+        saveSkavaEntity(tableName, newSkavaEntity);
     }
 
     @Override
     public boolean deleteBoltType(String code) {
-        return false;
+        return deleteIdentifiableEntity(BoltTypeTable.BOLT_DATABASE_TABLE, code);
     }
 
     @Override
     public int deleteAllBoltTypes() {
-        return 0;
+        return deleteAllPersistentEntities(BoltTypeTable.BOLT_DATABASE_TABLE);
     }
 
 

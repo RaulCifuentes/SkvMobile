@@ -47,7 +47,7 @@ public class SpacingFragment extends RMRCalculatorBaseFragment {
 //        final List<Spacing> listSpacings = getMappedIndexDataProvider().getAllSpacings();
         final List<Spacing> listSpacings;
         try {
-            listSpacings = daoFactory.getLocalSpacingDAO().getAllSpacings();
+            listSpacings = getDAOFactory().getLocalSpacingDAO().getAllSpacings();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();

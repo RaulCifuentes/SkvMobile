@@ -4,12 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.metric.skava.app.context.SkavaContext;
-import com.metric.skava.calculator.barton.model.Ja;
 import com.metric.skava.calculator.barton.model.SRF;
 import com.metric.skava.data.dao.LocalSrfDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.helper.MappedIndexInstanceBuilder4SqlLite;
-import com.metric.skava.data.dao.impl.sqllite.table.JaTable;
 import com.metric.skava.data.dao.impl.sqllite.table.SRFTable;
 
 import java.util.ArrayList;
@@ -33,17 +31,24 @@ public class SrfDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<SRF> imp
         mappedIndexInstaceBuilder = new MappedIndexInstanceBuilder4SqlLite(mContext);
     }
 
+
     @Override
-    public SRF getSrf(String indexCode, String groupCode, String code) throws DAOException {
+    public SRF getSrfByUniqueCode(String code) throws DAOException {
+        return getPersistentEntityByCandidateKey(SRFTable.MAPPED_INDEX_DATABASE_TABLE, SRFTable.CODE_COLUMN, code);
+    }
+
+
+    @Override
+    public SRF getSrf(String groupCode, String code) throws DAOException {
         String[] names = new String[]{SRFTable.INDEX_CODE_COLUMN, SRFTable.GROUP_CODE_COLUMN, SRFTable.CODE_COLUMN};
-        String[] values = new String[]{indexCode, groupCode, code};
+        String[] values = new String[]{SRF.INDEX_CODE, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(SRFTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
         List<SRF> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + SRF.INDEX_CODE + ", Group Code: " + groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Multiple records for same code. [Index Code : " + SRF.INDEX_CODE + ", Group Code: " + groupCode + ", Code: " + code + " ]");
         }
         cursor.close();
         return list.get(0);
@@ -108,12 +113,12 @@ public class SrfDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<SRF> imp
 
 
     @Override
-    public boolean deleteSrf(String indexCode, String groupCode, String code) {
+    public boolean deleteSrf(String groupCode, String code) {
         String[] colNames = {SRFTable.INDEX_CODE_COLUMN,
                 SRFTable.GROUP_CODE_COLUMN,
                 SRFTable.CODE_COLUMN};
         Object[] colValues = {
-                indexCode,
+                SRF.INDEX_CODE,
                 groupCode,
                 code};
         int howMany = deletePersistentEntitiesFilteredByColumns(SRFTable.MAPPED_INDEX_DATABASE_TABLE, colNames, colValues);

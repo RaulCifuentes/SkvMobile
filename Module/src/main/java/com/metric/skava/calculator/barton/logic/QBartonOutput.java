@@ -1,6 +1,10 @@
 package com.metric.skava.calculator.barton.logic;
 
+import com.metric.skava.calculator.barton.model.RockQuality;
+
 public class QBartonOutput {
+
+    private RockQuality rockQuality;
 
 	private Double QBarton;
 
@@ -42,4 +46,11 @@ public class QBartonOutput {
 		this.jwOverSRF = jwOverSRF;
 	}
 
+    public RockQuality getRockQuality() {
+        return rockQuality;
+    }
+
+    public void setRockQuality(RockQuality rockQuality) {
+        this.rockQuality = rockQuality;
+    }
 }

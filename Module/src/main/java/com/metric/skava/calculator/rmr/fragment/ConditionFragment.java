@@ -231,7 +231,7 @@ public class ConditionFragment extends RMRCalculatorBaseFragment {
 //        final List<Persistence> listConditions = getMappedIndexDataProvider().getAllPersistences();
         final List<Persistence> listPersistences;
         try {
-            listPersistences = daoFactory.getLocalPersistenceDAO().getAllPersistences();
+            listPersistences = getDAOFactory().getLocalPersistenceDAO().getAllPersistences();
         } catch (DAOException e){
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -278,7 +278,7 @@ public class ConditionFragment extends RMRCalculatorBaseFragment {
 //        final List<Aperture> listConditions = getMappedIndexDataProvider().getAllApertures();
         final List<Aperture> listApertures;
         try {
-            listApertures = daoFactory.getLocalApertureDAO().getAllApertures();
+            listApertures = getDAOFactory().getLocalApertureDAO().getAllApertures();
         } catch (DAOException e){
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -327,7 +327,7 @@ public class ConditionFragment extends RMRCalculatorBaseFragment {
 //        final List<Roughness> listRoughness = getMappedIndexDataProvider().getAllRoughness();
         final List<Roughness> listRoughness;
         try {
-            listRoughness = daoFactory.getLocalRoughnessDAO().getAllRoughnesses();
+            listRoughness = getDAOFactory().getLocalRoughnessDAO().getAllRoughnesses();
         } catch (DAOException e){
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -374,7 +374,7 @@ public class ConditionFragment extends RMRCalculatorBaseFragment {
 //        final List<Infilling> listInfillings = getMappedIndexDataProvider().getAllInfillings();
         final List<Infilling> listInfillings;
         try {
-            listInfillings = daoFactory.getLocalInfillingDAO().getAllInfillings();
+            listInfillings = getDAOFactory().getLocalInfillingDAO().getAllInfillings();
         } catch (DAOException e){
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -421,7 +421,7 @@ public class ConditionFragment extends RMRCalculatorBaseFragment {
 //        final List<Weathering> listWeatherings = getMappedIndexDataProvider().getAllWeatherings();
         final List<Weathering> listWeatherings;
         try {
-            listWeatherings = daoFactory.getLocalWeatheringDAO().getAllWeatherings();
+            listWeatherings = getDAOFactory().getLocalWeatheringDAO().getAllWeatherings();
         } catch (DAOException e){
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();

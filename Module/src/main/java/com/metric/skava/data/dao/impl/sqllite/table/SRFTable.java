@@ -31,6 +31,6 @@ public class SRFTable extends MappexIndexInstanceBaseTable {
     public static final String INSERT_SRF_TABLE_FOURTEENTH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + " values('SRF', 'd','O', 'Keywords O', 'Mild swelling rock pressure', 7.5 )";
     public static final String INSERT_SRF_TABLE_FIFTEENTH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + " values('SRF', 'd','P', 'Keywords P', 'Heavy swelling rock pressure', 12.5 )";
 
-
+    public static final String DELETE_SRF_TABLE = "delete from " + MAPPED_INDEX_DATABASE_TABLE;
 
 }

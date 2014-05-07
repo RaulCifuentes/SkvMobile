@@ -63,7 +63,7 @@ public class SaveAssessmentMainFragment extends SkavaFragment {
             public void onClick(View v) {
                 try {
                     Assessment assessment = getCurrentAssessment();
-                    mLocalAssessmentDAO.saveDraft(assessment);
+                    mLocalAssessmentDAO.saveAssessment(assessment);
                     mRemoteAssessmentDAO.saveAssessment(assessment);
                 } catch (DAOException e) {
                     Log.e(SkavaConstants.LOG, e.getMessage());
@@ -79,7 +79,7 @@ public class SaveAssessmentMainFragment extends SkavaFragment {
             public void onClick(View v) {
                 try {
                     Assessment assessment = getCurrentAssessment();
-                    mLocalAssessmentDAO.saveDraft(assessment);
+                    mLocalAssessmentDAO.saveAssessment(assessment);
                     mRemoteAssessmentDAO.saveAssessment(assessment);
                 } catch (DAOException e) {
                     Log.e(SkavaConstants.LOG, e.getMessage());

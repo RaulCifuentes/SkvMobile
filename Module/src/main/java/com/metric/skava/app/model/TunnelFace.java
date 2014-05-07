@@ -9,10 +9,13 @@ public class TunnelFace extends SkavaEntity {
 
     private Tunnel tunnel;
     private Short orientation;
-    private Short slope;
+    private Double slope;
 
-    public TunnelFace(String id, String name) {
-        super(id, name);
+    public TunnelFace(Tunnel tunnel, String code, String name, Short orientation, Double slope) {
+        super(code, name);
+        this.tunnel = tunnel;
+        this.orientation = orientation;
+        this.slope = slope;
     }
 
     public Tunnel getTunnel() {
@@ -31,11 +34,11 @@ public class TunnelFace extends SkavaEntity {
         this.orientation = orientation;
     }
 
-    public Short getSlope() {
+    public Double getSlope() {
         return slope;
     }
 
-    public void setSlope(Short slope) {
+    public void setSlope(Double slope) {
         this.slope = slope;
     }
 }

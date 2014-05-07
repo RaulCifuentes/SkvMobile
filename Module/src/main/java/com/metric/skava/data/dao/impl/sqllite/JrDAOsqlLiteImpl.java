@@ -28,16 +28,22 @@ public class JrDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Jr> imple
     }
 
     @Override
-    public Jr getJr(String indexCode, String groupCode, String code) throws DAOException {
+    public Jr getJrByUniqueCode(String code) throws DAOException {
+        return getPersistentEntityByCandidateKey(JrTable.MAPPED_INDEX_DATABASE_TABLE, JrTable.CODE_COLUMN, code);
+    }
+
+
+    @Override
+    public Jr getJr( String groupCode, String code) throws DAOException {
         String[] names = new String[]{JrTable.INDEX_CODE_COLUMN, JrTable.GROUP_CODE_COLUMN, JrTable.CODE_COLUMN};
-        String[] values = new String[]{indexCode, groupCode, code};
+        String[] values = new String[]{Jr.INDEX_CODE, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(JrTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Jr> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + Jr.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Multiple records for same code. [Index Code : " + Jr.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
         cursor.close();
         return list.get(0);

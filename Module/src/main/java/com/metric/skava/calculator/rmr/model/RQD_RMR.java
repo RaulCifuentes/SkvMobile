@@ -48,10 +48,6 @@ public class RQD_RMR extends MappedIndex implements Serializable {
 
         public RQD_RMR(String code, String key, String shortDescription, String longDescription, Double value) {
         super(code, key, shortDescription, longDescription, value);
-//		setKey(key);
-//        getCategoriesAndValues()[0][0] = MappedIndex.DESCRIPTION;
-//        getCategoriesAndValues()[1][0] = longDescription;
-//		setValue(value);
 	}
 
     private RQD wrappedRqd;
@@ -64,13 +60,20 @@ public class RQD_RMR extends MappedIndex implements Serializable {
         this.wrappedRqd = wrappedRqd;
     }
 
-    public static RQD_RMR findWrapper(RQD rqd){
-        for (RQD_RMR rqd_rmr : commonValuesTable) {
-            if (rqd_rmr.getValue().intValue() == rqd.getValue()) {
-                return rqd_rmr;
-            }
+    public static RQD_RMR findWrapper(RQD rqd) {
+        RQD_RMR rqd_rmr = null;
+        if (rqd.getValue() <= 25) {
+            rqd_rmr = commonValuesTable.get(0);
+        } else if (rqd.getValue() <= 50 ){
+            rqd_rmr = commonValuesTable.get(1);
+        } else if (rqd.getValue() <= 75) {
+            rqd_rmr = commonValuesTable.get(2);
+        } else if (rqd.getValue() <= 90) {
+            rqd_rmr = commonValuesTable.get(3);
+        } else if (rqd.getValue() <= 100) {
+            rqd_rmr = commonValuesTable.get(4);
         }
-        return null;
+        return rqd_rmr;
     }
 
     public static List<RQD_RMR> getAllRqdRmr() {

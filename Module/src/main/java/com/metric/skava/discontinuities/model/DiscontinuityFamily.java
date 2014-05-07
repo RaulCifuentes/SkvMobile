@@ -1,5 +1,6 @@
 package com.metric.skava.discontinuities.model;
 
+import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.calculator.barton.model.Ja;
 import com.metric.skava.calculator.barton.model.Jr;
 import com.metric.skava.calculator.rmr.model.Aperture;
@@ -154,23 +155,33 @@ public class DiscontinuityFamily {
     public void setAperture(Aperture aperture) {
         this.aperture = aperture;
     }
-    
+
     public boolean isComplete() {
         return
-            this.getType() != null &&
-            this.getRelevance() != null &&
-            this.getDipDegrees() != null &&
-            this.getDipDirDegrees() != null &&
-            this.getShape() != null &&
-            this.getSpacing() != null &&
-            this.getRoughness() != null &&
-            this.getWeathering() != null &&
-            this.getWater().getCode() != null &&
-            this.getPersistence() != null &&
-            this.getAperture() != null &&
-            this.getInfilling() != null &&
-            this.getJa() != null &&
-            this.getJr() != null;
+                this.getType() != null &&
+                        this.getRelevance() != null &&
+                        this.getDipDegrees() != null &&
+                        this.getDipDirDegrees() != null &&
+                        this.getShape() != null &&
+                        this.getSpacing() != null &&
+                        this.getRoughness() != null &&
+                        this.getWeathering() != null &&
+                        this.getWater().getCode() != null &&
+                        this.getPersistence() != null &&
+                        this.getAperture() != null &&
+                        this.getInfilling() != null &&
+                        this.getJa() != null &&
+                        this.getJr() != null;
+    }
+
+    public boolean hasSelectedAnything() {
+        return SkavaUtils.isDefined(getType()) || SkavaUtils.isDefined(getRelevance()) ||
+                (getDipDegrees()!=null) || (getDipDirDegrees()!=null) ||
+                SkavaUtils.isDefined(getShape()) || SkavaUtils.isDefined(getSpacing()) ||
+                SkavaUtils.isDefined(getRoughness()) || SkavaUtils.isDefined(getWeathering()) ||
+                SkavaUtils.isDefined(getWater()) || SkavaUtils.isDefined(getPersistence()) ||
+                SkavaUtils.isDefined(getAperture()) || SkavaUtils.isDefined(getInfilling()) ||
+                SkavaUtils.isDefined(getJa()) || SkavaUtils.isDefined(getJr());
     }
 
     public Long get_id() {

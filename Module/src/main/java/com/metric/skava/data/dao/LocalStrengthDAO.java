@@ -13,7 +13,9 @@ public interface LocalStrengthDAO {
 
     public List<StrengthOfRock> getAllStrengths(StrengthOfRock.Group group) throws DAOException;
 
-    public StrengthOfRock getStrength(String indexCode, String groupCode, String code) throws DAOException;
+    public StrengthOfRock getStrength(String groupCode, String code) throws DAOException;
+
+    public StrengthOfRock getStrengthByUniqueCode(String code) throws DAOException;
 
     public void saveStrength(StrengthOfRock strength) throws DAOException;
 

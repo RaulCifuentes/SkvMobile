@@ -112,7 +112,7 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
 
         final List<OrientationDiscontinuities> listOrientations;
         try {
-            listOrientations = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.TUNNELS_MINES);
+            listOrientations = getDAOFactory().getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.TUNNELS_MINES);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
@@ -154,7 +154,7 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
 
         final List<OrientationDiscontinuities> listOrientations;
         try {
-            listOrientations = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.SLOPES);
+            listOrientations = getDAOFactory().getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.SLOPES);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
@@ -196,7 +196,7 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
 
         final List<OrientationDiscontinuities> listOrientations;
         try {
-            listOrientations = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.FOUNDATIONS);
+            listOrientations = getDAOFactory().getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.FOUNDATIONS);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);

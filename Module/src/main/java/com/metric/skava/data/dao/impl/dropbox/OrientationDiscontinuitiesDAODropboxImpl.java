@@ -30,17 +30,17 @@ public class OrientationDiscontinuitiesDAODropboxImpl extends DropBoxBaseDAO imp
 
 
     private String getOrientationParameterId() throws DAOException {
-        DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "RMR_UCS");
+        DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "RMR_Orientation");
         String codigo = foundRecord.getString("ParameterId");
         return codigo;
     }
 
     @Override
     public List<OrientationDiscontinuities> getAllOrientationsDiscontinuities() throws DAOException {
-        String strengthParameterId = getOrientationParameterId();
+        String orientationParameterId = getOrientationParameterId();
         List<OrientationDiscontinuities> listOrientations = new ArrayList<OrientationDiscontinuities>();
         String[] names = new String[]{"FkParameterId"};
-        String[] values = new String[]{strengthParameterId};
+        String[] values = new String[]{orientationParameterId};
         List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
         for (DbxRecord currentDbxRecord : recordList) {
             String code = currentDbxRecord.getString("IndexId");
@@ -60,11 +60,11 @@ public class OrientationDiscontinuitiesDAODropboxImpl extends DropBoxBaseDAO imp
             if (groupName.equalsIgnoreCase("b")){
                 groupName = OrientationDiscontinuities.Group.FOUNDATIONS.name();
             }
-            if (groupName.equalsIgnoreCase("b")){
+            if (groupName.equalsIgnoreCase("c")){
                 groupName = OrientationDiscontinuities.Group.SLOPES.name();
             }
-            OrientationDiscontinuities.Group strengthGroup = OrientationDiscontinuities.Group.valueOf(groupName);
-            OrientationDiscontinuities newOrientation = new OrientationDiscontinuities(strengthGroup, code, key, shortDescription, description, value);
+            OrientationDiscontinuities.Group orientationGroup = OrientationDiscontinuities.Group.valueOf(groupName);
+            OrientationDiscontinuities newOrientation = new OrientationDiscontinuities(orientationGroup, code, key, shortDescription, description, value);
             newOrientation.setShortDescription(shortDescription);
 
             listOrientations.add(newOrientation);

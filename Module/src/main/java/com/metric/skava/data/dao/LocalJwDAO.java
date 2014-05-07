@@ -12,7 +12,9 @@ public interface LocalJwDAO {
 
     public List<Jw> getAllJws() throws DAOException;
 
-    public Jw getJw(String indexCode, String groupCode, String code) throws DAOException;
+    public Jw getJw(String groupCode, String code) throws DAOException;
+
+    public Jw getJwByUniqueCode(String code) throws DAOException;
 
     public void saveJw(Jw jw) throws DAOException;
 

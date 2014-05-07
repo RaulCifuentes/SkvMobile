@@ -17,7 +17,7 @@ public class SpacingTable extends MappexIndexInstanceBaseTable {
     public static final String INSERT_SPACING_TABLE_FOURTH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + "values('Spacing', null, 'D', '60 - 200 mm', '60 - 200 mm', 8 )";
     public static final String INSERT_SPACING_TABLE_FIFTH = "insert into " + MAPPED_INDEX_DATABASE_TABLE + INSERT_SCRIPT + "values('Spacing', null, 'E', '< 60 mm', '< 60 mm', 5 )";
 
-
+    public static final String DELETE_SPACING_TABLE = "delete from " + MAPPED_INDEX_DATABASE_TABLE;
 
 }
 

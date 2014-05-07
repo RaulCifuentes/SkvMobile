@@ -8,8 +8,9 @@ public class ExcavationFactors {
     private ESR esr;
     private Double span;
 
-    public ExcavationFactors(ESR esr) {
+    public ExcavationFactors(ESR esr, Double span) {
         this.esr = esr;
+        this.span = span;
     }
 
 

@@ -20,6 +20,7 @@ public class SyncLogEntry {
         this.syncDate = syncDate;
         this.source = source;
         this.status = status;
+        this.domain = domain;
     }
 
     public Source getSource() {
@@ -44,5 +45,13 @@ public class SyncLogEntry {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Domain getDomain() {
+        return domain;
+    }
+
+    public void setDomain(Domain domain) {
+        this.domain = domain;
     }
 }

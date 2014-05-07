@@ -27,7 +27,7 @@ public class OrientationDiscontinuities extends MappedIndex implements Serializa
     }
 
     public OrientationDiscontinuities(Group group, String code, String key, String shortDescription, String longDescription, Double value) {
-        super(code, key, shortDescription, longDescription,value);
+        super(code, key, shortDescription, longDescription, value);
         setGroup(group);
     }
 
