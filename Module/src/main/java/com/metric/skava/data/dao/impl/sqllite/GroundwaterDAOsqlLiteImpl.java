@@ -33,24 +33,46 @@ public class GroundwaterDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<
 
     @Override
     protected List<Groundwater> assemblePersistentEntities(Cursor cursor) throws DAOException {
-        return null;
+        List<Groundwater> list = new ArrayList<Groundwater>();
+        while (cursor.moveToNext()) {
+            Groundwater newInstance = mappedIndexInstaceBuilder.buildGroundwaterFromCursorRecord(cursor);
+            list.add(newInstance);
+        }
+        return list;
     }
 
     @Override
-    public Groundwater getGroundwater(String indexCode, String groupCode, String code) throws DAOException {
+    public Groundwater getGroundwater(String groupCode, String code) throws DAOException {
         String[] names = new String[]{GroundwaterTable.INDEX_CODE_COLUMN, GroundwaterTable.GROUP_CODE_COLUMN, GroundwaterTable.CODE_COLUMN};
-        String[] values = new String[]{indexCode, groupCode, code};
+        String[] values = new String[]{Groundwater.INDEX_CODE, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(GroundwaterTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
         List<Groundwater> list = assambleGroundwaters(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + Groundwater.INDEX_CODE + ", Group Code: " + groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Multiple records for same code. [Index Code : " + Groundwater.INDEX_CODE + ", Group Code: " + groupCode + ", Code: " + code + " ]");
         }
         cursor.close();
         return list.get(0);
     }
+
+    @Override
+    public Groundwater getGroundwaterByUniqueCode(String infillingCode) throws DAOException {
+        String[] names = new String[]{GroundwaterTable.INDEX_CODE_COLUMN, GroundwaterTable.CODE_COLUMN};
+        String[] values = new String[]{Groundwater.INDEX_CODE, infillingCode};
+        Cursor cursor = getRecordsFilteredByColumns(GroundwaterTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
+        List<Groundwater> list = assemblePersistentEntities(cursor);
+        if (list.isEmpty()) {
+            throw new DAOException("Entity not found. [Groundwater Code : " + infillingCode + " ]");
+        }
+        if (list.size() > 1) {
+            throw new DAOException("Multiple records for same code. [Index Code : " + infillingCode + " ]");
+        }
+        cursor.close();
+        return list.get(0);
+    }
+
 
 
     protected List<Groundwater> assambleGroundwaters(Cursor cursor) throws DAOException {

@@ -17,6 +17,7 @@ public class RMRCalculationTable extends SkavaEntityTable {
     public static final String INFILLING_CODE_COLUMN = "INFILLING_CODE";
     public static final String WEATHERING_CODE_COLUMN = "WEATHERING_CODE";
     public static final String GROUNDWATER_CODE_COLUMN = "GROUNDWATER_CODE";
+    public static final String ORIENTATION_CODE_COLUMN = "ORIENTATION_CODE";
 
     public static final String CREATE_RMRCALCULATION_TABLE = "create table " +
             RMR_CALCULATION_DATABASE_TABLE + " (" + GLOBAL_KEY_ID +
@@ -30,6 +31,7 @@ public class RMRCalculationTable extends SkavaEntityTable {
             ROUGHNESS_CODE_COLUMN + " text not null, " +
             INFILLING_CODE_COLUMN + " text not null, " +
             WEATHERING_CODE_COLUMN + " text not null, " +
-            GROUNDWATER_CODE_COLUMN + " text not null " +
+            GROUNDWATER_CODE_COLUMN + " text not null, " +
+            ORIENTATION_CODE_COLUMN + " text not null " +
             " );";
 }

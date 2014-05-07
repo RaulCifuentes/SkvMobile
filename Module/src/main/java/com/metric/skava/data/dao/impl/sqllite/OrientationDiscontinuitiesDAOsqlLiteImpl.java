@@ -34,20 +34,41 @@ public class OrientationDiscontinuitiesDAOsqlLiteImpl extends SqlLiteBaseIdentif
 
     @Override
     protected List<OrientationDiscontinuities> assemblePersistentEntities(Cursor cursor) throws DAOException {
-        return null;
+        List<OrientationDiscontinuities> list = new ArrayList<OrientationDiscontinuities>();
+        while (cursor.moveToNext()) {
+            OrientationDiscontinuities newInstance = mappedIndexInstaceBuilder.buildOrientationDiscontinuitiesFromCursorRecord(cursor);
+            list.add(newInstance);
+        }
+        return list;
     }
 
     @Override
-    public OrientationDiscontinuities getOrientationDiscontinuities(String indexCode, String groupCode, String code) throws DAOException {
+    public OrientationDiscontinuities getOrientationDiscontinuities(String groupCode, String code) throws DAOException {
         String[] names = new String[]{OrientationTable.INDEX_CODE_COLUMN, OrientationTable.GROUP_CODE_COLUMN, OrientationTable.CODE_COLUMN};
-        String[] values = new String[]{indexCode, groupCode, code};
+        String[] values = new String[]{OrientationDiscontinuities.INDEX_CODE, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(OrientationTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
         List<OrientationDiscontinuities> list = assambleOrientationDiscontinuities(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + OrientationDiscontinuities.INDEX_CODE + ", Group Code: " + groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Multiple records for same code. [Index Code : " + OrientationDiscontinuities.INDEX_CODE + ", Group Code: " + groupCode + ", Code: " + code + " ]");
+        }
+        cursor.close();
+        return list.get(0);
+    }
+
+    @Override
+    public OrientationDiscontinuities getOrientationDiscontinuitiesByUniqueCode(String code) throws DAOException {
+        String[] names = new String[]{OrientationTable.INDEX_CODE_COLUMN, OrientationTable.CODE_COLUMN};
+        String[] values = new String[]{OrientationDiscontinuities.INDEX_CODE, code};
+        Cursor cursor = getRecordsFilteredByColumns(OrientationTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
+        List<OrientationDiscontinuities> list = assambleOrientationDiscontinuities(cursor);
+        if (list.isEmpty()) {
+            throw new DAOException("Entity not found. [Index Code : " + OrientationDiscontinuities.INDEX_CODE +  ", Code: " + code + " ]");
+        }
+        if (list.size() > 1) {
+            throw new DAOException("Multiple records for same code. [Index Code : " + OrientationDiscontinuities.INDEX_CODE + ", Code: " + code + " ]");
         }
         cursor.close();
         return list.get(0);

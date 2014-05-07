@@ -13,7 +13,9 @@ public interface LocalOrientationDiscontinuitiesDAO {
 
     public List<OrientationDiscontinuities> getAllOrientationDiscontinuities(OrientationDiscontinuities.Group group) throws DAOException;
 
-    public OrientationDiscontinuities getOrientationDiscontinuities(String indexCode, String groupCode, String code) throws DAOException;
+    public OrientationDiscontinuities getOrientationDiscontinuities(String groupCode, String code) throws DAOException;
+
+    public OrientationDiscontinuities getOrientationDiscontinuitiesByUniqueCode(String code) throws DAOException;
 
     public void saveOrientationDiscontinuities(OrientationDiscontinuities orientationDiscontinuities) throws DAOException;
 

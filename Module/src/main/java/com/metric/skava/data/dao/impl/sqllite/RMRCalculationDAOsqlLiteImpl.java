@@ -17,6 +17,7 @@ import com.metric.skava.calculator.rmr.model.Spacing;
 import com.metric.skava.calculator.rmr.model.StrengthOfRock;
 import com.metric.skava.calculator.rmr.model.Weathering;
 import com.metric.skava.data.dao.LocalApertureDAO;
+import com.metric.skava.data.dao.LocalGroundwaterDAO;
 import com.metric.skava.data.dao.LocalInfillingDAO;
 import com.metric.skava.data.dao.LocalOrientationDiscontinuitiesDAO;
 import com.metric.skava.data.dao.LocalPersistenceDAO;
@@ -43,6 +44,7 @@ public class RMRCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO
     private LocalRoughnessDAO mLocalRoughnessDAO;
     private LocalInfillingDAO mLocalInfillingDAO;
     private LocalWeatheringDAO mLocalWeatheringDAO;
+    private LocalGroundwaterDAO mLocalGroundwaterDAO;
     private LocalOrientationDiscontinuitiesDAO mLocalOrientationDAO;
 
 
@@ -55,6 +57,7 @@ public class RMRCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO
         mLocalRoughnessDAO = getDAOFactory().getLocalRoughnessDAO();
         mLocalInfillingDAO = getDAOFactory().getLocalInfillingDAO();
         mLocalWeatheringDAO = getDAOFactory().getLocalWeatheringDAO();
+        mLocalGroundwaterDAO = getDAOFactory().getLocalGroundwaterDAO();
         mLocalOrientationDAO = getDAOFactory().getLocalOrientationDiscontinuitiesDAO();
     }
 
@@ -71,20 +74,19 @@ public class RMRCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO
             String infillingCode = CursorUtils.getString(RMRCalculationTable.INFILLING_CODE_COLUMN, cursor);
             String weatheringCode = CursorUtils.getString(RMRCalculationTable.WEATHERING_CODE_COLUMN, cursor);
             String groundwaterCode = CursorUtils.getString(RMRCalculationTable.GROUNDWATER_CODE_COLUMN, cursor);
+            String orientationCode = CursorUtils.getString(RMRCalculationTable.ORIENTATION_CODE_COLUMN, cursor);
             //This seems to be persisted only to transfer to Dropbox but not needed in the deserialization/parsing process
 
-
             StrengthOfRock strenght = mLocalStrengthDAO.getStrengthByUniqueCode(strenghtCode);
-            RQD_RMR rqd = null;
+            RQD_RMR rqd = RQD_RMR.findRQDByKey(rqdCode);
             Spacing spacing = mLocalSpacingDAO.getSpacingByUniqueCode(spacingCode);
-            Groundwater groundwater = null;
+            Groundwater groundwater = mLocalGroundwaterDAO.getGroundwaterByUniqueCode(groundwaterCode);
             Persistence persistence = mLocalPersistenceDAO.getPersistenceByUniqueCode(persistenceCode);
             Aperture aperture = mLocalApertureDAO.getApertureByUniqueCode(apertureCode);
             Roughness roughness = mLocalRoughnessDAO.getRoughnessByUniqueCode(roughnessCode);
             Infilling infilling = mLocalInfillingDAO.getInfillingByUniqueCode(infillingCode);
             Weathering weathering = mLocalWeatheringDAO.getWeatheringByUniqueCode(weatheringCode);
-            OrientationDiscontinuities orientation = null;
-
+            OrientationDiscontinuities orientation = mLocalOrientationDAO.getOrientationDiscontinuitiesByUniqueCode(orientationCode);
             RMR_Calculation newInstance = new RMR_Calculation(strenght, rqd, spacing, persistence, aperture, roughness, infilling, weathering, groundwater, orientation);
             list.add(newInstance);
         }
