@@ -582,6 +582,11 @@ public class MappingReportMainFragment extends SkavaFragment {
             ((TextView) rootView.findViewById(R.id.summary_report_outcrop_description_value)).setText(outcrop);
         }
 
+        String rockSampleIdentification = currentAssessment.getRockSampleIdentification();
+        if (rockSampleIdentification != null) {
+            ((TextView) rootView.findViewById(R.id.summary_report_rock_sample_identification_value)).setText(rockSampleIdentification);
+        }
+
         return rootView;
     }
 }
