@@ -12,7 +12,9 @@ public interface LocalGroundwaterDAO {
 
     public List<Groundwater> getAllGroundwaters(Groundwater.Group group) throws DAOException;
 
-    public Groundwater getGroundwater(String indexCode, String groupCode, String code) throws DAOException;
+    public Groundwater getGroundwater(String groupCode, String code) throws DAOException;
+
+    public Groundwater getGroundwaterByUniqueCode( String code) throws DAOException;
 
     public void saveGroundwater(Groundwater persistence) throws DAOException;
 
