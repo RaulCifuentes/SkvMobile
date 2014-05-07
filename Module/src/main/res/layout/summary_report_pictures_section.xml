@@ -2,10 +2,10 @@
 
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_span="2"
-    android:orientation="vertical"
-    android:rowCount="3"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="2">
 
     <!--<TextView-->
     <!--android:layout_span="2"-->
@@ -17,50 +17,57 @@
     <!--android:textStyle="bold"-->
     <!--style="@style/ReportLabelContainerBox" />-->
 
-    <ImageView
-        android:id="@+id/summary_report_left_wall_pic"
-        android:src="@drawable/skava_shadow"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:minWidth="@dimen/summary_report_non_face_image_width"
-        android:minHeight="@dimen/summary_report_non_face_image_height"
-        android:maxHeight="@dimen/summary_report_non_face_image_height"
-        android:maxWidth="@dimen/summary_report_non_face_image_width"
-        android:adjustViewBounds="true"
-        android:scaleType="centerInside"
-        android:layout_margin="@dimen/summary_report_box_margin" />
+        android:layout_height="fill_parent">
 
-    <ImageView
-        android:id="@+id/summary_report_right_wall_pic"
-        android:src="@drawable/skava_shadow"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:minWidth="@dimen/summary_report_non_face_image_width"
-        android:minHeight="@dimen/summary_report_non_face_image_height"
-        android:maxHeight="@dimen/summary_report_non_face_image_height"
-        android:maxWidth="@dimen/summary_report_non_face_image_width"
-        android:scaleType="centerInside"
-        android:adjustViewBounds="true"
-        android:layout_margin="@dimen/summary_report_box_margin" />
+        <ImageView
+            android:id="@+id/summary_report_left_wall_pic"
+            android:src="@drawable/skava_shadow"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:minWidth="@dimen/summary_report_non_face_image_width"
+            android:minHeight="@dimen/summary_report_non_face_image_height"
+            android:maxHeight="@dimen/summary_report_non_face_image_height"
+            android:maxWidth="@dimen/summary_report_non_face_image_width"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:layout_margin="@dimen/summary_report_box_margin" />
 
-    <ImageView
-        android:id="@+id/summary_report_roof_pic"
-        android:src="@drawable/skava_shadow"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:minWidth="@dimen/summary_report_non_face_image_width"
-        android:minHeight="@dimen/summary_report_non_face_image_height"
-        android:maxHeight="@dimen/summary_report_non_face_image_height"
-        android:maxWidth="@dimen/summary_report_non_face_image_width"
-        android:adjustViewBounds="true"
-        android:scaleType="centerInside"
-        android:layout_margin="@dimen/summary_report_box_margin" />
+        <ImageView
+            android:id="@+id/summary_report_right_wall_pic"
+            android:src="@drawable/skava_shadow"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:minWidth="@dimen/summary_report_non_face_image_width"
+            android:minHeight="@dimen/summary_report_non_face_image_height"
+            android:maxHeight="@dimen/summary_report_non_face_image_height"
+            android:maxWidth="@dimen/summary_report_non_face_image_width"
+            android:scaleType="centerInside"
+            android:adjustViewBounds="true"
+            android:layout_margin="@dimen/summary_report_box_margin" />
+
+        <ImageView
+            android:id="@+id/summary_report_roof_pic"
+            android:src="@drawable/skava_shadow"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:minWidth="@dimen/summary_report_non_face_image_width"
+            android:minHeight="@dimen/summary_report_non_face_image_height"
+            android:maxHeight="@dimen/summary_report_non_face_image_height"
+            android:maxWidth="@dimen/summary_report_non_face_image_width"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:layout_margin="@dimen/summary_report_box_margin" />
+
+    </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_rowSpan="3">
+        android:layout_gravity="top|center_horizontal">
 
         <ImageView
             android:layout_gravity="center"
@@ -75,6 +82,36 @@
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
             android:layout_margin="@dimen/summary_report_box_margin" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_gravity="top|center_horizontal">
+
+        <TextView
+            style="@style/ReportLabelContainerBox"
+            android:id="@id/summary_report_rock_sample_identification_label"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="@string/rockmass_desc_rock_sample_identification" />
+
+        <TextView
+            android:id="@id/summary_report_rock_sample_identification_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_box" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_gravity="top|center_horizontal">
 
         <TextView
             android:id="@+id/summary_report_outcrop_description_label"

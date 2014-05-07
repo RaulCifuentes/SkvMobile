@@ -38,6 +38,7 @@ public class Assessment implements IdentifiableEntity {
     private Double blockSize;
     private Short numberOfJoints;
     private String outcropDescription;
+    private String rockSampleIdentification;
 
     private SupportRecomendation recomendation;
     private List<DiscontinuityFamily> discontinuitySystem;
@@ -232,6 +233,14 @@ public class Assessment implements IdentifiableEntity {
 
     public void setOutcropDescription(java.lang.String outcropDescription) {
         this.outcropDescription = outcropDescription;
+    }
+
+    public String getRockSampleIdentification() {
+        return rockSampleIdentification;
+    }
+
+    public void setRockSampleIdentification(String rockSampleIdentification) {
+        this.rockSampleIdentification = rockSampleIdentification;
     }
 
     public SupportRecomendation getRecomendation() {

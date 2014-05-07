@@ -39,6 +39,8 @@ public class AssessmentTable extends SkavaTable {
 
     public static final String OUTCROP_COLUMN = "OUTCROP";
 
+    public static final String ROCK_SAMPLE_IDENTIFICATION_COLUMN = "ROCK_SAMPLE_IDENTIFICATION";
+
 
     //TODO Solved the relations on the dependant side
     //    public static final String RECOMENDATION_CODE_COLUMN = "SUPPORT_RECOMENDATION_CODE";
@@ -62,7 +64,8 @@ public class AssessmentTable extends SkavaTable {
             FRACTURE_TYPE_CODE_COLUMN + " text null, " +
             BLOCKS_SIZE_COLUMN + " real null, " +
             NUMBER_JOINTS_COLUMN + " integer null, " +
-            OUTCROP_COLUMN + " text null  );";
+            OUTCROP_COLUMN + " text null, " +
+            ROCK_SAMPLE_IDENTIFICATION_COLUMN + " text null  );";
 
     private static String INSERT_SCRIPT = "insert into " + ASSESSMENT_DATABASE_TABLE + "(" +
             CODE_COLUMN + "," +
@@ -80,7 +83,8 @@ public class AssessmentTable extends SkavaTable {
             FRACTURE_TYPE_CODE_COLUMN + "," +
             BLOCKS_SIZE_COLUMN + "," +
             NUMBER_JOINTS_COLUMN  + "," +
-            OUTCROP_COLUMN +") ";
+            OUTCROP_COLUMN + ", " +
+            ROCK_SAMPLE_IDENTIFICATION_COLUMN + ") ";
 
     public static final String INSERT_ASSESSMENT_TABLE          = INSERT_SCRIPT + " values('SKV_A', 'GLG_A', 'TFC_1', 'SCT_A', 20131015011500, 9999999, 100, 'MTH_D', 210, 5,  'FRC_B', 100, 10, 'China deploys ships to new search areas, as Thailand says its radars may have tracked the missing Malaysia Airlines plane shortly after it lost contact.')";
     public static final String INSERT_ASSESSMENT_TABLE_SECOND   = INSERT_SCRIPT + " values('SKV_B', 'GLG_A', 'TFC_3', 'SCT_B', 20140229223000, 9999999, 100, 'MTH_B', 125, 30, 'FRC_E', 220, 15, 'Researchers outline compelling evidence for an occasion when the ancient Earth was battered by two asteroids at the same time.')";

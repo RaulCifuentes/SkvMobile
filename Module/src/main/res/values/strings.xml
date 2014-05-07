@@ -74,6 +74,6 @@
     <string name="title_activity_test_authentication_main">TestAuthenticationMainActivity</string>
     <string name="title_activity_save_assessment">SaveAssessmentActivity</string>
     <string name="action_report_send">Send</string>
-    <string name="action_report_save_draft">Save draft</string>
+    <string name="action_report_save_draft">Save draft</string><string name="rockmass_desc_rock_sample_identification">Rock Sample Identification</string>
 
 </resources>
