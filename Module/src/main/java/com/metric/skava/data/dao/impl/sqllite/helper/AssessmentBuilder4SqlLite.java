@@ -41,10 +41,6 @@ public class AssessmentBuilder4SqlLite {
     private LocalExcavationMethodDAO localExcavationMethodDAO;
     private LocalFractureTypeDAO localFractureTypeDAO;
 
-    //http://joesapps.blogspot.com/2011/02/managing-date-and-time-data-in-android.html
-//    private final java.lang.String DATE_FORMAT = "yyyyMMddHHmmss";
-//    private final SimpleDateFormat dateFormat;
-
     public AssessmentBuilder4SqlLite(Context context, SkavaContext skavaContext) throws DAOException {
         this.mContext = context;
 
@@ -62,7 +58,7 @@ public class AssessmentBuilder4SqlLite {
     }
 
 
-    public Assessment buildAssessmentFromCursorRecord(Cursor cursor) throws DAOException {
+    public Assessment buildBareAssessmentFromCursorRecord(Cursor cursor) throws DAOException {
 
         String code = CursorUtils.getString(AssessmentTable.CODE_COLUMN, cursor);
         String internalCode = CursorUtils.getString(AssessmentTable.INTERNAL_CODE_COLUMN, cursor);
@@ -71,24 +67,32 @@ public class AssessmentBuilder4SqlLite {
         babyAssessment.setInternalCode(internalCode);
 
         java.lang.String faceID = CursorUtils.getString(AssessmentTable.TUNEL_FACE_CODE_COLUMN, cursor);
-        TunnelFace tunnelFace = localTunnelFaceDAO.getTunnelFaceByCode(faceID);
-        babyAssessment.setFace(tunnelFace);
+        if (faceID != null) {
+            TunnelFace tunnelFace = localTunnelFaceDAO.getTunnelFaceByCode(faceID);
+            babyAssessment.setFace(tunnelFace);
+        }
 
         java.lang.String geologistID = CursorUtils.getString(AssessmentTable.GEOLOGIST_CODE_COLUMN, cursor);
-        User geologist = localUserDAO.getUserByCode(geologistID);
-        babyAssessment.setGeologist(geologist);
+        if (geologistID != null) {
+            User geologist = localUserDAO.getUserByCode(geologistID);
+            babyAssessment.setGeologist(geologist);
+        }
 
         Long dateAsLongRep = CursorUtils.getLong(AssessmentTable.DATE_COLUMN, cursor);
         Date date = DateDataFormat.getDateFromFormattedLong(dateAsLongRep);
         babyAssessment.setDate(date);
 
         java.lang.String sectionID = CursorUtils.getString(AssessmentTable.EXCAVATION_SECTION_CODE_COLUMN, cursor);
-        ExcavationSection section = localExcavationSectionDAO.getExcavationSectionByCode(sectionID);
-        babyAssessment.setSection(section);
+        if (sectionID != null) {
+            ExcavationSection section = localExcavationSectionDAO.getExcavationSectionByCode(sectionID);
+            babyAssessment.setSection(section);
+        }
 
         java.lang.String methodID = CursorUtils.getString(AssessmentTable.EXCAVATION_METHOD_CODE_COLUMN, cursor);
-        ExcavationMethod method = localExcavationMethodDAO.getExcavationMethodByCode(methodID);
-        babyAssessment.setMethod(method);
+        if (methodID != null) {
+            ExcavationMethod method = localExcavationMethodDAO.getExcavationMethodByCode(methodID);
+            babyAssessment.setMethod(method);
+        }
 
         Double initialPk = CursorUtils.getDouble(AssessmentTable.PK_INITIAL_COLUMN, cursor);
         babyAssessment.setInitialPeg(initialPk);
@@ -106,8 +110,10 @@ public class AssessmentBuilder4SqlLite {
         babyAssessment.setSlope(slope.doubleValue());
 
         java.lang.String fractureTypeID = CursorUtils.getString(AssessmentTable.FRACTURE_TYPE_CODE_COLUMN, cursor);
-        FractureType fractureType = localFractureTypeDAO.getFractureTypeByCode(fractureTypeID);
-        babyAssessment.setFractureType(fractureType);
+        if (fractureTypeID != null) {
+            FractureType fractureType = localFractureTypeDAO.getFractureTypeByCode(fractureTypeID);
+            babyAssessment.setFractureType(fractureType);
+        }
 
         Double blockSize = CursorUtils.getDouble(AssessmentTable.BLOCKS_SIZE_COLUMN, cursor);
         babyAssessment.setBlockSize(blockSize.doubleValue());
@@ -117,6 +123,7 @@ public class AssessmentBuilder4SqlLite {
 
         java.lang.String outcrop = CursorUtils.getString(AssessmentTable.OUTCROP_COLUMN, cursor);
         babyAssessment.setOutcropDescription(outcrop);
+
 
         return babyAssessment;
     }

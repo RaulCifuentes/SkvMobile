@@ -1,28 +1,28 @@
 package com.metric.skava.rocksupport.model;
 
-import com.metric.skava.app.data.SkavaEntity;
-import com.metric.skava.app.model.ExcavationProject;
 import com.metric.skava.app.model.Tunnel;
+import com.metric.skava.calculator.barton.model.RockQuality;
 import com.metric.skava.instructions.model.ArchType;
 import com.metric.skava.instructions.model.BoltType;
 import com.metric.skava.instructions.model.Coverage;
 import com.metric.skava.instructions.model.MeshType;
 import com.metric.skava.instructions.model.ShotcreteType;
-import com.metric.skava.rockmass.model.RockMass;
+import com.metric.skava.instructions.model.SupportPattern;
 
 /**
  * Created by metricboy on 3/13/14.
  */
-public class SupportRequirement extends SkavaEntity {
-
+public class SupportRequirement {
 
     private Tunnel tunnel;
     private Double spanOverESRLowerBoundary;
     private Double spanOverESRUpperBoundary;
-    private RockMass.RockMassQualityType rockMassQualityType;
+    private RockQuality rockQuality;
     private BoltType boltType;
     private Double diameter;
     private Double length;
+    private SupportPattern roofPattern;
+    private SupportPattern wallPattern;
     private ShotcreteType shotcreteType;
     private Double thickness;
     private MeshType meshType;
@@ -30,13 +30,8 @@ public class SupportRequirement extends SkavaEntity {
     private ArchType archType;
     private Double separation;
 
-
-    public SupportRequirement(String code, String name) {
-        super(code, name);
-    }
-
-    public ExcavationProject getProject() {
-        return getTunnel().getProject();
+    public SupportRequirement(Tunnel tunnel) {
+        this.tunnel = tunnel;
     }
 
     public void setTunnel(Tunnel tunnel) {
@@ -46,7 +41,6 @@ public class SupportRequirement extends SkavaEntity {
     public Tunnel getTunnel() {
         return tunnel;
     }
-
 
     public Double getSpanOverESRLower() {
         return spanOverESRLowerBoundary;
@@ -64,12 +58,12 @@ public class SupportRequirement extends SkavaEntity {
         this.spanOverESRUpperBoundary = spanOverESR;
     }
 
-    public RockMass.RockMassQualityType getRockMassQualityType() {
-        return rockMassQualityType;
+    public RockQuality getRockQuality() {
+        return rockQuality;
     }
 
-    public void setRockMassQualityType(RockMass.RockMassQualityType rockMassQualityType) {
-        this.rockMassQualityType = rockMassQualityType;
+    public void setRockQuality(RockQuality rockQuality) {
+        this.rockQuality = rockQuality;
     }
 
     public BoltType getBoltType() {
@@ -94,6 +88,22 @@ public class SupportRequirement extends SkavaEntity {
 
     public void setLength(Double length) {
         this.length = length;
+    }
+
+    public SupportPattern getRoofPattern() {
+        return roofPattern;
+    }
+
+    public void setRoofPattern(SupportPattern roofPattern) {
+        this.roofPattern = roofPattern;
+    }
+
+    public SupportPattern getWallPattern() {
+        return wallPattern;
+    }
+
+    public void setWallPattern(SupportPattern wallPattern) {
+        this.wallPattern = wallPattern;
     }
 
     public ShotcreteType getShotcreteType() {

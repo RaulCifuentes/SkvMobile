@@ -46,7 +46,7 @@ public class JwFragment extends QBartonCalculatorBaseFragment {
 
         final List<Jw> listJw;
         try {
-            listJw = daoFactory.getLocalJwDAO().getAllJws();
+            listJw = getDAOFactory().getLocalJwDAO().getAllJws();
         } catch (DAOException e){
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();

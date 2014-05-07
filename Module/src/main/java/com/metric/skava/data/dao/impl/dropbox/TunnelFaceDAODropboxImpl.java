@@ -8,8 +8,7 @@ import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.Tunnel;
 import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
-import com.metric.skava.data.dao.DAOFactory;
-import com.metric.skava.data.dao.RemoteTunnelDAO;
+import com.metric.skava.data.dao.LocalTunnelDAO;
 import com.metric.skava.data.dao.RemoteTunnelFaceDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.datastore.tables.TunnelFaceDropboxTable;
@@ -26,13 +25,15 @@ public class TunnelFaceDAODropboxImpl extends DropBoxBaseDAO implements RemoteTu
     private TunnelFaceDropboxTable mTunnelsFaceTable;
     private UserDropboxTable mUsersTable;
 
-    private RemoteTunnelDAO remoteTunnelDAO;
+//    private RemoteTunnelDAO remoteTunnelDAO;
+    private LocalTunnelDAO tunnelDAO;
 
     public TunnelFaceDAODropboxImpl(Context context, SkavaContext skavaContext) throws DAOException {
         super(context, skavaContext);
         mTunnelsFaceTable = new TunnelFaceDropboxTable(getDatastore());
         mUsersTable = new UserDropboxTable(getDatastore());
-        remoteTunnelDAO = getDAOFactory().getRemoteTunnelDAO(DAOFactory.Flavour.DROPBOX);
+//        remoteTunnelDAO = getDAOFactory().getRemoteTunnelDAO(DAOFactory.Flavour.DROPBOX);
+        tunnelDAO = getDAOFactory().getLocalTunnelDAO();
     }
 
     @Override
@@ -42,10 +43,11 @@ public class TunnelFaceDAODropboxImpl extends DropBoxBaseDAO implements RemoteTu
         for (DbxRecord faceRecord : facesList) {
             String codigo = faceRecord.getString("FaceId");
             String nombre = faceRecord.getString("Name");
-            TunnelFace face = new TunnelFace(codigo, nombre);
+            Double orientation = faceRecord.getDouble("Orientation");
+            Double slope = faceRecord.getDouble("Slope");
             String tunnelCode = faceRecord.getString("TunnelId");
-            Tunnel tunnel = remoteTunnelDAO.getTunnelByCode(tunnelCode);
-            face.setTunnel(tunnel);
+            Tunnel tunnel = tunnelDAO.getTunnelByUniqueCode(tunnelCode);
+            TunnelFace face = new TunnelFace(tunnel, codigo, nombre, orientation.shortValue(), slope );
             listFaces.add(face);
         }
         return listFaces;
@@ -69,10 +71,11 @@ public class TunnelFaceDAODropboxImpl extends DropBoxBaseDAO implements RemoteTu
         DbxRecord faceRecord = mTunnelsFaceTable.findRecordByCode(code);
         String codigo = faceRecord.getString("FaceId");
         String nombre = faceRecord.getString("Name");
-        TunnelFace face = new TunnelFace(codigo, nombre);
+        Double orientation = faceRecord.getDouble("Orientation");
+        Double slope = faceRecord.getDouble("Slope");
         String tunnelCode = faceRecord.getString("TunnelId");
-        Tunnel tunnel = remoteTunnelDAO.getTunnelByCode(tunnelCode);
-        face.setTunnel(tunnel);
+        Tunnel tunnel = tunnelDAO.getTunnelByUniqueCode(tunnelCode);
+        TunnelFace face = new TunnelFace(tunnel, codigo, nombre, orientation.shortValue(), slope );
         return face;
     }
 

@@ -18,7 +18,9 @@ public interface LocalTunnelDAO {
 
     public List<Tunnel> getTunnelsByUser(User user) throws DAOException;
 
-    public Tunnel getTunnelByCode(String code) throws DAOException;
+    public Tunnel getTunnelByUniqueCode (String code) throws DAOException;
+
+    public Tunnel getTunnelByCode(String projectCode, String code) throws DAOException;
 
     public List<Tunnel> getAllTunnels() throws DAOException;
 

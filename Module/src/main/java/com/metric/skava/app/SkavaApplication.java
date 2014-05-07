@@ -1,13 +1,15 @@
 package com.metric.skava.app;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.exception.SkavaExceptionHandler;
 import com.metric.skava.app.util.SkavaConstants;
-import com.metric.skava.calculator.data.MappedIndexDataProvider;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
+import com.metric.skava.settings.fragment.SettingsMainFragment;
 import com.metric.skava.sync.dao.SyncLoggingDAO;
 import com.metric.skava.sync.helper.SyncHelper;
 import com.metric.skava.sync.model.SyncLogEntry;
@@ -18,16 +20,19 @@ public class SkavaApplication extends MetricApplication {
 
     private int customThemeId;
     private boolean requiresRestart;
+//    private boolean updateDatamodelAutomatically;
     private SkavaContext mSkavaContext;
 
-//    private SkavaDataProvider mSkavaDataProvider;
-    //    public SkavaDataProvider getSkavaDataProvider() {
-//        return mSkavaDataProvider;
-//    }
-    private MappedIndexDataProvider mMappedIndexDataProvider;
-    public MappedIndexDataProvider getMappedIndexDataProvider() {
-        return mMappedIndexDataProvider;
+    public boolean isUpdateDatamodelAutomatically() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        Boolean updateDatamodelAutomatically  = sharedPref.getBoolean(SettingsMainFragment.UPDATE_AUTO_PREFERENCE, false);
+        return updateDatamodelAutomatically;
     }
+
+//    public void setUpdateDatamodelAutomatically(boolean updateDatamodelAutomatically) {
+//
+//
+//    }
 
     public boolean isRequiresRestart() {
         return requiresRestart;
@@ -90,6 +95,5 @@ public class SkavaApplication extends MetricApplication {
     @Override
     public void onTerminate() {
         super.onTerminate();
-
     }
 }

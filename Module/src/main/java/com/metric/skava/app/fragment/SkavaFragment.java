@@ -9,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.View;
 
 import com.metric.skava.BuildConfig;
-import com.metric.skava.app.SkavaApplication;
 import com.metric.skava.app.activity.SkavaFragmentActivity;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.Assessment;
@@ -30,19 +29,22 @@ public class SkavaFragment extends Fragment {
 
 
     //This is setted when an anctivity context is available onAttach() method
-    private SkavaContext mSkavaContext;
+//    private SkavaContext mSkavaContext;
 
 
     public SkavaContext getSkavaContext() {
-        return mSkavaContext;
+//        return mSkavaContext;
+        return getSkavaActivity().getSkavaContext();
     }
 
     public Assessment getCurrentAssessment() {
-        return getSkavaContext().getAssessment();
+//        return getSkavaContext().getAssessment();
+        return getSkavaActivity().getCurrentAssessment();
     }
 
     public DAOFactory getDAOFactory() {
-        return getSkavaContext().getDAOFactory();
+//        return getSkavaContext().getDAOFactory();
+        return getSkavaActivity().getDAOFactory();
     }
 
 
@@ -94,8 +96,8 @@ public class SkavaFragment extends Fragment {
                     + SkavaFragment.class.getSimpleName() + " : onAttach ");
         }
         super.onAttach(activity);
-        SkavaApplication application = (SkavaApplication) (activity.getApplication());
-        mSkavaContext = application.getSkavaContext();
+//        SkavaApplication application = (SkavaApplication) (activity.getApplication());
+//        mSkavaContext = application.getSkavaContext();
     }
 
     @Override

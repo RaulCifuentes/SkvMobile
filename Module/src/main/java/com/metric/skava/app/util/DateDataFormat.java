@@ -21,6 +21,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+//As recommended by
+//http://joesapps.blogspot.com/2011/02/managing-date-and-time-data-in-android.html
+
 public class DateDataFormat {
 	
 	// cannot be instantiated

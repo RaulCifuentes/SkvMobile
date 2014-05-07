@@ -12,15 +12,14 @@ public interface LocalInfillingDAO {
 
     public List<Infilling> getAllInfillings() throws DAOException;
 
-    public Infilling getInfilling(String indexCode, String groupCode, String code) throws DAOException;
+    public Infilling getInfilling(String groupCode, String code) throws DAOException;
+
+    public Infilling getInfillingByUniqueCode(String infillingCode) throws DAOException;
 
     public void saveInfilling(Infilling infilling) throws DAOException;
 
     public boolean deleteInfilling(String indexCode, String groupCode, String code);
 
+
     public int deleteAllInfillings();
-
-
-
-
 }

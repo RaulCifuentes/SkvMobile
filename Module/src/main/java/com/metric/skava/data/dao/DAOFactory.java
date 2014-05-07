@@ -6,6 +6,7 @@ import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.ApertureDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.ArchTypeDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.AssessmentDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.BoltTypeDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.ClientDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.CoverageDAODropboxImpl;
@@ -13,6 +14,7 @@ import com.metric.skava.data.dao.impl.dropbox.DiscontinuityRelevanceDAODropboxIm
 import com.metric.skava.data.dao.impl.dropbox.DiscontinuityShapeDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.DiscontinuityTypeDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.DiscontinuityWaterDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.EsrDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.ExcavationMethodDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.ExcavationProjectDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.ExcavationSectionDAODropboxImpl;
@@ -28,12 +30,15 @@ import com.metric.skava.data.dao.impl.dropbox.JwDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.MeshTypeDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.OrientationDiscontinuitiesDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.PersistenceDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.RockQualityDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.RoleDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.RoughnessDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.ShotcreteTypeDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.SpacingDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.SrfDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.StrengthDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.SupportPatternTypeDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.SupportRequirementDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.TunnelDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.TunnelFaceDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.UserDAODropboxImpl;
@@ -44,11 +49,13 @@ import com.metric.skava.data.dao.impl.sqllite.AssessmentDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.BoltTypeDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.ClientDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.CoverageDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.DiscontinuityFamilyDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.DiscontinuityRelevanceDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.DiscontinuityShapeDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.DiscontinuityTypeDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.DiscontinuityWaterDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.EsrDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.ExcavationFactorsDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.ExcavationMethodDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.ExcavationProjectDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.ExcavationSectionDAOsqlLiteImpl;
@@ -65,12 +72,16 @@ import com.metric.skava.data.dao.impl.sqllite.MeshTypeDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.OrientationDiscontinuitiesDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.PermissionDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.PersistenceDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.QCalculationDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.RMRCalculationDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.RockQualityDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.RoleDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.RoughnessDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.ShotcreteTypeDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.SpacingDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.SrfDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.StrengthDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.SupportPatternTypeDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.SupportRequirementDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.TunnelDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.TunnelFaceDAOsqlLiteImpl;
@@ -163,6 +174,20 @@ public class DAOFactory {
         return localPermissionDAO;
     }
 
+    public LocalDiscontinuityFamilyDAO getLocalDiscontinuityFamilyDAO() throws DAOException {
+        LocalDiscontinuityFamilyDAO discontinuityFamilyDAO = new DiscontinuityFamilyDAOsqlLiteImpl(mContext, mSkavaContext);
+        return discontinuityFamilyDAO;
+    }
+
+    public LocalQCalculationDAO getLocalQCalculationDAO() throws DAOException {
+        LocalQCalculationDAO qCalculationDAO = new QCalculationDAOsqlLiteImpl(mContext, mSkavaContext);
+        return qCalculationDAO;
+    }
+
+    public LocalRMRCalculationDAO getLocalRMRCalculationDAO() throws DAOException {
+        LocalRMRCalculationDAO rmrCalculationDAO = new RMRCalculationDAOsqlLiteImpl(mContext, mSkavaContext);
+        return rmrCalculationDAO;
+    }
 
     public LocalExcavationProjectDAO getLocalExcavationProjectDAO() throws DAOException {
         LocalExcavationProjectDAO projectDAO = new ExcavationProjectDAOsqlLiteImpl(mContext, mSkavaContext);
@@ -179,6 +204,10 @@ public class DAOFactory {
         return projectDAO;
     }
 
+    public LocalExcavationFactorDAO getLocalExcavationFactorsDAO() throws DAOException {
+        LocalExcavationFactorDAO factorsDAO = new ExcavationFactorsDAOsqlLiteImpl(mContext, mSkavaContext);
+        return factorsDAO;
+    }
 
     public LocalTunnelDAO getLocalTunnelDAO() throws DAOException {
         LocalTunnelDAO tunnelDAO = new TunnelDAOsqlLiteImpl(mContext, mSkavaContext);
@@ -225,9 +254,34 @@ public class DAOFactory {
         return remoteExcavationSectionDAO;
     }
 
+    public LocalSupportPatternTypeDAO getLocalSupportPatternTypeDAO() {
+        LocalSupportPatternTypeDAO localSupportPatternTypeDAO = new SupportPatternTypeDAOsqlLiteImpl(mContext, mSkavaContext);
+        return localSupportPatternTypeDAO;
+    }
+
+    public RemoteSupportPatternTypeDAO getRemoteSupportPatternTypeDAO(Flavour daoFlavour) throws DAOException {
+        RemoteSupportPatternTypeDAO remoteSupportPatternTypeDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteSupportPatternTypeDAO = new SupportPatternTypeDAODropboxImpl(mContext, mSkavaContext);
+                break;
+        }
+        return remoteSupportPatternTypeDAO;
+    }
+
     public LocalEsrDAO getLocalEsrDAO() throws DAOException {
         LocalEsrDAO localEsrDAO = new EsrDAOsqlLiteImpl(mContext, mSkavaContext);
         return localEsrDAO;
+    }
+
+    public RemoteEsrDAO getRemoteEsrDAO(Flavour daoFlavour) throws DAOException {
+        RemoteEsrDAO remoteEsrDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteEsrDAO = new EsrDAODropboxImpl(mContext, mSkavaContext);
+                break;
+        }
+        return remoteEsrDAO;
     }
 
 
@@ -360,6 +414,20 @@ public class DAOFactory {
         return remoteBoltTypeDAO;
     }
 
+    public LocalRockQualityDAO getLocalRockQualityDAO() {
+        LocalRockQualityDAO shotcreteTypeDAO = new RockQualityDAOsqlLiteImpl(mContext, mSkavaContext);
+        return shotcreteTypeDAO;
+    }
+
+    public RemoteRockQualityDAO getRemoteRockQualityDAO(Flavour daoFlavour) throws DAOException {
+        RemoteRockQualityDAO remoteRockQualityDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteRockQualityDAO = new RockQualityDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteRockQualityDAO;
+    }
+
     public LocalShotcreteTypeDAO getLocalShotcreteTypeDAO() {
         LocalShotcreteTypeDAO shotcreteTypeDAO = new ShotcreteTypeDAOsqlLiteImpl(mContext, mSkavaContext);
         return shotcreteTypeDAO;
@@ -417,17 +485,33 @@ public class DAOFactory {
         return remoteArchTypeDAO;
     }
 
-    public SupportRequirementDAO getSupportRequirementDAO() {
-        SupportRequirementDAO supportRequirementDAO = new SupportRequirementDAOsqlLiteImpl(mContext, mSkavaContext);
+    public LocalSupportRequirementDAO getLocalSupportRequirementDAO() {
+        LocalSupportRequirementDAO supportRequirementDAO = new SupportRequirementDAOsqlLiteImpl(mContext, mSkavaContext);
         return supportRequirementDAO;
     }
 
+    public RemoteSupportRequirementDAO getRemoteSupportRequirementDAO(Flavour daoFlavour) throws DAOException {
+        RemoteSupportRequirementDAO supportRequirementDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                supportRequirementDAO = new SupportRequirementDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return supportRequirementDAO;
+    }
 
     public LocalAssessmentDAO getLocalAssessmentDAO() throws DAOException {
         LocalAssessmentDAO localAssessmentDAO = new AssessmentDAOsqlLiteImpl(mContext, mSkavaContext);
         return localAssessmentDAO;
     }
 
+    public RemoteAssessmentDAO getRemoteAssessmentDAO(Flavour daoFlavour) throws DAOException {
+        RemoteAssessmentDAO remoteAssessmentDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteAssessmentDAO = new AssessmentDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteAssessmentDAO;
+    }
 
     public LocalJnDAO getLocalJnDAO() throws DAOException {
         LocalJnDAO localJnDAO = new JnDAOsqlLiteImpl(mContext, mSkavaContext);

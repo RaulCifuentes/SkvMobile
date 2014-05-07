@@ -64,6 +64,12 @@ public class UserDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<User> i
     }
 
     @Override
+    public User getUserByUsername(String username) throws DAOException {
+        User entity = getPersistentEntityByCandidateKey(UserTable.USER_DATABASE_TABLE, UserTable.NAME_COLUMN, username);
+        return entity;
+    }
+
+    @Override
     public void saveUser(User newUser) throws DAOException {
         savePersistentEntity(UserTable.USER_DATABASE_TABLE, newUser);
     }

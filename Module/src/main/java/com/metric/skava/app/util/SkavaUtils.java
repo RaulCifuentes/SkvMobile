@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 
 import com.metric.skava.app.context.SkavaContext;
+import com.metric.skava.app.data.IdentifiableEntity;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.calculator.barton.helper.RQDMapper;
 import com.metric.skava.calculator.barton.model.Ja;
@@ -28,10 +29,10 @@ import com.metric.skava.calculator.rmr.model.Weathering;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
-import com.metric.skava.instructions.model.SupportRecomendation;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -69,6 +70,7 @@ public class SkavaUtils {
         return Build.VERSION.SDK_INT >= VERSION_CODES.KITKAT;
     }
 
+
     public static Assessment createInitialAssessment(SkavaContext skavaContext) throws DAOException {
 
         int assesmentNumber = SkavaUtils.getRandom(1, 10);
@@ -81,7 +83,6 @@ public class SkavaUtils {
 
         DAOFactory daoFactory = skavaContext.getDAOFactory();
 
-
         Date date = new Date();
         initialAssessment.setDate(date);
 
@@ -89,16 +90,24 @@ public class SkavaUtils {
 
         RQD rqd = RQDMapper.getInstance().mapJvToRQD(4);
 
-        SRF sRF =  daoFactory.getLocalSrfDAO().getAllSrfs(SRF.Group.a).get(0);
-        Jw jw = daoFactory.getLocalJwDAO().getAllJws().get(0);
-        Ja ja = daoFactory.getLocalJaDAO().getAllJas(Ja.Group.a).get(0);
-        Jn jn = daoFactory.getLocalJnDAO().getAllJns().get(0);
-        Jr jr = daoFactory.getLocalJrDAO().getAllJrs(Jr.Group.a).get(0);
+        List<SRF> listSRF = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.Group.a);
+        SRF sRF = listSRF.get(0);
+
+        List<Jw> listJw = daoFactory.getLocalJwDAO().getAllJws();
+        Jw jw = listJw.get(0);
+
+        List<Ja> listJa = daoFactory.getLocalJaDAO().getAllJas(Ja.Group.a);
+        Ja ja = listJa.get(0);
+
+        List<Jn> listJn = daoFactory.getLocalJnDAO().getAllJns();
+        Jn jn = listJn.get(0);
+
+        List<Jr> listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.Group.a);
+        Jr jr =  listJr.get(0);
 
         Q_Calculation mQCalculation = new Q_Calculation(rqd, jn, jr, ja, jw, sRF);
 
         initialAssessment.setQCalculation(mQCalculation);
-
 
         StrengthOfRock strenght = daoFactory.getLocalStrengthDAO().getAllStrengths(StrengthOfRock.Group.POINT_LOAD_KEY).get(0);
 
@@ -126,14 +135,6 @@ public class SkavaUtils {
 
         initialAssessment.setRmrCalculation(mRMRCalculation);
 
-        //Support Requirements
-//        ESR esr = provider.getAllESR().get(0);
-//        Float span = 100f;
-//        ExcavationFactors mExcavationFactors = new ExcavationFactors(esr);
-//        mExcavationFactors.setSpan(span);
-
-//        initialAssessment.setExcavationFactors(mExcavationFactors);
-
 
         //Default 4 picture placeholders
         ArrayList<Uri> pictureUriList = new ArrayList<Uri>(5);
@@ -154,11 +155,43 @@ public class SkavaUtils {
 
         initialAssessment.setDiscontinuitySystem(discontinuitySystem);
 
-        SupportRecomendation recomendation = new SupportRecomendation();
-
-        initialAssessment.setRecomendation(recomendation);
+//        SupportRecomendation recomendation = new SupportRecomendation();
+//        initialAssessment.setRecomendation(recomendation);
 
         return initialAssessment;
     }
 
+    public static boolean isUndefined(IdentifiableEntity skavaEntity) {
+        if (skavaEntity == null || skavaEntity.getCode() == null || skavaEntity.getCode().equals("HINT")) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isDefined(IdentifiableEntity skavaEntity) {
+        return !isUndefined(skavaEntity);
+    }
+
+    public static String breakLongLine(String longLine, int rowMaxLength) {
+        List<String> shorterStrings = splitEqually(longLine, rowMaxLength);
+        StringBuffer stringBuffer = new StringBuffer();
+        int renglones = shorterStrings.size() - 1;
+        for (int i = 0; i < renglones; i++) {
+            String shorterString = shorterStrings.get(i);
+            stringBuffer.append(shorterString).append("\n");
+        }
+        stringBuffer.append(shorterStrings.get(renglones));
+        return stringBuffer.toString();
+    }
+
+    private static List<String> splitEqually(String text, int size) {
+        // Give the list the right capacity to start with. You could use an array
+        // instead if you wanted.
+        List<String> ret = new ArrayList<String>((text.length() + size - 1) / size);
+
+        for (int start = 0; start < text.length(); start += size) {
+            ret.add(text.substring(start, Math.min(text.length(), start + size)));
+        }
+        return ret;
+    }
 }

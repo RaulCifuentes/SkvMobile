@@ -21,8 +21,6 @@ import com.metric.skava.app.util.SkavaConstants;
 public class QBartonCalculatorMainFragment extends SkavaFragment
         implements OnTabChangeListener {
 
-
-
     public static final String TAB_RQD = "RQD";
     public static final String TAB_JN = "Jn";
     private static final String TAB_JR = "Jr";

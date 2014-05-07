@@ -13,7 +13,9 @@ public interface LocalJrDAO {
 
     public List<Jr> getAllJrs(Jr.Group group) throws DAOException;
 
-    public Jr getJr(String indexCode, String groupCode, String code) throws DAOException;
+    public Jr getJrByUniqueCode(String code) throws DAOException;
+
+    public Jr getJr(String groupCode, String code) throws DAOException;
 
     public void saveJr(Jr jr) throws DAOException;
 

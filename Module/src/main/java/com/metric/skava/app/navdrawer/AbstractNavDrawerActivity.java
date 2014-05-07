@@ -1,7 +1,5 @@
 package com.metric.skava.app.navdrawer;
 
-import com.metric.skava.app.activity.SkavaFragmentActivity;
-
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -14,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.metric.skava.app.activity.SkavaFragmentActivity;
 
 public abstract class AbstractNavDrawerActivity extends SkavaFragmentActivity {
 
@@ -36,50 +36,54 @@ public abstract class AbstractNavDrawerActivity extends SkavaFragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		navConf = getNavDrawerConfiguration();
-
-		setContentView(navConf.getMainLayout());
-
-		if (savedInstanceState == null) {
-			mTitle = mDrawerTitle = getTitle();
-		} else {
-			mTitle = savedInstanceState.getCharSequence("title");
-			mDrawerTitle = savedInstanceState.getCharSequence("drawerTitle");
-			lastItemChecked = savedInstanceState.getInt("lastItemChecked");
-			setTitle(mTitle);
-		}
-
-		mDrawerLayout = (DrawerLayout) findViewById(navConf.getDrawerLayoutId());
-		mDrawerList = (ListView) findViewById(navConf.getLeftDrawerId());
-		mDrawerList.setAdapter(navConf.getBaseAdapter());
-		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-		this.initDrawerShadow();
-
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
-
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				navConf.getDrawerIcon(), navConf.getDrawerOpenDesc(),
-				navConf.getDrawerCloseDesc()) {
-			public void onDrawerClosed(View view) {
-				getActionBar().setTitle(mTitle);
-				// setTitle(mDrawerTitle);
-				ActivityCompat
-						.invalidateOptionsMenu(AbstractNavDrawerActivity.this);
-			}
-
-			public void onDrawerOpened(View drawerView) {
-				getActionBar().setTitle(mDrawerTitle);
-				// setTitle(mDrawerTitle);
-				ActivityCompat
-						.invalidateOptionsMenu(AbstractNavDrawerActivity.this);
-			}
-		};
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
+        setupTheDrawer();
+        if (savedInstanceState == null) {
+            mTitle = mDrawerTitle = getTitle();
+        } else {
+            mTitle = savedInstanceState.getCharSequence("title");
+            mDrawerTitle = savedInstanceState.getCharSequence("drawerTitle");
+            lastItemChecked = savedInstanceState.getInt("lastItemChecked");
+            setTitle(mTitle);
+        }
 	}
 
-	protected void initDrawerShadow() {
+    protected void setupTheDrawer() {
+
+        navConf = getNavDrawerConfiguration();
+
+        setContentView(navConf.getMainLayout());
+
+        mDrawerLayout = (DrawerLayout) findViewById(navConf.getDrawerLayoutId());
+        mDrawerList = (ListView) findViewById(navConf.getLeftDrawerId());
+        mDrawerList.setAdapter(navConf.getBaseAdapter());
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        this.initDrawerShadow();
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                navConf.getDrawerIcon(), navConf.getDrawerOpenDesc(),
+                navConf.getDrawerCloseDesc()) {
+            public void onDrawerClosed(View view) {
+                getActionBar().setTitle(mTitle);
+                // setTitle(mDrawerTitle);
+                ActivityCompat
+                        .invalidateOptionsMenu(AbstractNavDrawerActivity.this);
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                getActionBar().setTitle(mDrawerTitle);
+                // setTitle(mDrawerTitle);
+                ActivityCompat
+                        .invalidateOptionsMenu(AbstractNavDrawerActivity.this);
+            }
+        };
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    protected void initDrawerShadow() {
 		mDrawerLayout.setDrawerShadow(navConf.getDrawerShadow(),
 				GravityCompat.START);
 	}

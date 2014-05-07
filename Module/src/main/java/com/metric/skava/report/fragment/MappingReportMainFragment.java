@@ -22,6 +22,7 @@ import com.metric.skava.app.model.Tunnel;
 import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
 import com.metric.skava.app.util.PegNumberFormat;
+import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.calculator.barton.helper.QToQualityMapper;
 import com.metric.skava.calculator.barton.model.Ja;
 import com.metric.skava.calculator.barton.model.Jn;
@@ -29,8 +30,9 @@ import com.metric.skava.calculator.barton.model.Jr;
 import com.metric.skava.calculator.barton.model.Jw;
 import com.metric.skava.calculator.barton.model.Q_Calculation;
 import com.metric.skava.calculator.barton.model.RQD;
+import com.metric.skava.calculator.barton.model.RockQuality;
 import com.metric.skava.calculator.barton.model.SRF;
-import com.metric.skava.calculator.rmr.helper.RmrToRockMassMapper;
+import com.metric.skava.calculator.rmr.helper.RmrToQualityMapper;
 import com.metric.skava.calculator.rmr.model.Aperture;
 import com.metric.skava.calculator.rmr.model.Groundwater;
 import com.metric.skava.calculator.rmr.model.Infilling;
@@ -46,6 +48,7 @@ import com.metric.skava.discontinuities.model.DiscontinuityRelevance;
 import com.metric.skava.discontinuities.model.DiscontinuityShape;
 import com.metric.skava.discontinuities.model.DiscontinuityType;
 import com.metric.skava.discontinuities.model.DiscontinuityWater;
+import com.metric.skava.instructions.model.ArchType;
 import com.metric.skava.instructions.model.BoltType;
 import com.metric.skava.instructions.model.Coverage;
 import com.metric.skava.instructions.model.MeshType;
@@ -53,7 +56,6 @@ import com.metric.skava.instructions.model.ShotcreteType;
 import com.metric.skava.instructions.model.SupportRecomendation;
 import com.metric.skava.pictures.util.SkavaPictureFilesUtils;
 import com.metric.skava.rockmass.model.FractureType;
-import com.metric.skava.rockmass.model.RockMass;
 import com.metric.skava.rocksupport.model.ESR;
 import com.metric.skava.rocksupport.model.ExcavationFactors;
 
@@ -86,22 +88,22 @@ public class MappingReportMainFragment extends SkavaFragment {
 
         ExcavationProject project = currentAssessment.getProject();
         if (project != null) {
-            ((TextView) rootView.findViewById(R.id.report_proyecto_value)).setText(project.getName());
+            ((TextView) rootView.findViewById(R.id.report_proyecto_value)).setText(SkavaUtils.breakLongLine(project.getName(),25));
         }
 
 
         Tunnel tunnel = currentAssessment.getTunnel();
         if (tunnel != null) {
-            ((TextView) rootView.findViewById(R.id.report_tunel_value)).setText(tunnel.getName());
+            ((TextView) rootView.findViewById(R.id.report_tunel_value)).setText(SkavaUtils.breakLongLine(tunnel.getName(), 25));
         }
 
         TunnelFace face = currentAssessment.getFace();
         if (face != null) {
-            ((TextView) rootView.findViewById(R.id.report_frente_value)).setText(face.getName());
+            ((TextView) rootView.findViewById(R.id.report_frente_value)).setText(SkavaUtils.breakLongLine(face.getName(), 25));
         }
 
         ExcavationSection section = currentAssessment.getSection();
-        if (section != null) {
+        if (!SkavaUtils.isUndefined(section)) {
             ((TextView) rootView.findViewById(R.id.report_tipo_seccion_value)).setText(section.getName());
         }
 
@@ -132,7 +134,7 @@ public class MappingReportMainFragment extends SkavaFragment {
         }
 
         ExcavationMethod method = currentAssessment.getMethod();
-        if (method != null) {
+        if (!SkavaUtils.isUndefined(method)) {
             ((TextView) rootView.findViewById(R.id.report_metodo_value)).setText(method.getName());
         }
 
@@ -211,7 +213,7 @@ public class MappingReportMainFragment extends SkavaFragment {
             ((TextView) rootView.findViewById(R.id.report_rmr_agua_rating)).setText(numberFormat.format(groundwater.getValue()));
         }
 
-        int orientationType = rmrCalculation.getOrientationType();
+
         OrientationDiscontinuities orientationDiscontinuities = rmrCalculation.getOrientationDiscontinuities();
         if (orientationDiscontinuities != null) {
             ((TextView) rootView.findViewById(R.id.report_rmr_ajuste_value)).setText(orientationDiscontinuities.getGroupName() + " - " + orientationDiscontinuities.getKey());
@@ -223,16 +225,12 @@ public class MappingReportMainFragment extends SkavaFragment {
         ((TextView) rootView.findViewById(R.id.report_rmr_rmr_value)).setText(numberFormat.format(rmrValue));
 
 
-        RmrToRockMassMapper rmrMapper = RmrToRockMassMapper.getInstance();
+        RmrToQualityMapper rmrMapper = RmrToQualityMapper.getInstance(getSkavaContext());
 
-        RockMass.RockMassClass classType = rmrMapper.mapRMRToRockMassClass(rmrValue);
-        if (classType != null) {
-            ((TextView) rootView.findViewById(R.id.report_rmr_clase_value)).setText(classType.toString());
-        }
-
-        RockMass.RockMassQualityType qualityType = rmrMapper.mapRMRToRockMassQuality(rmrValue);
-        if (qualityType != null) {
-            ((TextView) rootView.findViewById(R.id.report_rmr_calidad_value)).setText(qualityType.toString());
+        RockQuality quality = rmrMapper.mapRMRToRockMassQuality(rmrValue);
+        if (quality != null) {
+            ((TextView) rootView.findViewById(R.id.report_rmr_clase_value)).setText(quality.getClassification().toString());
+            ((TextView) rootView.findViewById(R.id.report_rmr_calidad_value)).setText(quality.getName());
         }
 
         if (currentAssessment.getTunnel()!= null){
@@ -275,6 +273,8 @@ public class MappingReportMainFragment extends SkavaFragment {
             }
             if (value != null) {
                 ((TextView) rootView.findViewById(R.id.report_q_rqd_value)).setText(value.toString());
+            } else {
+                ((TextView) rootView.findViewById(R.id.report_q_rqd_value)).setText("-");
             }
             ((TextView) rootView.findViewById(R.id.report_q_rqd_rating)).setText(numberFormat.format(rqd.getValue()));
         }
@@ -314,12 +314,11 @@ public class MappingReportMainFragment extends SkavaFragment {
         Double qValue = qCalculation.getQResult().getQBarton();
         ((TextView) rootView.findViewById(R.id.report_q_q_value)).setText(numberFormat.format(qValue));
 
-        QToQualityMapper qMapper = QToQualityMapper.getInstance();
-        qualityType = qMapper.mapQToRockMassQuality(qValue);
-        if (qualityType != null) {
-            ((TextView) rootView.findViewById(R.id.report_q_calidad_value)).setText(qualityType.toString());
+        QToQualityMapper qMapper = QToQualityMapper.getInstance(getSkavaContext());
+        quality = qMapper.mapQToRockMassQuality(qValue);
+        if (quality != null) {
+            ((TextView) rootView.findViewById(R.id.report_q_calidad_value)).setText(quality.getName());
         }
-
 
         SupportRecomendation recomendation = currentAssessment.getRecomendation();
         if (recomendation != null) {
@@ -358,9 +357,19 @@ public class MappingReportMainFragment extends SkavaFragment {
                 ((TextView) rootView.findViewById(R.id.report_cobertura_value)).setText(coverage.getName());
             }
 
+            ArchType archType = recomendation.getArchType();
+            if (archType != null) {
+                ((TextView) rootView.findViewById(R.id.report_tipo_marco_value)).setText(archType.getName());
+            }
+
             Double separation = recomendation.getSeparation();
             if (separation != null) {
                 ((TextView) rootView.findViewById(R.id.report_separacion_value)).setText(numberFormat.format(separation));
+            }
+
+            String observations = recomendation.getObservations();
+            if (observations != null) {
+                ((TextView) rootView.findViewById(R.id.report_observaciones_soporte_value)).setText(observations);
             }
         }
 

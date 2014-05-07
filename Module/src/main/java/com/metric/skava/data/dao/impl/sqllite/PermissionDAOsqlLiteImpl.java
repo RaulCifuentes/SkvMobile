@@ -61,7 +61,7 @@ public class PermissionDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Per
                     targetEntity = projectDAO.getExcavationProjectByCode(targetCode);
                     break;
                 case TUNNEL:
-                    targetEntity = localTunnelDAO.getTunnelByCode(targetCode);
+                    targetEntity = localTunnelDAO.getTunnelByUniqueCode(targetCode);
                     break;
                 case FACE:
                     targetEntity = localTunnelFaceDAO.getTunnelFaceByCode(targetCode);
@@ -74,8 +74,10 @@ public class PermissionDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Per
     }
 
     @Override
-    protected void savePersistentEntity(String tableName, Permission newSkavaEntity) throws DAOException {
-
+    protected void savePersistentEntity(String tableName, Permission newPermission) throws DAOException {
+        String[] columns = new String[]{PermissionTable.USER_CODE_COLUMN, PermissionTable.ACTION_COLUMN, PermissionTable.TARGET_TYPE_CODE_COLUMN, PermissionTable.TARGET_CODE_COLUMN};
+        String[] values = new String[]{newPermission.getWho().getCode(), newPermission.getWhat().name(), newPermission.getWhere().name(), newPermission.getWhereExactly().getCode()};
+        saveRecord(tableName, columns, values);
     }
 
     @Override
@@ -99,18 +101,13 @@ public class PermissionDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Per
 
     @Override
     public void savePermission(Permission newPermission) throws DAOException {
-
-        String[] columns = new String[]{PermissionTable.USER_CODE_COLUMN, PermissionTable.ACTION_COLUMN, PermissionTable.TARGET_TYPE_CODE_COLUMN, PermissionTable.TARGET_CODE_COLUMN};
-
-        String[] values = new String[]{newPermission.getWho().getCode(), newPermission.getWhat().name(), newPermission.getWhere().name(), newPermission.getWhereExactly().getCode()};
-
-        saveRecord(PermissionTable.PERMISSION_DATABASE_TABLE, columns, values);
-
+        savePersistentEntity(PermissionTable.PERMISSION_DATABASE_TABLE, newPermission);
     }
 
     @Override
-    public boolean deletePermission(String code) {
-        return false;
+    public boolean deletePermissionsByUser(User user) {
+        int numDeleted = deletePersistentEntitiesFilteredByColumn(PermissionTable.PERMISSION_DATABASE_TABLE, PermissionTable.USER_CODE_COLUMN, user.getCode());
+        return numDeleted != -1;
     }
 
     @Override

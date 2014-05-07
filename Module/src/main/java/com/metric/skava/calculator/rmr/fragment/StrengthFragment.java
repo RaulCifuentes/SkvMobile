@@ -53,6 +53,12 @@ public class StrengthFragment extends RMRCalculatorBaseFragment  implements Radi
         RadioButton uniaxialRadio = (RadioButton) view.findViewById(R.id.radioButtonSecond);
         uniaxialRadio.setText(StrengthOfRock.Group.UNIAXIAL_KEY.toString());
 
+        RadioButton thirdRadio = (RadioButton) view.findViewById(R.id.radioButtonThird);
+        thirdRadio.setVisibility(View.GONE);
+
+        RadioButton fourthRadio = (RadioButton) view.findViewById(R.id.radioButtonFourth);
+        fourthRadio.setVisibility(View.GONE);
+
         mPointLoadListView = (ListView) getView().findViewById(R.id.listview_a);
         mUniaxialListView = (ListView) getView().findViewById(R.id.listview_b);
 
@@ -87,7 +93,7 @@ public class StrengthFragment extends RMRCalculatorBaseFragment  implements Radi
 
         List<StrengthOfRock> listStrenght;
         try {
-            listStrenght = daoFactory.getLocalStrengthDAO().getAllStrengths(StrengthOfRock.Group.POINT_LOAD_KEY);
+            listStrenght = getDAOFactory().getLocalStrengthDAO().getAllStrengths(StrengthOfRock.Group.POINT_LOAD_KEY);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -128,7 +134,7 @@ public class StrengthFragment extends RMRCalculatorBaseFragment  implements Radi
 
         List<StrengthOfRock> listStrenght;
         try {
-            listStrenght = daoFactory.getLocalStrengthDAO().getAllStrengths(StrengthOfRock.Group.UNIAXIAL_KEY);
+            listStrenght = getDAOFactory().getLocalStrengthDAO().getAllStrengths(StrengthOfRock.Group.UNIAXIAL_KEY);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();

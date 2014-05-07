@@ -13,15 +13,14 @@ public interface LocalWeatheringDAO {
 
     public List<Weathering> getAllWeatherings() throws DAOException;
 
-    public Weathering getWeathering(String indexCode, String groupCode, String code) throws DAOException;
+    public Weathering getWeathering(String groupCode, String code) throws DAOException;
+
+    public Weathering getWeatheringByUniqueCode(String weatheringCode) throws DAOException;
 
     public void saveWeathering(Weathering weathering) throws DAOException;
 
-    public boolean deleteWeathering(String indexCode, String groupCode, String code);
+    public boolean deleteWeathering(String groupCode, String code);
+
 
     public int deleteAllWeatherings();
-
-
-
-
 }

@@ -13,11 +13,13 @@ public interface LocalSpacingDAO {
 
     public List<Spacing> getAllSpacings() throws DAOException;
 
-    public Spacing getSpacing(String indexCode, String groupCode, String code) throws DAOException;
+    public Spacing getSpacing(String groupCode, String code) throws DAOException;
+
+    public Spacing getSpacingByUniqueCode(String spacingCode) throws DAOException;
 
     public void saveSpacing(Spacing spacing) throws DAOException;
 
-    public boolean deleteSpacing(String indexCode, String groupCode, String code);
+    public boolean deleteSpacing(String groupCode, String code);
 
     public int deleteAllSpacings();
 

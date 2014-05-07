@@ -1,13 +1,20 @@
 package com.metric.skava.home;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxAccount;
@@ -33,33 +40,73 @@ import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.datastore.DatastoreHelper;
 import com.metric.skava.data.dao.impl.sqllite.SkavaDBHelper;
+import com.metric.skava.settings.activity.SettingsMainActivity;
+import com.metric.skava.sync.activity.SyncMainActivity;
 import com.metric.skava.sync.dao.SyncLoggingDAO;
 import com.metric.skava.sync.dao.SyncLoggingDAOsqlLiteImpl;
 import com.metric.skava.sync.helper.SyncHelper;
 import com.metric.skava.sync.model.SyncLogEntry;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class HomeMainActivity extends AbstractNavDrawerActivity {
 
 
+    private static final int NAV_MENU_SKAVA_SECTION_ID = 10;
+    private static final int NAV_MENU_LOGIN_ITEM_ID = 20;
+    private static final int NAV_MENU_FACE_MAPPING_ITEM_ID = 30;
+    private static final int NAV_MENU_ADMIN_SECTION_ID = 40;
+    private static final int NAV_MENU_SYNC_ITEM_ID = 50;
+    private static final int NAV_MENU_GENERAL_SECTION_ID = 60;
+    private static final int NAV_MENU_SETTINGS_ITEM_ID = 70;
+    private static final int NAV_MENU_ABOUT_ITEM_ID = 80;
     private boolean dropboxNeverCalled = true;
     private boolean assertNeverCalled = true;
     private DbxAccountManager mDbxAcctMgr;
     private DbxAccount mAccount;
     private DbxDatastoreManager mDatastoreManager;
     private DbxDatastore mDatastore;
+    private MainFragment mHomeMainFragment;
+    private static final String FRAGMENT_HOME_MAIN_TAG = "FRAGMENT_HOME_MAIN_TAG";
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        super.setupTheDrawer();
+    }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.nav_drawer_main_layout_content_frame, new MainFragment())
+                    .add(R.id.nav_drawer_main_layout_content_frame, new MainFragment(), FRAGMENT_HOME_MAIN_TAG)
                     .commit();
         }
+
+    }
+
+
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+        return super.onCreateView(name, context, attrs);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mHomeMainFragment = (MainFragment)
+                getSupportFragmentManager().findFragmentByTag(FRAGMENT_HOME_MAIN_TAG);
+    }
+
+    private void setupDataModel() {
         if (dropboxNeverCalled && isNetworkAvailable()) {
+            String message = getString(R.string.connecting_dropbox);
+            showProgressBar(true, message, false);
             try {
                 //Abrir el acount manager que Dropbox ofrece para esta app
                 mDbxAcctMgr = DbxAccountManager.getInstance(this.getApplicationContext(), DatastoreHelper.APP_KEY, DatastoreHelper.APP_SECRET);
@@ -79,19 +126,53 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 //                    mDatastore = mDatastoreManager.openDatastore(DatastoreHelper.APP_DATASTORE_NAME);
                     mDatastore = mDatastoreManager.openDefaultDatastore();
                     getSkavaContext().setDatastore(mDatastore);
+                    UpdateDataModelTask task = new UpdateDataModelTask();
+                    task.execute();
+//                    downloadAndPopulateDataModel();
+                    mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
                 }
-                downloadAndPopulateDataModel();
             } catch (DbxException e) {
                 Log.e(SkavaConstants.LOG, e.getMessage());
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
-        }
-        if (assertNeverCalled){
-            assertDataAvailable();
+        } else {
+            if (assertNeverCalled) {
+                assertDataAvailable();
+            }
         }
     }
 
+
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        View view = this.findViewById(android.R.id.content);
+        if (shouldUpdateAutomatically()) {
+            view.post(new Runnable() {
+                @Override
+                public void run() {
+//                    showProgressBar(true, "Probando, probando", false);
+                    setupDataModel();
+//                    showProgressBar(true, "Ya probe, probe", false);
+                }
+            });
+        } else {
+            assertDataAvailable();
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -111,7 +192,10 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 //                    mDatastore = mDatastoreManager.openDatastore(DatastoreHelper.APP_DATASTORE_NAME);
                     mDatastore = mDatastoreManager.openDefaultDatastore();
                     getSkavaContext().setDatastore(mDatastore);
-                    downloadAndPopulateDataModel();
+                    UpdateDataModelTask task = new UpdateDataModelTask();
+                    task.execute();
+//                    downloadAndPopulateDataModel();
+                    mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
                 } catch (DbxException e) {
                     Log.e(SkavaConstants.LOG, e.getMessage());
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -131,7 +215,8 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mDbxAcctMgr.unlink();
+        // The unlink seems to be unecessary as there will be just one global dropbox account rather than individual accounts per user
+//        mDbxAcctMgr.unlink();
     }
 
 
@@ -154,8 +239,9 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             dropboxNeverCalled = false;
         } catch (DAOException daoe) {
             Log.e(SkavaConstants.LOG, daoe.getMessage());
-            Toast.makeText(this, daoe.getMessage(), Toast.LENGTH_LONG).show();
+//            Toast.makeText(this, daoe.getMessage(), Toast.LENGTH_LONG).show();
         }
+
     }
 
 
@@ -234,47 +320,41 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     }
 
 
-
     @Override
     protected NavDrawerActivityConfiguration getNavDrawerConfiguration() {
-        NavDrawerItem[] menu = new NavDrawerItem[]{
-                NavMenuSection.create(100, "Skava Apps"),
 
-                NavMenuItem.create(110, getString(R.string.login_label),
-                        "ic_menu_copy_holo_dark", true, true, this),
-
-                NavMenuSection.create(200, "General"),
-
-                NavMenuItem.create(210, getString(R.string.about_label), "ic_action_overflow", true,
-                        true, this)
-        };
+        List<NavDrawerItem> menuAsList = new ArrayList<NavDrawerItem>();
+        menuAsList.add(NavMenuSection.create(NAV_MENU_SKAVA_SECTION_ID, "Skava Apps"));
+        menuAsList.add(NavMenuItem.create(NAV_MENU_LOGIN_ITEM_ID, getString(R.string.login_label), "ic_menu_copy_holo_dark", true, true, this));
 
         User loggedUser = getSkavaContext().getLoggedUser();
         if (loggedUser != null) {
             Role geologist = new Role("GEOLOGIST", "Geologist");
             Role admin = new Role("ADMINISTRATOR", "Administrator");
+            Role metricAdmin = new Role("METRICADMIN", "MetricAdmin");
             if (loggedUser.hasRole(geologist) || loggedUser.hasRole(admin)) {
-                menu = new NavDrawerItem[]{
-                        NavMenuSection.create(100, "Skava Apps"),
-                        NavMenuItem.create(190, "Face Mappings",
-                                "ic_menu_copy_holo_dark", true, true, this),
-//                        NavMenuItem.create(199, "Test Dropbox Sync",
-//                                "ic_menu_copy_holo_dark", true, true, this),
-                        NavMenuSection.create(200, "General"),
-                        NavMenuItem.create(210, getString(R.string.about_label), "ic_action_overflow", true,
-                                true, this)};
+                menuAsList.remove(1);
+                menuAsList.add(NavMenuItem.create(NAV_MENU_FACE_MAPPING_ITEM_ID, "Face Mappings","ic_menu_copy_holo_dark", true, true, this));
+            }
+            if (loggedUser.hasRole(metricAdmin)) {
+                menuAsList.add(NavMenuSection.create(NAV_MENU_ADMIN_SECTION_ID, "Admin"));
+                menuAsList.add(NavMenuItem.create(NAV_MENU_SYNC_ITEM_ID, "Sync admin", "ic_menu_copy_holo_dark", true, true, this));
             }
         }
+        menuAsList.add(NavMenuSection.create(NAV_MENU_GENERAL_SECTION_ID, "General"));
+        menuAsList.add(NavMenuItem.create(NAV_MENU_SETTINGS_ITEM_ID, getString(R.string.settings_label), "ic_action_overflow", true, true, this));
+        menuAsList.add(NavMenuItem.create(NAV_MENU_ABOUT_ITEM_ID, getString(R.string.about_label), "ic_action_overflow", true, true, this));
+        NavDrawerItem[] menuAsArray = menuAsList.toArray(new NavDrawerItem[]{});
 
         NavDrawerActivityConfiguration navDrawerConfig = new NavDrawerActivityConfiguration();
         navDrawerConfig.setMainLayout(R.layout.nav_drawer_main_layout);
         navDrawerConfig.setDrawerLayoutId(R.id.nav_drawer_main_layout_drawer_layout);
         navDrawerConfig.setLeftDrawerId(R.id.nav_drawer_main_layout_left_drawer);
-        navDrawerConfig.setNavItems(menu);
+        navDrawerConfig.setNavItems(menuAsArray);
         navDrawerConfig.setDrawerShadow(R.drawable.drawer_shadow);
         navDrawerConfig.setDrawerOpenDesc(R.string.drawer_open);
         navDrawerConfig.setDrawerCloseDesc(R.string.drawer_close);
-        navDrawerConfig.setBaseAdapter(new NavDrawerAdapter(this, R.layout.nav_drawer_item, menu));
+        navDrawerConfig.setBaseAdapter(new NavDrawerAdapter(this, R.layout.nav_drawer_item, menuAsArray));
         navDrawerConfig.setDrawerIcon(R.drawable.apptheme_ic_navigation_drawer);
         return navDrawerConfig;
     }
@@ -283,45 +363,101 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     protected void onNavItemSelected(int id) {
         Intent intent;
         switch (id) {
-
-            case 110: // "Login"
+            case NAV_MENU_LOGIN_ITEM_ID:
                 intent = new Intent(this, LoginMainActivity.class);
-                intent.putExtra(LoginMainActivity.EXTRA_EMAIL, "geologist@skava.cl");
+                intent.putExtra(LoginMainActivity.EXTRA_USERNAME, "geologist1");
                 startActivity(intent);
                 break;
-
-            case 190: //
+            case NAV_MENU_FACE_MAPPING_ITEM_ID:
                 intent = new Intent(this, AssessmentsListActivity.class);
                 startActivity(intent);
                 break;
-
-//            case 199: //
-//                intent = new Intent(this, SyncMainActivity.class);
-//                startActivity(intent);
-//                break;
-
-//            case 205: // "Settings"
-//                intent = new Intent(this, SettingsMainActivity.class);
-//                startActivity(intent);
-//                break;
-
-
-            case 210: // "About"
+            case NAV_MENU_SYNC_ITEM_ID:
+                intent = new Intent(this, SyncMainActivity.class);
+                startActivity(intent);
+                break;
+            case NAV_MENU_SETTINGS_ITEM_ID:
+                intent = new Intent(this, SettingsMainActivity.class);
+                startActivity(intent);
+                break;
+            case NAV_MENU_ABOUT_ITEM_ID:
                 intent = new Intent(this, AboutMainActivity.class);
                 startActivity(intent);
                 break;
-
         }
     }
 
 
-    private boolean isNetworkAvailable() {
+    public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+
+    public void onClick(View v) {
+        new UpdateDataModelTask().execute();
+    }
+
+    public class UpdateDataModelTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            downloadAndPopulateDataModel();
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //mostrar que va a empezar
+            String message = getString(R.string.syncing_progress);
+            showProgressBar(true, message, true);
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+            //mostrar avance
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            //mostrar que termino
+            showProgressBar(false, "Finished", false);
+        }
+
+    }
+
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    private void showProgressBar(final boolean show, String text, boolean longTime) {
+
+        mHomeMainFragment.getSyncingStatusMessageView().setText(text);
+
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = longTime ? getResources().getInteger(android.R.integer.config_longAnimTime) : getResources().getInteger(android.R.integer.config_shortAnimTime);
+            mHomeMainFragment.getSyncingStatusView().setVisibility(View.VISIBLE);
+            mHomeMainFragment.getSyncingStatusView().animate()
+                    .setDuration(shortAnimTime)
+                    .alpha(show ? 1 : 0)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mHomeMainFragment.getSyncingStatusView().setVisibility(show ? View.VISIBLE : View.GONE);
+                        }
+                    });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mHomeMainFragment.getSyncingStatusView().setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
 
     //    @Override
 //    public void onBackPressed() {

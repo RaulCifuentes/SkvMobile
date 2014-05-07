@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/18/14.
  */
-public class EsrDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalEsrDAO {
+public class EsrDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<ESR> implements LocalEsrDAO {
 
     private Context mContext;
     private MappedIndexInstanceBuilder4SqlLite mappedIndexInstaceBuilder;
@@ -32,11 +32,27 @@ public class EsrDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalEsrDAO {
     }
 
     @Override
-    public ESR getESR(String code) throws DAOException {
+    public ESR getESR(String groupCode, String code) throws DAOException {
+        String[] names = new String[]{ESRTable.INDEX_CODE_COLUMN, ESRTable.GROUP_CODE_COLUMN, ESRTable.CODE_COLUMN};
+        String[] values = new String[]{ESR.INDEX_CODE, groupCode, code};
+        Cursor cursor = getRecordsFilteredByColumns(ESRTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
+        List<ESR> list = assemblePersistentEntities(cursor);
+        if (list.isEmpty()) {
+            throw new DAOException("Entity not found. [ESR Code : " + code + " ]");
+        }
+        if (list.size() > 1) {
+            throw new DAOException("Multiple records for same code. [Index Code : " + code + " ]");
+        }
+        cursor.close();
+        return list.get(0);
+    }
+
+    @Override
+    public ESR getESRByUniqueCode(String code) throws DAOException {
         String[] names = new String[]{ESRTable.INDEX_CODE_COLUMN, ESRTable.CODE_COLUMN};
-        String[] values = new String[]{ESR.ESR_CODE, code};
-        Cursor cursor = getRecordsFilteredByColumns(ESRTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
-        List<ESR> list = assambleESRs(cursor);
+        String[] values = new String[]{ESR.INDEX_CODE, code};
+        Cursor cursor = getRecordsFilteredByColumns(ESRTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
+        List<ESR> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
             throw new DAOException("Entity not found. [ESR Code : " + code + " ]");
         }
@@ -48,7 +64,44 @@ public class EsrDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalEsrDAO {
     }
 
 
-    protected List<ESR> assambleESRs(Cursor cursor) throws DAOException {
+    @Override
+    public List<ESR> getAllESRs(ESR.Group group) throws DAOException {
+        Cursor cursor = getRecordsFilteredByColumn(ESRTable.MAPPED_INDEX_DATABASE_TABLE, ESRTable.GROUP_CODE_COLUMN, group.name(), null);
+        List<ESR> list = assemblePersistentEntities(cursor);
+        cursor.close();
+        return list;
+    }
+
+    @Override
+    public void saveESR(ESR newESR) throws DAOException {
+        savePersistentEntity(ESRTable.MAPPED_INDEX_DATABASE_TABLE, newESR);
+    }
+
+    @Override
+    protected void savePersistentEntity(String tableName, ESR newSkavaEntity) throws DAOException {
+
+        String[] colNames = {ESRTable.INDEX_CODE_COLUMN,
+                ESRTable.GROUP_CODE_COLUMN,
+                ESRTable.CODE_COLUMN,
+                ESRTable.KEY_COLUMN,
+                ESRTable.SHORT_DESCRIPTION_COLUMN,
+                ESRTable.DESCRIPTION_COLUMN,
+                ESRTable.VALUE_COLUMN};
+
+        Object[] colValues = {
+                ESR.INDEX_CODE,
+                newSkavaEntity.getGroupName(),
+                newSkavaEntity.getCode(),
+                newSkavaEntity.getKey(),
+                newSkavaEntity.getShortDescription(),
+                newSkavaEntity.getDescription(),
+                newSkavaEntity.getValue()
+        };
+        saveRecord(tableName, colNames, colValues);
+    }
+
+    @Override
+    protected List<ESR> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<ESR> list = new ArrayList<ESR>();
         while (cursor.moveToNext()) {
             ESR newInstance = mappedIndexInstaceBuilder.buildESRFromCursorRecord(cursor);
@@ -59,27 +112,21 @@ public class EsrDAOsqlLiteImpl extends SqlLiteBaseDAO implements LocalEsrDAO {
 
 
     @Override
-    public List<ESR> getAllESRs(ESR.Group group) throws DAOException {
-        Cursor cursor = getRecordsFilteredByColumn(ESRTable.MAPPED_INDEX_DATABASE_TABLE, ESRTable.GROUP_CODE_COLUMN, group.name(), null);
-        List<ESR> list = assambleESRs(cursor);
-        cursor.close();
-        return list;
-    }
-
-
-    @Override
-    public void saveESR(ESR assessment) throws DAOException {
-
-    }
-
-    @Override
-    public boolean deleteESR(String indexCode, String groupCode, String code) {
-        return false;
+    public boolean deleteESR(String groupCode, String code) {
+        String[] colNames = {ESRTable.INDEX_CODE_COLUMN,
+                ESRTable.GROUP_CODE_COLUMN,
+                ESRTable.CODE_COLUMN};
+        Object[] colValues = {
+                ESR.INDEX_CODE,
+                groupCode,
+                code};
+        int howMany = deletePersistentEntitiesFilteredByColumns(ESRTable.MAPPED_INDEX_DATABASE_TABLE, colNames, colValues);
+        return (howMany == 1);
     }
 
     @Override
     public int deleteAllESRs() {
-        return 0;
+        return deleteAllPersistentEntities(ESRTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
 

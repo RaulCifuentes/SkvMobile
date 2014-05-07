@@ -137,7 +137,7 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
         final ListView listview = (ListView) getView().findViewById(R.id.listview_a);
         final List<SRF> listSrf;
         try {
-            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.Group.a);
+            listSrf = getDAOFactory().getLocalSrfDAO().getAllSrfs(SRF.Group.a);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -180,7 +180,7 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
         final ListView listview = (ListView) getView().findViewById(R.id.listview_b);
         final List<SRF> listSrf;
         try {
-            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.Group.b);
+            listSrf = getDAOFactory().getLocalSrfDAO().getAllSrfs(SRF.Group.b);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -223,7 +223,7 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
         final ListView listview = (ListView) getView().findViewById(R.id.listview_c);
         final List<SRF> listSrf;
         try {
-            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.Group.c);
+            listSrf = getDAOFactory().getLocalSrfDAO().getAllSrfs(SRF.Group.c);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -266,7 +266,7 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
         final ListView listview = (ListView) getView().findViewById(R.id.listview_d);
         final List<SRF> listSrf;
         try {
-            listSrf = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.Group.d);
+            listSrf = getDAOFactory().getLocalSrfDAO().getAllSrfs(SRF.Group.d);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();

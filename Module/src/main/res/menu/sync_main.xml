@@ -3,38 +3,10 @@
     tools:context="com.metric.skava.sync.activity.SyncMainActivity" >
 
 
-    <item android:id="@+id/action_sync_roles"
-        android:title="@string/action_sync_roles"
-        android:showAsAction="ifRoom" />
 
     <item android:id="@+id/action_sync_clients"
         android:title="@string/action_sync_clients"
         android:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_sync_users"
-        android:title="@string/action_sync_users"
-        android:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_sync_projects"
-        android:title="@string/action_sync_projects"
-        android:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_sync_tunnels"
-        android:title="@string/action_sync_tunnels"
-        android:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_sync_faces"
-        android:title="@string/action_sync_faces"
-        android:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_sync_sections"
-        android:title="@string/action_sync_sections"
-        android:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_sync_methods"
-        android:title="@string/action_sync_methods"
-        android:showAsAction="ifRoom" />
-
 
     <item android:id="@+id/action_sync_assessments"
         android:title="@string/action_sync_assessments"

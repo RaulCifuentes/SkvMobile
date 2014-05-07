@@ -118,18 +118,7 @@
 
                     <ListView
                         android:layout_weight="1"
-                        android:id="@+id/listviewClients"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:choiceMode="singleChoice" />
-
-                    <Space
-                        android:layout_width="@dimen/grid_space_separation_width"
-                        android:layout_height="@dimen/grid_space_separation_height" />
-
-                    <ListView
-                        android:layout_weight="1"
-                        android:id="@+id/listviewRoles"
+                        android:id="@+id/listview_assessments"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:choiceMode="singleChoice" />
@@ -141,7 +130,6 @@
                     android:layout_height="@dimen/grid_space_separation_height" />
 
 
-
                 <!--Not so very First row -->
                 <LinearLayout
                     android:orientation="horizontal"
@@ -151,7 +139,7 @@
 
                     <ListView
                         android:layout_weight="1"
-                        android:id="@+id/listviewUsers"
+                        android:id="@+id/listview_qCalculations"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:choiceMode="singleChoice" />
@@ -162,7 +150,7 @@
 
                     <ListView
                         android:layout_weight="1"
-                        android:id="@+id/listviewProjects"
+                        android:id="@+id/listview_rmrCalculations"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:choiceMode="singleChoice" />
@@ -183,21 +171,11 @@
 
                     <ListView
                         android:layout_weight="1"
-                        android:id="@+id/listviewTunnels"
+                        android:id="@+id/listview_discontinuities"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:choiceMode="singleChoice" />
 
-                    <Space
-                        android:layout_width="@dimen/grid_space_separation_width"
-                        android:layout_height="@dimen/grid_space_separation_height" />
-
-                    <ListView
-                        android:layout_weight="1"
-                        android:id="@+id/listviewFaces"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:choiceMode="singleChoice" />
 
                 </LinearLayout>
 
@@ -215,28 +193,16 @@
 
                     <ListView
                         android:layout_weight="1"
-                        android:id="@+id/listviewSections"
+                        android:id="@+id/listview_supportRecommendations"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:choiceMode="singleChoice" />
 
-                    <Space
-                        android:visibility="gone"
-                        android:layout_width="@dimen/grid_space_separation_width"
-                        android:layout_height="@dimen/grid_space_separation_height" />
-
-                    <ListView
-                        android:layout_weight="1"
-                        android:id="@+id/listviewMethods"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:choiceMode="singleChoice" />
 
                 </LinearLayout>
 
             </LinearLayout>
         </ScrollView>
-
 
 
     </GridLayout>

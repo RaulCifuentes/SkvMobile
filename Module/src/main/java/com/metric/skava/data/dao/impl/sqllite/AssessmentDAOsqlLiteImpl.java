@@ -10,19 +10,19 @@ import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
 import com.metric.skava.app.util.DateDataFormat;
+import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.calculator.barton.model.Q_Calculation;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
-import com.metric.skava.data.dao.LocalPermissionDAO;
+import com.metric.skava.data.dao.LocalDiscontinuityFamilyDAO;
+import com.metric.skava.data.dao.LocalQCalculationDAO;
+import com.metric.skava.data.dao.LocalRMRCalculationDAO;
 import com.metric.skava.data.dao.LocalTunnelFaceDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.helper.AssessmentBuilder4SqlLite;
 import com.metric.skava.data.dao.impl.sqllite.table.AssessmentTable;
-import com.metric.skava.data.dao.impl.sqllite.table.DiscontinuityFamilyTable;
 import com.metric.skava.data.dao.impl.sqllite.table.ExternalResourcesTable;
-import com.metric.skava.data.dao.impl.sqllite.table.QCalculationTable;
-import com.metric.skava.data.dao.impl.sqllite.table.RMRCalculationTable;
 import com.metric.skava.data.dao.impl.sqllite.table.SupportRecomendationTable;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
 import com.metric.skava.instructions.model.ArchType;
@@ -40,14 +40,23 @@ import java.util.List;
  */
 public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Assessment> implements LocalAssessmentDAO {
 
-    private LocalPermissionDAO mLocalPermissionDAO;
+    //    private LocalPermissionDAO mLocalPermissionDAO;
     private LocalTunnelFaceDAO mLocalTunnelFaceDAO;
+    private LocalDiscontinuityFamilyDAO mLocalDiscontinuityFamilyDAO;
+    private LocalQCalculationDAO mLocalQCalculationDAO;
+    private LocalRMRCalculationDAO mLocalRMRCalculationDAO;
+
+
     private AssessmentBuilder4SqlLite assessmentBuilder;
 
     public AssessmentDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
         super(context, skavaContext);
         assessmentBuilder = new AssessmentBuilder4SqlLite(mContext, skavaContext);
-        mLocalPermissionDAO = getDAOFactory().getLocalPermissionDAO();
+        //        mLocalPermissionDAO = getDAOFactory().getLocalPermissionDAO();
+        mLocalTunnelFaceDAO = getDAOFactory().getLocalTunnelFaceDAO();
+        mLocalDiscontinuityFamilyDAO = getDAOFactory().getLocalDiscontinuityFamilyDAO();
+        mLocalQCalculationDAO = getDAOFactory().getLocalQCalculationDAO();
+        mLocalRMRCalculationDAO = getDAOFactory().getLocalRMRCalculationDAO();
     }
 
     @Override
@@ -111,17 +120,27 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         List<Assessment> list = new ArrayList<Assessment>();
         while (cursor.moveToNext()) {
             //First the barebones assessment data
-            Assessment newInstance = assessmentBuilder.buildAssessmentFromCursorRecord(cursor);
+            Assessment reconstructedAssessment = assessmentBuilder.buildBareAssessmentFromCursorRecord(cursor);
             //Now the associated support recommendation, Q and RMR calculations, Discontinuity Systems, etc
-            // TODO: Uncomment when fixed
-//            SupportRecomendation recomendation = getRecommendationByAssessmentCode(newInstance.getCode());
-//            newInstance.setRecomendation(recomendation);
-//            Q_Calculation qCalculation = getQCalculationByAssessmentCode(newInstance.getCode());
-//            newInstance.setQCalculation(qCalculation);
-//            newInstance.setRmrCalculation(rmrCalculation)
-//            List<Uri> resourceList = getResourcesByAssessmentCode(newInstance.getCode());
-  //          newInstance.setPictureUriList(resourceList);
-            list.add(newInstance);
+
+            String assessmentCode = reconstructedAssessment.getCode();
+
+            List<DiscontinuityFamily> discontinuitySystem = mLocalDiscontinuityFamilyDAO.getDiscontinuityFamilies(assessmentCode);
+            reconstructedAssessment.setDiscontinuitySystem(discontinuitySystem);
+
+            Q_Calculation qCalculation = mLocalQCalculationDAO.getQCalculation(assessmentCode);
+            reconstructedAssessment.setQCalculation(qCalculation);
+
+            RMR_Calculation rmrCalculation = mLocalRMRCalculationDAO.getRMRCalculation(assessmentCode);
+            reconstructedAssessment.setRmrCalculation(rmrCalculation);
+
+            List<Uri> resourceList = getResourcesByAssessmentCode(assessmentCode);
+            reconstructedAssessment.setPictureUriList(resourceList);
+
+            SupportRecomendation recomendation = getRecommendationByAssessmentCode(assessmentCode);
+            reconstructedAssessment.setRecomendation(recomendation);
+
+            list.add(reconstructedAssessment);
         }
         return list;
     }
@@ -132,22 +151,14 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         return list;
     }
 
+
     private List<Uri> assembleResourceList(Cursor cursor) {
         return null;
     }
 
-    private Q_Calculation getQCalculationByAssessmentCode(String code) {
-        Cursor cursor = getRecordsFilteredByColumn(QCalculationTable.Q_CALCULATION_DATABASE_TABLE, QCalculationTable.ASSESSMENT_CODE_COLUMN, code, null);
-        Q_Calculation calculation = assembleCalculation(cursor);
-        return calculation;
-    }
-
-    private Q_Calculation assembleCalculation(Cursor cursor) {
-        return null;
-    }
 
     private SupportRecomendation getRecommendationByAssessmentCode(String code) throws DAOException {
-        Cursor cursor = getRecordsFilteredByColumn(SupportRecomendationTable.RECOMENDATION_DATABASE_TABLE, QCalculationTable.ASSESSMENT_CODE_COLUMN, code, null);
+        Cursor cursor = getRecordsFilteredByColumn(SupportRecomendationTable.RECOMENDATION_DATABASE_TABLE, SupportRecomendationTable.ASSESSMENT_CODE_COLUMN, code, null);
         SupportRecomendation recomendation = assembleSupportRecommendation(cursor);
         return recomendation;
     }
@@ -196,28 +207,22 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             resultList.add(newInstance);
         }
         //TODO This should be one and only one Check is not null and stuff
-        if (!resultList.isEmpty()){
+        if (!resultList.isEmpty()) {
             return resultList.get(0);
         } else {
             return null;
         }
     }
 
-    @Override
-    public void send(Assessment assessment) throws DAOException {
-        savePersistentEntity(AssessmentTable.ASSESSMENT_DATABASE_TABLE, assessment);
-    }
-
 
     @Override
-    public void saveDraft(Assessment assessment) throws DAOException {
+    public void saveAssessment(Assessment assessment) throws DAOException {
         savePersistentEntity(AssessmentTable.ASSESSMENT_DATABASE_TABLE, assessment);
     }
 
     @Override
     protected void savePersistentEntity(java.lang.String tableName, Assessment newSkavaEntity) throws DAOException {
         String[] names = new String[]{
-                AssessmentTable.GLOBAL_KEY_ID,
                 AssessmentTable.CODE_COLUMN,
                 AssessmentTable.INTERNAL_CODE_COLUMN,
                 AssessmentTable.GEOLOGIST_CODE_COLUMN,
@@ -237,20 +242,19 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         };
 
         Object[] values = new Object[]{
-                newSkavaEntity.get_id(),
                 newSkavaEntity.getCode(),
                 newSkavaEntity.getInternalCode(),
-                newSkavaEntity.getGeologist().getCode(),
-                newSkavaEntity.getFace().getCode(),
+                SkavaUtils.isUndefined(newSkavaEntity.getGeologist()) ? null : newSkavaEntity.getGeologist().getCode(),
+                SkavaUtils.isUndefined(newSkavaEntity.getFace()) ? null : newSkavaEntity.getFace().getCode(),
                 DateDataFormat.formatDateAsLong(newSkavaEntity.getDate()),
-                newSkavaEntity.getSection().getCode(),
-                newSkavaEntity.getMethod().getCode(),
+                SkavaUtils.isUndefined(newSkavaEntity.getSection()) ? null : newSkavaEntity.getSection().getCode(),
+                SkavaUtils.isUndefined(newSkavaEntity.getMethod()) ? null : newSkavaEntity.getMethod().getCode(),
                 newSkavaEntity.getInitialPeg(),
                 newSkavaEntity.getFinalPeg(),
                 newSkavaEntity.getAccummAdvance(),
                 newSkavaEntity.getOrientation(),
                 newSkavaEntity.getSlope(),
-                newSkavaEntity.getFractureType() != null ? newSkavaEntity.getFractureType().getCode() : null,
+                SkavaUtils.isUndefined(newSkavaEntity.getFractureType()) ? null : newSkavaEntity.getFractureType().getCode(),
                 newSkavaEntity.getBlockSize(),
                 newSkavaEntity.getNumberOfJoints(),
                 newSkavaEntity.getOutcropDescription()
@@ -259,149 +263,65 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         Long assesmentId = saveRecord(tableName, names, values);
         newSkavaEntity.set_id(assesmentId);
 
-        //Save the related recommendation
-        String[] recommendationNames = new String[]{
-                SupportRecomendationTable.ASSESSMENT_CODE_COLUMN,
-                SupportRecomendationTable.BOLT_TYPE_CODE_COLUMN,
-                SupportRecomendationTable.BOLT_DIAMETER_COLUMN,
-                SupportRecomendationTable.BOLT_LENGTH_COLUMN,
-                SupportRecomendationTable.SHOTCRETE_TYPE_CODE_COLUMN,
-                SupportRecomendationTable.THICKNESS_COLUMN,
-                SupportRecomendationTable.MESH_TYPE_CODE_COLUMN,
-                SupportRecomendationTable.COVERAGE_CODE_COLUMN,
-                SupportRecomendationTable.ARCH_TYPE_CODE_COLUMN,
-                SupportRecomendationTable.SEPARATION_COLUMN
-        };
-//        SupportRecomendation recomendation = newSkavaEntity.getRecomendation();
-//        Object[] recomendationValues = new Object[]{
-//                newSkavaEntity.getCode(),
-//                recomendation.getBoltType().getCode(),
-//                recomendation.getBoltDiameter(),
-//                recomendation.getBoltLength(),
-//                recomendation.getShotcreteType().getCode(),
-//                recomendation.getThickness(),
-//                recomendation.getMeshType().getCode(),
-//                recomendation.getCoverage(),
-//                recomendation.getArchType().getCode(),
-//                recomendation.getSeparation()
-//        };
-//        saveRecord(SupportRecomendationTable.RECOMENDATION_DATABASE_TABLE, recommendationNames, recomendationValues);
-
-        // Save the related Q Calculation
-        Q_Calculation qCalculation = newSkavaEntity.getQCalculation();
-        if (qCalculation != null) {
-            String[] qCalculationNames = new String[]{
-                    QCalculationTable.GLOBAL_KEY_ID,
-                    QCalculationTable.ASSESSMENT_CODE_COLUMN,
-                    QCalculationTable.RQD_COLUMN,
-                    QCalculationTable.Jn_CODE_COLUMN,
-                    QCalculationTable.Jr_CODE_COLUMN,
-                    QCalculationTable.Ja_CODE_COLUMN,
-                    QCalculationTable.Jw_CODE_COLUMN,
-                    QCalculationTable.SRF_CODE_COLUMN,
-                    QCalculationTable.Q_COLUMN
-            };
-            Object[] qCalculationValues = new Object[]{
-                    qCalculation.get_id(),
-                    newSkavaEntity.getCode(),
-                    qCalculation.getRqd().getValue(),
-                    qCalculation.getJn().getKey(),
-                    qCalculation.getJr().getKey(),
-                    qCalculation.getJa().getKey(),
-                    qCalculation.getJw().getKey(),
-                    qCalculation.getSrf().getKey(),
-                    qCalculation.getQResult().getQBarton(),
-            };
-            Long qCalculationId = saveRecord(QCalculationTable.Q_CALCULATION_DATABASE_TABLE, qCalculationNames, qCalculationValues);
-            qCalculation.set_id(qCalculationId);
-        }
-
-        RMR_Calculation rmrCalculation = newSkavaEntity.getRmrCalculation();
-        if (rmrCalculation != null) {
-            //Save the related RMR Calculation
-            String[] rmrCalculationNames = new String[]{
-                    RMRCalculationTable.GLOBAL_KEY_ID,
-                    RMRCalculationTable.ASSESSMENT_CODE_COLUMN,
-                    RMRCalculationTable.STRENGTHOFROCK_CODE_COLUMN,
-                    RMRCalculationTable.RQD_RMR_CODE_COLUMN,
-                    RMRCalculationTable.SPACING_CODE_COLUMN,                    
-                    RMRCalculationTable.PERSISTENCE_CODE_COLUMN,
-                    RMRCalculationTable.APERTURE_CODE_COLUMN,
-                    RMRCalculationTable.ROUGHNESS_CODE_COLUMN,
-                    RMRCalculationTable.INFILLING_CODE_COLUMN,
-                    RMRCalculationTable.WEATHERING_CODE_COLUMN,
-                    RMRCalculationTable.GROUNDWATER_CODE_COLUMN
-            };
-
-            Object[] rmrCalculationValues = new Object[]{
-                    rmrCalculation.get_id(),
-                    newSkavaEntity.getCode(),
-                    rmrCalculation.getStrengthOfRock().getKey(),
-                    rmrCalculation.getRqd().getKey(),
-                    rmrCalculation.getSpacing().getKey(),
-                    rmrCalculation.getPersistence().getKey(),
-                    rmrCalculation.getAperture().getKey(),
-                    rmrCalculation.getRoughness().getKey(),
-                    rmrCalculation.getInfilling().getKey(),
-                    rmrCalculation.getWeathering().getKey(),
-                    rmrCalculation.getGroundwater().getKey()
-            };
-            Long rmrCalculationId = saveRecord(RMRCalculationTable.RMR_CALCULATION_DATABASE_TABLE, rmrCalculationNames, rmrCalculationValues);
-            rmrCalculation.set_id(rmrCalculationId);
-        }
-
         // Save Discontinuity Families
         List<DiscontinuityFamily> discontinuitySystem = newSkavaEntity.getDiscontinuitySystem();
         if (discontinuitySystem != null) {
-            for(DiscontinuityFamily df: discontinuitySystem) {
-                // TODO: Cambiar la segunda condicion por algo que se parezca al Null Pattern
-                if (df == null || !df.isComplete()) {
+            for (DiscontinuityFamily currentFamily : discontinuitySystem) {
+                if (currentFamily == null || !currentFamily.hasSelectedAnything()) {
                     continue;
                 }
-
-                String[] discontinuitySystemNames = new String[]{
-                        DiscontinuityFamilyTable.GLOBAL_KEY_ID,
-                        DiscontinuityFamilyTable.ASSESSMENT_CODE_COLUMN,
-                        DiscontinuityFamilyTable.NUMBER_CODE_COLUMN,
-                        DiscontinuityFamilyTable.TYPE_CODE_COLUMN,
-                        DiscontinuityFamilyTable.RELEVANCE_CODE_COLUMN,
-                        DiscontinuityFamilyTable.DIPDIRDEGREES_CODE_COLUMN,
-                        DiscontinuityFamilyTable.DIPDEGREES_CODE_COLUMN,
-                        DiscontinuityFamilyTable.SHAPE_CODE_COLUMN,
-                        DiscontinuityFamilyTable.SPACING_CODE_COLUMN,
-                        DiscontinuityFamilyTable.ROUGHNESS_CODE_COLUMN,
-                        DiscontinuityFamilyTable.WEATHERING_CODE_COLUMN,
-                        DiscontinuityFamilyTable.DISCONTINUITYWATER_CODE_COLUMN,
-                        DiscontinuityFamilyTable.PERSISTENCE_CODE_COLUMN,
-                        DiscontinuityFamilyTable.APERTURE_CODE_COLUMN,
-                        DiscontinuityFamilyTable.INFILLING_CODE_COLUMN,
-                        DiscontinuityFamilyTable.JA_CODE_COLUMN,
-                        DiscontinuityFamilyTable.JR_CODE_COLUMN
-                };
-
-                Object[] discontinuitySystemValues = new Object[]{
-                        df.get_id(),
-                        newSkavaEntity.getCode(),
-                        df.getNumber(),
-                        df.getType().getCode(),
-                        df.getRelevance().getCode(),
-                        df.getDipDegrees(),
-                        df.getDipDirDegrees(),
-                        df.getShape().getCode(),
-                        df.getSpacing().getKey(),
-                        df.getRoughness().getKey(),
-                        df.getWeathering().getKey(),
-                        df.getWater().getCode(),
-                        df.getPersistence().getKey(),
-                        df.getAperture().getKey(),
-                        df.getInfilling().getKey(),
-                        df.getJa().getKey(),
-                        df.getJr().getKey()
-                };
-
-                Long dfId = saveRecord(DiscontinuityFamilyTable.DISCONTINUITY_FAMILY_DATABASE_TABLE, discontinuitySystemNames, discontinuitySystemValues);
-                df.set_id(dfId);
+                mLocalDiscontinuityFamilyDAO.saveDiscontinuityFamily(newSkavaEntity.getCode(), currentFamily);
             }
+        }
+
+        // Save the related Q Calculation
+        Q_Calculation qCalculation = newSkavaEntity.getQCalculation();
+        mLocalQCalculationDAO.saveQCalculation(newSkavaEntity.getCode(), qCalculation);
+
+        // Save the related RMR Calculation
+        RMR_Calculation rmrCalculation = newSkavaEntity.getRmrCalculation();
+        mLocalRMRCalculationDAO.saveRMRCalculation(newSkavaEntity.getCode(), rmrCalculation);
+
+
+        //Save the related recommendation
+
+        SupportRecomendation recomendation = newSkavaEntity.getRecomendation();
+        if (recomendation != null && recomendation.isComplete()){
+            String[] recommendationNames = new String[]{
+                    SupportRecomendationTable.ASSESSMENT_CODE_COLUMN,
+                    SupportRecomendationTable.BOLT_TYPE_CODE_COLUMN,
+                    SupportRecomendationTable.BOLT_DIAMETER_COLUMN,
+                    SupportRecomendationTable.BOLT_LENGTH_COLUMN,
+                    SupportRecomendationTable.ROOF_PATTERN_TYPE_CODE_COLUMN,
+                    SupportRecomendationTable.ROOF_PATTERN_COLUMN,
+                    SupportRecomendationTable.WALL_PATTERN_TYPE_CODE_COLUMN,
+                    SupportRecomendationTable.WALL_PATTERN_COLUMN,
+                    SupportRecomendationTable.SHOTCRETE_TYPE_CODE_COLUMN,
+                    SupportRecomendationTable.THICKNESS_COLUMN,
+                    SupportRecomendationTable.MESH_TYPE_CODE_COLUMN,
+                    SupportRecomendationTable.COVERAGE_CODE_COLUMN,
+                    SupportRecomendationTable.ARCH_TYPE_CODE_COLUMN,
+                    SupportRecomendationTable.SEPARATION_COLUMN,
+                    SupportRecomendationTable.OBSERVATIONS_COLUMN
+            };
+            Object[] recomendationValues = new Object[]{
+                    newSkavaEntity.getCode(),
+                    recomendation.getBoltType() != null ? recomendation.getBoltType().getCode() : null,
+                    recomendation.getBoltDiameter(),
+                    recomendation.getBoltLength(),
+                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getType().getCode() : null,
+                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getPattern() : null,
+                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getType().getCode() : null,
+                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getPattern() : null,
+                    recomendation.getShotcreteType() != null ? recomendation.getShotcreteType().getCode() : null,
+                    recomendation.getThickness(),
+                    recomendation.getMeshType() != null ? recomendation.getMeshType().getCode() : null,
+                    recomendation.getCoverage(),
+                    recomendation.getArchType() != null ? recomendation.getArchType().getCode() : null,
+                    recomendation.getSeparation(),
+                    recomendation.getObservations()
+            };
+            saveRecord(SupportRecomendationTable.RECOMENDATION_DATABASE_TABLE, recommendationNames, recomendationValues);
         }
 
         //Save the related pictures urls

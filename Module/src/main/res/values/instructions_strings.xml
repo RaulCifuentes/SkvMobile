@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="instructions_observations_label">Observations</string>
-    <string name="instructions_separation_label">Separation</string>
+    <string name="instructions_separation_label">Separation (m)</string>
     <string name="instructions_arch_type_label">Arch Type</string>
     <string name="instructions_coverage_label">Coverage</string>
     <string name="instructions_mesh_type_label">Mesh Type</string>
-    <string name="instructions_thickness_label">Thickness</string>
+    <string name="instructions_thickness_label">Thickness (mm)</string>
     <string name="instructions_shotcrete_type_label">Shotcrete Type</string>
-    <string name="instructions_bolt_length_label">Bolt Length</string>
-    <string name="instructions_bolt_diameter_label">Bolt Diameter</string>
+    <string name="instructions_bolt_length_label">Bolt Length (m)</string>
+    <string name="instructions_bolt_diameter_label">Bolt Diameter (mm)</string>
     <string name="instructions_bolt_type_label">Bolt Type</string>
 </resources>

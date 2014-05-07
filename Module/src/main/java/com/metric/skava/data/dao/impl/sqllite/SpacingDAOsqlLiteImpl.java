@@ -27,20 +27,37 @@ public class SpacingDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Spac
 
 
     @Override
-    public Spacing getSpacing(String indexCode, String groupCode, String code) throws DAOException {
+    public Spacing getSpacing(String groupCode, String code) throws DAOException {
         String[] names = new String[]{SpacingTable.INDEX_CODE_COLUMN, SpacingTable.GROUP_CODE_COLUMN, SpacingTable.CODE_COLUMN};
-        String[] values = new String[]{indexCode, groupCode, code};
+        String[] values = new String[]{Spacing.INDEX_CODE, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(SpacingTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
         List<Spacing> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + Spacing.INDEX_CODE + ", Group Code: " + groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Multiple records for same code. [Index Code : " + Spacing.INDEX_CODE + ", Group Code: " + groupCode + ", Code: " + code + " ]");
         }
         cursor.close();
         return list.get(0);
     }
+
+    @Override
+    public Spacing getSpacingByUniqueCode(String spacingCode) throws DAOException {
+        String[] names = new String[]{SpacingTable.INDEX_CODE_COLUMN, SpacingTable.CODE_COLUMN};
+        String[] values = new String[]{Spacing.INDEX_CODE, spacingCode};
+        Cursor cursor = getRecordsFilteredByColumns(SpacingTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
+        List<Spacing> list = assemblePersistentEntities(cursor);
+        if (list.isEmpty()) {
+            throw new DAOException("Entity not found. [Spacing Code : " + spacingCode + " ]");
+        }
+        if (list.size() > 1) {
+            throw new DAOException("Multiple records for same code. [Index Code : " + spacingCode + " ]");
+        }
+        cursor.close();
+        return list.get(0);
+    }
+
 
     @Override
     protected List<Spacing> assemblePersistentEntities(Cursor cursor) throws DAOException {
@@ -69,11 +86,6 @@ public class SpacingDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Spac
 
     @Override
     protected void savePersistentEntity(String tableName, Spacing newSkavaEntity) throws DAOException {
-        //  LocalIndexDAO indexDAO = getDAOFactory().getLocalIndexDAO();
-        //  Index index = indexDAO.getIndexByCode(Spacing.INDEX_CODE);
-        //  Test if this is to map the indexes and grop codes on Fabian model is necessary
-        //  String indexCode = index.getCode();
-        String indexCode = Spacing.INDEX_CODE;
 
         String[] colNames = {SpacingTable.INDEX_CODE_COLUMN,
                 SpacingTable.GROUP_CODE_COLUMN,
@@ -84,7 +96,7 @@ public class SpacingDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Spac
                 SpacingTable.VALUE_COLUMN};
 
         Object[] colValues = {
-                indexCode,
+                Spacing.INDEX_CODE,
                 newSkavaEntity.getGroupName(),
                 newSkavaEntity.getCode(),
                 newSkavaEntity.getKey(),
@@ -97,12 +109,12 @@ public class SpacingDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Spac
 
 
     @Override
-    public boolean deleteSpacing(String indexCode, String groupCode, String code) {
+    public boolean deleteSpacing(String groupCode, String code) {
         String[] colNames = {SpacingTable.INDEX_CODE_COLUMN,
                 SpacingTable.GROUP_CODE_COLUMN,
                 SpacingTable.CODE_COLUMN};
         Object[] colValues = {
-                indexCode,
+                Spacing.INDEX_CODE,
                 groupCode,
                 code};
         int howMany = deletePersistentEntitiesFilteredByColumns(SpacingTable.MAPPED_INDEX_DATABASE_TABLE, colNames, colValues);

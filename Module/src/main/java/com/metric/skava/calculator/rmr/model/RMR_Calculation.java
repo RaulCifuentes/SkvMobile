@@ -16,19 +16,13 @@ public class RMR_Calculation implements Parcelable {
     private StrengthOfRock strengthOfRock;
     private RQD_RMR rqd;
     private Spacing spacing;
-    //    private ConditionDiscontinuities conditionDiscontinuities;
     private Persistence persistence;
     private Aperture aperture;
     private Roughness roughness;
     private Infilling infilling;
     private Weathering weathering;
     private Groundwater groundwater;
-    /**
-     * Special case coz need to distinghuis among three types for rating values
-     *
-     * @param type  TUNNEL_MINES | FOUNDATIONS | SLOPES
-     */
-    private int mOrientationType;
+
     private OrientationDiscontinuities orientationDiscontinuities;
 
     private RMROutput rmrResult;
@@ -41,7 +35,6 @@ public class RMR_Calculation implements Parcelable {
         this.strengthOfRock = strenght;
         this.rqd = rqd;
         this.spacing = spacing;
-//        this.conditionDiscontinuities = condition;
         this.persistence = persistence;
         this.aperture = aperture;
         this.roughness = roughness;
@@ -73,22 +66,6 @@ public class RMR_Calculation implements Parcelable {
 
     public void setSpacing(Spacing spacing) {
         this.spacing = spacing;
-    }
-
-//    public ConditionDiscontinuities getConditionDiscontinuities() {
-//        return conditionDiscontinuities;
-//    }
-//
-//    public void setConditionDiscontinuities(ConditionDiscontinuities conditionDiscontinuities) {
-//        this.conditionDiscontinuities = conditionDiscontinuities;
-//    }
-
-    public int getOrientationType() {
-        return mOrientationType;
-    }
-
-    public void setOrientationType(int mOrientationType) {
-        this.mOrientationType = mOrientationType;
     }
 
     public OrientationDiscontinuities getOrientationDiscontinuities() {
@@ -163,21 +140,12 @@ public class RMR_Calculation implements Parcelable {
             input.setSpacing(getSpacing().getValue());
             input.setGroundwater(getGroundwater().getValue());
             input.setOrientation(getOrientationDiscontinuities().getValue());
-//            if (getConditionDiscontinuities() != null){
-//                //Dividir el valor resumido en cada una de las 5 categorias
-//                input.setCondition(getConditionDiscontinuities().getValue());
-////                input.setPersistence(equallyDistributed);
-////                input.setAperture(equallyDistributed);
-////                input.setRoughness(equallyDistributed);
-////                input.setInfilling();
-////                input.setWeathering();
-//            } else {
             input.setPersistence(getPersistence().getValue());
             input.setAperture(getAperture().getValue());
             input.setRoughness(getRoughness().getValue());
             input.setInfilling(getInfilling().getValue());
             input.setWeathering(getWeathering().getValue());
-//            }
+
             rmrResult = RMRCalculator.calculate(input);
         }
         return rmrResult;
@@ -189,7 +157,6 @@ public class RMR_Calculation implements Parcelable {
 
     @Override
     public int describeContents() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
@@ -210,7 +177,6 @@ public class RMR_Calculation implements Parcelable {
         out.writeValue(groundwater);
         out.writeValue(orientationDiscontinuities);
 
-//        out.writeValue(conditionDiscontinuities);
     }
 
     // This is used to regenerate your object.
@@ -225,7 +191,6 @@ public class RMR_Calculation implements Parcelable {
             StrengthOfRock strength = (StrengthOfRock) in.readValue(RMR_Calculation.class.getClassLoader());
             RQD_RMR rqd = (RQD_RMR) in.readValue(RMR_Calculation.class.getClassLoader());
             Spacing spacing = (Spacing) in.readValue(RMR_Calculation.class.getClassLoader());
-//            ConditionDiscontinuities condition = (ConditionDiscontinuities) in.readValue(RMR_Calculation.class.getClassLoader());
             Persistence persistence = (Persistence) in.readValue(RMR_Calculation.class.getClassLoader());
             Aperture aperture = (Aperture) in.readValue(RMR_Calculation.class.getClassLoader());
             Roughness roughness = (Roughness) in.readValue(RMR_Calculation.class.getClassLoader());
@@ -251,7 +216,6 @@ public class RMR_Calculation implements Parcelable {
         strengthOfRock = (StrengthOfRock) in.readValue(RMR_Calculation.class.getClassLoader());
         rqd = (RQD_RMR) in.readValue(RMR_Calculation.class.getClassLoader());
         spacing = (Spacing) in.readValue(RMR_Calculation.class.getClassLoader());
-//        conditionDiscontinuities = (ConditionDiscontinuities) in.readValue(RMR_Calculation.class.getClassLoader());
         persistence = (Persistence) in.readValue(RMR_Calculation.class.getClassLoader());
         aperture = (Aperture) in.readValue(RMR_Calculation.class.getClassLoader());
         roughness = (Roughness) in.readValue(RMR_Calculation.class.getClassLoader());

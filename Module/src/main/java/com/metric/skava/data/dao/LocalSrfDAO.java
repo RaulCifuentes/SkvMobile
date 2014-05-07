@@ -13,11 +13,13 @@ public interface LocalSrfDAO {
 
     public List<SRF> getAllSrfs(SRF.Group group) throws DAOException;
 
-    public SRF getSrf(String indexCode, String groupCode, String code) throws DAOException;
+    public SRF getSrf(String groupCode, String code) throws DAOException;
+
+    public SRF getSrfByUniqueCode(String code) throws DAOException;
 
     public void saveSrf(SRF jr) throws DAOException;
 
-    public boolean deleteSrf(String indexCode, String groupCode, String code);
+    public boolean deleteSrf(String groupCode, String code);
 
     public int deleteAllSrfs();
 

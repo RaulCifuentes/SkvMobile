@@ -33,16 +33,22 @@ public class JaDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Ja> imple
 
 
     @Override
-    public Ja getJa(String indexCode, String groupCode, String code) throws DAOException {
+    public Ja getJaByUniqueCode(String code) throws DAOException {
+        return getPersistentEntityByCandidateKey(JaTable.MAPPED_INDEX_DATABASE_TABLE, JaTable.CODE_COLUMN, code);
+    }
+
+
+    @Override
+    public Ja getJa(String groupCode, String code) throws DAOException {
         String[] names = new String[]{JaTable.INDEX_CODE_COLUMN, JaTable.GROUP_CODE_COLUMN, JaTable.CODE_COLUMN};
-        String[] values = new String[]{indexCode, groupCode, code};
+        String[] values = new String[]{Ja.INDEX_CODE, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(JaTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Ja> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + Ja.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Multiple records for same code. [Index Code : " + Ja.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
         cursor.close();
         return list.get(0);
@@ -67,6 +73,8 @@ public class JaDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Ja> imple
         cursor.close();
         return list;
     }
+
+
 
 
     @Override

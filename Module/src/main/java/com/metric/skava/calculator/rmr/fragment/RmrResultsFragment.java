@@ -53,21 +53,18 @@ public class RmrResultsFragment extends RMRCalculatorBaseFragment {
         input.setStrength(RMRCalculation.getStrengthOfRock().getValue());
         input.setRqd(Double.valueOf(RMRCalculation.getRqd().getValue()));
         input.setSpacing(RMRCalculation.getSpacing().getValue());
-//        if (RMRCalculation.getConditionDiscontinuities() != null) {
-//            input.setCondition(RMRCalculation.getConditionDiscontinuities().getValue());
-//        } else {
-            input.setRoughness(RMRCalculation.getRoughness().getValue());
-            input.setAperture(RMRCalculation.getAperture().getValue());
-            input.setInfilling(RMRCalculation.getInfilling().getValue());
-            input.setWeathering(RMRCalculation.getWeathering().getValue());
-            input.setPersistence(RMRCalculation.getPersistence().getValue());
-//        }
+        input.setRoughness(RMRCalculation.getRoughness().getValue());
+        input.setAperture(RMRCalculation.getAperture().getValue());
+        input.setInfilling(RMRCalculation.getInfilling().getValue());
+        input.setWeathering(RMRCalculation.getWeathering().getValue());
+        input.setPersistence(RMRCalculation.getPersistence().getValue());
         input.setGroundwater(RMRCalculation.getGroundwater().getValue());
         input.setOrientation(RMRCalculation.getOrientationDiscontinuities().getValue());
-        if (input.isComplete()){
+        if (input.isComplete()) {
             RMROutput output;
             try {
                 output = RMRCalculator.calculate(input);
+                getRMRCalculationContext().setRMRResult(output);
                 rmrValueTextView.setText(String.format("%.2f", output.getRMR()));
             } catch (Exception e) {
                 Log.e(SkavaConstants.LOG, e.getMessage(), e);

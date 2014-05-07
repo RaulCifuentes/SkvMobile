@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 public class ESR extends MappedIndex implements Serializable {
 
-    public static final String ESR_CODE = "ESR";
+    public static final String INDEX_CODE = "ESR";
 
     private Group group;
 
@@ -32,10 +32,6 @@ public class ESR extends MappedIndex implements Serializable {
     public ESR(Group group, String code, String key, String shortDescription, String longDescription, Double value) {
         super(code, key, shortDescription, longDescription,value);
         setGroup(group);
-//        setKey(key);
-//        getCategoriesAndValues()[0][0] = MappedIndex.DESCRIPTION;
-//        getCategoriesAndValues()[1][0] = longDescription;
-//        setValue(value);
     }
 
     public void setGroup(Group group) {
@@ -48,7 +44,8 @@ public class ESR extends MappedIndex implements Serializable {
 
     @Override
     public String getGroupName() {
-        return this.group.name();
+        //Only works when Dropbox model includes Groups for the ESR index
+        return null;
     }
 
 }

@@ -139,8 +139,15 @@ public abstract class SqlLiteBaseDAO {
             //just in case newId is needed sometime in the future
 //            long newId = db.insert(tableName, null, newValues);
             long newId = db.replace(tableName, null, newValues);
-            if (newId == -1 ){
-                throw new DAOException("Insert on "+ tableName + " failed when attemping to insert " + columnValues);
+            if (newId == -1 ) {
+                String insertValues = "[ ";
+                for (int i = 0; i < columnValues.length; i++) {
+                    insertValues+= columnValues[i] + ", " ;
+                }
+                int lastComma = insertValues.lastIndexOf(",");
+                insertValues = insertValues.substring(0, lastComma);
+                insertValues += " ]";
+                throw new DAOException("Insert on " + tableName + " failed when attempting to insert " + insertValues);
             }
             return newId;
         } else {

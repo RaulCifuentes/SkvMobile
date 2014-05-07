@@ -35,20 +35,41 @@ public class RoughnessDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Ro
 
     @Override
     protected List<Roughness> assemblePersistentEntities(Cursor cursor) throws DAOException {
-        return null;
+        List<Roughness> list = new ArrayList<Roughness>();
+        while (cursor.moveToNext()) {
+            Roughness newInstance = mappedIndexInstaceBuilder.buildRoughnessFromCursorRecord(cursor);
+            list.add(newInstance);
+        }
+        return list;
     }
 
     @Override
-    public Roughness getRoughness(String indexCode, String groupCode, String code) throws DAOException {
+    public Roughness getRoughness( String groupCode, String code) throws DAOException {
         String[] names = new String[]{RoughnessTable.INDEX_CODE_COLUMN, RoughnessTable.GROUP_CODE_COLUMN, RoughnessTable.CODE_COLUMN};
-        String[] values = new String[]{indexCode, groupCode, code};
+        String[] values = new String[]{Roughness.INDEX_CODE, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(RoughnessTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Roughness> list = assambleRoughnesss(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + Roughness.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Multiple records for same code. [Index Code : " + Roughness.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+        }
+        cursor.close();
+        return list.get(0);
+    }
+
+    @Override
+    public Roughness getRoughnessByUniqueCode(String roughnessCode) throws DAOException {
+        String[] names = new String[]{RoughnessTable.INDEX_CODE_COLUMN, RoughnessTable.CODE_COLUMN};
+        String[] values = new String[]{Roughness.INDEX_CODE, roughnessCode};
+        Cursor cursor = getRecordsFilteredByColumns(RoughnessTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
+        List<Roughness> list = assemblePersistentEntities(cursor);
+        if (list.isEmpty()) {
+            throw new DAOException("Entity not found. [Roughness Code : " + roughnessCode + " ]");
+        }
+        if (list.size() > 1) {
+            throw new DAOException("Multiple records for same code. [Index Code : " + roughnessCode + " ]");
         }
         cursor.close();
         return list.get(0);
@@ -108,12 +129,12 @@ public class RoughnessDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Ro
     }
 
     @Override
-    public boolean deleteRoughness(String indexCode, String groupCode, String code) {
+    public boolean deleteRoughness(String groupCode, String code) {
         String[] colNames = {RoughnessTable.INDEX_CODE_COLUMN,
                 RoughnessTable.GROUP_CODE_COLUMN,
                 RoughnessTable.CODE_COLUMN};
         Object[] colValues = {
-                indexCode,
+                Roughness.INDEX_CODE,
                 groupCode,
                 code};
         int howMany = deletePersistentEntitiesFilteredByColumns(RoughnessTable.MAPPED_INDEX_DATABASE_TABLE, colNames, colValues);

@@ -12,11 +12,15 @@ public interface LocalEsrDAO {
 
     public List<ESR> getAllESRs(ESR.Group group) throws DAOException;
 
-    public ESR getESR(String code) throws DAOException;
+    public ESR getESR(String groupCode, String code) throws DAOException;
+
+    // This method assumes that code is a candidateKey so theres no need to use the group as part
+    // of the criteria to find a single unique instance
+    public ESR getESRByUniqueCode(String code) throws DAOException;
 
     public void saveESR(ESR esr) throws DAOException;
 
-    public boolean deleteESR(String indexCode, String groupCode, String code);
+    public boolean deleteESR(String groupCode, String code);
 
     public int deleteAllESRs();
 

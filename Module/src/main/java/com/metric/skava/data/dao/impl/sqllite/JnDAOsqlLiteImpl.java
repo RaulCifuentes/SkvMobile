@@ -9,7 +9,6 @@ import com.metric.skava.data.dao.LocalJnDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.helper.MappedIndexInstanceBuilder4SqlLite;
 import com.metric.skava.data.dao.impl.sqllite.table.JnTable;
-import com.metric.skava.data.dao.impl.sqllite.table.JrTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,16 +32,22 @@ public class JnDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Jn> imple
     }
 
     @Override
-    public Jn getJn(String indexCode, String groupCode, String code) throws DAOException {
+    public Jn getJnByUniqueCode(String code) throws DAOException {
+        return getPersistentEntityByCandidateKey(JnTable.MAPPED_INDEX_DATABASE_TABLE, JnTable.CODE_COLUMN, code);
+    }
+
+
+    @Override
+    public Jn getJn(String groupCode, String code) throws DAOException {
         String[] names = new String[]{JnTable.INDEX_CODE_COLUMN, JnTable.GROUP_CODE_COLUMN, JnTable.CODE_COLUMN};
-        String[] values = new String[]{indexCode, groupCode, code};
+        String[] values = new String[]{Jn.INDEX_CODE, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(JnTable.MAPPED_INDEX_DATABASE_TABLE, names , values, null );
         List<Jn> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + Jn.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Multiple records for same code. [Index Code : " + Jn.INDEX_CODE + ", Group Code: "+ groupCode + ", Code: " + code + " ]");
         }
         cursor.close();
         return list.get(0);
@@ -71,7 +76,7 @@ public class JnDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Jn> imple
 
     @Override
     public void saveJn(Jn newJn) throws DAOException {
-        savePersistentEntity(JrTable.MAPPED_INDEX_DATABASE_TABLE, newJn);
+        savePersistentEntity(JnTable.MAPPED_INDEX_DATABASE_TABLE, newJn);
     }
 
     @Override

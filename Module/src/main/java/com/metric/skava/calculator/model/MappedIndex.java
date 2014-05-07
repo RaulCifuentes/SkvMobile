@@ -51,18 +51,6 @@ public abstract class MappedIndex implements IdentifiableEntity {
 		this.value = value;
 	}
 
-    /**
-     * This is a 2-row 3-column structure to store as this
-     * MappedIndex.DESCRIPTION | MappedIndexSubclass.KeyOne  | MappedIndexSubclass.KeyTwo
-     *  DESCRIPTION Value      |     Value                   |     Value
-     * @return
-     */
-//    public String[][] getCategoriesAndValues() {
-//        return categoriesAndValues;
-//    }
-
-//    public abstract Group getGroup();
-
     public abstract String getGroupName();
 
     public String getDescription() {

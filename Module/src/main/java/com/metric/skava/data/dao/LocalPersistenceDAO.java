@@ -10,25 +10,17 @@ import java.util.List;
  */
 public interface LocalPersistenceDAO {
 
-    public static final String INDEX_CODE_COLUMN = "INDEX_CODE";
-    public static final String GROUP_CODE_COLUMN = "GROUP_CODE";
-    public static final String CODE_COLUMN = "CODE";
-
-    public static final String KEYWORDS_COLUMN = "KEYWORDS";
-    public static final String DESCRIPTION_COLUMN = "DESCRIPTION";
-    public static final String VALUE_COLUMN  = "VALUE";
 
     public List<Persistence> getAllPersistences() throws DAOException;
 
-    public Persistence getPersistence(String indexCode, String groupCode, String code) throws DAOException;
+    public Persistence getPersistence(String groupCode, String code) throws DAOException;
+
+    public Persistence getPersistenceByUniqueCode(String persistenceCode) throws DAOException;
 
     public void savePersistence(Persistence persistence) throws DAOException;
 
-    public boolean deletePersistence(String indexCode, String groupCode, String code);
+    public boolean deletePersistence( String groupCode, String code);
+
 
     public int deleteAllPersistences();
-
-
-
-
 }

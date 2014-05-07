@@ -43,6 +43,7 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
      * The default email to populate the email field with.
      */
     public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
+    public static final String EXTRA_USERNAME = "com.example.android.authenticatordemo.extra.EMAIL";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -50,11 +51,11 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
     private UserLoginTask mAuthTask = null;
 
     // Values for email and password at the time of the login attempt.
-    private String mEmail;
+    private String mUsername;
     private String mPassword;
 
     // UI references.
-    private EditText mEmailView;
+    private EditText mUsernameView;
     private EditText mPasswordView;
     private View mLoginFormView;
     private View mLoginStatusView;
@@ -69,9 +70,10 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
         getLoaderManager().initLoader(0, null, this);
 
         // Set up the login form.
-        mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
-        mEmailView = (EditText) findViewById(R.id.email);
-        mEmailView.setText(mEmail);
+        //Check if there's a default value included with the Intent
+        mUsername = getIntent().getStringExtra(EXTRA_USERNAME);
+        mUsernameView = (EditText) findViewById(R.id.username);
+        mUsernameView.setText(mUsername);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -116,11 +118,11 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
         }
 
         // Reset errors.
-        mEmailView.setError(null);
+        mUsernameView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        mEmail = mEmailView.getText().toString();
+        mUsername = mUsernameView.getText().toString();
         mPassword = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -139,15 +141,16 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
 //        }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(mEmail)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!mEmail.contains("@")) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+        if (TextUtils.isEmpty(mUsername)) {
+            mUsernameView.setError(getString(R.string.error_field_required));
+            focusView = mUsernameView;
             cancel = true;
         }
+//        else if (!mUsername.contains("@")) {
+//            mUsernameView.setError(getString(R.string.error_invalid_email));
+//            focusView = mUsernameView;
+//            cancel = true;
+//        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -159,7 +162,7 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
             mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
             showProgress(true);
             mAuthTask = new UserLoginTask(this);
-            mAuthTask.execute((String) mEmail);
+            mAuthTask.execute((String) mUsername);
         }
     }
 
@@ -222,7 +225,8 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
             LocalUserDAO userDAO = null;
             try {
                 userDAO = daoFactory.getLocalUserDAO();
-                mUser = userDAO.getUserByEmail(params[0]);
+                mUser = userDAO.getUserByUsername(params[0]);
+//                mUser = userDAO.getUserByEmail(params[0]);
             } catch (DAOException e) {
                 e.printStackTrace();
                 return false;

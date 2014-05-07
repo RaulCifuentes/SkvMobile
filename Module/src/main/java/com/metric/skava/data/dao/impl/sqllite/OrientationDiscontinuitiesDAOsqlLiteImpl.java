@@ -80,10 +80,7 @@ public class OrientationDiscontinuitiesDAOsqlLiteImpl extends SqlLiteBaseIdentif
 
     @Override
     protected void savePersistentEntity(String tableName, OrientationDiscontinuities newSkavaEntity) throws DAOException {
-        //  LocalIndexDAO indexDAO = getDAOFactory().getLocalIndexDAO();
-        //  Index index = indexDAO.getIndexByCode(Spacing.INDEX_CODE);
-        //  Test if this is to map the indexes and grop codes on Fabian model is necessary
-        //  String indexCode = index.getCode();
+
         String indexCode = OrientationDiscontinuities.INDEX_CODE;
 
         String[] colNames = {StrengthTable.INDEX_CODE_COLUMN,

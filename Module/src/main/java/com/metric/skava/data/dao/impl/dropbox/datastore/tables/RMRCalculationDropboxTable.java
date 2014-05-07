@@ -1,25 +1,32 @@
 package com.metric.skava.data.dao.impl.dropbox.datastore.tables;
 
 import com.dropbox.sync.android.DbxDatastore;
-import com.dropbox.sync.android.DbxFields;
-import com.dropbox.sync.android.DbxRecord;
 import com.dropbox.sync.android.DbxTable;
 
 /**
  * Created by metricboy on 3/6/14.
  */
-public class RMRCalculationDropboxTable {
+public class RMRCalculationDropboxTable extends DropboxBaseTable implements DropboxTable {
 
-    private DbxDatastore mDatastore;
-    private DbxTable mRMRCalculationTable;
 
     public RMRCalculationDropboxTable(DbxDatastore datastore) {
-        mDatastore = datastore;
-        mRMRCalculationTable = datastore.getTable("RMRCalculation");
+        super(datastore);
+    }
+
+    @Override
+    public DbxTable getBaseDropboxTable() {
+        return mDatastore.getTable("RMRCalculation");
+    }
+
+    @Override
+    public boolean shouldSortByOrdinalColumn() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldSortByKeyColumn() {
+        return false;
     }
 
 
-    public DbxRecord  persist(DbxFields fields) {
-        return mRMRCalculationTable.insert(fields);
-    }
 }

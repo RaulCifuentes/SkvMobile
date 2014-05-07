@@ -1,7 +1,6 @@
 package com.metric.skava.assessment.fragment;
 
 import android.app.Activity;
-import android.app.Application;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -10,16 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.metric.skava.R;
-import com.metric.skava.app.SkavaApplication;
-import com.metric.skava.app.model.Assessment;
-import com.metric.skava.app.model.ExcavationProject;
 import com.metric.skava.assessment.adapter.AssessmentStageArrayAdapter;
 import com.metric.skava.assessment.data.AssesmentStageDataProvider;
 import com.metric.skava.assessment.model.AssessmentStage;
 
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * A list fragment representing a list of Stages. This fragment
@@ -30,7 +24,7 @@ import java.util.Observer;
  * Activities containing this fragment MUST implement the {@link com.metric.skava.assessment.fragment.AssessmentStageListFragment.StageSelectionCallback}
  * interface.
  */
-public class AssessmentStageListFragment extends ListFragment implements Observer {
+public class AssessmentStageListFragment extends ListFragment {
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -164,20 +158,5 @@ public class AssessmentStageListFragment extends ListFragment implements Observe
         mStageArrayAdapter.setActivateAllStages(true);
     }
 
-
-    @Override
-    public void update(Observable observable, Object data) {
-        publishAssessmentInfo();
-    }
-
-    private void publishAssessmentInfo() {
-        //TODO make a summary report of the assessment for debug purposes
-        Application application = getActivity().getApplication();
-        SkavaApplication skavaApp = (SkavaApplication)application;
-        Assessment currentAssessment = skavaApp.getSkavaContext().getAssessment();
-
-        ExcavationProject project = currentAssessment.getProject();
-
-    }
 
 }

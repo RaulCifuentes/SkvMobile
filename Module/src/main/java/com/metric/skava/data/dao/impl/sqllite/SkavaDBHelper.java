@@ -29,10 +29,10 @@ import com.metric.skava.data.dao.impl.sqllite.table.ExcavationFactorTable;
 import com.metric.skava.data.dao.impl.sqllite.table.ExcavationMethodTable;
 import com.metric.skava.data.dao.impl.sqllite.table.ExcavationProjectTable;
 import com.metric.skava.data.dao.impl.sqllite.table.ExcavationSectionTable;
+import com.metric.skava.data.dao.impl.sqllite.table.ExternalResourcesTable;
 import com.metric.skava.data.dao.impl.sqllite.table.FractureTypeTable;
 import com.metric.skava.data.dao.impl.sqllite.table.GroundwaterTable;
 import com.metric.skava.data.dao.impl.sqllite.table.InfillingTable;
-import com.metric.skava.data.dao.impl.sqllite.table.InternalCodeTable;
 import com.metric.skava.data.dao.impl.sqllite.table.JaTable;
 import com.metric.skava.data.dao.impl.sqllite.table.JnTable;
 import com.metric.skava.data.dao.impl.sqllite.table.JrTable;
@@ -52,6 +52,7 @@ import com.metric.skava.data.dao.impl.sqllite.table.SRFTable;
 import com.metric.skava.data.dao.impl.sqllite.table.ShotcreteTypeTable;
 import com.metric.skava.data.dao.impl.sqllite.table.SpacingTable;
 import com.metric.skava.data.dao.impl.sqllite.table.StrengthTable;
+import com.metric.skava.data.dao.impl.sqllite.table.SupportPatternTypeTable;
 import com.metric.skava.data.dao.impl.sqllite.table.SupportRecomendationTable;
 import com.metric.skava.data.dao.impl.sqllite.table.SupportRequirementTable;
 import com.metric.skava.data.dao.impl.sqllite.table.SyncLoggingTable;
@@ -68,7 +69,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "mySkavaDatabase.db";
 
-    public static final int DATABASE_VERSION = 26;
+    public static final int DATABASE_VERSION = 31;
 
     public SkavaDBHelper(Context context, String name,
                          SQLiteDatabase.CursorFactory factory, int version) {
@@ -124,7 +125,11 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
         db.execSQL(ShotcreteTypeTable.CREATE_SHOTCRETES_TABLE);
 
+        db.execSQL(SupportPatternTypeTable.CREATE_PATTERN_TYPE_TABLE);
+
         db.execSQL(SupportRequirementTable.CREATE_SUPPORTS_TABLE);
+
+        db.execSQL(SupportRecomendationTable.CREATE_RECOMENDATIONS_TABLE);
 
         // ******************** Discontinuities ********************
         db.execSQL(DiscontinuityTypeTable.CREATE_DISCONTINUITIES_TABLE);
@@ -134,6 +139,8 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         db.execSQL(DiscontinuityWaterTable.CREATE_WATERS_TABLE);
 
         db.execSQL(DiscontinuityShapeTable.CREATE_SHAPES_TABLE);
+
+        db.execSQL(DiscontinuityFamilyTable.CREATE_DISCONTINUITY_FAMILIES_TABLE);
 
         // ******************** Rock Mass ********************
         db.execSQL(FractureTypeTable.CREATE_FRACTURES_TABLE);
@@ -162,7 +169,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
         db.execSQL(StrengthTable.CREATE_STRENGTH_TABLE);
 
-        db.execSQL(ConditionTable.CREATE_CONDITION_TABLE);
+//        db.execSQL(ConditionTable.CREATE_CONDITION_TABLE);
 
         db.execSQL(SpacingTable.CREATE_SPACING_TABLE);
 
@@ -177,14 +184,20 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         db.execSQL(JnTable.CREATE_Jn_TABLE);
 
         db.execSQL(RockQualityTable.CREATE_ROCK_QUALITIES_TABLE);
+
         // ***************** Q Calculations *****************
         db.execSQL(QCalculationTable.CREATE_QCALCULATION_TABLE);
+
+        // ***************** RMR Calculations *****************
         db.execSQL(RMRCalculationTable.CREATE_RMRCALCULATION_TABLE);
-        db.execSQL(DiscontinuityFamilyTable.CREATE_DISCONTINUITY_FAMILIES_TABLE);
 
         // ******************** Assessment ********************
 
         db.execSQL(AssessmentTable.CREATE_ASSESSMENT_TABLE);
+
+        // ******************** Pictures ********************
+
+        db.execSQL(ExternalResourcesTable.CREATE_RESOURCES_TABLE);
 
 
     }
@@ -236,6 +249,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + CoverageTable.COVERAGE_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + MeshTypeTable.MESH_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + ShotcreteTypeTable.SHOTCRETE_DATABASE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + SupportPatternTypeTable.PATTERN_TYPE_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + SupportRequirementTable.SUPPORT_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + SupportRecomendationTable.RECOMENDATION_DATABASE_TABLE);
 
@@ -244,6 +258,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DiscontinuityRelevanceTable.RELEVANCES_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + DiscontinuityWaterTable.WATER_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + DiscontinuityShapeTable.SHAPE_DATABASE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + DiscontinuityFamilyTable.DISCONTINUITY_FAMILY_DATABASE_TABLE);
 
         // ******************** Rock Mass ********************
         db.execSQL("DROP TABLE IF EXISTS " + FractureTypeTable.FRACTURE_DATABASE_TABLE);
@@ -269,15 +284,17 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + JnTable.MAPPED_INDEX_DATABASE_TABLE);
 
         // ***************** Q/RMR Calculations *****************
-
         db.execSQL("DROP TABLE IF EXISTS " + RockQualityTable.ROCK_QUALITY_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + QCalculationTable.Q_CALCULATION_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + RMRCalculationTable.RMR_CALCULATION_DATABASE_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + DiscontinuityFamilyTable.DISCONTINUITY_FAMILY_DATABASE_TABLE);
+
 
         // ******************** Assessment ********************
-        db.execSQL("DROP TABLE IF EXISTS " + InternalCodeTable.INTERNAL_CODE_DATABASE_TABLE);
+//        db.execSQL("DROP TABLE IF EXISTS " + InternalCodeTable.INTERNAL_CODE_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + AssessmentTable.ASSESSMENT_DATABASE_TABLE);
+
+        // ******************** Pictures ********************
+        db.execSQL("DROP TABLE IF EXISTS " + ExternalResourcesTable.EXTERNAL_RESOURCES_DATABASE_TABLE);
 
         // Create a new one.
         onCreate(db);
@@ -386,8 +403,8 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         clearStrengths(db);
         insertStrengths(db);
 
-        clearConditions(db);
-        insertConditions(db);
+//        clearConditions(db);
+//        insertConditions(db);
 
         clearSpacings(db);
         insertSpacings(db);
@@ -468,9 +485,6 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
     private static void insertSupportRequirements(SQLiteDatabase db) throws DAOException {
         try {
             db.execSQL(SupportRequirementTable.INSERT_SUPPORTS_TABLE);
-            db.execSQL(SupportRequirementTable.INSERT_SUPPORTS_TABLE_SECOND);
-            db.execSQL(SupportRequirementTable.INSERT_SUPPORTS_TABLE_THIRD);
-            db.execSQL(SupportRequirementTable.INSERT_SUPPORTS_TABLE_FOURTH);
         } catch (SQLException e) {
             throw new DAOException(e);
         }
@@ -572,7 +586,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    private static void clearESR(SQLiteDatabase db) throws DAOException {
+    public static void clearESR(SQLiteDatabase db) throws DAOException {
         try {
             db.execSQL(ESRTable.DELETE_ESR_TABLE);
         } catch (SQLException e) {
@@ -710,20 +724,20 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    private static void clearConditions(SQLiteDatabase db) throws DAOException {
-        try {
-            db.execSQL(JwTable.DELETE_Jw_TABLE);
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }
-    }
+//    private static void clearConditions(SQLiteDatabase db) throws DAOException {
+//        try {
+//            db.execSQL(JwTable.DELETE_Jw_TABLE);
+//        } catch (SQLException e) {
+//            throw new DAOException(e);
+//        }
+//    }
 
     private static void clearSpacings(SQLiteDatabase db) {
-        db.execSQL(JwTable.DELETE_Jw_TABLE);
+        db.execSQL(SpacingTable.DELETE_SPACING_TABLE);
     }
 
     private static void clearSRFs(SQLiteDatabase db) {
-        db.execSQL(JwTable.DELETE_Jw_TABLE);
+        db.execSQL(SRFTable.DELETE_SRF_TABLE);
     }
 
     private static void clearJw(SQLiteDatabase db) {
@@ -830,13 +844,13 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         db.execSQL(SpacingTable.INSERT_SPACING_TABLE_FIFTH);
     }
 
-    private static void insertConditions(SQLiteDatabase db) {
-        db.execSQL(ConditionTable.INSERT_CONDITION_TABLE);
-        db.execSQL(ConditionTable.INSERT_CONDITION_TABLE_SECOND);
-        db.execSQL(ConditionTable.INSERT_CONDITION_TABLE_THIRD);
-        db.execSQL(ConditionTable.INSERT_CONDITION_TABLE_FOURTH);
-        db.execSQL(ConditionTable.INSERT_CONDITION_TABLE_FIFTH);
-    }
+//    private static void insertConditions(SQLiteDatabase db) {
+//        db.execSQL(ConditionTable.INSERT_CONDITION_TABLE);
+//        db.execSQL(ConditionTable.INSERT_CONDITION_TABLE_SECOND);
+//        db.execSQL(ConditionTable.INSERT_CONDITION_TABLE_THIRD);
+//        db.execSQL(ConditionTable.INSERT_CONDITION_TABLE_FOURTH);
+//        db.execSQL(ConditionTable.INSERT_CONDITION_TABLE_FIFTH);
+//    }
 
     private static void insertStrengths(SQLiteDatabase db) {
         db.execSQL(StrengthTable.INSERT_STRENGTH_TABLE);
@@ -927,7 +941,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         db.execSQL(OrientationTable.INSERT_ORIENTATION_TABLE_FOURTEENTH);
     }
 
-    private static void insertESR(SQLiteDatabase db) {
+    public static void insertESR(SQLiteDatabase db) {
         db.execSQL(ESRTable.INSERT_ESR_TABLE);
         db.execSQL(ESRTable.INSERT_ESR_TABLE_SECOND);
         db.execSQL(ESRTable.INSERT_ESR_TABLE_THIRD);

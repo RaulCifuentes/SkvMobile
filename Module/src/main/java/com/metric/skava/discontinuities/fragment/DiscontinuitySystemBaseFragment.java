@@ -330,17 +330,18 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         dipDirEditText.addTextChangedListener(new TextValidator(dipDirEditText) {
             @Override
             public void validate(TextView textView, String text) {
+                final String message = "Strike must be between 0 and 360";
                 /* Validation code here */
                 Short enteredValue = 0;
                 try {
                     enteredValue = Short.parseShort(text);
-                    if (enteredValue > 0 && enteredValue < 360) {
+                    if (enteredValue >= 0 && enteredValue <= 360) {
                         mDiscontinuityFamilyInstance.setDipDirDegrees(enteredValue);
                     } else {
-                        dipDirEditText.setError("DipDir must be between 0 and 360!");
+                        dipDirEditText.setError(message);
                     }
                 } catch (NumberFormatException e) {
-                    dipDirEditText.setError("DipDir must be between 0 and 360!");
+                    dipDirEditText.setError(message);
                 }
             }
         });
@@ -351,16 +352,17 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             @Override
             public void validate(TextView textView, String text) {
                 /* Validation code here */
+                final String message = "Dip must be between 0 and 90";
                 Short enteredValue = 0;
                 try {
                     enteredValue = Short.parseShort(text);
-                    if (enteredValue > 0 && enteredValue < 90) {
+                    if (enteredValue >= 0 && enteredValue <= 90) {
                         mDiscontinuityFamilyInstance.setDipDegrees(enteredValue);
                     } else {
-                        dipEditText.setError("Dip must be between 0 and 90!");
+                        dipEditText.setError(message);
                     }
                 } catch (NumberFormatException e) {
-                    dipEditText.setError("Dip must be between 0 and 90!");
+                    dipEditText.setError(message);
                 }
             }
         });

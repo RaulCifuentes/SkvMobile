@@ -33,19 +33,24 @@ public class StrengthDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Str
 
 
     @Override
-    public StrengthOfRock getStrength(String indexCode, String groupCode, String code) throws DAOException {
+    public StrengthOfRock getStrength(String groupCode, String code) throws DAOException {
         String[] names = new String[]{StrengthTable.INDEX_CODE_COLUMN, StrengthTable.GROUP_CODE_COLUMN, StrengthTable.CODE_COLUMN};
-        String[] values = new String[]{indexCode, groupCode, code};
+        String[] values = new String[]{StrengthOfRock.INDEX_CODE, groupCode, code};
         Cursor cursor = getRecordsFilteredByColumns(StrengthTable.MAPPED_INDEX_DATABASE_TABLE, names, values, null);
         List<StrengthOfRock> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Entity not found. [Index Code : " + StrengthOfRock.INDEX_CODE + ", Group Code: " + groupCode + ", Code: " + code + " ]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Index Code : " + indexCode + ", Group Code: " + groupCode + ", Code: " + code + " ]");
+            throw new DAOException("Multiple records for same code. [Index Code : " + StrengthOfRock.INDEX_CODE + ", Group Code: " + groupCode + ", Code: " + code + " ]");
         }
         cursor.close();
         return list.get(0);
+    }
+
+    @Override
+    public StrengthOfRock getStrengthByUniqueCode(String code) throws DAOException {
+        return getPersistentEntityByCandidateKey(StrengthTable.MAPPED_INDEX_DATABASE_TABLE, StrengthTable.CODE_COLUMN, code);
     }
 
     @Override

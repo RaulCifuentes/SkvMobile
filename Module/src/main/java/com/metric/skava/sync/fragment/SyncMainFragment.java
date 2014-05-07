@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.metric.skava.R;
 import com.metric.skava.app.fragment.SkavaFragment;
-import com.metric.skava.app.model.Client;
+import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.ExcavationProject;
 import com.metric.skava.app.model.Role;
 import com.metric.skava.app.model.Tunnel;
@@ -24,19 +24,19 @@ import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.app.util.ViewUtils;
-import com.metric.skava.data.adapter.ClientListViewAdapter;
+import com.metric.skava.data.adapter.AssessmentListViewAdapter;
 import com.metric.skava.data.adapter.ProjectListViewAdapter;
 import com.metric.skava.data.adapter.RoleListViewAdapter;
 import com.metric.skava.data.adapter.TunnelFaceListViewAdapter;
 import com.metric.skava.data.adapter.TunnelListViewAdapter;
 import com.metric.skava.data.adapter.UserListViewAdapter;
-import com.metric.skava.data.dao.LocalClientDAO;
 import com.metric.skava.data.dao.DAOFactory;
+import com.metric.skava.data.dao.LocalClientDAO;
 import com.metric.skava.data.dao.LocalExcavationProjectDAO;
-import com.metric.skava.data.dao.LocalUserDAO;
 import com.metric.skava.data.dao.LocalRoleDAO;
 import com.metric.skava.data.dao.LocalTunnelDAO;
 import com.metric.skava.data.dao.LocalTunnelFaceDAO;
+import com.metric.skava.data.dao.LocalUserDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 
 import java.util.List;
@@ -49,12 +49,12 @@ public class SyncMainFragment extends SkavaFragment {
     private DAOFactory daoFactory;
 
     private ListView rolesListView;
-    private ListView clientsListView;
+    private ListView assessmentsListView;
     private ListView usersListView;
     private ListView projectsListView;
     private ListView facesListView;
     private ListView tunnelsListView;
-    private ClientListViewAdapter clientListViewAdapter;
+    private AssessmentListViewAdapter assessmentListViewAdapter;
     private RoleListViewAdapter roleListViewAdapter;
     private UserListViewAdapter userListViewAdapter;
     private ProjectListViewAdapter projectListAdapter;
@@ -76,11 +76,6 @@ public class SyncMainFragment extends SkavaFragment {
         super.onCreate(savedInstanceState);
         daoFactory = getDAOFactory();
         try {
-            clientsDAO = daoFactory.getLocalClientDAO();
-            rolesDAO = daoFactory.getLocalRoleDAO();
-            usersDAO = daoFactory.getLocalUserDAO();
-            projectsDAO = daoFactory.getLocalExcavationProjectDAO();
-            tunnelsDAO = daoFactory.getLocalTunnelDAO();
             facesDAO = daoFactory.getLocalTunnelFaceDAO();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
@@ -98,33 +93,32 @@ public class SyncMainFragment extends SkavaFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupClientsListView(mInflater);
-        setupRolesListView(mInflater);
-        setupUsersListView(mInflater);
-        setupProjectsListView(mInflater);
-        setupTunnelsListView(mInflater);
-        setupFacesListView(mInflater);
+        setupAssessmentsListView(mInflater);
+//        setupQBartonListView(mInflater);
+//        setupRMRListView(mInflater);
+//        setupFamiliesListView(mInflater);
+//        setupRecommendationsListView(mInflater);
     }
 
-    private void setupClientsListView(LayoutInflater inflater) {
+    private void setupAssessmentsListView(LayoutInflater inflater) {
         View usersHeaderView = inflater.inflate(R.layout.calculator_two_column_list_view_header_checked_radio, null, false);
-        clientsListView = (ListView) getView().findViewById(R.id.listviewClients);
-        final List<Client> listClients;
+        assessmentsListView = (ListView) getView().findViewById(R.id.listview_assessments);
+        final List<Assessment> listAssessments;
         try {
-            listClients = daoFactory.getLocalClientDAO().getAllClients();
-            clientListViewAdapter = new ClientListViewAdapter(getActivity(),
-                    R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listClients);
+            listAssessments = daoFactory.getLocalAssessmentDAO().getAllAssessments();
+            assessmentListViewAdapter = new AssessmentListViewAdapter(getSkavaActivity(),
+                    R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listAssessments);
 
 //            TextView firstTextView = (TextView) usersHeaderView.findViewById(R.id.first_column_text_view);
             TextView secondTextView = (TextView) usersHeaderView.findViewById(R.id.second_column_text_view);
             secondTextView.setText("Clients");
 
-            clientsListView.addHeaderView(usersHeaderView, null, false);
-            final int numberOfHeaders = clientsListView.getHeaderViewsCount();
-            clientsListView.setAdapter(clientListViewAdapter);
+            assessmentsListView.addHeaderView(usersHeaderView, null, false);
+            final int numberOfHeaders = assessmentsListView.getHeaderViewsCount();
+            assessmentsListView.setAdapter(assessmentListViewAdapter);
 
             //This method is necessary only to use a ListView inside a ScrollView
-            ViewUtils.adjustListViewHeightBasedOnChildren(clientsListView);
+            ViewUtils.adjustListViewHeightBasedOnChildren(assessmentsListView);
 
         } catch (DAOException e) {
             e.printStackTrace();
@@ -265,19 +259,12 @@ public class SyncMainFragment extends SkavaFragment {
             case R.id.action_clear_tables:
                 try {
                     clientsDAO.deleteAllClients();
-
                     rolesDAO.deleteAllRoles();
-
                     usersDAO.deleteAllUsers();
-
                     projectsDAO.deleteAllExcavationProjects();
-
                     tunnelsDAO.deleteAllTunnels();
-
                     facesDAO.deleteAllTunnelFaces();
-
                     refreshListViews();
-
                 } catch (DAOException e) {
                     Log.d(SkavaConstants.LOG, e.getMessage());
                     Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
@@ -289,9 +276,9 @@ public class SyncMainFragment extends SkavaFragment {
 
 
     public void refreshListViews() throws DAOException {
-        clientListViewAdapter.clear();
-        clientListViewAdapter.addAll(clientsDAO.getAllClients());
-        clientListViewAdapter.notifyDataSetChanged();
+        assessmentListViewAdapter.clear();
+        assessmentListViewAdapter.addAll(daoFactory.getLocalAssessmentDAO().getAllAssessments());
+        assessmentListViewAdapter.notifyDataSetChanged();
 
         roleListViewAdapter.clear();
         roleListViewAdapter.addAll(rolesDAO.getAllRoles());

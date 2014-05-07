@@ -14,10 +14,10 @@ import com.metric.skava.app.activity.SkavaFragmentActivity;
 import com.metric.skava.app.exception.SkavaSystemException;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.RemoteAssessmentDAO;
 import com.metric.skava.data.dao.exception.DAOException;
-import com.metric.skava.data.dao.impl.dropbox.AssessmentDAODropboxImpl;
 import com.metric.skava.report.fragment.MappingReportMainFragment;
 
 
@@ -49,6 +49,18 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.mapping_report_main_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (getSkavaContext().getDatastore() != null) {
+            menu.findItem(R.id.action_mapping_report_draft).setVisible(false);
+            menu.findItem(R.id.action_mapping_report_send).setVisible(true);
+        } else {
+            menu.findItem(R.id.action_mapping_report_draft).setVisible(true);
+            menu.findItem(R.id.action_mapping_report_send).setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -95,11 +107,10 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
 
 
     private void saveDraft(){
-        LocalAssessmentDAO localAssessmentDAO;
         try {
-            localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
             Assessment currentAssessment = getCurrentAssessment();
-            localAssessmentDAO.saveDraft(currentAssessment);
+            LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
+            localAssessmentDAO.saveAssessment(currentAssessment);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -109,15 +120,12 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
 
 
     private void sendAsCompleted(){
-        LocalAssessmentDAO localAssessmentDAO;
-        RemoteAssessmentDAO remoteAssessmentDAO;
         try {
             Assessment assessment = getCurrentAssessment();
+            LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
+            localAssessmentDAO.saveAssessment(assessment);
 
-            localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
-            localAssessmentDAO.send(assessment);
-
-            remoteAssessmentDAO = new AssessmentDAODropboxImpl(this, getSkavaContext());
+            RemoteAssessmentDAO remoteAssessmentDAO = getDAOFactory().getRemoteAssessmentDAO(DAOFactory.Flavour.DROPBOX);
             remoteAssessmentDAO.saveAssessment(assessment);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
