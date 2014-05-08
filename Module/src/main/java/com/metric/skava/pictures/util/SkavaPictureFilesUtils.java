@@ -46,7 +46,7 @@ public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
             }
         }
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm").format(new Date());
 
         File mediaFile = new File(mediaStorageDir.getPath() + File.separator + suggestedName + timeStamp + ".jpg");
         Uri targetUri = Uri.fromFile(mediaFile);

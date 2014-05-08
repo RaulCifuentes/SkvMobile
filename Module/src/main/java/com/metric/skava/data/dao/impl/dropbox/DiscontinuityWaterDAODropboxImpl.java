@@ -30,7 +30,7 @@ public class DiscontinuityWaterDAODropboxImpl extends DropBoxBaseDAO implements 
     public List<DiscontinuityWater> getAllDiscontinuityWaters() throws DAOException {
         List<DiscontinuityWater> listDiscontinuityWaters = new ArrayList<DiscontinuityWater>();
         String[] names = new String[]{"ParameterName"} ;
-        String[] values = new String[]{"DSystem_Type"};
+        String[] values = new String[]{"DSystem_Water"};
         List<DbxRecord> recordList = mParametersTable.findRecordsByCriteria(names, values);
         for (DbxRecord currentDbxRecord : recordList) {
             String codigo = currentDbxRecord.getString("ParameterId");

@@ -37,10 +37,11 @@ public class ExcavationProjectDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnti
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(ExcavationProjectTable.CODE_COLUMN, cursor);
             String name = CursorUtils.getString(ExcavationProjectTable.NAME_COLUMN, cursor);
+            String internalCode = CursorUtils.getString(ExcavationProjectTable.INTERNAL_CODE_COLUMN, cursor);
             String clientCode = CursorUtils.getString(ExcavationProjectTable.CLIENT_CODE_COLUMN, cursor);
             Client client = localClientDAO.getClientByCode(clientCode);
             //Client reference
-            ExcavationProject newInstance = new ExcavationProject(code, name);
+            ExcavationProject newInstance = new ExcavationProject(code, name, internalCode);
             newInstance.setClient(client);
             list.add(newInstance);
         }
@@ -84,8 +85,8 @@ public class ExcavationProjectDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnti
 
     @Override
     protected void savePersistentEntity(String tableName, ExcavationProject newSkavaEntity) throws DAOException {
-        String[] columnNames = new String[]{ExcavationProjectTable.CLIENT_CODE_COLUMN, ExcavationProjectTable.CODE_COLUMN, ExcavationProjectTable.NAME_COLUMN};
-        String[] values = new String[]{newSkavaEntity.getClient().getCode(), newSkavaEntity.getCode(), newSkavaEntity.getName()};
+        String[] columnNames = new String[]{ExcavationProjectTable.CLIENT_CODE_COLUMN, ExcavationProjectTable.CODE_COLUMN, ExcavationProjectTable.INTERNAL_CODE_COLUMN, ExcavationProjectTable.NAME_COLUMN};
+        String[] values = new String[]{newSkavaEntity.getClient().getCode(), newSkavaEntity.getCode(), newSkavaEntity.getInternalCode(), newSkavaEntity.getName()};
         saveRecord(tableName, columnNames, values);
     }
 

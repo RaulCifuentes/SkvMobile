@@ -58,6 +58,8 @@ import java.util.List;
 public class IdentificationMainFragment extends SkavaFragment implements
         DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
 
+
+    private TextView internalCodeEditText;
     private EditText initialPegEditText;
     private EditText finalPegEditText;
     private EditText slopeTextEdit;
@@ -167,7 +169,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
         }
 
         projectList = mUserDataDomain.getProjects();
-        projectList.add(new ExcavationProject("HINT", "Select one project ..."));
+        projectList.add(new ExcavationProject("HINT", "Select one project ...", null));
 
         projectAdapter = new SkavaEntityAdapter<ExcavationProject>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, projectList);
         // Specify the layout to use when the list of choices appears
@@ -228,8 +230,9 @@ public class IdentificationMainFragment extends SkavaFragment implements
         final View rootView = inflater.inflate(R.layout.identification_main_fragment, container, false);
 
         String internalCode = getCurrentAssessment().getInternalCode();
+        internalCodeEditText = (TextView) rootView.findViewById(R.id.mapping_gral_info_code_value);
         if (internalCode != null) {
-            ((TextView) rootView.findViewById(R.id.mapping_gral_info_code_value)).setText(internalCode);
+            internalCodeEditText.setText(internalCode);
         }
 
 
@@ -535,6 +538,8 @@ public class IdentificationMainFragment extends SkavaFragment implements
         if (parent == projectSpinner) {
             if (position != projectSpinnerLastPosition) {
                 selectedProject = (ExcavationProject) parent.getItemAtPosition(position);
+                getSkavaContext().getAssessment().setInternalCode(selectedProject.getInternalCode());
+                internalCodeEditText.setText(selectedProject.getInternalCode());
                 tunnelAdapter = prepareTunnelAdapter(selectedProject);
                 tunnelSpinner.setAdapter(tunnelAdapter);
                 if (selectedTunnel != null) {
@@ -574,7 +579,6 @@ public class IdentificationMainFragment extends SkavaFragment implements
             if (position != faceSpinnerLastPosition) {
                 selectedFace = (TunnelFace) parent.getItemAtPosition(position);
                 getSkavaContext().getAssessment().setFace(selectedFace);
-                getSkavaContext().getAssessment().setInternalCode(selectedProject.getCode());
                 faceSpinnerLastPosition = position;
                 //use the orientation from the face as initial value
                 orientationEditText.setText(selectedFace.getOrientation().toString());

@@ -30,7 +30,7 @@ public class DiscontinuityShapeDAODropboxImpl extends DropBoxBaseDAO implements 
     public List<DiscontinuityShape> getAllDiscontinuityShapes() throws DAOException {
         List<DiscontinuityShape> listDiscontinuityShapes = new ArrayList<DiscontinuityShape>();
         String[] names = new String[]{"ParameterName"} ;
-        String[] values = new String[]{"DSystem_Type"};
+        String[] values = new String[]{"DSystem_Shape"};
         List<DbxRecord> recordList = mParametersTable.findRecordsByCriteria(names, values);
         for (DbxRecord currentDbxRecord : recordList) {
             String codigo = currentDbxRecord.getString("ParameterId");
