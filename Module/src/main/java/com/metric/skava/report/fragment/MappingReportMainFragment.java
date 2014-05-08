@@ -548,32 +548,43 @@ public class MappingReportMainFragment extends SkavaFragment {
 
         List<Uri> pictureList = currentAssessment.getPictureUriList();
         SkavaPictureFilesUtils pictureFilesUtils = new SkavaPictureFilesUtils(this.getActivity());
-        Uri faceUri = pictureList.get(0);
-        if (faceUri != null) {
-            Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(faceUri, 800, 600);
-            if (bitmap != null) {
-                ((ImageView) rootView.findViewById(R.id.summary_report_face_pic)).setImageBitmap(bitmap);
+        if (pictureList != null && !pictureList.isEmpty()) {
+            int pictureListSize = pictureList.size();
+
+            Uri faceUri = pictureList.get(0);
+            if (faceUri != null) {
+                Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(faceUri, 800, 600);
+                if (bitmap != null) {
+                    ((ImageView) rootView.findViewById(R.id.summary_report_face_pic)).setImageBitmap(bitmap);
+                }
             }
-        }
-        Uri leftUri = pictureList.get(1);
-        if (leftUri != null) {
-            Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(leftUri, 400, 300);
-            if (bitmap != null) {
-                ((ImageView) rootView.findViewById(R.id.summary_report_left_wall_pic)).setImageBitmap(bitmap);
+
+            if (pictureListSize >= 1) {
+                Uri leftUri = pictureList.get(1);
+                if (leftUri != null) {
+                    Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(leftUri, 400, 300);
+                    if (bitmap != null) {
+                        ((ImageView) rootView.findViewById(R.id.summary_report_left_wall_pic)).setImageBitmap(bitmap);
+                    }
+                }
             }
-        }
-        Uri rightUri = pictureList.get(2);
-        if (rightUri != null) {
-            Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(rightUri, 400, 300);
-            if (bitmap != null) {
-                ((ImageView) rootView.findViewById(R.id.summary_report_right_wall_pic)).setImageBitmap(bitmap);
+            if (pictureListSize >= 2) {
+            Uri rightUri = pictureList.get(2);
+            if (rightUri != null) {
+                Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(rightUri, 400, 300);
+                if (bitmap != null) {
+                    ((ImageView) rootView.findViewById(R.id.summary_report_right_wall_pic)).setImageBitmap(bitmap);
+                }
             }
-        }
-        Uri roofUri = pictureList.get(3);
-        if (roofUri != null) {
-            Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(roofUri, 400, 300);
-            if (bitmap != null) {
-                ((ImageView) rootView.findViewById(R.id.summary_report_roof_pic)).setImageBitmap(bitmap);
+            }
+            if (pictureListSize >= 3) {
+            Uri roofUri = pictureList.get(3);
+            if (roofUri != null) {
+                Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(roofUri, 400, 300);
+                if (bitmap != null) {
+                    ((ImageView) rootView.findViewById(R.id.summary_report_roof_pic)).setImageBitmap(bitmap);
+                }
+            }
             }
         }
 

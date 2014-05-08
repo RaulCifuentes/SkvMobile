@@ -25,7 +25,7 @@ public class AssessmentTable extends SkavaTable {
 
     public static final String PK_FINAL_COLUMN = "PEG_FINAL";
 
-    public static final String ADVANCE_ACUMM_COLUMN = "ADVANCE";
+    public static final String ADVANCE_COLUMN = "ADVANCE";
 
     public static final String ORIENTATION_COLUMN = "ORIENTATION";
 
@@ -58,7 +58,7 @@ public class AssessmentTable extends SkavaTable {
             EXCAVATION_METHOD_CODE_COLUMN + " text null, " +
             PK_INITIAL_COLUMN + " real null, " +
             PK_FINAL_COLUMN + " real null, " +
-            ADVANCE_ACUMM_COLUMN + " real null, " +
+            ADVANCE_COLUMN + " real null, " +
             ORIENTATION_COLUMN + " integer null, " +
             SLOPE_COLUMN + " real null, " +
             FRACTURE_TYPE_CODE_COLUMN + " text null, " +
@@ -77,7 +77,7 @@ public class AssessmentTable extends SkavaTable {
             EXCAVATION_METHOD_CODE_COLUMN + "," +
             PK_INITIAL_COLUMN + "," +
             PK_FINAL_COLUMN + "," +
-            ADVANCE_ACUMM_COLUMN + "," +
+            ADVANCE_COLUMN + "," +
             ORIENTATION_COLUMN + "," +
             SLOPE_COLUMN + "," +
             FRACTURE_TYPE_CODE_COLUMN + "," +

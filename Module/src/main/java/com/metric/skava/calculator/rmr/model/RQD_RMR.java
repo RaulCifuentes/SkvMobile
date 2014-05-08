@@ -79,7 +79,7 @@ public class RQD_RMR extends MappedIndex implements Serializable {
     public static RQD_RMR findRQDByKey(String key) {
         RQD_RMR rqqRmrFound = null;
         for (RQD_RMR rqd_rmr : commonValuesTable) {
-            if (rqd_rmr.getCode().equalsIgnoreCase(key)) {
+            if (rqd_rmr.getKey().equalsIgnoreCase(key)) {
                 rqqRmrFound = rqd_rmr;
                 break;
             }

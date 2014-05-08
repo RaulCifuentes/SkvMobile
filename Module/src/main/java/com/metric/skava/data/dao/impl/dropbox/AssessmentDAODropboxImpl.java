@@ -25,6 +25,7 @@ import com.metric.skava.calculator.barton.model.Q_Calculation;
 import com.metric.skava.calculator.barton.model.RQD;
 import com.metric.skava.calculator.barton.model.RockQuality;
 import com.metric.skava.calculator.barton.model.SRF;
+import com.metric.skava.calculator.rmr.logic.RMROutput;
 import com.metric.skava.calculator.rmr.model.Aperture;
 import com.metric.skava.calculator.rmr.model.Groundwater;
 import com.metric.skava.calculator.rmr.model.Infilling;
@@ -199,6 +200,16 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             Short numJoints = assessment.getNumberOfJoints();
             if (numJoints != null) {
                 assessmentFields.set("numJoints", numJoints);
+            }
+
+            String outcropGeologicalDescription = assessment.getOutcropDescription();
+            if (outcropGeologicalDescription != null) {
+                assessmentFields.set("outrcropGeologicalDescription", outcropGeologicalDescription);
+            }
+
+            String rockSampleIdentification = assessment.getRockSampleIdentification();
+            if (rockSampleIdentification != null) {
+                assessmentFields.set("rockSampleIdentification", rockSampleIdentification);
             }
 
             List<Uri> pictureList = assessment.getPictureUriList();
@@ -424,6 +435,11 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 RQD_RMR rqd = rmrCalculation.getRqd();
                 if (rqd != null) {
                     rmrCalculationFields.set("rqd", rqd.getValue());
+                }
+
+                RMROutput rmrOutput = rmrCalculation.getRMRResult();
+                if (rmrOutput != null) {
+                    rmrCalculationFields.set("rmr", rmrOutput.getRMR());
                 }
 
                 mRMRCalculationDropBoxTable.persist(rmrCalculationFields);

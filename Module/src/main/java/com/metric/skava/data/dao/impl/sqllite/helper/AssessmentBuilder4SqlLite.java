@@ -100,8 +100,8 @@ public class AssessmentBuilder4SqlLite {
         Double finalPk = CursorUtils.getDouble(AssessmentTable.PK_FINAL_COLUMN, cursor);
         babyAssessment.setFinalPeg(finalPk);
 
-        Double advance = CursorUtils.getDouble(AssessmentTable.ADVANCE_ACUMM_COLUMN, cursor);
-        babyAssessment.setAccummAdvance(advance);
+        Double advance = CursorUtils.getDouble(AssessmentTable.ADVANCE_COLUMN, cursor);
+        babyAssessment.setCurrentAdvance(advance);
 
         Long orientation =  CursorUtils.getLong(AssessmentTable.ORIENTATION_COLUMN, cursor);
         babyAssessment.setOrientation(orientation.shortValue());
@@ -123,6 +123,9 @@ public class AssessmentBuilder4SqlLite {
 
         java.lang.String outcrop = CursorUtils.getString(AssessmentTable.OUTCROP_COLUMN, cursor);
         babyAssessment.setOutcropDescription(outcrop);
+
+        java.lang.String rockSampleIdentification = CursorUtils.getString(AssessmentTable.ROCK_SAMPLE_IDENTIFICATION_COLUMN, cursor);
+        babyAssessment.setRockSampleIdentification(rockSampleIdentification);
 
 
         return babyAssessment;

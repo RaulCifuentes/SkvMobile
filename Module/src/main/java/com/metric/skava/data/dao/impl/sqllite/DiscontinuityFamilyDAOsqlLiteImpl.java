@@ -4,10 +4,24 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.metric.skava.app.context.SkavaContext;
+import com.metric.skava.app.database.utils.CursorUtils;
+import com.metric.skava.calculator.barton.model.Ja;
+import com.metric.skava.calculator.barton.model.Jr;
+import com.metric.skava.calculator.rmr.model.Aperture;
+import com.metric.skava.calculator.rmr.model.Infilling;
+import com.metric.skava.calculator.rmr.model.Persistence;
+import com.metric.skava.calculator.rmr.model.Roughness;
+import com.metric.skava.calculator.rmr.model.Spacing;
+import com.metric.skava.calculator.rmr.model.Weathering;
+import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalDiscontinuityFamilyDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.table.DiscontinuityFamilyTable;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
+import com.metric.skava.discontinuities.model.DiscontinuityRelevance;
+import com.metric.skava.discontinuities.model.DiscontinuityShape;
+import com.metric.skava.discontinuities.model.DiscontinuityType;
+import com.metric.skava.discontinuities.model.DiscontinuityWater;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,22 +31,77 @@ import java.util.List;
  */
 public class DiscontinuityFamilyDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<DiscontinuityFamily> implements LocalDiscontinuityFamilyDAO {
 
+    private DAOFactory daoFactory;
 
 
     public DiscontinuityFamilyDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
         super(context, skavaContext);
 
+        daoFactory = DAOFactory.getInstance(context, skavaContext);
     }
 
 
     @Override
     protected List<DiscontinuityFamily> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<DiscontinuityFamily> list = new ArrayList<DiscontinuityFamily>();
+
         while (cursor.moveToNext()) {
+            DiscontinuityFamily newDiscontinuityFamily = new DiscontinuityFamily();
+            newDiscontinuityFamily.setNumber(CursorUtils.getInt(DiscontinuityFamilyTable.NUMBER_COLUMN, cursor));
+
+            String discontinuityTypeCode = CursorUtils.getString(DiscontinuityFamilyTable.TYPE_CODE_COLUMN, cursor);
+            DiscontinuityType discontinuityType =  daoFactory.getLocalDiscontinuityTypeDAO().getDiscontinuityTypeByCode(discontinuityTypeCode);
+            newDiscontinuityFamily.setType(discontinuityType);
+
+            String discontinuityRelevanceCode = CursorUtils.getString(DiscontinuityFamilyTable.RELEVANCE_CODE_COLUMN, cursor);
+            DiscontinuityRelevance discontinuityRelevance =  daoFactory.getLocalDiscontinuityRelevanceDAO().getDiscontinuityRelevanceByCode(discontinuityRelevanceCode);
+            newDiscontinuityFamily.setRelevance(discontinuityRelevance);
+
+            newDiscontinuityFamily.setDipDegrees((short)CursorUtils.getInt(DiscontinuityFamilyTable.DIPDEGREES_CODE_COLUMN, cursor));
+            newDiscontinuityFamily.setDipDirDegrees((short)CursorUtils.getInt(DiscontinuityFamilyTable.DIPDIRDEGREES_CODE_COLUMN, cursor));
+
+            String discontinuityShapeCode = CursorUtils.getString(DiscontinuityFamilyTable.SHAPE_CODE_COLUMN, cursor);
+            DiscontinuityShape discontinuityShape =  daoFactory.getLocalDiscontinuityShapeDAO().getDiscontinuityShapeByCode(discontinuityShapeCode);
+            newDiscontinuityFamily.setShape(discontinuityShape);
 
 
-            DiscontinuityFamily newInstance = new DiscontinuityFamily();
-            list.add(newInstance);
+            String discontinuitySpacingCode = CursorUtils.getString(DiscontinuityFamilyTable.SPACING_CODE_COLUMN, cursor);
+            Spacing discontinuitySpacing =  daoFactory.getLocalSpacingDAO().getSpacingByUniqueCode(discontinuitySpacingCode);
+            newDiscontinuityFamily.setSpacing(discontinuitySpacing);
+
+            String roughnessCode = CursorUtils.getString(DiscontinuityFamilyTable.ROUGHNESS_CODE_COLUMN, cursor);
+            Roughness roughness =  daoFactory.getLocalRoughnessDAO().getRoughnessByUniqueCode(roughnessCode);
+            newDiscontinuityFamily.setRoughness(roughness);
+
+            String weatheringCode = CursorUtils.getString(DiscontinuityFamilyTable.WEATHERING_CODE_COLUMN, cursor);
+            Weathering weathering =  daoFactory.getLocalWeatheringDAO().getWeatheringByUniqueCode(weatheringCode);
+            newDiscontinuityFamily.setWeathering(weathering);
+
+            String discontinuityWaterCode = CursorUtils.getString(DiscontinuityFamilyTable.DISCONTINUITYWATER_CODE_COLUMN, cursor);
+            DiscontinuityWater discontinuityWater =  daoFactory.getLocalDiscontinuityWaterDAO().getDiscontinuityWaterByCode(discontinuityWaterCode);
+            newDiscontinuityFamily.setWater(discontinuityWater);
+
+            String persistenceCode = CursorUtils.getString(DiscontinuityFamilyTable.PERSISTENCE_CODE_COLUMN, cursor);
+            Persistence persistence =  daoFactory.getLocalPersistenceDAO().getPersistenceByUniqueCode(persistenceCode);
+            newDiscontinuityFamily.setPersistence(persistence);
+
+            String apertureCode = CursorUtils.getString(DiscontinuityFamilyTable.APERTURE_CODE_COLUMN, cursor);
+            Aperture aperture =  daoFactory.getLocalApertureDAO().getApertureByUniqueCode(apertureCode);
+            newDiscontinuityFamily.setAperture(aperture);
+
+            String infillingCode = CursorUtils.getString(DiscontinuityFamilyTable.INFILLING_CODE_COLUMN, cursor);
+            Infilling infilling =  daoFactory.getLocalInfillingDAO().getInfillingByUniqueCode(infillingCode);
+            newDiscontinuityFamily.setInfilling(infilling);
+
+            String jaCode = CursorUtils.getString(DiscontinuityFamilyTable.JA_CODE_COLUMN, cursor);
+            Ja ja =  daoFactory.getLocalJaDAO().getJaByUniqueCode(jaCode);
+            newDiscontinuityFamily.setJa(ja);
+
+            String jrCode = CursorUtils.getString(DiscontinuityFamilyTable.JR_CODE_COLUMN, cursor);
+            Jr jr =  daoFactory.getLocalJrDAO().getJrByUniqueCode(jrCode);
+            newDiscontinuityFamily.setJr(jr);
+
+            list.add(newDiscontinuityFamily);
         }
         return list;
     }
@@ -89,15 +158,15 @@ public class DiscontinuityFamilyDAOsqlLiteImpl extends SqlLiteBasePersistentEnti
                     newDiscontinuityFamily.getDipDegrees(),
                     newDiscontinuityFamily.getDipDirDegrees(),
                     newDiscontinuityFamily.getShape().getCode(),
-                    newDiscontinuityFamily.getSpacing().getKey(),
-                    newDiscontinuityFamily.getRoughness().getKey(),
-                    newDiscontinuityFamily.getWeathering().getKey(),
+                    newDiscontinuityFamily.getSpacing().getCode(),
+                    newDiscontinuityFamily.getRoughness().getCode(),
+                    newDiscontinuityFamily.getWeathering().getCode(),
                     newDiscontinuityFamily.getWater().getCode(),
-                    newDiscontinuityFamily.getPersistence().getKey(),
-                    newDiscontinuityFamily.getAperture().getKey(),
-                    newDiscontinuityFamily.getInfilling().getKey(),
-                    newDiscontinuityFamily.getJa().getKey(),
-                    newDiscontinuityFamily.getJr().getKey()
+                    newDiscontinuityFamily.getPersistence().getCode(),
+                    newDiscontinuityFamily.getAperture().getCode(),
+                    newDiscontinuityFamily.getInfilling().getCode(),
+                    newDiscontinuityFamily.getJa().getCode(),
+                    newDiscontinuityFamily.getJr().getCode()
             };
 
             Long newDiscontinuityFamilyId = saveRecord(tableName, names, values);
