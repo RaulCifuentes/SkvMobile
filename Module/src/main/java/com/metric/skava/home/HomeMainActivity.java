@@ -22,6 +22,7 @@ import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxDatastore;
 import com.dropbox.sync.android.DbxDatastoreManager;
 import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxFileSystem;
 import com.metric.skava.R;
 import com.metric.skava.about.activity.AboutMainActivity;
 import com.metric.skava.app.model.Role;
@@ -46,6 +47,7 @@ import com.metric.skava.sync.dao.SyncLoggingDAO;
 import com.metric.skava.sync.dao.SyncLoggingDAOsqlLiteImpl;
 import com.metric.skava.sync.helper.SyncHelper;
 import com.metric.skava.sync.model.SyncLogEntry;
+import com.metric.skava.test.activity.HelloDropboxActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,12 +64,14 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     private static final int NAV_MENU_GENERAL_SECTION_ID = 60;
     private static final int NAV_MENU_SETTINGS_ITEM_ID = 70;
     private static final int NAV_MENU_ABOUT_ITEM_ID = 80;
+    private static final int NAV_MENU_FILESYSTEM_ITEM_ID = 90;
     private boolean dropboxNeverCalled = true;
     private boolean assertNeverCalled = true;
     private DbxAccountManager mDbxAcctMgr;
     private DbxAccount mAccount;
     private DbxDatastoreManager mDatastoreManager;
     private DbxDatastore mDatastore;
+    private DbxFileSystem mFileSystem;
     private MainFragment mHomeMainFragment;
     private static final String FRAGMENT_HOME_MAIN_TAG = "FRAGMENT_HOME_MAIN_TAG";
 
@@ -124,11 +128,20 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 //                    }
 //                    //Abrir el datastore
 //                    mDatastore = mDatastoreManager.openDatastore(DatastoreHelper.APP_DATASTORE_NAME);
-                    mDatastore = mDatastoreManager.openDefaultDatastore();
+                    if (mDatastore == null) {
+                        mDatastore = mDatastoreManager.openDefaultDatastore();
+                    } if (mFileSystem == null){
+                        mFileSystem = DbxFileSystem.forAccount(mAccount);
+                    }
                     getSkavaContext().setDatastore(mDatastore);
-                    UpdateDataModelTask task = new UpdateDataModelTask();
-                    task.execute();
-//                    downloadAndPopulateDataModel();
+                    getSkavaContext().setFileSystem(mFileSystem);
+
+                    if (shouldUpdateAutomatically()){
+                        UpdateDataModelTask task = new UpdateDataModelTask();
+                        task.execute();
+                    } else {
+                        assertDataAvailable();
+                    }
                     mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
                 }
             } catch (DbxException e) {
@@ -149,19 +162,19 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         View view = this.findViewById(android.R.id.content);
-        if (shouldUpdateAutomatically()) {
-            view.post(new Runnable() {
-                @Override
-                public void run() {
-//                    showProgressBar(true, "Probando, probando", false);
-                    setupDataModel();
-//                    showProgressBar(true, "Ya probe, probe", false);
-                }
-            });
-        } else {
-            assertDataAvailable();
-        }
-
+//        if (shouldUpdateAutomatically()) {
+//            view.post(new Runnable() {
+//                @Override
+//                public void run() {
+////                    showProgressBar(true, "Probando, probando", false);
+//                    setupDataModel();
+////                    showProgressBar(true, "Ya probe, probe", false);
+//                }
+//            });
+//        } else {
+//            assertDataAvailable();
+//        }
+        setupDataModel();
     }
 
     @Override
@@ -190,8 +203,13 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 //                    }
 //                    //Abrir el datastore
 //                    mDatastore = mDatastoreManager.openDatastore(DatastoreHelper.APP_DATASTORE_NAME);
-                    mDatastore = mDatastoreManager.openDefaultDatastore();
+                    if (mDatastore == null) {
+                        mDatastore = mDatastoreManager.openDefaultDatastore();
+                    } if (mFileSystem == null){
+                        mFileSystem = DbxFileSystem.forAccount(mAccount);
+                    }
                     getSkavaContext().setDatastore(mDatastore);
+                    getSkavaContext().setFileSystem(mFileSystem);
                     UpdateDataModelTask task = new UpdateDataModelTask();
                     task.execute();
 //                    downloadAndPopulateDataModel();
@@ -332,12 +350,13 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             Role geologist = new Role("GEOLOGIST", "Geologist");
             Role admin = new Role("ADMINISTRATOR", "Administrator");
             Role metricAdmin = new Role("METRICADMIN", "MetricAdmin");
-            if (loggedUser.hasRole(geologist) || loggedUser.hasRole(admin)) {
+            if (loggedUser.hasRole(geologist) || loggedUser.hasRole(admin) || loggedUser.hasRole(metricAdmin)) {
                 menuAsList.remove(1);
                 menuAsList.add(NavMenuItem.create(NAV_MENU_FACE_MAPPING_ITEM_ID, "Face Mappings","ic_menu_copy_holo_dark", true, true, this));
             }
-            if (loggedUser.hasRole(metricAdmin)) {
+            if (loggedUser.hasRole(admin) ||  loggedUser.hasRole(metricAdmin)) {
                 menuAsList.add(NavMenuSection.create(NAV_MENU_ADMIN_SECTION_ID, "Admin"));
+                menuAsList.add(NavMenuItem.create(NAV_MENU_FILESYSTEM_ITEM_ID, "Dropbox with files", "ic_menu_copy_holo_dark", true, true, this));
                 menuAsList.add(NavMenuItem.create(NAV_MENU_SYNC_ITEM_ID, "Sync admin", "ic_menu_copy_holo_dark", true, true, this));
             }
         }
@@ -374,6 +393,10 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 break;
             case NAV_MENU_SYNC_ITEM_ID:
                 intent = new Intent(this, SyncMainActivity.class);
+                startActivity(intent);
+                break;
+            case NAV_MENU_FILESYSTEM_ITEM_ID:
+                intent = new Intent(this, HelloDropboxActivity.class);
                 startActivity(intent);
                 break;
             case NAV_MENU_SETTINGS_ITEM_ID:

@@ -75,11 +75,11 @@ public class SkavaUtils {
 
         int assesmentNumber = SkavaUtils.getRandom(1, 10);
 
-        String internalCode = "SKV-" + assesmentNumber;
+//        String internalCode = "SKV-" + assesmentNumber;
 
         String code = UUID.randomUUID().toString();
         Assessment initialAssessment = new Assessment(code);
-        initialAssessment.setInternalCode(internalCode);
+//        initialAssessment.setInternalCode(internalCode);
 
         DAOFactory daoFactory = skavaContext.getDAOFactory();
 

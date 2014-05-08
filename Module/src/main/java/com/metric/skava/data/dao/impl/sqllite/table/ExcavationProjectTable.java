@@ -8,12 +8,14 @@ public class ExcavationProjectTable extends SkavaEntityTable {
     public static final String PROJECT_DATABASE_TABLE = "Projects";
 
     public static final String CLIENT_CODE_COLUMN = "CLIENT_CODE";
+    public static final String INTERNAL_CODE_COLUMN = "INTERNAL_CODE";
 
     public static final String CREATE_PROJECTS_TABLE = "create table " +
             PROJECT_DATABASE_TABLE + " (" + GLOBAL_KEY_ID +
             " integer primary key autoincrement, " +
             CLIENT_CODE_COLUMN + " text not null, " +
             CODE_COLUMN + " text not null, " +
+            INTERNAL_CODE_COLUMN + " text not null, " +
             NAME_COLUMN + " text not null  );";
 
     public static final String DELETE_PROJECTS_TABLE = "delete from " + PROJECT_DATABASE_TABLE;

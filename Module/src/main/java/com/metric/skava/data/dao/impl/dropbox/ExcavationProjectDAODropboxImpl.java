@@ -42,9 +42,11 @@ public class ExcavationProjectDAODropboxImpl extends DropBoxBaseDAO implements R
                 String codigo = currentDbxRecord.getString("ProjectId");
                 String nombre = currentDbxRecord.getString("Name");
                 String clientCode = currentDbxRecord.getString("FkClientId");
+                String internalCode = currentDbxRecord.getString("code");
+
                 LocalClientDAO clientDAO = getDAOFactory().getLocalClientDAO();
                 Client client = clientDAO.getClientByCode(clientCode);
-                ExcavationProject newProject = new ExcavationProject(codigo, nombre);
+                ExcavationProject newProject = new ExcavationProject(codigo, nombre, internalCode);
                 newProject.setClient(client);
                 listProjects.add(newProject);
             }
@@ -67,7 +69,8 @@ public class ExcavationProjectDAODropboxImpl extends DropBoxBaseDAO implements R
             String clientCode = projectRecord.getString("FkClientId");
             LocalClientDAO clientDAO = getDAOFactory().getLocalClientDAO();
             Client client = clientDAO.getClientByCode(clientCode);
-            ExcavationProject newProject = new ExcavationProject(codigo, nombre);
+            String internalCode = projectRecord.getString("code");
+            ExcavationProject newProject = new ExcavationProject(codigo, nombre, internalCode);
             newProject.setClient(client);
             return newProject;
         } catch (DbxException e) {

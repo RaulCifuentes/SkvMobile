@@ -1,10 +1,10 @@
 package com.metric.skava.app.context;
 
 import com.dropbox.sync.android.DbxDatastore;
+import com.dropbox.sync.android.DbxFileSystem;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.User;
 import com.metric.skava.data.dao.DAOFactory;
-import com.metric.skava.data.dao.impl.dropbox.datastore.DatastoreHelper;
 import com.metric.skava.sync.helper.SyncHelper;
 import com.metric.skava.sync.model.SyncStatus;
 
@@ -16,8 +16,9 @@ public class SkavaContext {
     private User loggedUser;
     private Assessment assessment;
     private SyncStatus syncMetadata;
-    private DatastoreHelper mDatastoreHelper;
+//    private DatastoreHelper mDatastoreHelper;
     private DbxDatastore mDatastore;
+    private DbxFileSystem mFileSystem;
     private DAOFactory daoFactory;
     private SyncHelper syncHelper;
 
@@ -61,12 +62,20 @@ public class SkavaContext {
         this.syncMetadata = syncMetadata;
     }
 
-    public DatastoreHelper getDatastoreHelper() {
-        return mDatastoreHelper;
+//    public DatastoreHelper getDatastoreHelper() {
+//        return mDatastoreHelper;
+//    }
+//
+//    public void setDatastoreHelper(DatastoreHelper mDatastoreHelper) {
+//        this.mDatastoreHelper = mDatastoreHelper;
+//    }
+
+    public DbxFileSystem getFileSystem() {
+        return mFileSystem;
     }
 
-    public void setDatastoreHelper(DatastoreHelper mDatastoreHelper) {
-        this.mDatastoreHelper = mDatastoreHelper;
+    public void setFileSystem(DbxFileSystem fileSystem) {
+        this.mFileSystem = fileSystem;
     }
 
     public void setDatastore(DbxDatastore myDatastore) {

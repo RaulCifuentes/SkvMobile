@@ -126,7 +126,7 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
         if (id == R.id.action_settings) {
             return true;
         }
-        String suggestedName = getCurrentAssessment().getInternalCode();
+        String suggestedName = getCurrentAssessment().getCode();
         if (id == R.id.action_add_face_picture) {
             Intent photoIntent = new Intent(
                     MediaStore.ACTION_IMAGE_CAPTURE);

@@ -76,7 +76,6 @@ public class RMRCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO
             String groundwaterCode = CursorUtils.getString(RMRCalculationTable.GROUNDWATER_CODE_COLUMN, cursor);
             String orientationCode = CursorUtils.getString(RMRCalculationTable.ORIENTATION_CODE_COLUMN, cursor);
             //This seems to be persisted only to transfer to Dropbox but not needed in the deserialization/parsing process
-
             StrengthOfRock strenght = mLocalStrengthDAO.getStrengthByUniqueCode(strenghtCode);
             RQD_RMR rqd = RQD_RMR.findRQDByKey(rqdCode);
             Spacing spacing = mLocalSpacingDAO.getSpacingByUniqueCode(spacingCode);

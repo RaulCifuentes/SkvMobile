@@ -2,10 +2,14 @@ package com.metric.skava.data.dao.impl.dropbox;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFields;
+import com.dropbox.sync.android.DbxFile;
+import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxList;
+import com.dropbox.sync.android.DbxPath;
 import com.dropbox.sync.android.DbxRecord;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.Assessment;
@@ -15,6 +19,7 @@ import com.metric.skava.app.model.ExcavationSection;
 import com.metric.skava.app.model.Tunnel;
 import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.calculator.barton.logic.QBartonOutput;
 import com.metric.skava.calculator.barton.model.Ja;
@@ -57,12 +62,16 @@ import com.metric.skava.instructions.model.MeshType;
 import com.metric.skava.instructions.model.ShotcreteType;
 import com.metric.skava.instructions.model.SupportPattern;
 import com.metric.skava.instructions.model.SupportRecomendation;
+import com.metric.skava.pictures.util.SkavaFilesUtils;
 import com.metric.skava.rockmass.model.FractureType;
 import com.metric.skava.rocksupport.model.ESR;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by metricboy on 3/5/14.
@@ -75,6 +84,8 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
     private QBartonCalculationDropboxTable mQBartonCalculationDropBoxTable;
     private SupportRecommendationDropboxTable mSupportRecommendationDropboxTable;
     private AssessmentBuilder4DropBox assessmentBuilder;
+    private SkavaFilesUtils mFilesUtils;
+
 
 
     public AssessmentDAODropboxImpl(Context context, SkavaContext skavaContext) throws DAOException {
@@ -85,6 +96,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         this.mQBartonCalculationDropBoxTable = new QBartonCalculationDropboxTable(getDatastore());
         this.mSupportRecommendationDropboxTable = new SupportRecommendationDropboxTable(getDatastore());
         this.assessmentBuilder = new AssessmentBuilder4DropBox(skavaContext);
+        this.mFilesUtils = new SkavaFilesUtils(context);
     }
 
     @Override
@@ -217,22 +229,26 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             DbxList uriEncodedList = new DbxList();
             for (Uri uri : pictureList) {
                 if (uri != null) {
-                    java.lang.String uriEncoded = uri.toString();
+                    java.lang.String uriEncoded = uri.getLastPathSegment();
                     uriEncodedList.add(uriEncoded);
                 }
             }
+            uploadPictures(assessment.getInternalCode(), pictureList);
             assessmentFields.set("picturesURIs", uriEncodedList);
 
             List<DiscontinuityFamily> discontinuitySystem = assessment.getDiscontinuitySystem();
-            if (discontinuitySystem != null ) {
+            if (discontinuitySystem != null) {
 
                 DbxList discontinuitiesFamilySystem = new DbxList();
 
                 for (DiscontinuityFamily family : discontinuitySystem) {
-                    if (family == null || !family.isComplete()) {
+                    if (family == null || !family.hasSelectedAnything()) {
                         continue;
                     }
                     DbxFields discontinuityFamilyFields = new DbxFields();
+                    //This UUID is requested by Fabian in order to uniquely identify a record on Dropbox
+                    String familyPK = UUID.randomUUID().toString();
+                    discontinuityFamilyFields.set("familyPK", familyPK);
 
                     discontinuityFamilyFields.set("assesmentCode", assessment.getCode());
 
@@ -307,6 +323,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 assessmentFields.set("discontinuitiesSystem", discontinuitiesFamilySystem);
             }
 
+            //TODO take the supportRecommendation construction handling out of here, following the same style of Q, RMRCalulation, etc
             SupportRecomendation recomendation = assessment.getRecomendation();
             if (recomendation != null && recomendation.isComplete()) {
 
@@ -508,4 +525,37 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             throw new DAOException(e);
         }
     }
+
+    private void uploadPictures(String internalCode, List<Uri> pictures ) throws DAOException {
+        // Create DbxFileSystem for synchronized file access.
+        DbxFileSystem dbxFs = getSkavaContext().getFileSystem();
+
+        DbxPath skavaFolderPath = new DbxPath(DbxPath.ROOT, "SkavaMobile");
+        try {
+            if (!dbxFs.exists(skavaFolderPath)) {
+                //create
+                dbxFs.createFolder(skavaFolderPath);
+            } else {
+                DbxPath projectPath = new DbxPath(skavaFolderPath, internalCode);
+                for (Uri pictureURI : pictures) {
+                    if (pictureURI != null) {
+                        String name = pictureURI.getLastPathSegment();
+                        DbxPath filePath = new DbxPath(projectPath, name);
+                        DbxFile targetFile = dbxFs.create(filePath);
+                        try {
+                            File tabletFile = mFilesUtils.getExistingFileFromUri(pictureURI);
+                            targetFile.writeFromExistingFile(tabletFile, false);
+                        } finally {
+                            targetFile.close();
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            throw new DAOException(e);
+        }
+
+    }
+
 }
