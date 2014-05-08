@@ -153,7 +153,13 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
 
 
     private List<Uri> assembleResourceList(Cursor cursor) {
-        return null;
+        List<Uri> result = new ArrayList<Uri>();
+        while (cursor.moveToNext()) {
+            String uriString = CursorUtils.getString(ExternalResourcesTable.RESOURCE_URL_COLUMN, cursor);
+            Uri uri = Uri.parse(uriString);
+            result.add(uri);
+        }
+        return result;
     }
 
 
@@ -232,7 +238,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 AssessmentTable.EXCAVATION_METHOD_CODE_COLUMN,
                 AssessmentTable.PK_INITIAL_COLUMN,
                 AssessmentTable.PK_FINAL_COLUMN,
-                AssessmentTable.ADVANCE_ACUMM_COLUMN,
+                AssessmentTable.ADVANCE_COLUMN,
                 AssessmentTable.ORIENTATION_COLUMN,
                 AssessmentTable.SLOPE_COLUMN,
                 AssessmentTable.FRACTURE_TYPE_CODE_COLUMN,
@@ -252,7 +258,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 SkavaUtils.isUndefined(newSkavaEntity.getMethod()) ? null : newSkavaEntity.getMethod().getCode(),
                 newSkavaEntity.getInitialPeg(),
                 newSkavaEntity.getFinalPeg(),
-                newSkavaEntity.getAccummAdvance(),
+                newSkavaEntity.getCurrentAdvance(),
                 newSkavaEntity.getOrientation(),
                 newSkavaEntity.getSlope(),
                 SkavaUtils.isUndefined(newSkavaEntity.getFractureType()) ? null : newSkavaEntity.getFractureType().getCode(),
@@ -333,10 +339,12 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 continue;
             }
             String[] resourcesNames = new String[]{
+                    ExternalResourcesTable.ASSESSMENT_CODE_COLUMN,
                     ExternalResourcesTable.RESOURCE_TYPE_COLUMN,
                     ExternalResourcesTable.RESOURCE_URL_COLUMN
             };
             String[] resourcesValues = new String[]{
+                    newSkavaEntity.getCode(),
                     "PICTURE",
                     uri.getPath()
             };

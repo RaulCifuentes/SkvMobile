@@ -23,6 +23,9 @@ import com.metric.skava.report.fragment.MappingReportMainFragment;
 
 public class MappingReportMainActivity extends SkavaFragmentActivity {
 
+    private Boolean isPreview;
+    public static final String IS_PREVIEW = "MAPPING_REPORT_MAIN_ACTIVITY_IS_PREVIEW";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,23 +44,30 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
                     .add(R.id.container, new MappingReportMainFragment())
                     .commit();
         }
+        isPreview = getIntent().getBooleanExtra(IS_PREVIEW, false);
+
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.mapping_report_main_menu, menu);
+            getMenuInflater().inflate(R.menu.mapping_report_main_menu, menu);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (getSkavaContext().getDatastore() != null) {
-            menu.findItem(R.id.action_mapping_report_draft).setVisible(false);
-            menu.findItem(R.id.action_mapping_report_send).setVisible(true);
+        if (!isPreview) {
+            if (getSkavaContext().getDatastore() != null) {
+                menu.findItem(R.id.action_mapping_report_draft).setVisible(false);
+                menu.findItem(R.id.action_mapping_report_send).setVisible(true);
+            } else {
+                menu.findItem(R.id.action_mapping_report_draft).setVisible(true);
+                menu.findItem(R.id.action_mapping_report_send).setVisible(false);
+            }
         } else {
-            menu.findItem(R.id.action_mapping_report_draft).setVisible(true);
+            menu.findItem(R.id.action_mapping_report_draft).setVisible(false);
             menu.findItem(R.id.action_mapping_report_send).setVisible(false);
         }
         return super.onPrepareOptionsMenu(menu);

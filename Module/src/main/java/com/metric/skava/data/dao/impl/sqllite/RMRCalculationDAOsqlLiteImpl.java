@@ -125,7 +125,8 @@ public class RMRCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO
                     RMRCalculationTable.ROUGHNESS_CODE_COLUMN,
                     RMRCalculationTable.INFILLING_CODE_COLUMN,
                     RMRCalculationTable.WEATHERING_CODE_COLUMN,
-                    RMRCalculationTable.GROUNDWATER_CODE_COLUMN
+                    RMRCalculationTable.GROUNDWATER_CODE_COLUMN,
+                    RMRCalculationTable.ORIENTATION_CODE_COLUMN,
             };
 
             Object[] rmrCalculationValues = new Object[]{
@@ -139,7 +140,8 @@ public class RMRCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO
                     rmrCalculation.getRoughness().getCode(),
                     rmrCalculation.getInfilling().getCode(),
                     rmrCalculation.getWeathering().getCode(),
-                    rmrCalculation.getGroundwater().getCode()
+                    rmrCalculation.getGroundwater().getCode(),
+                    rmrCalculation.getOrientationDiscontinuities().getCode()
             };
             Long rmrCalculationId = saveRecord(tableName, rmrCalculationNames, rmrCalculationValues);
             rmrCalculation.set_id(rmrCalculationId);
