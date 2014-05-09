@@ -461,7 +461,8 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         protected void onProgressUpdate(Long... progress) {
 //            super.onProgressUpdate(progress);
             //mostrar avance
-            showProgressBar(true, String.valueOf(progress), true);
+            Long value = (Long) progress[0];
+//            showProgressBar(true,  + value + " records created so far.", false);
         }
 
         @Override
@@ -470,8 +471,8 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             //mostrar que termino
             dropboxNeverCalled = false;
             Toast.makeText(HomeMainActivity.this, "Load succesfully finished", Toast.LENGTH_LONG);
-            showProgressBar(false, "Finished", false);
             mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+            showProgressBar(false, "Finished. " + result + " records created.", true);
         }
 
     }
