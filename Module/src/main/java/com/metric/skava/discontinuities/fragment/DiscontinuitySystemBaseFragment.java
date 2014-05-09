@@ -117,7 +117,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             }
         }
 
-//        getSkavaActivity().getSkavaDataProvider().getAllDiscontinuitiesTypes();
+
         List<DiscontinuityType> discTypeList = null;
         try {
             discTypeList = daoFactory.getLocalDiscontinuityTypeDAO().getAllDiscontinuityTypes();
@@ -131,7 +131,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         // Specify the layout to use when the list of choices appears
         discTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        //getSkavaActivity().getSkavaDataProvider().getAllDiscontinuityRelevances();
+
         List<DiscontinuityRelevance> discRelevanceList = new ArrayList<DiscontinuityRelevance>();
         try {
             discRelevanceList = daoFactory.getLocalDiscontinuityRelevanceDAO().getAllDiscontinuityRelevances();
@@ -146,7 +146,6 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         discRelevanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
-//        List<Spacing> discSpacingsList = getSkavaActivity().getMappedIndexDataProvider().getAllSpacings();
         List<Spacing> discSpacingsList = null;
         try {
             discSpacingsList = daoFactory.getLocalSpacingDAO().getAllSpacings();
@@ -162,7 +161,6 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         discSpacingsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
-//        List<Persistence> discPersistencesList = getSkavaActivity().getMappedIndexDataProvider().getAllPersistences();
         List<Persistence> discPersistencesList = null;
         try {
             discPersistencesList = daoFactory.getLocalPersistenceDAO().getAllPersistences();
@@ -177,7 +175,6 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         discPersistenceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
-//        List<Aperture> discAperturesList = getSkavaActivity().getMappedIndexDataProvider().getAllApertures();
         List<Aperture> discAperturesList = null;
         try {
             discAperturesList = daoFactory.getLocalApertureDAO().getAllApertures();
@@ -192,7 +189,6 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         discApertureAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
-//        List<DiscontinuityShape> discShapeList = getSkavaActivity().getSkavaDataProvider().getAllDiscontinuityShapes();
         List<DiscontinuityShape> discShapeList = null;
         try {
             discShapeList = daoFactory.getLocalDiscontinuityShapeDAO().getAllDiscontinuityShapes();
@@ -206,7 +202,6 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         discShapeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
-//        List<Roughness> discRoughnessList = getSkavaActivity().getMappedIndexDataProvider().getAllRoughness();
         List<Roughness> discRoughnessList = null;
         try {
             discRoughnessList = daoFactory.getLocalRoughnessDAO().getAllRoughnesses();
@@ -222,7 +217,6 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         discRoughnessAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
-//        List<Infilling> discInfillingList = getSkavaActivity().getMappedIndexDataProvider().getAllInfillings();
         List<Infilling> discInfillingList = null;
         try {
             discInfillingList = daoFactory.getLocalInfillingDAO().getAllInfillings();
@@ -236,10 +230,10 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         // Specify the layout to use when the list of choices appears
         discInfillingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-
-//        List<Jr> discJrList = getSkavaActivity().getMappedIndexDataProvider().getAllJr(Jr.a);
         List<Jr> discJrList = null;
         try {
+            //TODO Show the whole set of Ja and not only the a group. This depends on
+            //definition from Matias of what should appers here
             discJrList = daoFactory.getLocalJrDAO().getAllJrs(Jr.Group.a);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
@@ -251,9 +245,11 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         // Specify the layout to use when the list of choices appears
         discJrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-//        List<Ja> discJaList = getSkavaActivity().getMappedIndexDataProvider().getAllJa(Ja.a);
+
         List<Ja> discJaList = null;
         try {
+            //TODO Show the whole set of Ja and not only the a group. This depends on
+            //definition from Matias of what should appers here
             discJaList = daoFactory.getLocalJaDAO().getAllJas(Ja.Group.a);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
@@ -266,7 +262,6 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         discJaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
-//        List<Weathering> discWeatheringList = getSkavaActivity().getMappedIndexDataProvider().getAllWeatherings();
         List<Weathering> discWeatheringList = null;
         try {
             discWeatheringList = daoFactory.getLocalWeatheringDAO().getAllWeatherings();
@@ -279,7 +274,6 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         discWeatheringAdapter = new MappedIndexSpinnerArrayAdapter<Weathering>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, discWeatheringList);
 
 
-//        List<DiscontinuityWater> discWaterList = getSkavaActivity().getSkavaDataProvider().getAllDiscontinuityWaters();
         List<DiscontinuityWater> discWaterList = null;
         try {
             discWaterList = daoFactory.getLocalDiscontinuityWaterDAO().getAllDiscontinuityWaters();
@@ -373,7 +367,6 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         discSpacingSpinner.setOnItemSelectedListener(this);
         Spacing spacing = mDiscontinuityFamilyInstance.getSpacing();
         if (spacing != null) {
-//            discSpacingSpinner.setSelection(discSpacingsAdapter.getPosition(spacing));
             discSpacingSpinner.setSelection(discSpacingsAdapter.getPosition(spacing));
         } else {
             discSpacingSpinner.setSelection(discSpacingsAdapter.getCount()-1);
@@ -568,19 +561,5 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
 
     }
 
-//    public void saveDiscontinuityFamily() {
-//        List<DiscontinuityFamily> discFamilySystem = getSkavaContext().getAssessment().getDiscontinuitySystem();
-//        if (mDiscontinuityFamilyNumber - 1 < discFamilySystem.size()) {
-//            discFamilySystem.set(mDiscontinuityFamilyNumber - 1, mDiscontinuityFamilyInstance);
-//        } else {
-////            discFamilySystem.add(mDiscontinuityFamilyNumber - 1, mDiscontinuityFamilyInstance);
-//        }
-//
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-////        saveDiscontinuityFamily();
-//    }
+
 }

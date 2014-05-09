@@ -73,13 +73,8 @@ public class SkavaUtils {
 
     public static Assessment createInitialAssessment(SkavaContext skavaContext) throws DAOException {
 
-        int assesmentNumber = SkavaUtils.getRandom(1, 10);
-
-//        String internalCode = "SKV-" + assesmentNumber;
-
         String code = UUID.randomUUID().toString();
         Assessment initialAssessment = new Assessment(code);
-//        initialAssessment.setInternalCode(internalCode);
 
         DAOFactory daoFactory = skavaContext.getDAOFactory();
 
@@ -112,9 +107,6 @@ public class SkavaUtils {
         StrengthOfRock strenght = daoFactory.getLocalStrengthDAO().getAllStrengths(StrengthOfRock.Group.POINT_LOAD_KEY).get(0);
 
         Spacing spacing =  daoFactory.getLocalSpacingDAO().getAllSpacings().get(0);
-
-        // ***** Condition was the summarized not needed anymore ****
-        //ConditionDiscontinuities condition = provider.getAllConditions().get(0);
 
         Persistence persistence = daoFactory.getLocalPersistenceDAO().getAllPersistences().get(0);
 
@@ -155,9 +147,6 @@ public class SkavaUtils {
 
         initialAssessment.setDiscontinuitySystem(discontinuitySystem);
 
-//        SupportRecomendation recomendation = new SupportRecomendation();
-//        initialAssessment.setRecomendation(recomendation);
-
         return initialAssessment;
     }
 
@@ -185,10 +174,7 @@ public class SkavaUtils {
     }
 
     private static List<String> splitEqually(String text, int size) {
-        // Give the list the right capacity to start with. You could use an array
-        // instead if you wanted.
         List<String> ret = new ArrayList<String>((text.length() + size - 1) / size);
-
         for (int start = 0; start < text.length(); start += size) {
             ret.add(text.substring(start, Math.min(text.length(), start + size)));
         }

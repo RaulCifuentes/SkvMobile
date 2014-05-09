@@ -6,11 +6,12 @@ package com.metric.skava.instructions.model;
  public class SupportPattern {
 
     private SupportPatternType type;
-    private String pattern;
+    private Double distanceX, distanceY;
 
-    public SupportPattern(SupportPatternType type, String pattern) {
+    public SupportPattern(SupportPatternType type, Double dx, Double dy) {
         this.type = type;
-        this.pattern = pattern;
+        this.distanceX = dx;
+        this.distanceY = dy;
     }
 
     public SupportPatternType getType() {
@@ -21,11 +22,19 @@ package com.metric.skava.instructions.model;
         this.type = type;
     }
 
-    public String getPattern() {
-        return pattern;
+    public Double getDistanceX() {
+        return distanceX;
     }
 
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
+    public void setDistanceX(Double distanceX) {
+        this.distanceX = distanceX;
+    }
+
+    public Double getDistanceY() {
+        return distanceY;
+    }
+
+    public void setDistanceY(Double distanceY) {
+        this.distanceY = distanceY;
     }
 }

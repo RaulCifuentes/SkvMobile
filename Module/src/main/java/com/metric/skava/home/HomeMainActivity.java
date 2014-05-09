@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -40,14 +39,11 @@ import com.metric.skava.authentication.LoginMainActivity;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.datastore.DatastoreHelper;
-import com.metric.skava.data.dao.impl.sqllite.SkavaDBHelper;
 import com.metric.skava.settings.activity.SettingsMainActivity;
 import com.metric.skava.sync.activity.SyncMainActivity;
 import com.metric.skava.sync.dao.SyncLoggingDAO;
-import com.metric.skava.sync.dao.SyncLoggingDAOsqlLiteImpl;
 import com.metric.skava.sync.helper.SyncHelper;
 import com.metric.skava.sync.model.SyncLogEntry;
-import com.metric.skava.test.activity.HelloDropboxActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -91,9 +87,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                     .add(R.id.nav_drawer_main_layout_content_frame, new MainFragment(), FRAGMENT_HOME_MAIN_TAG)
                     .commit();
         }
-
     }
-
 
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
@@ -106,8 +100,37 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         mHomeMainFragment = (MainFragment)
                 getSupportFragmentManager().findFragmentByTag(FRAGMENT_HOME_MAIN_TAG);
     }
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        View view = this.findViewById(android.R.id.content);
+//        if (shouldUpdateAutomatically()) {
+//            view.post(new Runnable() {
+//                @Override
+//                public void run() {
+////                    showProgressBar(true, "Probando, probando", false);
+//                    setupDataModel();
+////                    showProgressBar(true, "Ya probe, probe", false);
+//                }
+//            });
+//        } else {
+//            assertDataAvailable();
+//        }
+        setupLinkToDropbox();
+        setupDataModel();
+    }
 
-    private void setupDataModel() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    private void setupLinkToDropbox() {
         if (dropboxNeverCalled && isNetworkAvailable()) {
             String message = getString(R.string.connecting_dropbox);
             showProgressBar(true, message, false);
@@ -130,25 +153,28 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 //                    mDatastore = mDatastoreManager.openDatastore(DatastoreHelper.APP_DATASTORE_NAME);
                     if (mDatastore == null) {
                         mDatastore = mDatastoreManager.openDefaultDatastore();
-                    } if (mFileSystem == null){
+                    }
+                    if (mFileSystem == null) {
                         mFileSystem = DbxFileSystem.forAccount(mAccount);
                     }
                     getSkavaContext().setDatastore(mDatastore);
                     getSkavaContext().setFileSystem(mFileSystem);
-
-                    if (shouldUpdateAutomatically()){
-                        UpdateDataModelTask task = new UpdateDataModelTask();
-                        task.execute();
-                    } else {
-                        assertDataAvailable();
-                    }
-                    mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
                 }
             } catch (DbxException e) {
+                e.printStackTrace();
                 Log.e(SkavaConstants.LOG, e.getMessage());
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-                e.printStackTrace();
+                showProgressBar(true, "Failed trying to connect to Dropbox.", false);
             }
+            showProgressBar(false, "It does not matter, right?", false);
+        }
+    }
+
+
+    private void setupDataModel(){
+        if (shouldUpdateAutomatically()) {
+            UpdateDataModelTask task = new UpdateDataModelTask();
+            task.execute();
         } else {
             if (assertNeverCalled) {
                 assertDataAvailable();
@@ -156,36 +182,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         }
     }
 
-
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        View view = this.findViewById(android.R.id.content);
-//        if (shouldUpdateAutomatically()) {
-//            view.post(new Runnable() {
-//                @Override
-//                public void run() {
-////                    showProgressBar(true, "Probando, probando", false);
-//                    setupDataModel();
-////                    showProgressBar(true, "Ya probe, probe", false);
-//                }
-//            });
-//        } else {
-//            assertDataAvailable();
-//        }
-        setupDataModel();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -205,7 +201,8 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 //                    mDatastore = mDatastoreManager.openDatastore(DatastoreHelper.APP_DATASTORE_NAME);
                     if (mDatastore == null) {
                         mDatastore = mDatastoreManager.openDefaultDatastore();
-                    } if (mFileSystem == null){
+                    }
+                    if (mFileSystem == null) {
                         mFileSystem = DbxFileSystem.forAccount(mAccount);
                     }
                     getSkavaContext().setDatastore(mDatastore);
@@ -238,219 +235,54 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     }
 
 
-    private void downloadAndPopulateDataModel() {
+    /*This will run under an AyncTask*/
+    private Long downloadAndPopulateGlobalDataModel() {
+        Long totalRecords = 0L;
+        DAOFactory daoFactory = getDAOFactory();
+        SyncHelper syncHelper = getSyncHelper();
         try {
-            DAOFactory daoFactory = getDAOFactory();
-            SyncHelper syncHelper = getSyncHelper();
-
             SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
-            if (syncHelper.downloadGlobalData()) {
+            try {
+                totalRecords += syncHelper.downloadGlobalData();
                 SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.GLOBAL, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS);
                 syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
                 getSkavaContext().getSyncMetadata().setGlobal(newSyncLogEntry);
-            }
-            if (syncHelper.downloadNonSpecificData()) {
-                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS);
+            } catch (DAOException daoe) {
+                Log.e(SkavaConstants.LOG, daoe.getMessage());
+                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.GLOBAL, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.FAIL);
                 syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
                 getSkavaContext().getSyncMetadata().setNonUserSpecific(newSyncLogEntry);
             }
-            dropboxNeverCalled = false;
         } catch (DAOException daoe) {
+            daoe.printStackTrace();
             Log.e(SkavaConstants.LOG, daoe.getMessage());
-//            Toast.makeText(this, daoe.getMessage(), Toast.LENGTH_LONG).show();
         }
-
+        return totalRecords;
     }
 
-
-    private void onDropboxFailed() {
-        Toast.makeText(this, "Dropbox linking cancelled by user or failed.", Toast.LENGTH_LONG).show();
-        if (assertNeverCalled) {
-            assertDataAvailable();
-        }
-        Log.d(SkavaConstants.LOG, "Dropbox linking cancelled by user or failed.");
-    }
-
-    public void insertGlobalEmergencyData() throws DAOException {
+    /*This will run under an AyncTask*/
+    private Long downloadAndPopulateUserRelatedDataModel() {
+        Long totalRecords = 0L;
         DAOFactory daoFactory = getDAOFactory();
-        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
-        SQLiteDatabase dbConn = ((SyncLoggingDAOsqlLiteImpl) syncLoggingDAO).getDBConnection();
-        SkavaDBHelper.insertDefaultData(dbConn);
-        SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.GLOBAL, SyncLogEntry.Source.DEFAULT, SyncLogEntry.Status.SUCCESS);
-        syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
-    }
-
-    public void insertNonSpecificEmergencyData() throws DAOException {
-        DAOFactory daoFactory = getDAOFactory();
-        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
-        SQLiteDatabase dbConn = ((SyncLoggingDAOsqlLiteImpl) syncLoggingDAO).getDBConnection();
-        SkavaDBHelper.insertDefaultData(dbConn);
-        SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Source.DEFAULT, SyncLogEntry.Status.SUCCESS);
-        syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
-    }
-
-
-    private void assertDataAvailable() {
-
-        SyncLogEntry lastGlobalData = getSkavaContext().getSyncMetadata().getGlobal();
-        SyncLogEntry lastNonSpecificData = getSkavaContext().getSyncMetadata().getGlobal();
-
-        if (lastGlobalData == null) {
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
             try {
-                insertGlobalEmergencyData();
-                Log.d(SkavaConstants.LOG, "Using emergency data. Use of appliaction on this state is discouraged as data could be outdated and corrupted . !!");
-                Toast.makeText(this, "Using emergency data. Use of appliaction on this state is discouraged as data could be outdated and corrupted. ", Toast.LENGTH_LONG).show();
+                totalRecords += syncHelper.downloadUserRelatedData();
+                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS);
+                syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
+                getSkavaContext().getSyncMetadata().setNonUserSpecific(newSyncLogEntry);
             } catch (DAOException daoe) {
-                Toast.makeText(this, daoe.getMessage(), Toast.LENGTH_LONG).show();
                 Log.e(SkavaConstants.LOG, daoe.getMessage());
+                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.FAIL);
+                syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
+                getSkavaContext().getSyncMetadata().setNonUserSpecific(newSyncLogEntry);
             }
-        } else {
-            if (lastGlobalData.getSource().equals(SyncLogEntry.Source.DROPBOX)) {
-                Log.d(SkavaConstants.LOG, "Using global data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()));
-                Toast.makeText(this, "Using global data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()), Toast.LENGTH_LONG).show();
-            }
-            if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DEFAULT)) {
-                Log.d(SkavaConstants.LOG, "Operating on previous emergency data created on  " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()));
-                Toast.makeText(this, "Operating on previous emergency data created on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()), Toast.LENGTH_LONG).show();
-            }
+        } catch (DAOException daoe) {
+            daoe.printStackTrace();
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
         }
-
-        if (lastNonSpecificData == null) {
-            try {
-                insertNonSpecificEmergencyData();
-                Log.d(SkavaConstants.LOG, "Using emergency data. No internet nor local data. Sorry !!");
-                Toast.makeText(this, "Using emergency data. No internet nor local data. Sorry ", Toast.LENGTH_LONG).show();
-            } catch (DAOException daoe) {
-                Toast.makeText(this, daoe.getMessage(), Toast.LENGTH_LONG).show();
-                Log.e(SkavaConstants.LOG, daoe.getMessage());
-            }
-        } else {
-            if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DROPBOX)) {
-                Log.d(SkavaConstants.LOG, "Using non specific data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()));
-                Toast.makeText(this, "Using non specific data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()), Toast.LENGTH_LONG).show();
-            }
-            if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DEFAULT)) {
-                Log.d(SkavaConstants.LOG, "Operating on previous emergency data created on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()));
-                Toast.makeText(this, "Operating on previous emergency datacreated on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()), Toast.LENGTH_LONG).show();
-            }
-        }
-        assertNeverCalled = false;
-    }
-
-
-    @Override
-    protected NavDrawerActivityConfiguration getNavDrawerConfiguration() {
-
-        List<NavDrawerItem> menuAsList = new ArrayList<NavDrawerItem>();
-        menuAsList.add(NavMenuSection.create(NAV_MENU_SKAVA_SECTION_ID, "Skava Apps"));
-        menuAsList.add(NavMenuItem.create(NAV_MENU_LOGIN_ITEM_ID, getString(R.string.login_label), "ic_menu_copy_holo_dark", true, true, this));
-
-        User loggedUser = getSkavaContext().getLoggedUser();
-        if (loggedUser != null) {
-            Role geologist = new Role("GEOLOGIST", "Geologist");
-            Role admin = new Role("ADMINISTRATOR", "Administrator");
-            Role metricAdmin = new Role("METRICADMIN", "MetricAdmin");
-            if (loggedUser.hasRole(geologist) || loggedUser.hasRole(admin) || loggedUser.hasRole(metricAdmin)) {
-                menuAsList.remove(1);
-                menuAsList.add(NavMenuItem.create(NAV_MENU_FACE_MAPPING_ITEM_ID, "Face Mappings","ic_menu_copy_holo_dark", true, true, this));
-            }
-            if (loggedUser.hasRole(admin) ||  loggedUser.hasRole(metricAdmin)) {
-                menuAsList.add(NavMenuSection.create(NAV_MENU_ADMIN_SECTION_ID, "Admin"));
-                menuAsList.add(NavMenuItem.create(NAV_MENU_FILESYSTEM_ITEM_ID, "Dropbox with files", "ic_menu_copy_holo_dark", true, true, this));
-                menuAsList.add(NavMenuItem.create(NAV_MENU_SYNC_ITEM_ID, "Sync admin", "ic_menu_copy_holo_dark", true, true, this));
-            }
-        }
-        menuAsList.add(NavMenuSection.create(NAV_MENU_GENERAL_SECTION_ID, "General"));
-        menuAsList.add(NavMenuItem.create(NAV_MENU_SETTINGS_ITEM_ID, getString(R.string.settings_label), "ic_action_overflow", true, true, this));
-        menuAsList.add(NavMenuItem.create(NAV_MENU_ABOUT_ITEM_ID, getString(R.string.about_label), "ic_action_overflow", true, true, this));
-        NavDrawerItem[] menuAsArray = menuAsList.toArray(new NavDrawerItem[]{});
-
-        NavDrawerActivityConfiguration navDrawerConfig = new NavDrawerActivityConfiguration();
-        navDrawerConfig.setMainLayout(R.layout.nav_drawer_main_layout);
-        navDrawerConfig.setDrawerLayoutId(R.id.nav_drawer_main_layout_drawer_layout);
-        navDrawerConfig.setLeftDrawerId(R.id.nav_drawer_main_layout_left_drawer);
-        navDrawerConfig.setNavItems(menuAsArray);
-        navDrawerConfig.setDrawerShadow(R.drawable.drawer_shadow);
-        navDrawerConfig.setDrawerOpenDesc(R.string.drawer_open);
-        navDrawerConfig.setDrawerCloseDesc(R.string.drawer_close);
-        navDrawerConfig.setBaseAdapter(new NavDrawerAdapter(this, R.layout.nav_drawer_item, menuAsArray));
-        navDrawerConfig.setDrawerIcon(R.drawable.apptheme_ic_navigation_drawer);
-        return navDrawerConfig;
-    }
-
-    @Override
-    protected void onNavItemSelected(int id) {
-        Intent intent;
-        switch (id) {
-            case NAV_MENU_LOGIN_ITEM_ID:
-                intent = new Intent(this, LoginMainActivity.class);
-                intent.putExtra(LoginMainActivity.EXTRA_USERNAME, "geologist1");
-                startActivity(intent);
-                break;
-            case NAV_MENU_FACE_MAPPING_ITEM_ID:
-                intent = new Intent(this, AssessmentsListActivity.class);
-                startActivity(intent);
-                break;
-            case NAV_MENU_SYNC_ITEM_ID:
-                intent = new Intent(this, SyncMainActivity.class);
-                startActivity(intent);
-                break;
-            case NAV_MENU_FILESYSTEM_ITEM_ID:
-                intent = new Intent(this, HelloDropboxActivity.class);
-                startActivity(intent);
-                break;
-            case NAV_MENU_SETTINGS_ITEM_ID:
-                intent = new Intent(this, SettingsMainActivity.class);
-                startActivity(intent);
-                break;
-            case NAV_MENU_ABOUT_ITEM_ID:
-                intent = new Intent(this, AboutMainActivity.class);
-                startActivity(intent);
-                break;
-        }
-    }
-
-
-    public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-
-    public void onClick(View v) {
-        new UpdateDataModelTask().execute();
-    }
-
-    public class UpdateDataModelTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            downloadAndPopulateDataModel();
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //mostrar que va a empezar
-            String message = getString(R.string.syncing_progress);
-            showProgressBar(true, message, true);
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-            //mostrar avance
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            //mostrar que termino
-            showProgressBar(false, "Finished", false);
-        }
-
+        return totalRecords;
     }
 
     /**
@@ -480,6 +312,168 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             // and hide the relevant UI components.
             mHomeMainFragment.getSyncingStatusView().setVisibility(show ? View.VISIBLE : View.GONE);
         }
+    }
+
+
+    private void onDropboxFailed() {
+        Toast.makeText(this, "Dropbox linking cancelled by user or failed.", Toast.LENGTH_LONG).show();
+        if (assertNeverCalled) {
+            assertDataAvailable();
+        }
+        Log.d(SkavaConstants.LOG, "Dropbox linking cancelled by user or failed.");
+    }
+
+
+    private void assertDataAvailable() {
+
+        SyncLogEntry lastGlobalData = getSkavaContext().getSyncMetadata().getGlobal();
+        SyncLogEntry lastNonSpecificData = getSkavaContext().getSyncMetadata().getGlobal();
+
+        if (lastGlobalData == null) {
+            Log.d(SkavaConstants.LOG, "Skava Mobile needs to connect to Internet in order to load an set of initial data.!!");
+            Toast.makeText(this, "Skava Mobile needs to connect to Internet in order to load an set of initial data. Please find an Internet connection !!", Toast.LENGTH_LONG).show();
+        } else {
+            if (lastGlobalData.getSource().equals(SyncLogEntry.Source.DROPBOX)) {
+                Log.d(SkavaConstants.LOG, "Using master data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()));
+                Toast.makeText(this, "Using master data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()), Toast.LENGTH_LONG).show();
+            }
+            if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DEFAULT)) {
+                Log.d(SkavaConstants.LOG, "Operating on previous emergency data created on  " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()));
+                Toast.makeText(this, "Operating on previous emergency data created on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()), Toast.LENGTH_LONG).show();
+            }
+        }
+
+        if (lastNonSpecificData == null) {
+            Log.d(SkavaConstants.LOG, "Skava Mobile needs to connect to Internet in order to load an set of initial data.!!");
+            Toast.makeText(this, "Skava Mobile needs to connect to Internet in order to load an set of initial data. Please find an Internet connection !!", Toast.LENGTH_LONG).show();
+
+        } else {
+            if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DROPBOX)) {
+                Log.d(SkavaConstants.LOG, "Using non specific data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()));
+                Toast.makeText(this, "Using non specific data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()), Toast.LENGTH_LONG).show();
+            }
+            if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DEFAULT)) {
+                Log.d(SkavaConstants.LOG, "Operating on previous emergency data created on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()));
+                Toast.makeText(this, "Operating on previous emergency datacreated on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()), Toast.LENGTH_LONG).show();
+            }
+        }
+        assertNeverCalled = false;
+    }
+
+    @Override
+    protected NavDrawerActivityConfiguration getNavDrawerConfiguration() {
+
+        List<NavDrawerItem> menuAsList = new ArrayList<NavDrawerItem>();
+        menuAsList.add(NavMenuSection.create(NAV_MENU_SKAVA_SECTION_ID, "Skava Apps"));
+        menuAsList.add(NavMenuItem.create(NAV_MENU_LOGIN_ITEM_ID, getString(R.string.login_label), "ic_menu_copy_holo_dark", true, true, this));
+
+        User loggedUser = getSkavaContext().getLoggedUser();
+        if (loggedUser != null) {
+            Role geologist = new Role("GEOLOGIST", "Geologist");
+            Role admin = new Role("ADMINISTRATOR", "Administrator");
+            Role metricAdmin = new Role("METRICADMIN", "MetricAdmin");
+            if (loggedUser.hasRole(geologist) || loggedUser.hasRole(admin) || loggedUser.hasRole(metricAdmin)) {
+                menuAsList.remove(1);
+                menuAsList.add(NavMenuItem.create(NAV_MENU_FACE_MAPPING_ITEM_ID, "Face Mappings", "ic_menu_copy_holo_dark", true, true, this));
+            }
+            if (loggedUser.hasRole(admin) || loggedUser.hasRole(metricAdmin)) {
+                menuAsList.add(NavMenuSection.create(NAV_MENU_ADMIN_SECTION_ID, "Admin"));
+                menuAsList.add(NavMenuItem.create(NAV_MENU_FILESYSTEM_ITEM_ID, "Dropbox with files", "ic_menu_copy_holo_dark", true, true, this));
+                menuAsList.add(NavMenuItem.create(NAV_MENU_SYNC_ITEM_ID, "Sync admin", "ic_menu_copy_holo_dark", true, true, this));
+            }
+        }
+        menuAsList.add(NavMenuSection.create(NAV_MENU_GENERAL_SECTION_ID, "General"));
+        menuAsList.add(NavMenuItem.create(NAV_MENU_SETTINGS_ITEM_ID, getString(R.string.settings_label), "ic_action_overflow", true, true, this));
+        menuAsList.add(NavMenuItem.create(NAV_MENU_ABOUT_ITEM_ID, getString(R.string.about_label), "ic_action_overflow", true, true, this));
+        NavDrawerItem[] menuAsArray = menuAsList.toArray(new NavDrawerItem[]{});
+
+        NavDrawerActivityConfiguration navDrawerConfig = new NavDrawerActivityConfiguration();
+        navDrawerConfig.setMainLayout(R.layout.nav_drawer_main_layout);
+        navDrawerConfig.setDrawerLayoutId(R.id.nav_drawer_main_layout_drawer_layout);
+        navDrawerConfig.setLeftDrawerId(R.id.nav_drawer_main_layout_left_drawer);
+        navDrawerConfig.setNavItems(menuAsArray);
+        navDrawerConfig.setDrawerShadow(R.drawable.drawer_shadow);
+        navDrawerConfig.setDrawerOpenDesc(R.string.drawer_open);
+        navDrawerConfig.setDrawerCloseDesc(R.string.drawer_close);
+        navDrawerConfig.setBaseAdapter(new NavDrawerAdapter(this, R.layout.nav_drawer_item, menuAsArray));
+        navDrawerConfig.setDrawerIcon(R.drawable.apptheme_ic_navigation_drawer);
+        return navDrawerConfig;
+    }
+
+
+    @Override
+    protected void onNavItemSelected(int id) {
+        Intent intent;
+        switch (id) {
+            case NAV_MENU_LOGIN_ITEM_ID:
+                intent = new Intent(this, LoginMainActivity.class);
+                intent.putExtra(LoginMainActivity.EXTRA_USERNAME, "geologist1");
+                startActivity(intent);
+                break;
+            case NAV_MENU_FACE_MAPPING_ITEM_ID:
+                intent = new Intent(this, AssessmentsListActivity.class);
+                startActivity(intent);
+                break;
+            case NAV_MENU_SYNC_ITEM_ID:
+                intent = new Intent(this, SyncMainActivity.class);
+                startActivity(intent);
+                break;
+            case NAV_MENU_SETTINGS_ITEM_ID:
+                intent = new Intent(this, SettingsMainActivity.class);
+                startActivity(intent);
+                break;
+            case NAV_MENU_ABOUT_ITEM_ID:
+                intent = new Intent(this, AboutMainActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
+
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public void onClick(View v) {
+        new UpdateDataModelTask().execute();
+    }
+    public class UpdateDataModelTask extends AsyncTask<Void, Long, Long> {
+
+        @Override
+        protected Long doInBackground(Void... params) {
+            Long numRecordsCreated = downloadAndPopulateGlobalDataModel();
+            publishProgress(numRecordsCreated);
+            numRecordsCreated+=downloadAndPopulateUserRelatedDataModel();
+            return numRecordsCreated;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            String message = getString(R.string.syncing_progress);
+            Toast.makeText(HomeMainActivity.this, "Data load starting ...", Toast.LENGTH_LONG);
+            showProgressBar(true, message, true);
+        }
+
+        @Override
+        protected void onProgressUpdate(Long... progress) {
+//            super.onProgressUpdate(progress);
+            //mostrar avance
+            showProgressBar(true, String.valueOf(progress), true);
+        }
+
+        @Override
+        protected void onPostExecute(Long result) {
+//            super.onPostExecute(result);
+            //mostrar que termino
+            dropboxNeverCalled = false;
+            Toast.makeText(HomeMainActivity.this, "Load succesfully finished", Toast.LENGTH_LONG);
+            showProgressBar(false, "Finished", false);
+            mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+        }
+
     }
 
     //    @Override

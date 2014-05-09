@@ -65,6 +65,7 @@ import com.metric.skava.instructions.model.SupportRecomendation;
 import com.metric.skava.pictures.util.SkavaFilesUtils;
 import com.metric.skava.rockmass.model.FractureType;
 import com.metric.skava.rocksupport.model.ESR;
+import com.metric.skava.rocksupport.model.SupportRequirement;
 
 import java.io.File;
 import java.io.IOException;
@@ -132,7 +133,9 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             assessmentFields.set("code", code);
 
             String internalCode = assessment.getInternalCode();
-            assessmentFields.set("skavaInternalCode", internalCode);
+            if (internalCode != null) {
+                assessmentFields.set("skavaInternalCode", internalCode);
+            }
 
             ExcavationProject project = assessment.getProject();
             if (SkavaUtils.isDefined(project)) {
@@ -225,7 +228,6 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             }
 
             List<Uri> pictureList = assessment.getPictureUriList();
-            //TODO Check the toString/parse methods or encode/decode to persist the URI info
             DbxList uriEncodedList = new DbxList();
             for (Uri uri : pictureList) {
                 if (uri != null) {
@@ -331,6 +333,11 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
 
                 supportRecommendationFields.set("assessmentCode", assessment.getCode());
 
+                SupportRequirement base = recomendation.getRequirementBase();
+                if (base != null) {
+                supportRecommendationFields.set("supportRequirementBaseCode", base.getCode());
+                }
+
                 BoltType boltType = recomendation.getBoltType();
                 if (boltType != null) {
                     supportRecommendationFields.set("boltTypeCode", boltType.getCode());
@@ -349,13 +356,15 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 SupportPattern roofPattern = recomendation.getRoofPattern();
                 if (roofPattern != null) {
                     supportRecommendationFields.set("roofPatternTypeCode", roofPattern.getType().getCode());
-                    supportRecommendationFields.set("roofPattern", roofPattern.getPattern());
+                    supportRecommendationFields.set("roofPatternDx", roofPattern.getDistanceX());
+                    supportRecommendationFields.set("roofPatternDy", roofPattern.getDistanceY());
                 }
 
                 SupportPattern wallPattern = recomendation.getWallPattern();
                 if (wallPattern != null) {
                     supportRecommendationFields.set("wallPatternTypeCode", wallPattern.getType().getCode());
-                    supportRecommendationFields.set("wallPattern", wallPattern.getPattern());
+                    supportRecommendationFields.set("wallPatternDx", wallPattern.getDistanceX());
+                    supportRecommendationFields.set("wallPatternDy", wallPattern.getDistanceY());
                 }
 
                 ShotcreteType shotcreteType = recomendation.getShotcreteType();
@@ -467,10 +476,13 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 DbxFields qCalculationFields = new DbxFields();
                 qCalculationFields.set("assessmentCode", assessment.getCode());
 
-                ESR esr = tunnel.getExcavationFactors().getEsr();
-                if (esr != null) {
-                    qCalculationFields.set("esr", esr.getCode());
+                if (tunnel != null) {
+                    ESR esr = tunnel.getExcavationFactors().getEsr();
+                    if (esr != null) {
+                        qCalculationFields.set("esr", esr.getCode());
+                    }
                 }
+
                 //rockQualityCode
                 RockQuality quality = qCalculation.getQResult().getRockQuality();
                 if (quality != null) {

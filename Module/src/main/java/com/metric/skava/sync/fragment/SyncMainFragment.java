@@ -31,12 +31,7 @@ import com.metric.skava.data.adapter.TunnelFaceListViewAdapter;
 import com.metric.skava.data.adapter.TunnelListViewAdapter;
 import com.metric.skava.data.adapter.UserListViewAdapter;
 import com.metric.skava.data.dao.DAOFactory;
-import com.metric.skava.data.dao.LocalClientDAO;
-import com.metric.skava.data.dao.LocalExcavationProjectDAO;
-import com.metric.skava.data.dao.LocalRoleDAO;
-import com.metric.skava.data.dao.LocalTunnelDAO;
 import com.metric.skava.data.dao.LocalTunnelFaceDAO;
-import com.metric.skava.data.dao.LocalUserDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 
 import java.util.List;
@@ -61,12 +56,9 @@ public class SyncMainFragment extends SkavaFragment {
     private TunnelListViewAdapter tunnelListViewAdapter;
     private TunnelFaceListViewAdapter facesListViewAdapter;
     private LayoutInflater mInflater;
-    private LocalClientDAO clientsDAO;
+
     private LocalTunnelFaceDAO facesDAO;
-    private LocalRoleDAO rolesDAO;
-    private LocalTunnelDAO tunnelsDAO;
-    private LocalExcavationProjectDAO projectsDAO;
-    private LocalUserDAO usersDAO;
+
 
     public SyncMainFragment() {
     }
@@ -258,11 +250,6 @@ public class SyncMainFragment extends SkavaFragment {
         switch (menuItem.getItemId()) {
             case R.id.action_clear_tables:
                 try {
-                    clientsDAO.deleteAllClients();
-                    rolesDAO.deleteAllRoles();
-                    usersDAO.deleteAllUsers();
-                    projectsDAO.deleteAllExcavationProjects();
-                    tunnelsDAO.deleteAllTunnels();
                     facesDAO.deleteAllTunnelFaces();
                     refreshListViews();
                 } catch (DAOException e) {
@@ -279,22 +266,6 @@ public class SyncMainFragment extends SkavaFragment {
         assessmentListViewAdapter.clear();
         assessmentListViewAdapter.addAll(daoFactory.getLocalAssessmentDAO().getAllAssessments());
         assessmentListViewAdapter.notifyDataSetChanged();
-
-        roleListViewAdapter.clear();
-        roleListViewAdapter.addAll(rolesDAO.getAllRoles());
-        roleListViewAdapter.notifyDataSetChanged();
-
-        userListViewAdapter.clear();
-        userListViewAdapter.addAll(usersDAO.getAllUsers());
-        userListViewAdapter.notifyDataSetChanged();
-
-        projectListAdapter.clear();
-        projectListAdapter.addAll(projectsDAO.getAllExcavationProjects());
-        projectListAdapter.notifyDataSetChanged();
-
-        tunnelListViewAdapter.clear();
-        tunnelListViewAdapter.addAll(tunnelsDAO.getAllTunnels());
-        tunnelListViewAdapter.notifyDataSetChanged();
 
         facesListViewAdapter.clear();
         facesListViewAdapter.addAll(facesDAO.getAllTunnelFaces());

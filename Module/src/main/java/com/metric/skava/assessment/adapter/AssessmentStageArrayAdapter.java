@@ -21,13 +21,12 @@ public class AssessmentStageArrayAdapter extends ArrayAdapter<AssessmentStage> {
         super(context, resource, textViewResourceId, objects);
         //true mientras que hago algo mejor para el enable disable
         mContext = context;
-        mActivateAllStages = true;
+        mActivateAllStages = false;
     }
 
     @Override
     public boolean areAllItemsEnabled() {
-//        return false;
-        return true;
+        return false;
     }
 
     @Override

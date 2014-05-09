@@ -7,7 +7,6 @@ import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxRecord;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.Tunnel;
-import com.metric.skava.calculator.barton.model.RockQuality;
 import com.metric.skava.data.dao.LocalArchTypeDAO;
 import com.metric.skava.data.dao.LocalBoltTypeDAO;
 import com.metric.skava.data.dao.LocalCoverageDAO;
@@ -75,21 +74,22 @@ public class SupportRequirementDAODropboxImpl extends DropBoxBaseDAO implements 
             for (DbxRecord currentSupportRequirementRecord : supporRequirementsList) {
                 String codigo = currentSupportRequirementRecord.getString("SupportId");
                 String tunnelCode = currentSupportRequirementRecord.getString("TUNNEL_CODE");
-                Double spanEsrLowerBound = currentSupportRequirementRecord.getDouble("SPAN_ESR_RATIO_LOWER");
-                Double spanEsrUpperBound = currentSupportRequirementRecord.getDouble("SPAN_ESR_RATIO_UPPER");
-                String rockQualityCode = currentSupportRequirementRecord.getString("ROCK_QUALITY_CODE");
+                //TODO The name of this Rock classification column To be defined ..
+                String name = "PENDING";
+                Double lowerQ = 0d;
+                Double upperQ = 100d;
+//                Double lowerQ = currentSupportRequirementRecord.getDouble("Q_LOWER_BOUNDARY");
+//                Double upperQ = currentSupportRequirementRecord.getDouble("Q_UPPER_BOUNDARY");
+//                String name = currentSupportRequirementRecord.getString("NAME");
                 String boltTypeCode = currentSupportRequirementRecord.getString("BOLT_TYPE_CODE");
                 Double boltDiameter = currentSupportRequirementRecord.getDouble("BOLT_DIAMETER");
                 Double boltLength = currentSupportRequirementRecord.getDouble("BOLT_LENGTH");
                 String wallPatternTypeCode = currentSupportRequirementRecord.getString("PatternWallType");
                 Double wallDx = currentSupportRequirementRecord.getDouble("PatternWall_dx");
                 Double wallDy = currentSupportRequirementRecord.getDouble("PatternWall_dy");
-                String wallPatternDesc = wallDx + " x " + wallDy;
+                String roofPatternTypeCode = currentSupportRequirementRecord.getString("PatternRoofType");
                 Double roofDx = currentSupportRequirementRecord.getDouble("PatternRoof_dx");
                 Double roofDy = currentSupportRequirementRecord.getDouble("PatternRoof_dy");
-                String roofPatternDesc = roofDx + " x " + roofDy;
-                String roofPatternTypeCode = currentSupportRequirementRecord.getString("PatternRoofType");
-
                 String shotcreteTypeCode = currentSupportRequirementRecord.getString("SHOTCRETE_TYPE");
                 Double thickness = currentSupportRequirementRecord.getDouble("THICKNESS");
                 String meshTypeCode = currentSupportRequirementRecord.getString("MESH_TYPE");
@@ -98,21 +98,20 @@ public class SupportRequirementDAODropboxImpl extends DropBoxBaseDAO implements 
                 Double separation = currentSupportRequirementRecord.getDouble("SEPARATION");
 
                 Tunnel tunnel = tunnelDAO.getTunnelByUniqueCode(tunnelCode);
-                RockQuality rockQuality = rockQualityDAO.getRockQualityByCode(rockQualityCode);
+
                 BoltType boltType = boltTypeDAO.getBoltTypeByCode(boltTypeCode);
                 SupportPatternType roofPatternType = supportPatternTypeDAO.getSupportPatternTypeByCode(roofPatternTypeCode);
                 SupportPatternType wallPatternType = supportPatternTypeDAO.getSupportPatternTypeByCode(wallPatternTypeCode);
-                SupportPattern roofPattern = new SupportPattern(roofPatternType, roofPatternDesc);
-                SupportPattern wallPattern = new SupportPattern(wallPatternType, wallPatternDesc);
+                SupportPattern roofPattern = new SupportPattern(roofPatternType, roofDx, roofDy);
+                SupportPattern wallPattern = new SupportPattern(wallPatternType, wallDx, wallDy);
                 ShotcreteType shotcreteType = shotcreteTypeDAO.getShotcreteTypeByCode(shotcreteTypeCode);
                 MeshType meshType = meshTypeDAO.getMeshTypeByCode(meshTypeCode);
                 Coverage coverage = coverageDAO.getCoverageByCode(coverageCode);
                 ArchType archType = archTypeDAO.getArchTypeByCode(archTypeCode);
 
-                SupportRequirement newSupportRequirement = new SupportRequirement(tunnel);
-                newSupportRequirement.setSpanOverESRLower(spanEsrLowerBound);
-                newSupportRequirement.setSpanOverESRUpper(spanEsrUpperBound);
-                newSupportRequirement.setRockQuality(rockQuality);
+                SupportRequirement newSupportRequirement = new SupportRequirement(tunnel, codigo, name);
+                newSupportRequirement.setqBartonLowerBoundary(lowerQ);
+                newSupportRequirement.setqBartonUpperBoundary(upperQ);
                 newSupportRequirement.setBoltType(boltType);
                 newSupportRequirement.setDiameter(boltDiameter);
                 newSupportRequirement.setLength(boltLength);

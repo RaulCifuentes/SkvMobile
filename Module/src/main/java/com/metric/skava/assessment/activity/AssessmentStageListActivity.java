@@ -3,7 +3,6 @@ package com.metric.skava.assessment.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,7 +17,6 @@ import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.assessment.data.AssesmentStageDataProvider;
-import com.metric.skava.assessment.dialog.ExistingAssessmentDialog;
 import com.metric.skava.assessment.fragment.AssessmentStageListFragment;
 import com.metric.skava.calculator.barton.activity.QBartonCalculatorDetailActivity;
 import com.metric.skava.calculator.barton.fragment.QBartonCalculatorMainFragment;
@@ -55,7 +53,7 @@ import com.metric.skava.rockmass.fragment.RockMassDescriptionMainFragment;
  * to listen for item selections.
  */
 public class AssessmentStageListActivity extends SkavaFragmentActivity
-        implements AssessmentStageListFragment.StageSelectionCallback, IdentificationMainFragment.IdentificationCompletedListener, ExistingAssessmentDialog.LoadAssessmentDialogListener {
+        implements AssessmentStageListFragment.StageSelectionCallback, IdentificationMainFragment.TunnelFaceIdentificationListener {
 
     private static final String SHOW_LOAD_ASSESSMENT_DIALOG_TAG = "SHOW_LOAD_ASSESSMENT_DIALOG";
 
@@ -115,7 +113,10 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
         Intent intent = getIntent();
         isRedirected = intent.getBooleanExtra("REDIRECT", false);
         if (isRedirected) {
+            //I want to go back directly to pictures
             onItemSelected(AssesmentStageDataProvider.PICS);
+            //And I want to have the stages items enabled
+            onTunelFaceIdentified();
         }
     }
 
@@ -219,30 +220,6 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
                 fx.commit();
                 return;
             }
-
-//            if (id.equalsIgnoreCase(AssesmentStageDataProvider.ROCK_SUPPORT)) {
-//                FragmentManager fragmentManager = getSupportFragmentManager();
-//                FragmentTransaction fx = fragmentManager.beginTransaction();
-//                Fragment previous = getSupportFragmentManager().findFragmentById(R.id.stage_detail_container);
-//                if (previous != null) {
-//                    fx.detach(previous);
-//                }
-//                //use the previous fragment if there is one
-//                Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_ROCK_SUPPORT_STAGE_TAG);
-//                RockSupportMainFragment rockSupportFragment;
-//                if (fragment != null) {
-//                    rockSupportFragment = (RockSupportMainFragment) fragment;
-//                    fx.attach(rockSupportFragment);
-//                } else {
-//                    Bundle arguments = new Bundle();
-//                    arguments.putString(RockSupportMainFragment.ARG_BASKET_ID, id);
-//                    rockSupportFragment = new RockSupportMainFragment();
-//                    rockSupportFragment.setArguments(arguments);
-//                    fx.add(R.id.stage_detail_container, rockSupportFragment, FRAGMENT_ROCK_SUPPORT_STAGE_TAG);
-//                }
-//                fx.commit();
-//                return;
-//            }
 
             if (id.equalsIgnoreCase(AssesmentStageDataProvider.RMR)) {
                 FragmentTransaction fx = getSupportFragmentManager().beginTransaction();
@@ -352,28 +329,7 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
 //                return;
             }
 
-//            if (id.equalsIgnoreCase(AssesmentStageDataProvider.SAVE)) {
-//                FragmentTransaction fx = getSupportFragmentManager().beginTransaction();
-//                Fragment previous = getSupportFragmentManager().findFragmentById(R.id.stage_detail_container);
-//                if (previous != null) {
-//                    fx.detach(previous);
-//                }
-//                //use the previous fragment if there is one
-//                Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_SAVE_STAGE_TAG);
-//                SaveAssessmentMainFragment saveAssessmentFragment;
-//                if (fragment != null) {
-//                    saveAssessmentFragment = (SaveAssessmentMainFragment) fragment;
-//                    fx.attach(saveAssessmentFragment);
-//                } else {
-//                    saveAssessmentFragment = new SaveAssessmentMainFragment();
-//                    Bundle arguments = new Bundle();
-//                    arguments.putString(SaveAssessmentMainFragment.ARG_BASKET_ID, id);
-//                    saveAssessmentFragment.setArguments(arguments);
-//                    fx.add(R.id.stage_detail_container, saveAssessmentFragment, FRAGMENT_SAVE_STAGE_TAG);
-//                }
-//                fx.commit();
-//                return;
-//            }
+
 
 
         } else {
@@ -400,13 +356,6 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
                 return;
             }
 
-
-//            if (id.equalsIgnoreCase(AssesmentStageDataProvider.ROCK_SUPPORT)) {
-//                Intent detailIntent = new Intent(this, RockSupportMainActivity.class);
-//                detailIntent.putExtra(RockSupportMainFragment.ARG_BASKET_ID, id);
-//                startActivity(detailIntent);
-//                return;
-//            }
 
             if (id.equalsIgnoreCase(AssesmentStageDataProvider.RMR)) {
                 Intent detailIntent = new Intent(this, RMRCalculatorDetailActivity.class);
@@ -449,27 +398,19 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
 
 
     @Override
-    public void onIdentificationCompleted() {
+    public void onTunelFaceIdentified() {
         AssessmentStageListFragment assessmentStageListFragment = (AssessmentStageListFragment)
                 getSupportFragmentManager().findFragmentById(R.id.stage_list);
-        assessmentStageListFragment.enableAllStages();
+        assessmentStageListFragment.enableAllStages(true);
     }
 
-
-    public void showLoadAssessmentDialog() {
-        // Create an instance of the dialog fragment and show it
-        DialogFragment dialog = new ExistingAssessmentDialog(this);
-        dialog.show(getSupportFragmentManager(), SHOW_LOAD_ASSESSMENT_DIALOG_TAG);
-    }
-
-    // The dialog fragment receives a reference to this Activity through the
-    // Fragment.onAttach() callback, which it uses to call the following methods
-    // defined by the NoticeDialogFragment.NoticeDialogListener interface
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-        // User touched the dialog's positive button
-
+    public void onTunelFaceNotIdentified() {
+        AssessmentStageListFragment assessmentStageListFragment = (AssessmentStageListFragment)
+                getSupportFragmentManager().findFragmentById(R.id.stage_list);
+        assessmentStageListFragment.enableAllStages(false);
     }
+
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == DatastoreHelper.REQUEST_LINK_TO_DROPBOX) {

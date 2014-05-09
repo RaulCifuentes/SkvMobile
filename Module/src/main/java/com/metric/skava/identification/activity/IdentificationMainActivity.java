@@ -8,7 +8,7 @@ import com.metric.skava.R;
 import com.metric.skava.app.activity.SkavaFragmentActivity;
 import com.metric.skava.identification.fragment.IdentificationMainFragment;
 
-public class IdentificationMainActivity extends SkavaFragmentActivity implements IdentificationMainFragment.IdentificationCompletedListener {
+public class IdentificationMainActivity extends SkavaFragmentActivity implements IdentificationMainFragment.TunnelFaceIdentificationListener {
 
 
     @Override
@@ -46,9 +46,14 @@ public class IdentificationMainActivity extends SkavaFragmentActivity implements
 
 
     @Override
-    public void onIdentificationCompleted() {
+    public void onTunelFaceIdentified() {
         //activated (enable) the assessmentStages beyond Identification
-        //TODO how to navigate Up to the activity that fires me (AssessmentStageListActivity) to delegate the handling of this method?
-
+        //TODO navigate Up to the activity that fires me (AssessmentStageListActivity) to delegate the handling of this method?
     }
+    @Override
+    public void onTunelFaceNotIdentified() {
+        //activated (enable) the assessmentStages beyond Identification
+        //TODO navigate Up to the activity that fires me (AssessmentStageListActivity) to delegate the handling of this method?
+    }
+
 }

@@ -10,4 +10,7 @@
     <string name="instructions_bolt_length_label">Bolt Length (m)</string>
     <string name="instructions_bolt_diameter_label">Bolt Diameter (mm)</string>
     <string name="instructions_bolt_type_label">Bolt Type</string>
+    <string name="instructions_wall_pattern_label">Wall Pattern</string>
+    <string name="instructions_roof_pattern_label">Roof Pattern</string>
+
 </resources>

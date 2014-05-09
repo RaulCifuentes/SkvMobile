@@ -50,10 +50,10 @@ public class AssessmentTable extends SkavaTable {
             ASSESSMENT_DATABASE_TABLE + " (" + GLOBAL_KEY_ID +
             " integer primary key autoincrement, " +
             CODE_COLUMN + " text not null, " +
-            INTERNAL_CODE_COLUMN + " text not null, " +
-            GEOLOGIST_CODE_COLUMN + " text not null, " +
+            INTERNAL_CODE_COLUMN + " text null, " +
+            GEOLOGIST_CODE_COLUMN + " text null, " +
             TUNEL_FACE_CODE_COLUMN + " text null, " +
-            DATE_COLUMN + " integer not null, " +
+            DATE_COLUMN + " integer null, " +
             EXCAVATION_SECTION_CODE_COLUMN + " text null, " +
             EXCAVATION_METHOD_CODE_COLUMN + " text null, " +
             PK_INITIAL_COLUMN + " real null, " +

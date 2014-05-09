@@ -108,9 +108,9 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
     }
 
 
-    public void onNewPhotoTaken() {
-        mAdapter.notifyDataSetChanged();
-    }
+//    public void onNewPhotoTaken() {
+//        mAdapter.notifyDataSetChanged();
+//    }
 
 
     @Override

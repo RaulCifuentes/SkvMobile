@@ -176,7 +176,7 @@
 //                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.GLOBAL, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS);
 //                syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
 //            }
-//            if (syncHelper.downloadNonSpecificData()) {
+//            if (syncHelper.downloadUserRelatedData()) {
 //                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS);
 //                syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
 //            }
