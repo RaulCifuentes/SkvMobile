@@ -50,18 +50,8 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
 
     private OnFragmentInteractionListener mListener;
 
-
-    /**
-     * The fragment's ListView/GridView.
-     */
-//    private AbsListView mListView;
     private ListView mListView;
 
-    /**
-     * The Adapter which will be used to populate the ListView/GridView with
-     * Views.
-     */
-//    private ListAdapter mAdapter;
 
     public static AssessmentListFragment newInstance(String userCode, String projectCode) {
         AssessmentListFragment fragment = new AssessmentListFragment();
@@ -156,18 +146,18 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
         }
     }
 
-    /**
-     * The default content for this Fragment has a TextView that is shown when
-     * the list is empty. If you would like to change the text, call this method
-     * to supply the text it should use.
-     */
-    public void setEmptyText(CharSequence emptyText) {
-        View emptyView = mListView.getEmptyView();
-
-        if (emptyText instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
-        }
-    }
+//    /**
+//     * The default content for this Fragment has a TextView that is shown when
+//     * the list is empty. If you would like to change the text, call this method
+//     * to supply the text it should use.
+//     */
+//    public void setEmptyText(CharSequence emptyText) {
+//        View emptyView = mListView.getEmptyView();
+//
+//        if (emptyText instanceof TextView) {
+//            ((TextView) emptyView).setText(emptyText);
+//        }
+//    }
 
 
     public void updateAssessmentList() {

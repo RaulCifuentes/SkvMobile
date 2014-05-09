@@ -6,13 +6,11 @@ import android.database.Cursor;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.Tunnel;
-import com.metric.skava.calculator.barton.model.RockQuality;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalArchTypeDAO;
 import com.metric.skava.data.dao.LocalBoltTypeDAO;
 import com.metric.skava.data.dao.LocalCoverageDAO;
 import com.metric.skava.data.dao.LocalMeshTypeDAO;
-import com.metric.skava.data.dao.LocalRockQualityDAO;
 import com.metric.skava.data.dao.LocalShotcreteTypeDAO;
 import com.metric.skava.data.dao.LocalSupportPatternTypeDAO;
 import com.metric.skava.data.dao.LocalSupportRequirementDAO;
@@ -26,8 +24,6 @@ import com.metric.skava.instructions.model.MeshType;
 import com.metric.skava.instructions.model.ShotcreteType;
 import com.metric.skava.instructions.model.SupportPattern;
 import com.metric.skava.instructions.model.SupportPatternType;
-
-import com.metric.skava.rocksupport.model.ESR;
 import com.metric.skava.rocksupport.model.SupportRequirement;
 
 import java.util.ArrayList;
@@ -36,7 +32,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/14/14.
  */
-public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<SupportRequirement> implements LocalSupportRequirementDAO {
+public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<SupportRequirement> implements LocalSupportRequirementDAO {
 
     public SupportRequirementDAOsqlLiteImpl(Context context, SkavaContext skavaContext) {
         super(context, skavaContext);
@@ -50,16 +46,19 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBasePersistentEntit
 
         while (cursor.moveToNext()) {
             String tunnelCode = CursorUtils.getString(SupportRequirementTable.TUNNEL_CODE_COLUMN, cursor);
-            Double lower = CursorUtils.getDouble(SupportRequirementTable.SPAN_ESR_RATIO_LOWERBOUND_COLUMN, cursor);
-            Double upper = CursorUtils.getDouble(SupportRequirementTable.SPAN_ESR_RATIO_UPPERBOUND_COLUMN, cursor);
-            String qualityCode = CursorUtils.getString(SupportRequirementTable.ROCK_QUALITY_CODE_COLUMN, cursor);
+            String code = CursorUtils.getString(SupportRequirementTable.CODE_COLUMN, cursor);
+            String name = CursorUtils.getString(SupportRequirementTable.NAME_COLUMN, cursor);
+            Double qLower = CursorUtils.getDouble(SupportRequirementTable.Q_LOWER_BOUND_COLUMN, cursor);
+            Double qUpper = CursorUtils.getDouble(SupportRequirementTable.Q_LOWER_BOUND_COLUMN, cursor);
             String boltTypeCode = CursorUtils.getString(SupportRequirementTable.BOLT_TYPE_CODE_COLUMN, cursor);
             Double boltDiameter = CursorUtils.getDouble(SupportRequirementTable.BOLT_DIAMETER_COLUMN, cursor);
             Double boltLength = CursorUtils.getDouble(SupportRequirementTable.BOLT_LENGTH_COLUMN, cursor);
             String roofPatternTypeCode = CursorUtils.getString(SupportRequirementTable.ROOF_PATTERN_TYPE_CODE_COLUMN, cursor);
-            String roofPatternDesc = CursorUtils.getString(SupportRequirementTable.ROOF_PATTERN_COLUMN, cursor);
+            Double roofPatternXDistance = CursorUtils.getDouble(SupportRequirementTable.ROOF_PATTERN_DX_COLUMN, cursor);
+            Double roofPatternYDistance = CursorUtils.getDouble(SupportRequirementTable.ROOF_PATTERN_DY_COLUMN, cursor);
             String wallPatternTypeCode = CursorUtils.getString(SupportRequirementTable.WALL_PATTERN_TYPE_CODE_COLUMN, cursor);
-            String wallPatternDesc = CursorUtils.getString(SupportRequirementTable.WALL_PATTERN_COLUMN, cursor);
+            Double wallPatternXDistance = CursorUtils.getDouble(SupportRequirementTable.WALL_PATTERN_DX_COLUMN, cursor);
+            Double wallPatternYDistance = CursorUtils.getDouble(SupportRequirementTable.WALL_PATTERN_DY_COLUMN, cursor);
             String shotcreteTypeCode = CursorUtils.getString(SupportRequirementTable.SHOTCRETE_TYPE_CODE_COLUMN, cursor);
             Double thickness = CursorUtils.getDouble(SupportRequirementTable.THICKNESS_COLUMN, cursor);
             String meshTypeCode = CursorUtils.getString(SupportRequirementTable.MESH_TYPE_CODE_COLUMN, cursor);
@@ -72,18 +71,15 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBasePersistentEntit
             LocalTunnelDAO localTunnelFaceDAO = daoFactory.getLocalTunnelDAO();
             Tunnel tunnel = localTunnelFaceDAO.getTunnelByUniqueCode(tunnelCode);
 
-            LocalRockQualityDAO localQualityDAO = daoFactory.getLocalRockQualityDAO();
-            RockQuality quality = localQualityDAO.getRockQualityByCode(qualityCode);
-
             LocalBoltTypeDAO localBoltTypeDAO = daoFactory.getLocalBoltTypeDAO();
             BoltType boltType = localBoltTypeDAO.getBoltTypeByCode(boltTypeCode);
 
             LocalSupportPatternTypeDAO supportPatternTypeDAO = daoFactory.getLocalSupportPatternTypeDAO();
             SupportPatternType supportPatternType = supportPatternTypeDAO.getSupportPatternTypeByCode(roofPatternTypeCode);
-            SupportPattern roofPattern = new SupportPattern(supportPatternType, roofPatternDesc);
+            SupportPattern roofPattern = new SupportPattern(supportPatternType, roofPatternXDistance, roofPatternYDistance);
 
             supportPatternType = supportPatternTypeDAO.getSupportPatternTypeByCode(wallPatternTypeCode);
-            SupportPattern wallPattern = new SupportPattern(supportPatternType, wallPatternDesc);
+            SupportPattern wallPattern = new SupportPattern(supportPatternType, wallPatternXDistance, wallPatternYDistance);
 
             LocalShotcreteTypeDAO shotcreteTypeDAO = daoFactory.getLocalShotcreteTypeDAO();
             ShotcreteType shotcrete = shotcreteTypeDAO.getShotcreteTypeByCode(shotcreteTypeCode);
@@ -97,11 +93,10 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBasePersistentEntit
             LocalArchTypeDAO localArchTypeDAO = daoFactory.getLocalArchTypeDAO();
             ArchType archType = localArchTypeDAO.getArchTypeByCode(archTypeCode);
 
-            SupportRequirement newInstance = new SupportRequirement(tunnel);
+            SupportRequirement newInstance = new SupportRequirement(tunnel, code, name);
             newInstance.setTunnel(tunnel);
-            newInstance.setSpanOverESRLower(lower);
-            newInstance.setSpanOverESRUpper(upper);
-            newInstance.setRockQuality(quality);
+            newInstance.setqBartonLowerBoundary(qLower);
+            newInstance.setqBartonUpperBoundary(qUpper);
             newInstance.setBoltType(boltType);
             newInstance.setDiameter(boltDiameter);
             newInstance.setLength(boltLength);
@@ -121,25 +116,15 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBasePersistentEntit
 
 
     @Override
-    public SupportRequirement getSupportRequirementByTunnel(Tunnel tunnel, RockQuality qualityType) throws DAOException {
-        String[] names = new String[]{SupportRequirementTable.TUNNEL_CODE_COLUMN, SupportRequirementTable.ROCK_QUALITY_CODE_COLUMN};
-        Object[] values = new Object[]{tunnel.getCode(), qualityType.getCode()};
-        Cursor cursor = getRecordsFilteredByColumns(SupportRequirementTable.SUPPORT_DATABASE_TABLE, names, values, null);
+    public SupportRequirement getSupportRequirementByTunnel(Tunnel tunnel, Double qBarton) throws DAOException {
+        Cursor cursor = getRecordsFilteredByColumn(SupportRequirementTable.SUPPORT_REQUIREMENT_DATABASE_TABLE, SupportRequirementTable.TUNNEL_CODE_COLUMN, tunnel.getCode(), SupportRequirementTable.Q_LOWER_BOUND_COLUMN);
         List<SupportRequirement> listSupportRequirements = assemblePersistentEntities(cursor);
 
-        if (tunnel.getExcavationFactors() != null) {
-            ESR tunnelESR = tunnel.getExcavationFactors().getEsr();
-            Double tunnelSpan = tunnel.getExcavationFactors().getSpan();
-            if (tunnelESR != null) {
-                Double esrSpanRatio = tunnelSpan / tunnelESR.getValue();
-
-                for (SupportRequirement currentSupportRequirement : listSupportRequirements) {
-                    Double lowerBound = currentSupportRequirement.getSpanOverESRLower();
-                    Double upperBound = currentSupportRequirement.getSpanOverESRUpper();
-                    if (lowerBound < esrSpanRatio && esrSpanRatio < upperBound) {
-                        return currentSupportRequirement;
-                    }
-                }
+        for (SupportRequirement currentSupportRequirement : listSupportRequirements) {
+            Double lowerBound = currentSupportRequirement.getqBartonLowerBoundary();
+            Double upperBound = currentSupportRequirement.getqBartonUpperBoundary();
+            if (lowerBound <= qBarton && qBarton < upperBound) {
+                return currentSupportRequirement;
             }
         }
         return null;
@@ -148,43 +133,49 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBasePersistentEntit
 
     @Override
     public List<SupportRequirement> getAllSupportRequirements() throws DAOException {
-        List<SupportRequirement> list = getAllPersistentEntities(SupportRequirementTable.SUPPORT_DATABASE_TABLE);
+        List<SupportRequirement> list = getAllPersistentEntities(SupportRequirementTable.SUPPORT_REQUIREMENT_DATABASE_TABLE);
         return list;
     }
 
 
     @Override
     public void saveSupportRequirement(SupportRequirement newEntity) throws DAOException {
-        savePersistentEntity(SupportRequirementTable.SUPPORT_DATABASE_TABLE, newEntity);
+        savePersistentEntity(SupportRequirementTable.SUPPORT_REQUIREMENT_DATABASE_TABLE, newEntity);
     }
 
 
     @Override
     protected void savePersistentEntity(String tableName, SupportRequirement newSkavaEntity) throws DAOException {
-        String[] columns = new String[]{SupportRequirementTable.TUNNEL_CODE_COLUMN, SupportRequirementTable.SPAN_ESR_RATIO_LOWERBOUND_COLUMN,
-                SupportRequirementTable.SPAN_ESR_RATIO_UPPERBOUND_COLUMN, SupportRequirementTable.ROCK_QUALITY_CODE_COLUMN, SupportRequirementTable.BOLT_TYPE_CODE_COLUMN,
-                SupportRequirementTable.BOLT_DIAMETER_COLUMN, SupportRequirementTable.BOLT_LENGTH_COLUMN, SupportRequirementTable.ROOF_PATTERN_COLUMN,
-                SupportRequirementTable.ROOF_PATTERN_TYPE_CODE_COLUMN, SupportRequirementTable.WALL_PATTERN_COLUMN,SupportRequirementTable.WALL_PATTERN_TYPE_CODE_COLUMN,
+        String[] columns = new String[]{SupportRequirementTable.TUNNEL_CODE_COLUMN, SupportRequirementTable.CODE_COLUMN,
+                SupportRequirementTable.NAME_COLUMN, SupportRequirementTable.Q_LOWER_BOUND_COLUMN, SupportRequirementTable.Q_UPPER_BOUND_COLUMN,
+                SupportRequirementTable.BOLT_TYPE_CODE_COLUMN, SupportRequirementTable.BOLT_DIAMETER_COLUMN, SupportRequirementTable.BOLT_LENGTH_COLUMN,
+                SupportRequirementTable.ROOF_PATTERN_TYPE_CODE_COLUMN, SupportRequirementTable.ROOF_PATTERN_DX_COLUMN, SupportRequirementTable.ROOF_PATTERN_DY_COLUMN,
+                SupportRequirementTable.WALL_PATTERN_TYPE_CODE_COLUMN, SupportRequirementTable.WALL_PATTERN_DX_COLUMN, SupportRequirementTable.WALL_PATTERN_DY_COLUMN,
                 SupportRequirementTable.SHOTCRETE_TYPE_CODE_COLUMN, SupportRequirementTable.THICKNESS_COLUMN, SupportRequirementTable.MESH_TYPE_CODE_COLUMN,
                 SupportRequirementTable.COVERAGE_CODE_COLUMN, SupportRequirementTable.ARCH_TYPE_CODE_COLUMN, SupportRequirementTable.SEPARATION_COLUMN
         };
         //Currently the relation is mantained by the Tunnel side of the relations so ...
-        Object[] values = new Object[]{newSkavaEntity.getTunnel().getCode(), newSkavaEntity.getSpanOverESRLower(), newSkavaEntity.getSpanOverESRUpper(), newSkavaEntity.getRockQuality().getCode(),
-                newSkavaEntity.getBoltType().getCode(), newSkavaEntity.getDiameter(), newSkavaEntity.getLength(), newSkavaEntity.getRoofPattern().getPattern(), newSkavaEntity.getRoofPattern().getType().getCode(),
-                newSkavaEntity.getWallPattern().getPattern(), newSkavaEntity.getWallPattern().getType().getCode(), newSkavaEntity.getShotcreteType().getCode(), newSkavaEntity.getThickness(),
-                newSkavaEntity.getMeshType().getCode(), newSkavaEntity.getCoverage().getCode(), newSkavaEntity.getArchType().getCode(), newSkavaEntity.getSeparation()};
+        Object[] values = new Object[]{newSkavaEntity.getTunnel().getCode(), newSkavaEntity.getCode(),
+                newSkavaEntity.getName(), newSkavaEntity.getqBartonLowerBoundary(), newSkavaEntity.getqBartonUpperBoundary(),
+                newSkavaEntity.getBoltType().getCode(), newSkavaEntity.getDiameter(), newSkavaEntity.getLength(),
+                newSkavaEntity.getRoofPattern().getType().getCode(),
+                newSkavaEntity.getRoofPattern().getDistanceX(),newSkavaEntity.getRoofPattern().getDistanceY(),
+                newSkavaEntity.getWallPattern().getType().getCode(),
+                newSkavaEntity.getWallPattern().getDistanceX(), newSkavaEntity.getWallPattern().getDistanceY(),
+                newSkavaEntity.getShotcreteType().getCode(), newSkavaEntity.getThickness(), newSkavaEntity.getMeshType().getCode(),
+                newSkavaEntity.getCoverage().getCode(), newSkavaEntity.getArchType().getCode(), newSkavaEntity.getSeparation()};
         saveRecord(tableName, columns, values);
     }
 
     @Override
     public boolean deleteSupportRequirementByTunnel(Tunnel tunnel) {
-        int numDeleted = deletePersistentEntitiesFilteredByColumn(SupportRequirementTable.SUPPORT_DATABASE_TABLE, SupportRequirementTable.TUNNEL_CODE_COLUMN, tunnel.getCode());
+        int numDeleted = deletePersistentEntitiesFilteredByColumn(SupportRequirementTable.SUPPORT_REQUIREMENT_DATABASE_TABLE, SupportRequirementTable.TUNNEL_CODE_COLUMN, tunnel.getCode());
         return numDeleted != -1;
     }
 
     @Override
     public int deleteAllSupportRequirements() {
-        return deleteAllPersistentEntities(SupportRequirementTable.SUPPORT_DATABASE_TABLE);
+        return deleteAllPersistentEntities(SupportRequirementTable.SUPPORT_REQUIREMENT_DATABASE_TABLE);
     }
 
 

@@ -27,7 +27,7 @@ public class SupportPatternTypeDAODropboxImpl extends DropBoxBaseDAO implements 
 
     @Override
     public List<SupportPatternType> getAllSupportPatternTypes() throws DAOException {
-        //TODO Ask Fabian, why are there so many different Pattern Types??
+
         List<SupportPatternType> listPatterns = new ArrayList<SupportPatternType>();
 
         String[] names = new String[]{"ParameterName"} ;

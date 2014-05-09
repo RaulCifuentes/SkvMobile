@@ -1,7 +1,6 @@
 package com.metric.skava.data.dao;
 
 import com.metric.skava.app.model.Tunnel;
-import com.metric.skava.calculator.barton.model.RockQuality;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.rocksupport.model.SupportRequirement;
 
@@ -12,7 +11,7 @@ import java.util.List;
  */
 public interface LocalSupportRequirementDAO {
 
-    public SupportRequirement getSupportRequirementByTunnel(Tunnel tunnel, RockQuality quality) throws DAOException;
+    public SupportRequirement getSupportRequirementByTunnel(Tunnel tunnel, Double qBarton) throws DAOException;
 
     public List<SupportRequirement> getAllSupportRequirements() throws DAOException;
 

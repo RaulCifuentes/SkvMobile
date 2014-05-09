@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 import com.metric.skava.R;
 import com.metric.skava.app.model.Assessment;
+import com.metric.skava.app.model.ExcavationProject;
+import com.metric.skava.app.model.Tunnel;
+import com.metric.skava.app.model.TunnelFace;
+import com.metric.skava.app.util.SkavaUtils;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -66,25 +70,33 @@ public class AssessmentListAdapter extends BaseAdapter {
             assessmentViewItem = convertView;
         }
 
-        Assessment actualAssessmentItem = getItem(position);
+        Assessment currentItem = getItem(position);
 
-        if (actualAssessmentItem != null) {
-
-            TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_code);
-            text.setText(actualAssessmentItem.getInternalCode());
-
-            text = (TextView) assessmentViewItem.findViewById(R.id.assessment_date);
-            Date date = actualAssessmentItem.getDate();
-            text.setText(DateFormat.getDateInstance().format(date));
-
-            text = (TextView) assessmentViewItem.findViewById(R.id.assessment_project);
-            text.setText(actualAssessmentItem.getProject().getName());
-
-            text = (TextView) assessmentViewItem.findViewById(R.id.assessment_tunnel);
-            text.setText(actualAssessmentItem.getTunnel().getName());
-
-            text = (TextView) assessmentViewItem.findViewById(R.id.assessment_face);
-            text.setText(actualAssessmentItem.getFace().getName());
+        if (currentItem != null) {
+            if (currentItem.getCode() != null){
+                TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_code);
+                text.setText(currentItem.getCode());
+            }
+            Date date = currentItem.getDate();
+            if (date != null) {
+                TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_date);
+                text.setText(DateFormat.getDateInstance().format(date));
+            }
+            ExcavationProject project = currentItem.getProject();
+            if (SkavaUtils.isDefined(project)){
+                TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_project);
+                text.setText(project.getName());
+            }
+            Tunnel tunnel = currentItem.getTunnel();
+            if (SkavaUtils.isDefined(tunnel)){
+                TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_tunnel);
+                text.setText(tunnel.getName());
+            }
+            TunnelFace face = currentItem.getFace();
+            if (SkavaUtils.isDefined(face)){
+                TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_face);
+                text.setText(face.getName());
+            }
         }
 
 

@@ -1,7 +1,7 @@
 package com.metric.skava.rocksupport.model;
 
+import com.metric.skava.app.data.SkavaEntity;
 import com.metric.skava.app.model.Tunnel;
-import com.metric.skava.calculator.barton.model.RockQuality;
 import com.metric.skava.instructions.model.ArchType;
 import com.metric.skava.instructions.model.BoltType;
 import com.metric.skava.instructions.model.Coverage;
@@ -12,12 +12,11 @@ import com.metric.skava.instructions.model.SupportPattern;
 /**
  * Created by metricboy on 3/13/14.
  */
-public class SupportRequirement {
+public class SupportRequirement extends SkavaEntity {
 
     private Tunnel tunnel;
-    private Double spanOverESRLowerBoundary;
-    private Double spanOverESRUpperBoundary;
-    private RockQuality rockQuality;
+    private Double qBartonLowerBoundary;
+    private Double qBartonUpperBoundary;
     private BoltType boltType;
     private Double diameter;
     private Double length;
@@ -30,7 +29,9 @@ public class SupportRequirement {
     private ArchType archType;
     private Double separation;
 
-    public SupportRequirement(Tunnel tunnel) {
+
+    public SupportRequirement(Tunnel tunnel, String code, String name) {
+        super(code, name);
         this.tunnel = tunnel;
     }
 
@@ -42,28 +43,20 @@ public class SupportRequirement {
         return tunnel;
     }
 
-    public Double getSpanOverESRLower() {
-        return spanOverESRLowerBoundary;
+    public Double getqBartonLowerBoundary() {
+        return qBartonLowerBoundary;
     }
 
-    public void setSpanOverESRLower(Double spanOverESR) {
-        this.spanOverESRLowerBoundary = spanOverESR;
+    public void setqBartonLowerBoundary(Double qBartonLowerBoundary) {
+        this.qBartonLowerBoundary = qBartonLowerBoundary;
     }
 
-    public Double getSpanOverESRUpper() {
-        return spanOverESRUpperBoundary;
+    public Double getqBartonUpperBoundary() {
+        return qBartonUpperBoundary;
     }
 
-    public void setSpanOverESRUpper(Double spanOverESR) {
-        this.spanOverESRUpperBoundary = spanOverESR;
-    }
-
-    public RockQuality getRockQuality() {
-        return rockQuality;
-    }
-
-    public void setRockQuality(RockQuality rockQuality) {
-        this.rockQuality = rockQuality;
+    public void setqBartonUpperBoundary(Double qBartonUpperBoundary) {
+        this.qBartonUpperBoundary = qBartonUpperBoundary;
     }
 
     public BoltType getBoltType() {

@@ -171,7 +171,6 @@
                     android:layout_row="4"
                     android:layout_column="0" />
 
-
                 <TextView
                     android:hint="Bolt length in meters considering two decimals."
                     android:id="@+id/instructions_bolt_length_value"
@@ -194,6 +193,70 @@
                     android:layout_row="5"
                     android:layout_column="1" />
 
+                //
+                <TextView
+                    android:id="@+id/textView01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructions_roof_pattern_label"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:layout_row="6"
+                    android:layout_column="0" />
+
+                <TextView
+                    android:hint="Roof pattern."
+                    android:id="@+id/instructions_roof_pattern_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/form_column_left_margin"
+                    android:layout_row="6"
+                    android:layout_column="1" />
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+                    android:layout_row="7"
+                    android:layout_column="0" />
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+                    android:layout_row="7"
+                    android:layout_column="1" />
+
+                <TextView
+                    android:id="@+id/textView01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructions_wall_pattern_label"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:layout_row="8"
+                    android:layout_column="0" />
+
+                <TextView
+                    android:hint="Roof pattern."
+                    android:id="@+id/instructions_wall_pattern_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/form_column_left_margin"
+                    android:layout_row="8"
+                    android:layout_column="1" />
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+                    android:layout_row="9"
+                    android:layout_column="0" />
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+                    android:layout_row="9"
+                    android:layout_column="1" />
+
+                //
                 <TextView
                     android:id="@+id/textView01"
                     android:layout_width="wrap_content"
@@ -201,7 +264,7 @@
                     android:text="@string/instructions_shotcrete_type_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="6"
+                    android:layout_row="10"
                     android:layout_column="0" />
 
 
@@ -212,19 +275,19 @@
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="6"
+                    android:layout_row="10"
                     android:layout_column="1" />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="7"
+                    android:layout_row="11"
                     android:layout_column="0" />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="7"
+                    android:layout_row="11"
                     android:layout_column="1" />
 
                 <TextView
@@ -234,7 +297,7 @@
                     android:text="@string/instructions_thickness_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="8"
+                    android:layout_row="12"
                     android:layout_column="0" />
 
 
@@ -244,20 +307,20 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="8"
+                    android:layout_row="12"
                     android:layout_column="1" />
 
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="9"
+                    android:layout_row="13"
                     android:layout_column="0" />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="9"
+                    android:layout_row="13"
                     android:layout_column="1" />
 
                 <TextView
@@ -267,7 +330,7 @@
                     android:text="@string/instructions_mesh_type_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="10"
+                    android:layout_row="14"
                     android:layout_column="0" />
 
 
@@ -278,19 +341,19 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="10"
+                    android:layout_row="14"
                     android:layout_column="1" />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="11"
+                    android:layout_row="15"
                     android:layout_column="0" />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="11"
+                    android:layout_row="15"
                     android:layout_column="1" />
 
                 <TextView
@@ -300,7 +363,7 @@
                     android:text="@string/instructions_coverage_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="12"
+                    android:layout_row="16"
                     android:layout_column="0" />
 
 
@@ -313,19 +376,19 @@
                     android:numeric="integer"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_row="12"
+                    android:layout_row="16"
                     android:layout_column="1" />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="13"
+                    android:layout_row="17"
                     android:layout_column="0" />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="13"
+                    android:layout_row="17"
                     android:layout_column="1" />
 
                 <TextView
@@ -335,7 +398,7 @@
                     android:text="@string/instructions_arch_type_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="14"
+                    android:layout_row="18"
                     android:layout_column="0" />
 
 
@@ -346,19 +409,19 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="14"
+                    android:layout_row="18"
                     android:layout_column="1" />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="15"
+                    android:layout_row="19"
                     android:layout_column="0" />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="15"
+                    android:layout_row="19"
                     android:layout_column="1" />
 
                 <TextView
@@ -368,7 +431,7 @@
                     android:text="@string/instructions_separation_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="16"
+                    android:layout_row="20"
                     android:layout_column="0" />
 
 
@@ -378,19 +441,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="16"
+                    android:layout_row="20"
                     android:layout_column="1" />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="17"
+                    android:layout_row="21"
                     android:layout_column="0" />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="17"
+                    android:layout_row="21"
                     android:layout_column="1" />
 
                 <TextView
@@ -400,7 +463,7 @@
                     android:text="@string/instructions_observations_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="18"
+                    android:layout_row="22"
                     android:layout_column="0" />
 
                 <EditText
@@ -415,7 +478,7 @@
                     android:scrollbars="vertical"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="18"
+                    android:layout_row="22"
                     android:layout_column="1" />
 
 

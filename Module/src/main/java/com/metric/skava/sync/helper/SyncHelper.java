@@ -144,146 +144,142 @@ public class SyncHelper {
     }
 
 
-    public boolean downloadGlobalData() throws DAOException {
-        boolean success;
-        try {
-            clearRoles();
-            syncRoles();
+    public Long downloadGlobalData() throws DAOException {
 
-            clearExcavationMethods();
-            syncExcavationMethods();
+        Long numRecords = 0L;
 
-            clearExcavationSections();
-            syncExcavationSections();
+        clearRoles();
+        numRecords+= syncRoles();
 
-            clearDiscontinuityTypes();
-            syncDiscontinuityTypes();
+        clearExcavationMethods();
+        numRecords+=syncExcavationMethods();
 
-            clearDiscontinuityRelevances();
-            syncDiscontinuityRelevances();
+        clearExcavationSections();
+        numRecords+=syncExcavationSections();
 
-            clearIndexes();
-            syncIndexes();
+        clearDiscontinuityTypes();
+        numRecords+=syncDiscontinuityTypes();
 
-            clearGroups();
-            syncGroups();
+        clearDiscontinuityRelevances();
+        numRecords+=syncDiscontinuityRelevances();
 
-            clearSpacings();
-            syncSpacings();
+        clearIndexes();
+        numRecords+=syncIndexes();
 
-            clearPersistences();
-            syncPersistences();
+        clearGroups();
+        numRecords+=syncGroups();
 
-            clearApertures();
-            syncApertures();
+        clearSpacings();
+        numRecords+=syncSpacings();
 
-            clearDiscontinuityShapes();
-            syncDiscontinuityShapes();
+        clearPersistences();
+        numRecords+=syncPersistences();
 
-            clearRoughnesses();
-            syncRoughnesses();
+        clearApertures();
+        numRecords+=syncApertures();
 
-            clearInfillings();
-            syncInfillings();
+        clearDiscontinuityShapes();
+        numRecords+=syncDiscontinuityShapes();
 
-            clearWeatherings();
-            syncWeatherings();
+        clearRoughnesses();
+        numRecords+=syncRoughnesses();
 
-            clearDiscontinuityWaters();
-            syncDiscontinuityWaters();
+        clearInfillings();
+        numRecords+=syncInfillings();
 
-            clearStrengths();
-            syncStrengths();
+        clearWeatherings();
+        numRecords+=syncWeatherings();
 
-            clearGroudwaters();
-            syncGroundwaters();
+        clearDiscontinuityWaters();
+        numRecords+=syncDiscontinuityWaters();
 
-            clearOrientation();
-            syncOrientation();
+        clearStrengths();
+        numRecords+=syncStrengths();
 
-            clearJn();
-            syncJn();
+        clearGroudwaters();
+        numRecords+=syncGroundwaters();
 
-            clearJr();
-            syncJr();
+        clearOrientation();
+        numRecords+=syncOrientation();
 
-            clearJa();
-            syncJa();
+        clearJn();
+        numRecords+=syncJn();
 
-            clearJw();
-            syncJw();
+        clearJr();
+        numRecords+=syncJr();
 
-            clearSRF();
-            syncSRF();
+        clearJa();
+        numRecords+=syncJa();
 
-            clearFractureTypes();
-            syncFractureTypes();
+        clearJw();
+        numRecords+=syncJw();
 
-            clearBoltTypes();
-            syncBoltTypes();
+        clearSRF();
+        numRecords+=syncSRF();
 
-            clearShotcreteTypes();
-            syncShotcreteTypes();
+        clearFractureTypes();
+        numRecords+=syncFractureTypes();
 
-            clearMeshTypes();
-            syncMeshTypes();
+        clearBoltTypes();
+        syncBoltTypes();
 
-            clearCoverages();
-            syncCoverages();
+        clearShotcreteTypes();
+        syncShotcreteTypes();
 
-            clearArchTypes();
-            syncArchTypes();
+        clearMeshTypes();
+        syncMeshTypes();
 
-            clearESRs();
-            syncESRs();
+        clearCoverages();
+        syncCoverages();
 
-            clearSupportPatternTypes();
-            syncSupportPatternTypes();
+        clearArchTypes();
+        syncArchTypes();
 
-            clearRockQualities();
-            syncRockQualities();
+        clearESRs();
+        syncESRs();
+
+        clearSupportPatternTypes();
+        syncSupportPatternTypes();
+
+        clearRockQualities();
+        syncRockQualities();
 
 
-            success = true;
-        } catch (DAOException e) {
-            throw e;
-        }
-        return success;
+        return numRecords;
+
     }
 
 
-    public boolean downloadNonSpecificData() throws DAOException {
-        boolean success;
-        try {
-            clearClients();
-            syncClients();
+    public Long downloadUserRelatedData() throws DAOException {
+        Long numRecords = 0L;
 
-            clearProjects();
-            syncProjects();
+        clearClients();
+        numRecords+= syncClients();
 
-            clearTunnels();
-            syncTunnels();
+        clearProjects();
+        numRecords+= syncProjects();
 
-            //Support Requirements depends on Tunnel
-            clearSupportRequirements();
-            syncSupportRequirements();
+        clearTunnels();
+        numRecords+= syncTunnels();
 
-            clearFaces();
-            syncFaces();
-            //HEADS UP: on this strategy users shuold be loaded last coz the assembling will look up some roles and faces DAOs
-            //This is not exactly th best option as it will load the entire data and not just what this user can see
-            //TODO evaluate and implement the userSpecifidData
-            clearUsers();
-            syncUsers();
-            success = true;
-        } catch (DAOException e) {
-            throw e;
-        }
-        return success;
+        //Support Requirements depends on Tunnel
+        clearSupportRequirements();
+        numRecords+= syncSupportRequirements();
+
+        clearFaces();
+        numRecords+= syncFaces();
+        //HEADS UP: on this strategy users shuold be loaded last coz the assembling will look up some roles and faces DAOs
+        //This is not exactly th best option as it will load the entire data and not just what this user can see
+        //TODO evaluate and implement the userSpecifidData
+        clearUsers();
+        numRecords+= syncUsers();
+
+
+        return numRecords;
     }
 
     //TODO Use the user information to pull just the faces, tunnels, projects anc clients for that user
-    public void downloadSpecificData(User user) throws DAOException {
+    public void downloadUserRelatedDataFilteredByUser(User user) throws DAOException {
         syncFacesCascade(user);
     }
 
@@ -292,7 +288,7 @@ public class SyncHelper {
         sqlLiteLocalSectionDAO.deleteAllExcavationSections();
     }
 
-    private void syncExcavationSections() throws DAOException {
+    private Long syncExcavationSections() throws DAOException {
         //Read from DropBox
         RemoteExcavationSectionDAO dropBoxSectionDAO = daoFactory.getRemoteExcavationSectionDAO(DAOFactory.Flavour.DROPBOX);
         List<ExcavationSection> downloadedSections = dropBoxSectionDAO.getAllExcavationSections();
@@ -301,6 +297,7 @@ public class SyncHelper {
         for (ExcavationSection downloadedSection : downloadedSections) {
             sqlLiteSectionDAO.saveExcavationSection(downloadedSection);
         }
+        return Long.valueOf(downloadedSections.size());
     }
 
     private void clearExcavationMethods() throws DAOException {
@@ -308,7 +305,7 @@ public class SyncHelper {
         sqlLiteMethodDAO.deleteAllExcavationMethods();
     }
 
-    private void syncExcavationMethods() throws DAOException {
+    private Long syncExcavationMethods() throws DAOException {
         /**Update the excavation methods data*/
         RemoteExcavationMethodDAO dropBoxMethodDAO = daoFactory.getRemoteExcavationMethodDAO(DAOFactory.Flavour.DROPBOX);
         LocalExcavationMethodDAO sqlLiteMethodDAO = daoFactory.getLocalExcavationMethodDAO();
@@ -318,6 +315,7 @@ public class SyncHelper {
             //Write into the SQLLite
             sqlLiteMethodDAO.saveExcavationMethod(downloadedMethod);
         }
+        return Long.valueOf(downloadedMethods.size());
     }
 
     private void clearRoles() throws DAOException {
@@ -326,7 +324,7 @@ public class SyncHelper {
     }
 
 
-    private void syncRoles() throws DAOException {
+    private Long syncRoles() throws DAOException {
         //Read from DropBox
         RemoteRoleDAO dropBoxRemoteRoleDAO = daoFactory.getRemoteRoleDAO(DAOFactory.Flavour.DROPBOX);
         List<Role> downloadedMethods = dropBoxRemoteRoleDAO.getAllRoles();
@@ -335,6 +333,7 @@ public class SyncHelper {
         for (Role downloadedMethod : downloadedMethods) {
             sqlLiteLocalRoleDAO.saveRole(downloadedMethod);
         }
+        return Long.valueOf(downloadedMethods.size());
     }
 
     private void clearUsers() throws DAOException {
@@ -345,7 +344,7 @@ public class SyncHelper {
         permissionsDAO.deleteAllPermissions();
     }
 
-    private void syncUsers() throws DAOException {
+    private Long syncUsers() throws DAOException {
         //Read from DropBox
         RemoteUserDAO dropBoxUserDAO = daoFactory.getRemoteUserDAO(DAOFactory.Flavour.DROPBOX);
         List<User> downloadedUsers = dropBoxUserDAO.getAllUsers();
@@ -354,6 +353,7 @@ public class SyncHelper {
         for (User downloadedUser : downloadedUsers) {
             sqlLiteLocalUserDAO.saveUser(downloadedUser);
         }
+        return Long.valueOf(downloadedUsers.size());
     }
 
 
@@ -362,10 +362,9 @@ public class SyncHelper {
         sqlLiteLocalTunnelDAO.deleteAllTunnels();
         //As the tunnel was deleted, delete on cascade
         clearExcavationFactors();
-        clearSupportRequirements();
     }
 
-    private void syncTunnels() throws DAOException {
+    private Long syncTunnels() throws DAOException {
         //Read from DropBox
         RemoteTunnelDAO dropBoxTunnelDAO = daoFactory.getRemoteTunnelDAO(DAOFactory.Flavour.DROPBOX);
         List<Tunnel> downloadedTunnels = dropBoxTunnelDAO.getAllTunnels();
@@ -375,8 +374,7 @@ public class SyncHelper {
             //The saveTunnel() inserts automatically on the ExcavationFactors table
             sqlLiteLocalTunnelDAO.saveTunnel(downloadedTunnel);
         }
-        //Sync on cascade
-        syncSupportRequirements();
+        return Long.valueOf(downloadedTunnels.size());
     }
 
     private void clearProjects() throws DAOException {
@@ -384,7 +382,7 @@ public class SyncHelper {
         sqlLiteProjectDAO.deleteAllExcavationProjects();
     }
 
-    private void syncProjects() throws DAOException {
+    private Long syncProjects() throws DAOException {
         //Read from DropBox
         RemoteExcavationProjectDAO dropBoxProjectDAO = daoFactory.getRemoteExcavationProjectDAO(DAOFactory.Flavour.DROPBOX);
         List<ExcavationProject> downloadedProjects = dropBoxProjectDAO.getAllExcavationProjects();
@@ -393,6 +391,7 @@ public class SyncHelper {
         for (ExcavationProject downloadedProject : downloadedProjects) {
             sqlLiteProjectDAO.saveExcavationProject(downloadedProject);
         }
+        return Long.valueOf(downloadedProjects.size());
     }
 
 
@@ -401,7 +400,7 @@ public class SyncHelper {
         sqlLiteFaceDAO.deleteAllTunnelFaces();
     }
 
-    private void syncFaces() throws DAOException {
+    private Long syncFaces() throws DAOException {
         //Read from DropBox
         RemoteTunnelFaceDAO dropBoxFaceDAO = daoFactory.getRemoteTunnelFaceDAO(DAOFactory.Flavour.DROPBOX);
         List<TunnelFace> downloadedFaces = dropBoxFaceDAO.getAllTunnelFaces();
@@ -410,9 +409,10 @@ public class SyncHelper {
         for (TunnelFace downloadedFace : downloadedFaces) {
             sqlLiteFaceDAO.saveTunnelFace(downloadedFace);
         }
+        return Long.valueOf(downloadedFaces.size());
     }
 
-    private void syncFacesCascade(User user) throws DAOException {
+    private Long syncFacesCascade(User user) throws DAOException {
         //Read from DropBox
         RemoteTunnelFaceDAO dropBoxFaceDAO = daoFactory.getRemoteTunnelFaceDAO(DAOFactory.Flavour.DROPBOX);
         List<TunnelFace> downloadedFaces = dropBoxFaceDAO.getTunnelFacesByUser(user);
@@ -421,6 +421,7 @@ public class SyncHelper {
         for (TunnelFace downloadedFace : downloadedFaces) {
             sqlLiteFaceDAO.saveTunnelFace(downloadedFace);
         }
+        return Long.valueOf(downloadedFaces.size());
     }
 
     private void clearClients() throws DAOException {
@@ -428,7 +429,7 @@ public class SyncHelper {
         sqlLiteLocalClientDAO.deleteAllClients();
     }
 
-    private void syncClients() throws DAOException {
+    private Long syncClients() throws DAOException {
         //Read from DropBox
         RemoteClientDAO dropBoxClientDAO = daoFactory.getRemoteClientDAO(DAOFactory.Flavour.DROPBOX);
         List<Client> downloadedClients = dropBoxClientDAO.getAllClients();
@@ -437,6 +438,7 @@ public class SyncHelper {
         for (Client downloadedClient : downloadedClients) {
             sqlLiteLocalClientDAO.saveClient(downloadedClient);
         }
+        return Long.valueOf(downloadedClients.size());
     }
 
     private void clearDiscontinuityTypes() throws DAOException {
@@ -444,7 +446,7 @@ public class SyncHelper {
         sqlLiteDiscontinuityTypeDAO.deleteAllDiscontinuityTypes();
     }
 
-    private void syncDiscontinuityTypes() throws DAOException {
+    private Long syncDiscontinuityTypes() throws DAOException {
         //Read from DropBox
         RemoteDiscontinuityTypeDAO dropBoxDiscontinuityTypeDAO = daoFactory.getRemoteDiscontinuityTypeDAO(DAOFactory.Flavour.DROPBOX);
         List<DiscontinuityType> downloadedDiscontinuityTypes = dropBoxDiscontinuityTypeDAO.getAllDiscontinuityTypes();
@@ -453,6 +455,7 @@ public class SyncHelper {
         for (DiscontinuityType downloadedDiscontinuityType : downloadedDiscontinuityTypes) {
             sqlLiteDiscontinuityTypeDAO.saveDiscontinuityType(downloadedDiscontinuityType);
         }
+        return Long.valueOf(downloadedDiscontinuityTypes.size());
     }
 
 
@@ -461,7 +464,7 @@ public class SyncHelper {
         sqlLiteDiscontinuityRelevanceDAO.deleteAllDiscontinuityRelevances();
     }
 
-    private void syncDiscontinuityRelevances() throws DAOException {
+    private Long syncDiscontinuityRelevances() throws DAOException {
         //Read from DropBox
         RemoteDiscontinuityRelevanceDAO dropBoxDiscontinuityRelevanceDAO = daoFactory.getRemoteDiscontinuityRelevanceDAO(DAOFactory.Flavour.DROPBOX);
         List<DiscontinuityRelevance> downloadedDiscontinuityRelevances = dropBoxDiscontinuityRelevanceDAO.getAllDiscontinuityRelevances();
@@ -470,6 +473,7 @@ public class SyncHelper {
         for (DiscontinuityRelevance downloadedDiscontinuityRelevance : downloadedDiscontinuityRelevances) {
             sqlLiteDiscontinuityRelevanceDAO.saveDiscontinuityRelevance(downloadedDiscontinuityRelevance);
         }
+        return Long.valueOf(downloadedDiscontinuityRelevances.size());
     }
 
 
@@ -478,7 +482,7 @@ public class SyncHelper {
         sqlLiteIndexDAO.deleteAllIndexes();
     }
 
-    private void syncIndexes() throws DAOException {
+    private Long syncIndexes() throws DAOException {
         //Read from DropBox
         RemoteIndexDAO dropBoxIndexDAO = daoFactory.getRemoteIndexDAO(DAOFactory.Flavour.DROPBOX);
         List<Index> downloadedIndexes = dropBoxIndexDAO.getAllIndexes();
@@ -487,6 +491,7 @@ public class SyncHelper {
         for (Index downloadedIndex : downloadedIndexes) {
             sqlLiteIndexDAO.saveIndex(downloadedIndex);
         }
+        return Long.valueOf(downloadedIndexes.size());
     }
 
     private void clearGroups() throws DAOException {
@@ -494,7 +499,7 @@ public class SyncHelper {
         sqlLiteStrengthDAO.deleteAllGroups();
     }
 
-    private void syncGroups() throws DAOException {
+    private Long syncGroups() throws DAOException {
         //Read from DropBox
         RemoteGroupDAO dropBoxRemoteGroupDAO = daoFactory.getRemoteGroupDAO(DAOFactory.Flavour.DROPBOX);
         List<Group> downloadedGroups = dropBoxRemoteGroupDAO.getAllGroups();
@@ -503,6 +508,7 @@ public class SyncHelper {
         for (Group downloadedGroup : downloadedGroups) {
             sqlLiteLocalGroupDAO.saveGroup(downloadedGroup);
         }
+        return Long.valueOf(downloadedGroups.size());
     }
 
     private void clearJn() throws DAOException {
@@ -510,7 +516,7 @@ public class SyncHelper {
         sqlLiteJnDAO.deleteAllJns();
     }
 
-    private void syncJn() throws DAOException {
+    private Long syncJn() throws DAOException {
         //Read from DropBox
         RemoteJnDAO dropBoxJnDAO = daoFactory.getRemoteJnDAO(DAOFactory.Flavour.DROPBOX);
         List<Jn> dowloadedJns = dropBoxJnDAO.getAllJns();
@@ -519,6 +525,7 @@ public class SyncHelper {
         for (Jn dowloadedJn : dowloadedJns) {
             sqlLiteJnDAO.saveJn(dowloadedJn);
         }
+        return Long.valueOf(dowloadedJns.size());
     }
 
     private void clearJr() throws DAOException {
@@ -526,7 +533,7 @@ public class SyncHelper {
         sqlLiteJrDAO.deleteAllJrs();
     }
 
-    private void syncJr() throws DAOException {
+    private Long syncJr() throws DAOException {
         //Read from DropBox
         RemoteJrDAO dropBoxJrDAO = daoFactory.getRemoteJrDAO(DAOFactory.Flavour.DROPBOX);
         List<Jr> dowloadedJrs = dropBoxJrDAO.getAllJrs();
@@ -535,6 +542,7 @@ public class SyncHelper {
         for (Jr dowloadedJr : dowloadedJrs) {
             sqlLiteJrDAO.saveJr(dowloadedJr);
         }
+        return Long.valueOf(dowloadedJrs.size());
     }
 
     private void clearJa() throws DAOException {
@@ -542,7 +550,7 @@ public class SyncHelper {
         sqlLiteJaDAO.deleteAllJas();
     }
 
-    private void syncJa() throws DAOException {
+    private Long syncJa() throws DAOException {
         //Read from DropBox
         RemoteJaDAO dropBoxJaDAO = daoFactory.getRemoteJaDAO(DAOFactory.Flavour.DROPBOX);
         List<Ja> dowloadedJas = dropBoxJaDAO.getAllJas();
@@ -551,6 +559,7 @@ public class SyncHelper {
         for (Ja dowloadedJa : dowloadedJas) {
             sqlLiteJaDAO.saveJa(dowloadedJa);
         }
+        return Long.valueOf(dowloadedJas.size());
     }
 
     private void clearJw() throws DAOException {
@@ -558,7 +567,7 @@ public class SyncHelper {
         sqlLiteJwDAO.deleteAllJws();
     }
 
-    private void syncJw() throws DAOException {
+    private Long syncJw() throws DAOException {
         //Read from DropBox
         RemoteJwDAO dropBoxJwDAO = daoFactory.getRemoteJwDAO(DAOFactory.Flavour.DROPBOX);
         List<Jw> dowloadedJws = dropBoxJwDAO.getAllJws();
@@ -567,6 +576,7 @@ public class SyncHelper {
         for (Jw dowloadedJw : dowloadedJws) {
             sqlLiteJwDAO.saveJw(dowloadedJw);
         }
+        return Long.valueOf(dowloadedJws.size());
     }
 
     private void clearSRF() throws DAOException {
@@ -574,7 +584,7 @@ public class SyncHelper {
         sqlLiteSrfDAO.deleteAllSrfs();
     }
 
-    private void syncSRF() throws DAOException {
+    private Long syncSRF() throws DAOException {
         //Read from DropBox
         RemoteSrfDAO dropBoxSrfDAO = daoFactory.getRemoteSrfDAO(DAOFactory.Flavour.DROPBOX);
         List<SRF> dowloadedSrfs = dropBoxSrfDAO.getAllSrfs();
@@ -583,6 +593,7 @@ public class SyncHelper {
         for (SRF dowloadedSrf : dowloadedSrfs) {
             sqlLiteSrfDAO.saveSrf(dowloadedSrf);
         }
+        return Long.valueOf(dowloadedSrfs.size());
     }
 
     private void clearStrengths() throws DAOException {
@@ -590,7 +601,7 @@ public class SyncHelper {
         sqlLiteStrengthDAO.deleteAllStrengths();
     }
 
-    private void syncStrengths() throws DAOException {
+    private Long syncStrengths() throws DAOException {
         //Read from DropBox
         RemoteStrengthDAO dropBoxStrengthDAO = daoFactory.getRemoteStrengthDAO(DAOFactory.Flavour.DROPBOX);
         List<StrengthOfRock> dowloadedStrengths = dropBoxStrengthDAO.getAllStrengths();
@@ -599,6 +610,7 @@ public class SyncHelper {
         for (StrengthOfRock dowloadedStrength : dowloadedStrengths) {
             sqlLiteStrengthDAO.saveStrength(dowloadedStrength);
         }
+        return Long.valueOf(dowloadedStrengths.size());
     }
 
     private void clearGroudwaters() throws DAOException {
@@ -606,7 +618,7 @@ public class SyncHelper {
         sqlLiteGroudwaterDAO.deleteAllGroundwaters();
     }
 
-    private void syncGroundwaters() throws DAOException {
+    private Long syncGroundwaters() throws DAOException {
         //Read from DropBox
         RemoteGroundwaterDAO dropBoxGroundwaterDAO = daoFactory.getRemoteGroundwaterDAO(DAOFactory.Flavour.DROPBOX);
         List<Groundwater> dowloadedGroundwaters = dropBoxGroundwaterDAO.getAllGroundwaters();
@@ -615,6 +627,7 @@ public class SyncHelper {
         for (Groundwater dowloadedGroundwater : dowloadedGroundwaters) {
             sqlLiteGroundwaterDAO.saveGroundwater(dowloadedGroundwater);
         }
+        return Long.valueOf(dowloadedGroundwaters.size());
     }
 
     private void clearOrientation() throws DAOException {
@@ -622,7 +635,7 @@ public class SyncHelper {
         sqlLiteGroudwaterDAO.deleteAllOrientationDiscontinuities();
     }
 
-    private void syncOrientation() throws DAOException {
+    private Long syncOrientation() throws DAOException {
         //Read from DropBox
         RemoteOrientationDiscontinuitiesDAO dropBoxOrientationDiscontinuitiesDAO = daoFactory.getRemoteOrientationDiscontinuitiesDAO(DAOFactory.Flavour.DROPBOX);
         List<OrientationDiscontinuities> dowloadedOrientationsDiscontinuities = dropBoxOrientationDiscontinuitiesDAO.getAllOrientationsDiscontinuities();
@@ -631,6 +644,7 @@ public class SyncHelper {
         for (OrientationDiscontinuities dowloadedOrientationDiscontinuities : dowloadedOrientationsDiscontinuities) {
             sqlLiteOrientationDiscontinuitiesDAO.saveOrientationDiscontinuities(dowloadedOrientationDiscontinuities);
         }
+        return Long.valueOf(dowloadedOrientationsDiscontinuities.size());
     }
 
 
@@ -640,7 +654,7 @@ public class SyncHelper {
 
     }
 
-    private void syncSpacings() throws DAOException {
+    private Long syncSpacings() throws DAOException {
         //Read from DropBox
         RemoteSpacingDAO dropBoxSpacingDAO = daoFactory.getRemoteSpacingDAO(DAOFactory.Flavour.DROPBOX);
         List<Spacing> dowloadedSpacings = dropBoxSpacingDAO.getAllSpacings();
@@ -649,6 +663,7 @@ public class SyncHelper {
         for (Spacing dowloadedSpacing : dowloadedSpacings) {
             sqlLiteSpacingDAO.saveSpacing(dowloadedSpacing);
         }
+        return Long.valueOf(dowloadedSpacings.size());
     }
 
     private void clearPersistences() throws DAOException {
@@ -656,7 +671,7 @@ public class SyncHelper {
         sqlLitePersistenceDAO.deleteAllPersistences();
     }
 
-    private void syncPersistences() throws DAOException {
+    private Long syncPersistences() throws DAOException {
         //Read from DropBox
         RemotePersistenceDAO dropBoxPersistenceDAO = daoFactory.getRemotePersistenceDAO(DAOFactory.Flavour.DROPBOX);
         List<Persistence> downloadedPersistences = dropBoxPersistenceDAO.getAllPersistences();
@@ -665,6 +680,7 @@ public class SyncHelper {
         for (Persistence downloadedPersistence : downloadedPersistences) {
             sqlLitePersistenceDAO.savePersistence(downloadedPersistence);
         }
+        return Long.valueOf(downloadedPersistences.size());
     }
 
     private void clearApertures() throws DAOException {
@@ -672,7 +688,7 @@ public class SyncHelper {
         sqlLiteApertureDAO.deleteAllApertures();
     }
 
-    private void syncApertures() throws DAOException {
+    private Long syncApertures() throws DAOException {
         //Read from DropBox
         RemoteApertureDAO dropBoxApertureDAO = daoFactory.getRemoteApertureDAO(DAOFactory.Flavour.DROPBOX);
         List<Aperture> downloadedApertures = dropBoxApertureDAO.getAllApertures();
@@ -681,6 +697,7 @@ public class SyncHelper {
         for (Aperture downloadedAperture : downloadedApertures) {
             sqlLiteApertureDAO.saveAperture(downloadedAperture);
         }
+        return Long.valueOf(downloadedApertures.size());
     }
 
 
@@ -689,7 +706,7 @@ public class SyncHelper {
         sqlLiteDiscontinuityShapeDAO.deleteAllDiscontinuityShapes();
     }
 
-    private void syncDiscontinuityShapes() throws DAOException {
+    private Long syncDiscontinuityShapes() throws DAOException {
         //Read from DropBox
         RemoteDiscontinuityShapeDAO dropBoxDiscontinuityShapeDAO = daoFactory.getRemoteDiscontinuityShapeDAO(DAOFactory.Flavour.DROPBOX);
         List<DiscontinuityShape> downloadedDiscontinuityShapes = dropBoxDiscontinuityShapeDAO.getAllDiscontinuityShapes();
@@ -698,6 +715,7 @@ public class SyncHelper {
         for (DiscontinuityShape downloadedDiscontinuityShape : downloadedDiscontinuityShapes) {
             sqlLiteDiscontinuityShapeDAO.saveDiscontinuityShape(downloadedDiscontinuityShape);
         }
+        return Long.valueOf(downloadedDiscontinuityShapes.size());
     }
 
     private void clearRoughnesses() throws DAOException {
@@ -706,15 +724,16 @@ public class SyncHelper {
     }
 
 
-    private void syncRoughnesses() throws DAOException {
+    private Long syncRoughnesses() throws DAOException {
         //Read from DropBox
         RemoteRoughnessDAO dropBoxRoughnessDAO = daoFactory.getRemoteRoughnessDAO(DAOFactory.Flavour.DROPBOX);
-        List<Roughness> downloadedRoughnesss = dropBoxRoughnessDAO.getAllRoughnesses();
+        List<Roughness> downloadedRoughnesses = dropBoxRoughnessDAO.getAllRoughnesses();
         //Write into the SQLLite
         LocalRoughnessDAO sqlLiteRoughnessDAO = daoFactory.getLocalRoughnessDAO();
-        for (Roughness downloadedRoughness : downloadedRoughnesss) {
+        for (Roughness downloadedRoughness : downloadedRoughnesses) {
             sqlLiteRoughnessDAO.saveRoughness(downloadedRoughness);
         }
+        return Long.valueOf(downloadedRoughnesses.size());
     }
 
     private void clearInfillings() throws DAOException {
@@ -722,7 +741,7 @@ public class SyncHelper {
         sqlLiteInfillingDAO.deleteAllInfillings();
     }
 
-    private void syncInfillings() throws DAOException {
+    private Long syncInfillings() throws DAOException {
         //Read from DropBox
         RemoteInfillingDAO dropBoxInfillingDAO = daoFactory.getRemoteInfillingDAO(DAOFactory.Flavour.DROPBOX);
         List<Infilling> downloadedInfillings = dropBoxInfillingDAO.getAllInfillings();
@@ -731,6 +750,7 @@ public class SyncHelper {
         for (Infilling downloadedInfilling : downloadedInfillings) {
             sqlLiteInfillingDAO.saveInfilling(downloadedInfilling);
         }
+        return Long.valueOf(downloadedInfillings.size());
     }
 
     private void clearWeatherings() throws DAOException {
@@ -738,7 +758,7 @@ public class SyncHelper {
         sqlLiteWeatheringDAO.deleteAllWeatherings();
     }
 
-    private void syncWeatherings() throws DAOException {
+    private Long syncWeatherings() throws DAOException {
         //Read from DropBox
         RemoteWeatheringDAO dropBoxWeatheringDAO = daoFactory.getRemoteWeatheringDAO(DAOFactory.Flavour.DROPBOX);
         List<Weathering> downloadedWeatherings = dropBoxWeatheringDAO.getAllWeatherings();
@@ -747,6 +767,7 @@ public class SyncHelper {
         for (Weathering downloadedWeathering : downloadedWeatherings) {
             sqlLiteWeatheringDAO.saveWeathering(downloadedWeathering);
         }
+        return Long.valueOf(downloadedWeatherings.size());
     }
 
     private void clearDiscontinuityWaters() throws DAOException {
@@ -754,7 +775,7 @@ public class SyncHelper {
         sqlLiteDiscontinuityWaterDAO.deleteAllDiscontinuityWaters();
     }
 
-    private void syncDiscontinuityWaters() throws DAOException {
+    private Long syncDiscontinuityWaters() throws DAOException {
         //Read from DropBox
         RemoteDiscontinuityWaterDAO dropBoxDiscontinuityWaterDAO = daoFactory.getRemoteDiscontinuityWaterDAO(DAOFactory.Flavour.DROPBOX);
         List<DiscontinuityWater> downloadedDiscontinuityWaters = dropBoxDiscontinuityWaterDAO.getAllDiscontinuityWaters();
@@ -763,6 +784,7 @@ public class SyncHelper {
         for (DiscontinuityWater downloadedDiscontinuityWater : downloadedDiscontinuityWaters) {
             sqlLiteDiscontinuityWaterDAO.saveDiscontinuityWater(downloadedDiscontinuityWater);
         }
+        return Long.valueOf(downloadedDiscontinuityWaters.size());
     }
 
     private void clearFractureTypes() throws DAOException {
@@ -770,7 +792,7 @@ public class SyncHelper {
         sqlLiteFractureDAO.deleteAllFractureTypes();
     }
 
-    private void syncFractureTypes() throws DAOException {
+    private Long syncFractureTypes() throws DAOException {
         //Read from DropBox
         RemoteFractureTypeDAO dropBoxFractureTypeDAO = daoFactory.getRemoteFractureTypeDAO(DAOFactory.Flavour.DROPBOX);
         List<FractureType> downloadedFractureTypes = dropBoxFractureTypeDAO.getAllFractureTypes();
@@ -779,12 +801,14 @@ public class SyncHelper {
         for (FractureType downloadedFractureType : downloadedFractureTypes) {
             sqlLiteFractureTypeDAO.saveFractureType(downloadedFractureType);
         }
+        return Long.valueOf(downloadedFractureTypes.size());
     }
 
-    private void clearBoltTypes(){
+    private void clearBoltTypes() {
         LocalBoltTypeDAO sqlLiteBoltTypesDAO = daoFactory.getLocalBoltTypeDAO();
         sqlLiteBoltTypesDAO.deleteAllBoltTypes();
     }
+
     private void syncBoltTypes() throws DAOException {
         //Read from DropBox
         RemoteBoltTypeDAO dropBoxBoltTypeDAO = daoFactory.getRemoteBoltTypeDAO(DAOFactory.Flavour.DROPBOX);
@@ -796,10 +820,11 @@ public class SyncHelper {
         }
     }
 
-    private void clearShotcreteTypes(){
+    private void clearShotcreteTypes() {
         LocalShotcreteTypeDAO sqlLiteShotcreteDAO = daoFactory.getLocalShotcreteTypeDAO();
         sqlLiteShotcreteDAO.deleteAllShotcreteTypes();
     }
+
     private void syncShotcreteTypes() throws DAOException {
         //Read from DropBox
         RemoteShotcreteTypeDAO dropBoxShotcreteTypeDAO = daoFactory.getRemoteShotcreteTypeDAO(DAOFactory.Flavour.DROPBOX);
@@ -812,10 +837,11 @@ public class SyncHelper {
     }
 
 
-    private void clearMeshTypes(){
+    private void clearMeshTypes() {
         LocalMeshTypeDAO sqlLiteMeshTypeDAO = daoFactory.getLocalMeshTypeDAO();
         sqlLiteMeshTypeDAO.deleteAllMeshTypes();
     }
+
     private void syncMeshTypes() throws DAOException {
         //Read from DropBox
         RemoteMeshTypeDAO dropBoxMeshTypeDAO = daoFactory.getRemoteMeshTypeDAO(DAOFactory.Flavour.DROPBOX);
@@ -828,10 +854,11 @@ public class SyncHelper {
     }
 
 
-    private void clearCoverages(){
+    private void clearCoverages() {
         LocalCoverageDAO sqlLiteCoverageDAO = daoFactory.getLocalCoverageDAO();
         sqlLiteCoverageDAO.deleteAllCoverages();
     }
+
     private void syncCoverages() throws DAOException {
         //Read from DropBox
         RemoteCoverageDAO dropBoxCoverageDAO = daoFactory.getRemoteCoverageDAO(DAOFactory.Flavour.DROPBOX);
@@ -843,10 +870,11 @@ public class SyncHelper {
         }
     }
 
-    private void clearArchTypes(){
+    private void clearArchTypes() {
         LocalArchTypeDAO sqlLiteArchDAO = daoFactory.getLocalArchTypeDAO();
         sqlLiteArchDAO.deleteAllArchTypes();
     }
+
     private void syncArchTypes() throws DAOException {
         //Read from DropBox
         RemoteArchTypeDAO dropBoxArchTypeDAO = daoFactory.getRemoteArchTypeDAO(DAOFactory.Flavour.DROPBOX);
@@ -858,10 +886,11 @@ public class SyncHelper {
         }
     }
 
-    private void clearSupportPatternTypes(){
+    private void clearSupportPatternTypes() {
         LocalSupportPatternTypeDAO sqlLitePatternDAO = daoFactory.getLocalSupportPatternTypeDAO();
         sqlLitePatternDAO.deleteAllSupportPatternTypes();
     }
+
     private void syncSupportPatternTypes() throws DAOException {
         //Read from DropBox
         RemoteSupportPatternTypeDAO dropBoxSupportPatternTypeDAO = daoFactory.getRemoteSupportPatternTypeDAO(DAOFactory.Flavour.DROPBOX);
@@ -872,7 +901,7 @@ public class SyncHelper {
             sqlLiteSupportPatternTypeDAO.saveSupportPatternType(downloadedSupportPatternType);
         }
     }
-    
+
     private void clearESRs() throws DAOException {
         LocalEsrDAO sqlLiteESRDAO = daoFactory.getLocalEsrDAO();
         sqlLiteESRDAO.deleteAllESRs();
@@ -911,12 +940,12 @@ public class SyncHelper {
     }
 
 
-    private void clearSupportRequirements(){
+    private void clearSupportRequirements() {
         LocalSupportRequirementDAO sqlLiteSupportRequirementsDAO = daoFactory.getLocalSupportRequirementDAO();
         sqlLiteSupportRequirementsDAO.deleteAllSupportRequirements();
     }
 
-    private void syncSupportRequirements() throws DAOException {
+    private Long syncSupportRequirements() throws DAOException {
         //Read from DropBox
         RemoteSupportRequirementDAO supportRequirementsDAO = daoFactory.getRemoteSupportRequirementDAO(DAOFactory.Flavour.DROPBOX);
         List<SupportRequirement> dowloadedRequirements = supportRequirementsDAO.getAllSupportRequirements();
@@ -925,6 +954,7 @@ public class SyncHelper {
         for (SupportRequirement dowloadedRequirement : dowloadedRequirements) {
             sqlLiteSupportRequirementsDAO.saveSupportRequirement(dowloadedRequirement);
         }
+        return Long.valueOf(dowloadedRequirements.size());
     }
-    
+
 }

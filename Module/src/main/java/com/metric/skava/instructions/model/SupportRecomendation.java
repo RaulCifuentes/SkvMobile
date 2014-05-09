@@ -1,6 +1,7 @@
 package com.metric.skava.instructions.model;
 
 import com.metric.skava.app.util.SkavaUtils;
+import com.metric.skava.rocksupport.model.SupportRequirement;
 
 /**
  * Created by metricboy on 3/4/14.
@@ -8,6 +9,7 @@ import com.metric.skava.app.util.SkavaUtils;
 public class SupportRecomendation {
 
     private Long _id;
+    private SupportRequirement requirementBase;
     private BoltType boltType;
     private Double boltDiameter;
     private Double boltLength;
@@ -27,6 +29,14 @@ public class SupportRecomendation {
 
     public void set_id(Long _id) {
         this._id = _id;
+    }
+
+    public SupportRequirement getRequirementBase() {
+        return requirementBase;
+    }
+
+    public void setRequirement(SupportRequirement requirementBase) {
+        this.requirementBase = requirementBase;
     }
 
     public BoltType getBoltType() {

@@ -118,10 +118,11 @@ public class IdentificationMainFragment extends SkavaFragment implements
     private UserDataDomain mUserDataDomain;
 
     //********** Callback interface: This is an idea to force the Identification phase before any other stage could be used
-    private IdentificationCompletedListener mCallback;
+    private TunnelFaceIdentificationListener mCallback;
 
-    public interface IdentificationCompletedListener {
-        public void onIdentificationCompleted();
+    public interface TunnelFaceIdentificationListener {
+        public void onTunelFaceIdentified();
+        public void onTunelFaceNotIdentified();
     }
 
     @Override
@@ -130,10 +131,10 @@ public class IdentificationMainFragment extends SkavaFragment implements
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (IdentificationCompletedListener) activity;
+            mCallback = (TunnelFaceIdentificationListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement IdentificationCompletedListener");
+                    + " must implement TunnelFaceIdentificationListener");
         }
     }
     //********** Change our minds. Not used now. Waiting to see if this is required
@@ -579,6 +580,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
             if (position != faceSpinnerLastPosition) {
                 selectedFace = (TunnelFace) parent.getItemAtPosition(position);
                 getSkavaContext().getAssessment().setFace(selectedFace);
+                mCallback.onTunelFaceIdentified();
                 faceSpinnerLastPosition = position;
                 //use the orientation from the face as initial value
                 orientationEditText.setText(selectedFace.getOrientation().toString());

@@ -17,14 +17,9 @@ import android.widget.Toast;
 
 import com.metric.skava.R;
 import com.metric.skava.app.fragment.SkavaFragment;
-import com.metric.skava.app.model.Tunnel;
 import com.metric.skava.app.util.SkavaConstants;
-import com.metric.skava.calculator.barton.helper.QToQualityMapper;
-import com.metric.skava.calculator.barton.model.RockQuality;
-import com.metric.skava.calculator.rmr.helper.RmrToQualityMapper;
-import com.metric.skava.data.dao.DAOFactory;
-import com.metric.skava.data.dao.LocalSupportRequirementDAO;
 import com.metric.skava.data.dao.exception.DAOException;
+import com.metric.skava.instructions.logic.RecomendationProvider;
 import com.metric.skava.instructions.model.ArchType;
 import com.metric.skava.instructions.model.BoltType;
 import com.metric.skava.instructions.model.Coverage;
@@ -32,7 +27,6 @@ import com.metric.skava.instructions.model.MeshType;
 import com.metric.skava.instructions.model.ShotcreteType;
 import com.metric.skava.instructions.model.SupportPattern;
 import com.metric.skava.instructions.model.SupportRecomendation;
-import com.metric.skava.rocksupport.model.SupportRequirement;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -54,14 +48,16 @@ public class InstructionsMainFragment extends SkavaFragment {
         mRootView = inflater.inflate(R.layout.instructions_main_fragment, container, false);
 
         SupportRecomendation assessmentRecomendation = getCurrentAssessment().getRecomendation();
-        SupportRecomendation supportRecomendation;
+        SupportRecomendation supportRecomendation = null;
         // Use either the current recomendation for the assessment, or use the one mapped
         // from the requirements
         if (assessmentRecomendation == null) {
-            SupportRequirement supportRequirement = getSupportRequirement();
-            supportRecomendation = mapSupportRequirementToSupportRecommendation(supportRequirement);
-            if (supportRecomendation == null) {
-                supportRecomendation = new SupportRecomendation();
+            RecomendationProvider provider = new RecomendationProvider(getSkavaContext());
+            try {
+                supportRecomendation = provider.recomend(getCurrentAssessment());
+            } catch (DAOException e) {
+                Log.e(SkavaConstants.LOG, e.getMessage());
+                Toast.makeText(getSkavaActivity(), e.getMessage(), Toast.LENGTH_LONG);
             }
             getCurrentAssessment().setRecomendation(supportRecomendation);
         }
@@ -90,58 +86,6 @@ public class InstructionsMainFragment extends SkavaFragment {
         });
     }
 
-    private SupportRecomendation mapSupportRequirementToSupportRecommendation(SupportRequirement supportRequirement) {
-        if (supportRequirement == null) {
-            return null;
-        }
-        SupportRecomendation recomendation = new SupportRecomendation();
-
-        BoltType boltType = supportRequirement.getBoltType();
-        if (boltType != null) {
-            recomendation.setBoltType(boltType);
-        }
-        Double boltDiameter = supportRequirement.getDiameter();
-        if (boltDiameter != null) {
-            recomendation.setBoltDiameter(boltDiameter);
-        }
-        Double boltLength = supportRequirement.getLength();
-        if (boltLength != null) {
-            recomendation.setBoltLength(boltLength);
-        }
-        SupportPattern roofPattern = supportRequirement.getRoofPattern();
-        if (roofPattern != null) {
-            recomendation.setRoofPattern(roofPattern);
-        }
-        SupportPattern wallPattern = supportRequirement.getWallPattern();
-        if (wallPattern != null) {
-            recomendation.setWallPattern(wallPattern);
-        }
-        ShotcreteType shotcreteType = supportRequirement.getShotcreteType();
-        if (shotcreteType != null) {
-            recomendation.setShotcreteType(shotcreteType);
-        }
-        Double thickness = supportRequirement.getThickness();
-        if (thickness != null) {
-            recomendation.setThickness(thickness);
-        }
-        MeshType meshType = supportRequirement.getMeshType();
-        if (meshType != null) {
-            recomendation.setMeshType(meshType);
-        }
-        Coverage coverage = supportRequirement.getCoverage();
-        if (coverage != null) {
-            recomendation.setCoverage(coverage);
-        }
-        ArchType archType = supportRequirement.getArchType();
-        if (meshType != null) {
-            recomendation.setArchType(archType);
-        }
-        Double separation = supportRequirement.getSeparation();
-        if (thickness != null) {
-            recomendation.setSeparation(separation);
-        }
-        return recomendation;
-    }
 
     private void mapSupportRecommendationToView() {
 
@@ -167,6 +111,16 @@ public class InstructionsMainFragment extends SkavaFragment {
         ShotcreteType shotcreteType = supportRecommendation.getShotcreteType();
         if (shotcreteType != null) {
             ((TextView) mRootView.findViewById(R.id.instructions_shotcrete_type_value)).setText(shotcreteType.getName());
+        }
+
+        SupportPattern roofPattern = supportRecommendation.getRoofPattern();
+        if (roofPattern != null) {
+            ((TextView) mRootView.findViewById(R.id.instructions_roof_pattern_value)).setText(roofPattern.getType().getName() + " " + roofPattern.getDistanceX() + " x " + roofPattern.getDistanceY()) ;
+        }
+
+        SupportPattern wallPattern = supportRecommendation.getWallPattern();
+        if (wallPattern != null) {
+            ((TextView) mRootView.findViewById(R.id.instructions_wall_pattern_value)).setText(wallPattern.getType().getName() + " " + wallPattern.getDistanceX() + " x " + wallPattern.getDistanceY()) ;
         }
 
         Double thickness = supportRecommendation.getThickness();
@@ -200,40 +154,5 @@ public class InstructionsMainFragment extends SkavaFragment {
         }
     }
 
-    private SupportRequirement getSupportRequirement() {
-        DAOFactory daoFactory = getDAOFactory();
-
-        LocalSupportRequirementDAO supportRequirementDAO = daoFactory.getLocalSupportRequirementDAO();
-
-        Tunnel tunnel = getCurrentAssessment().getTunnel();
-        RockQuality quality = null;
-        if (getQCalculationContext() != null) {
-            if (getQCalculationContext().getQResult() != null) {
-                Double qBartonValue = getQCalculationContext().getQResult().getQBarton();
-                QToQualityMapper qMapper = QToQualityMapper.getInstance(getSkavaContext());
-                quality = qMapper.mapQToRockMassQuality(qBartonValue);
-            }
-        } else if (getRMRCalculationContext() != null) {
-            if (getRMRCalculationContext().getRMRResult() != null) {
-                Double rmrValue = getRMRCalculationContext().getRMRResult().getRMR();
-                RmrToQualityMapper qMapper = RmrToQualityMapper.getInstance(getSkavaContext());
-                quality = qMapper.mapRMRToRockMassQuality(rmrValue);
-            }
-        }
-
-        SupportRequirement supportRequirement = null;
-        if (tunnel != null && quality != null) {
-            try {
-                supportRequirement = supportRequirementDAO.getSupportRequirementByTunnel(tunnel, quality);
-            } catch (DAOException e) {
-                Log.e(SkavaConstants.LOG, e.getMessage());
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
-            }
-        } else {
-            Toast.makeText(getActivity(), "Support recomendations requires a face tunnel selection.", Toast.LENGTH_LONG);
-        }
-
-        return supportRequirement;
-    }
 
 }

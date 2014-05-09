@@ -154,9 +154,15 @@ public class AssessmentStageListFragment extends ListFragment {
         mActivatedPosition = position;
     }
 
-    public void enableAllStages() {
-        mStageArrayAdapter.setActivateAllStages(true);
+    public void enableAllStages(boolean shouldEnableAll) {
+        if (shouldEnableAll){
+            mStageArrayAdapter.setActivateAllStages(true);
+        } else {
+            mStageArrayAdapter.setActivateAllStages(false);
+        }
     }
+
+
 
 
 }

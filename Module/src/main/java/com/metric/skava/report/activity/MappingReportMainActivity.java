@@ -14,6 +14,8 @@ import com.metric.skava.app.activity.SkavaFragmentActivity;
 import com.metric.skava.app.exception.SkavaSystemException;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.app.util.SkavaUtils;
+import com.metric.skava.assessment.activity.AssessmentsListActivity;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.RemoteAssessmentDAO;
@@ -83,21 +85,41 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
             return true;
         }
         if (id == R.id.action_mapping_report_draft) {
-            saveDraft();
-            backToMappingStages();
+            boolean successOnSaving = saveDraft();
+            if (successOnSaving){
+                Log.i(SkavaConstants.LOG, "Geological mapping draft succesfully saved.");
+                Toast.makeText(this, "", Toast.LENGTH_LONG);
+                backToAssessmentList();
+            } else {
+                Log.e(SkavaConstants.LOG, "Failed when saving geological mapping draft.");
+                Toast.makeText(this, "Failed when saving geological mapping " + getCurrentAssessment().getInternalCode() + " :: " + getCurrentAssessment().getCode(), Toast.LENGTH_LONG);
+            }
             return true;
         }
         if (id == R.id.action_mapping_report_send) {
-            sendAsCompleted();
-            backToMappingStages();
+            boolean successOnSend = sendAsCompleted();
+            if (successOnSend){
+                Log.i(SkavaConstants.LOG, "Geological mapping succesfully send.");
+                Toast.makeText(this, "", Toast.LENGTH_LONG);
+                backToAssessmentList();
+            } else {
+                Log.e(SkavaConstants.LOG, "Failed when saving geological mapping.");
+                Toast.makeText(this, "Failed when saving geological mapping " + getCurrentAssessment().getInternalCode() + " :: " + getCurrentAssessment().getCode(), Toast.LENGTH_LONG);
+            }
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    private void backToMappingStages() {
-        Intent upIntent = NavUtils.getParentActivityIntent(this);
+    private void backToAssessmentList() {
+        //Clear the current assessment, as this is a new stating point
+        try {
+            getSkavaContext().setAssessment(SkavaUtils.createInitialAssessment(getSkavaContext()));
+        } catch (DAOException e) {
+            throw new SkavaSystemException(e);
+        }
+
+        Intent upIntent = new Intent(this, AssessmentsListActivity.class);
 //        upIntent.putExtra("REDIRECT", true);
         if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
             // This activity is NOT part of this app's task, so create a new task
@@ -105,7 +127,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
             TaskStackBuilder.create(this)
                     // Add all of this activity's parents to the back stack
                     .addNextIntentWithParentStack(upIntent)
-                            // Navigate up to the closest parent
+                    // Navigate up to the closest parent
                     .startActivities();
         } else {
             // This activity is part of this app's task, so simply
@@ -116,20 +138,22 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
     }
 
 
-    private void saveDraft(){
+    private boolean saveDraft(){
         try {
             Assessment currentAssessment = getCurrentAssessment();
             LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
             localAssessmentDAO.saveAssessment(currentAssessment);
+            return true;
         } catch (DAOException e) {
+            e.printStackTrace();
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-            throw new SkavaSystemException(e);
+            return false;
         }
     }
 
 
-    private void sendAsCompleted(){
+    private boolean sendAsCompleted(){
         try {
             Assessment assessment = getCurrentAssessment();
             LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
@@ -137,10 +161,12 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
 
             RemoteAssessmentDAO remoteAssessmentDAO = getDAOFactory().getRemoteAssessmentDAO(DAOFactory.Flavour.DROPBOX);
             remoteAssessmentDAO.saveAssessment(assessment);
+            return true;
         } catch (DAOException e) {
+            e.printStackTrace();
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-            throw new SkavaSystemException(e);
+            return false;
         }
     }
 

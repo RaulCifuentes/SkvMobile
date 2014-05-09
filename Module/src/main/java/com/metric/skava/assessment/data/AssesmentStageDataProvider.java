@@ -19,7 +19,6 @@ public class AssesmentStageDataProvider {
     public static String GRAL_INFO = "GRAL_INFO";
     public static String DISCONTINUITIES = "DISCONTINUITIES";
     public static String Q = "Q";
-//    public static String ROCK_SUPPORT = "ROCK_SUPPORT";
     public static String RMR = "RMR";
     public static String PICS = "PICS";
     public static String DESC = "DESC";
@@ -42,7 +41,6 @@ public class AssesmentStageDataProvider {
         list.add(new AssessmentStage(GRAL_INFO, context.getString(R.string.assessment_master_menu_identification_label)));
         list.add(new AssessmentStage(DISCONTINUITIES, context.getString(R.string.assessment_master_menu_discontinuities_label)));
         list.add(new AssessmentStage(Q, context.getString(R.string.assessment_master_menu_qvalue_label)));
-//        list.add(new AssessmentStage(ROCK_SUPPORT, context.getString(R.string.assessment_master_menu_rock_support_label)));
         list.add(new AssessmentStage(RMR, context.getString(R.string.assessment_master_menu_rmr_label)));
         list.add(new AssessmentStage(PICS, context.getString(R.string.assessment_master_menu_pictures_label)));
         list.add(new AssessmentStage(DESC, context.getString(R.string.assessment_master_menu_description_label)));
