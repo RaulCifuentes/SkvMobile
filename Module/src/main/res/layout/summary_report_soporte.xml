@@ -103,6 +103,61 @@
 
         <!--Fila 2-->
         <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                style="@style/ReportLabelContainerBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_wall_pattern"
+                android:id="@+id/textView4" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:id="@id/report_wall_pattern_dxdy"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:id="@id/report_wall_pattern_type"
+                android:background="@drawable/text_box"
+                android:layout_span="6" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/tableRow">
+
+            <TextView
+                style="@style/ReportLabelContainerBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_roof_pattern"
+                android:id="@+id/textView5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:id="@id/report_roof_pattern_dxdy"
+                android:background="@drawable/text_box" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:id="@id/report_roof_pattern_type"
+                android:background="@drawable/text_box"
+                android:layout_span="6" />
+        </TableRow>
+
+        <TableRow
             android:layout_height="wrap_content"
             android:layout_width="match_parent">
 

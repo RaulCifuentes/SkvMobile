@@ -82,14 +82,14 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
     private EditText thicknessEditText;
 
     private int roofPatternSpinnerLastPosition;
-    private SupportPattern selectedRoofPattern;
+    private SupportPatternType selectedRoofPatternType;
     private SkavaEntityAdapter roofPatternAdapter;
     private Spinner roofPatternSpinner;
     private EditText roofPatternDx;
     private EditText roofPatternDy;
 
     private int wallPatternSpinnerLastPosition;
-    private SupportPattern selectedwallPattern;
+    private SupportPatternType selectedWallPatternType;
     private SkavaEntityAdapter wallPatternAdapter;
     private Spinner wallPatternSpinner;
     private EditText wallPatternDx;
@@ -493,8 +493,12 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
 //                return;
 //            }
             if (position != roofPatternSpinner.getAdapter().getCount() && position != roofPatternSpinnerLastPosition) {
-                selectedRoofPattern = (SupportPattern) parent.getItemAtPosition(position);
-                getSkavaContext().getAssessment().getRecomendation().setRoofPattern(selectedRoofPattern);
+                SupportRecomendation recommendation = getSkavaContext().getAssessment().getRecomendation();
+                if (recommendation != null) {
+                    selectedRoofPatternType = (SupportPatternType) parent.getItemAtPosition(position);
+                    SupportPattern supportPattern = recommendation.getRoofPattern();
+                    supportPattern.setType(selectedRoofPatternType);
+                }
                 roofPatternSpinnerLastPosition = position;
             }
         }
@@ -503,9 +507,14 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
 //                methodSpinner.setSelection(methodAdapter.getCount());
 //                return;
 //            }
+
             if (position != wallPatternSpinner.getAdapter().getCount() && position != wallPatternSpinnerLastPosition) {
-                selectedwallPattern = (SupportPattern) parent.getItemAtPosition(position);
-                getSkavaContext().getAssessment().getRecomendation().setWallPattern(selectedwallPattern);
+                SupportRecomendation recommendation = getSkavaContext().getAssessment().getRecomendation();
+                if (recommendation != null) {
+                    selectedWallPatternType = (SupportPatternType) parent.getItemAtPosition(position);
+                    SupportPattern supportPattern = recommendation.getWallPattern();
+                    supportPattern.setType(selectedWallPatternType);
+                }
                 wallPatternSpinnerLastPosition = position;
             }
         }
