@@ -51,18 +51,7 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
             List<User> listUsers = new ArrayList<User>();
             List<DbxRecord> recordList = mUsersTable.findAll();
             for (DbxRecord currentDbxRecord : recordList) {
-                String codigo = String.valueOf(currentDbxRecord.getLong("UserId"));
-                String nombre = currentDbxRecord.getString("UserName");
-                String email = currentDbxRecord.getString("UserMail");
-                List<Role> roleList = new ArrayList<Role>();
-                DbxList roles = currentDbxRecord.getList("Roles");
-                for (int i = 0; i < roles.size(); i++) {
-                    String roleCode = roles.getString(i);
-                    roleList.add(mRolDAO.getRoleByCode(roleCode));
-                }
-
-                User newUser = new User(codigo, nombre, email, null);
-                newUser.grantRoles(roleList);
+                User newUser = mapUserFromDbxRecord(currentDbxRecord);
 
                 DbxList faces = currentDbxRecord.getList("Faces");
                 for (int i = 0; i < faces.size(); i++) {
@@ -79,6 +68,22 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
         }
     }
 
+    private User mapUserFromDbxRecord(DbxRecord currentDbxRecord) throws DAOException {
+        String codigo = String.valueOf(currentDbxRecord.getLong("UserId"));
+        String nombre = currentDbxRecord.getString("UserName");
+        String email = readString(currentDbxRecord, "UserMail");
+        List<Role> roleList = new ArrayList<Role>();
+        DbxList roles = currentDbxRecord.getList("Roles");
+        for (int i = 0; i < roles.size(); i++) {
+            String roleCode = roles.getString(i);
+            roleList.add(mRolDAO.getRoleByCode(roleCode));
+        }
+
+        User newUser = new User(codigo, nombre, email, null);
+        newUser.grantRoles(roleList);
+        return newUser;
+    }
+
     @Override
     public User getUserByEmail(String email) throws DAOException {
         try {
@@ -87,16 +92,7 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
                 getDatastore().sync();
             }
             DbxRecord userRecord = mUsersTable.findRecordByCandidateKey("UserMail", email);
-            String codigo = String.valueOf(userRecord.getString("UserId"));
-            String nombre = userRecord.getString("UserName");
-            List<Role> roleList = new ArrayList<Role>();
-            DbxList roles = userRecord.getList("Roles");
-            for (int i = 0; i < roles.size(); i++) {
-                String roleCode = roles.getString(i);
-                roleList.add(mRolDAO.getRoleByCode(roleCode));
-            }
-            User newUser = new User(codigo, nombre, email, null);
-            newUser.grantRoles(roleList);
+            User newUser = mapUserFromDbxRecord(userRecord);
 
             DbxList faces = userRecord.getList("Faces");
             for (int i = 0; i < faces.size(); i++) {
@@ -121,17 +117,7 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
                 getDatastore().sync();
             }
             DbxRecord userRecord = mUsersTable.findRecordByCode(code);
-            String codigo = String.valueOf(userRecord.getString("UserId"));
-            String nombre = userRecord.getString("UserName");
-            String email = userRecord.getString("UserMail");
-            List<Role> roleList = new ArrayList<Role>();
-            DbxList roles = userRecord.getList("Roles");
-            for (int i = 0; i < roles.size(); i++) {
-                String roleCode = roles.getString(i);
-                roleList.add(mRolDAO.getRoleByCode(roleCode));
-            }
-            User newUser = new User(codigo, nombre, email, null);
-            newUser.grantRoles(roleList);
+            User newUser = mapUserFromDbxRecord(userRecord);
 
             DbxList faces = userRecord.getList("Faces");
             for (int i = 0; i < faces.size(); i++) {
