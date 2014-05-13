@@ -14,7 +14,7 @@ public class UserTable extends SkavaEntityTable {
             " integer primary key autoincrement, " +
             CODE_COLUMN + " text not null, " +
             NAME_COLUMN + " text not null, " +
-            EMAIL_COLUMN + " text not null );";
+            EMAIL_COLUMN + " text null );";
 
     public static final String INSERT_USERS_TABLE = "insert into " + USER_DATABASE_TABLE + "(" + CODE_COLUMN + "," + NAME_COLUMN + "," + EMAIL_COLUMN +  ") values('USR_A','User A','admin@skava.cl')";
     public static final String INSERT_USERS_TABLE_SECOND = "insert into " + USER_DATABASE_TABLE + "(" + CODE_COLUMN + "," + NAME_COLUMN + "," + EMAIL_COLUMN + ") values('USR_B','User B','analyst@skava.cl')";
