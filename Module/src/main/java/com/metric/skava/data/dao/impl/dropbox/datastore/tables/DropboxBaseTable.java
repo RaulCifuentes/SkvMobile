@@ -71,7 +71,7 @@ public abstract class DropboxBaseTable implements DropboxTable {
                 if (results.count() == 1) {
                     resultRecord = results.iterator().next();
                 } else {
-                    throw new DAOException("Multiple Assessment instances for same code: " + keyValue);
+                    throw new DAOException("Multiple record instances for same code: " + keyValue);
                 }
             }
         } catch (DbxException e) {

@@ -189,13 +189,13 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             String patternTypeCode = CursorUtils.getString(SupportRecomendationTable.ROOF_PATTERN_TYPE_CODE_COLUMN, cursor);
             Double distanceX = CursorUtils.getDouble(SupportRecomendationTable.ROOF_PATTERN_DX_COLUMN, cursor);
             Double distanceY = CursorUtils.getDouble(SupportRecomendationTable.ROOF_PATTERN_DY_COLUMN, cursor);
-            SupportPatternType type = daoFactory.getLocalSupportPatternTypeDAO().getSupportPatternTypeByCode(patternTypeCode);
+            SupportPatternType type = daoFactory.getLocalSupportPatternTypeDAO().getSupportPatternTypeByUniqueCode(patternTypeCode);
             SupportPattern roofPattern = new SupportPattern(type, distanceX, distanceY);
 
             patternTypeCode = CursorUtils.getString(SupportRecomendationTable.WALL_PATTERN_TYPE_CODE_COLUMN, cursor);
             distanceX = CursorUtils.getDouble(SupportRecomendationTable.WALL_PATTERN_DX_COLUMN, cursor);
             distanceY = CursorUtils.getDouble(SupportRecomendationTable.WALL_PATTERN_DY_COLUMN, cursor);
-            type = daoFactory.getLocalSupportPatternTypeDAO().getSupportPatternTypeByCode(patternTypeCode);
+            type = daoFactory.getLocalSupportPatternTypeDAO().getSupportPatternTypeByUniqueCode(patternTypeCode);
             SupportPattern wallPattern = new SupportPattern(type, distanceX, distanceY);
             
             String boltTypeCode = CursorUtils.getString(SupportRecomendationTable.BOLT_TYPE_CODE_COLUMN, cursor);

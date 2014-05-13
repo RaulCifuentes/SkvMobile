@@ -192,25 +192,34 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
 
 
         //******PATTERN_TYPE ***///
-        List<SupportPatternType> patternTypeList;
+        List<SupportPatternType> roofPatternTypeList;
         LocalSupportPatternTypeDAO supportPatternTypeDAO = null;
         try {
             supportPatternTypeDAO = getDAOFactory().getLocalSupportPatternTypeDAO();
-            patternTypeList = supportPatternTypeDAO.getAllSupportPatternTypes();
-            patternTypeList.add(new SupportPatternType("HINT", "Select one type ..."));
+            roofPatternTypeList = supportPatternTypeDAO.getAllSupportPatternTypes(SupportPatternType.Group.ROOF);
+            roofPatternTypeList.add(new SupportPatternType("HINT", "Select one type ..."));
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             return;
         }
         // Create an ArrayAdapter using the string array and a default spinner layout
-        roofPatternAdapter = new SkavaEntityAdapter<SupportPatternType>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, patternTypeList);
+        roofPatternAdapter = new SkavaEntityAdapter<SupportPatternType>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, roofPatternTypeList);
         // Specify the layout to use when the list of choices appears
         roofPatternAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
 
+        List<SupportPatternType> wallPatternTypeList;
+        try {
+            wallPatternTypeList = supportPatternTypeDAO.getAllSupportPatternTypes(SupportPatternType.Group.WALL);
+            wallPatternTypeList.add(new SupportPatternType("HINT", "Select one type ..."));
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            return;
+        }
         // Create an ArrayAdapter using the string array and a default spinner layout
-        wallPatternAdapter = new SkavaEntityAdapter<SupportPatternType>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, patternTypeList);
+        wallPatternAdapter = new SkavaEntityAdapter<SupportPatternType>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, wallPatternTypeList);
         // Specify the layout to use when the list of choices appears
         wallPatternAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner

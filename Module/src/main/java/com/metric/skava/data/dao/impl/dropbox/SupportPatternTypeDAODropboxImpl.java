@@ -31,23 +31,14 @@ public class SupportPatternTypeDAODropboxImpl extends DropBoxBaseDAO implements 
         List<SupportPatternType> listPatterns = new ArrayList<SupportPatternType>();
 
         String[] names = new String[]{"ParameterName"} ;
-        String[] values = new String[]{"Support_PatternType"};
+        String[] values = new String[]{"Support_RoofType"};
         List<DbxRecord> recordList = mParametersTable.findRecordsByCriteria(names, values);
         for (DbxRecord currentDbxRecord : recordList) {
             String codigo = currentDbxRecord.getString("ParameterId");
             String nombre = currentDbxRecord.getString("ParameterValue");
-            SupportPatternType newSection = new SupportPatternType(codigo, nombre);
-            listPatterns.add(newSection);
-        }
-
-        names = new String[]{"ParameterName"} ;
-        values = new String[]{"Support_RoofType"};
-        recordList = mParametersTable.findRecordsByCriteria(names, values);
-        for (DbxRecord currentDbxRecord : recordList) {
-            String codigo = currentDbxRecord.getString("ParameterId");
-            String nombre = currentDbxRecord.getString("ParameterValue");
-            SupportPatternType newSection = new SupportPatternType(codigo, nombre);
-            listPatterns.add(newSection);
+            SupportPatternType newPattern = new SupportPatternType(codigo, nombre);
+            newPattern.setGroup(SupportPatternType.Group.ROOF);
+            listPatterns.add(newPattern);
         }
 
         names = new String[]{"ParameterName"} ;
@@ -56,10 +47,10 @@ public class SupportPatternTypeDAODropboxImpl extends DropBoxBaseDAO implements 
         for (DbxRecord currentDbxRecord : recordList) {
             String codigo = currentDbxRecord.getString("ParameterId");
             String nombre = currentDbxRecord.getString("ParameterValue");
-            SupportPatternType newSection = new SupportPatternType(codigo, nombre);
-            listPatterns.add(newSection);
+            SupportPatternType newPattern = new SupportPatternType(codigo, nombre);
+            newPattern.setGroup(SupportPatternType.Group.WALL);
+            listPatterns.add(newPattern);
         }
-
         return listPatterns;
     }
 

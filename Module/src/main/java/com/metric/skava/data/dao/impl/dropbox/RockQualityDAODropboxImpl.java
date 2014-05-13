@@ -41,24 +41,25 @@ public class RockQualityDAODropboxImpl extends DropBoxBaseDAO implements RemoteR
             List<DbxRecord> qRockQualities = mQ_rockQualityTable.findAll();
             for (DbxRecord currentRockQualityRecord : qRockQualities) {
                 String codigo = currentRockQualityRecord.getString("RockQualityId");
-                String name = currentRockQualityRecord.getString("NAME");
-                Double lowerBound = currentRockQualityRecord.getDouble("Q_LOW_BOUND");
-                Double upperBound = currentRockQualityRecord.getDouble("Q_HIGH_BOUND");
+                String name = readString(currentRockQualityRecord, "NAME");
+                Double lowerBound = readDouble(currentRockQualityRecord, "Q_LOW_BOUND");
+                Double upperBound = readDouble(currentRockQualityRecord, "Q_HIGH_BOUND");
                 RockQuality newRockQuality = new RockQuality(RockQuality.AccordingTo.Q, codigo, name, lowerBound, upperBound);
                 listRockQualitys.add(newRockQuality);
             }
             List<DbxRecord> rmrRockQualities = mRMR_rockQualityTable.findAll();
             for (DbxRecord currentRockQualityRecord : rmrRockQualities) {
                 String codigo = currentRockQualityRecord.getString("RockQualityId");
-                String name = currentRockQualityRecord.getString("NAME");
-                Double lowerBound = currentRockQualityRecord.getDouble("RMR_LOW_BOUND");
-                Double upperBound = currentRockQualityRecord.getDouble("RMR_HIGH_BOUND");
-                String classification = currentRockQualityRecord.getString("CLASS");
+                String name = readString(currentRockQualityRecord, "NAME");
+                Double lowerBound = readDouble(currentRockQualityRecord, "RMR_LOW_BOUND");
+                Double upperBound = readDouble(currentRockQualityRecord, "RMR_HIGH_BOUND");
+                String classification = readString(currentRockQualityRecord, "CLASS");
                 RockQuality newRockQuality = new RockQuality(RockQuality.AccordingTo.RMR, codigo, name, lowerBound, upperBound);
-                newRockQuality.setClassification(classification);
+                if (classification != null){
+                    newRockQuality.setClassification(classification);
+                }
                 listRockQualitys.add(newRockQuality);
             }
-
             return listRockQualitys;
         } catch (DbxException e) {
             throw new DAOException(e);

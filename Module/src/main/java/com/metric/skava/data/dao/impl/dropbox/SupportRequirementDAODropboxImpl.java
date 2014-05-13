@@ -101,13 +101,13 @@ public class SupportRequirementDAODropboxImpl extends DropBoxBaseDAO implements 
 
                 SupportPattern roofPattern = null;
                 if (roofPatternTypeCode != null) {
-                    SupportPatternType roofPatternType = supportPatternTypeDAO.getSupportPatternTypeByCode(roofPatternTypeCode);
+                    SupportPatternType roofPatternType = supportPatternTypeDAO.getSupportPatternTypeByUniqueCode(roofPatternTypeCode);
                     roofPattern = new SupportPattern(roofPatternType, roofDx, roofDy);
                 }
 
                 SupportPattern wallPattern = null;
                 if (wallPatternTypeCode != null) {
-                    SupportPatternType wallPatternType = supportPatternTypeDAO.getSupportPatternTypeByCode(wallPatternTypeCode);
+                    SupportPatternType wallPatternType = supportPatternTypeDAO.getSupportPatternTypeByUniqueCode(wallPatternTypeCode);
                     wallPattern = new SupportPattern(wallPatternType, wallDx, wallDy);
                 }
 

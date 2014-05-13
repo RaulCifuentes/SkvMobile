@@ -10,9 +10,9 @@ import java.util.List;
  */
 public interface LocalSupportPatternTypeDAO {
 
-    public List<SupportPatternType> getAllSupportPatternTypes() throws DAOException;
+    public List<SupportPatternType> getAllSupportPatternTypes(SupportPatternType.Group group) throws DAOException;
 
-    public SupportPatternType getSupportPatternTypeByCode(String code) throws DAOException;
+    public SupportPatternType getSupportPatternTypeByUniqueCode(String code) throws DAOException;
 
     public void saveSupportPatternType(SupportPatternType aperture) throws DAOException;
 

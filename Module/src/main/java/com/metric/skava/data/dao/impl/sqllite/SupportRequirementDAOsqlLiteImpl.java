@@ -75,10 +75,10 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
             BoltType boltType = localBoltTypeDAO.getBoltTypeByCode(boltTypeCode);
 
             LocalSupportPatternTypeDAO supportPatternTypeDAO = daoFactory.getLocalSupportPatternTypeDAO();
-            SupportPatternType supportPatternType = supportPatternTypeDAO.getSupportPatternTypeByCode(roofPatternTypeCode);
+            SupportPatternType supportPatternType = supportPatternTypeDAO.getSupportPatternTypeByUniqueCode(roofPatternTypeCode);
             SupportPattern roofPattern = new SupportPattern(supportPatternType, roofPatternXDistance, roofPatternYDistance);
 
-            supportPatternType = supportPatternTypeDAO.getSupportPatternTypeByCode(wallPatternTypeCode);
+            supportPatternType = supportPatternTypeDAO.getSupportPatternTypeByUniqueCode(wallPatternTypeCode);
             SupportPattern wallPattern = new SupportPattern(supportPatternType, wallPatternXDistance, wallPatternYDistance);
 
             LocalShotcreteTypeDAO shotcreteTypeDAO = daoFactory.getLocalShotcreteTypeDAO();
