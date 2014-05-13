@@ -173,7 +173,7 @@
                 <EditText
                     android:hint="Diameter of the bolt in milimeters."
                     android:id="@+id/instructions_bolt_diameter_value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/fragment_number_input_width_medium"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:inputType="number"
@@ -207,10 +207,10 @@
                 <EditText
                     android:hint="Length of the bolt in meters considering two decimals."
                     android:id="@+id/instructions_bolt_length_value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/fragment_number_input_width_medium"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:inputType="number"
+                    android:inputType="number|numberDecimal"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
 
                     />
@@ -263,7 +263,7 @@
                     <EditText
                         android:hint="Distance X axis"
                         android:id="@+id/instructions_roof_pattern_dx"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/fragment_number_input_width_small"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:inputType="number"
@@ -282,7 +282,7 @@
                     <EditText
                         android:hint="Distance Y axis."
                         android:id="@+id/instructions_roof_pattern_dy"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/fragment_number_input_width_small"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:inputType="number"
@@ -338,7 +338,7 @@
                     <EditText
                         android:hint="Distance X axis"
                         android:id="@+id/instructions_wall_pattern_dx"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/fragment_number_input_width_small"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:inputType="number"
@@ -358,7 +358,7 @@
                     <EditText
                         android:hint="Distance Y axis."
                         android:id="@+id/instructions_wall_pattern_dy"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/fragment_number_input_width_small"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:inputType="number"
@@ -424,7 +424,7 @@
                 <EditText
                     android:hint="Shotcrete thickness in millimeters."
                     android:id="@+id/instructions_thickness_value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/fragment_number_input_width_medium"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:inputType="number"
@@ -547,10 +547,10 @@
                 <EditText
                     android:hint="Distance between arches in meters considering two decimals."
                     android:id="@+id/instructions_separation_value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/fragment_number_input_width_medium"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:inputType="number"
+                    android:inputType="number|numberDecimal"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
 
                     />
