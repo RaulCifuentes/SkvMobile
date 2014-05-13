@@ -388,7 +388,7 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
                     Double enteredValue = Double.parseDouble(text);
                     supportRecommendation.setThickness(enteredValue);
                 } catch (NumberFormatException e) {
-                    thicknessEditText.setError("Length must be a number!");
+                    thicknessEditText.setError("Thickness must be a number!");
                 }
             }
         });
@@ -431,7 +431,7 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         separationEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
         Double separation = supportRecommendation.getSeparation();
         if (separation != null) {
-            separationEditText.setText(numberFormatter.format(separation));
+            separationEditText.setText(separation.toString());
         }
 
         separationEditText.addTextChangedListener(new TextValidator(separationEditText) {
@@ -442,7 +442,7 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
                     Double enteredValue = Double.parseDouble(text);
                     supportRecommendation.setSeparation(enteredValue);
                 } catch (NumberFormatException e) {
-                    separationEditText.setError("Length must be a number!");
+                    separationEditText.setError("Separation must be a number!");
                 }
             }
         });
