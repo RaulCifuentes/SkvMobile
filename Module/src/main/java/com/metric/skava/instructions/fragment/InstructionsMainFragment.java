@@ -342,7 +342,9 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         SupportPattern roofPattern = supportRecommendation.getRoofPattern();
         roofPatternSpinner = (Spinner) mRootView.findViewById(R.id.instructions_roof_pattern_spinner);
         roofPatternDx = (EditText) mRootView.findViewById(R.id.instructions_roof_pattern_dx);
+        roofPatternDx.setRawInputType(Configuration.KEYBOARD_12KEY);
         roofPatternDy = (EditText) mRootView.findViewById(R.id.instructions_roof_pattern_dy);
+        roofPatternDy.setRawInputType(Configuration.KEYBOARD_12KEY);
         roofPatternSpinner.setAdapter(roofPatternAdapter);
         roofPatternSpinner.setOnItemSelectedListener(this);
         if (roofPattern != null) {
@@ -357,7 +359,9 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         SupportPattern wallPattern = supportRecommendation.getWallPattern();
         wallPatternSpinner = (Spinner) mRootView.findViewById(R.id.instructions_wall_pattern_spinner);
         wallPatternDx = (EditText) mRootView.findViewById(R.id.instructions_wall_pattern_dx);
+        wallPatternDx.setRawInputType(Configuration.KEYBOARD_12KEY);
         wallPatternDy = (EditText) mRootView.findViewById(R.id.instructions_wall_pattern_dy);
+        wallPatternDy.setRawInputType(Configuration.KEYBOARD_12KEY);
         wallPatternSpinner.setAdapter(wallPatternAdapter);
         wallPatternSpinner.setOnItemSelectedListener(this);
         if (wallPattern != null) {
