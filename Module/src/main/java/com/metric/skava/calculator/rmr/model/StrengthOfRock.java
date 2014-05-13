@@ -11,8 +11,8 @@ public class StrengthOfRock extends MappedIndex {
     private Group group;
 
     public enum Group {
-        POINT_LOAD_KEY("Point-load strenght index"),
-        UNIAXIAL_KEY("Uniaxial compression strenght");
+        POINT_LOAD_KEY("a. Point-load strenght index"),
+        UNIAXIAL_KEY("b. Uniaxial compression strenght");
 
         private final String value;
 

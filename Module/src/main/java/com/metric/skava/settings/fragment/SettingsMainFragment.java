@@ -14,6 +14,7 @@ import com.metric.skava.app.util.SkavaConstants;
 public class SettingsMainFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String UPDATE_AUTO_PREFERENCE = "UPDATE_AUTO";
+    public static final String UNLINK_DROPBOX_PREFERENCE = "UNLINK_DROPBOX";
 
     @Override
     public void onCreate(Bundle paramBundle) {
@@ -27,38 +28,10 @@ public class SettingsMainFragment extends PreferenceFragment implements SharedPr
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
         if (key.equals(UPDATE_AUTO_PREFERENCE)) {
-            boolean valueSet = sharedPreferences.getBoolean(key, false);
-            if (valueSet) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(SkavaConstants.LOG, "settings UPDATE_AUTO changed: true()");
-                }
-            } else {
-                if (BuildConfig.DEBUG) {
-                    Log.d(SkavaConstants.LOG, "settings UPDATE_AUTO changed: false");
-                }
+            if (BuildConfig.DEBUG) {
+                Log.d(SkavaConstants.LOG, "Changing settings for " + key  +", new value: " + sharedPreferences.getBoolean(key, false));
             }
-//            ((SkavaApplication) getActivity().getApplication()).setUpdateDatamodelAutomatically(valueSet);
         }
-//        if (key.equals("PREFERENCE_THEME")) {
-//            String newValue = sharedPreferences.getString(key, "DEFAULT");
-//            if (newValue.equals("DEFAULT_THEME")) {
-//                if (BuildConfig.DEBUG) {
-//                    Log.d(SkavaConstants.LOG, "settings PREFERENCE_THEME changed: DEFAULT_THEME");
-//                }
-//                ((SkavaApplication) getActivity().getApplication()).setCustomThemeId(R.style.CustomAppTheme);
-//            } else if (newValue.equals("DAY_THEME")) {
-//                if (BuildConfig.DEBUG) {
-//                    Log.d(SkavaConstants.LOG, "settings PREFERENCE_THEME changed: DAY_THEME");
-//                }
-//                ((SkavaApplication) getActivity().getApplication()).setCustomThemeId(R.style.DayAppTheme);
-//            } else if (newValue.equals("NIGHT_THEME")) {
-//                if (BuildConfig.DEBUG) {
-//                    Log.d(SkavaConstants.LOG, "settings PREFERENCE_THEME changed: NIGHT_THEME");
-//                }
-//                ((SkavaApplication) getActivity().getApplication()).setCustomThemeId(R.style.NightAppTheme);
-//            }
-
-//    }
 
 }
 

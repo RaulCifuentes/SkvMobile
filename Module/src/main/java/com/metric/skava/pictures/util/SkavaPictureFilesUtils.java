@@ -30,6 +30,11 @@ public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
     }
 
 
+    //**
+    // AssessmentCode_TIPO_DATE_TIME.EXT
+//    TIPO: puede ser uno de los siguientes tipos
+//    [WEDGE,ROOF,LEFT,RIGHT,FACE,EXPANDED,EXTRA]
+//    EXT: Extension del archivo
     public Uri getOutputUri(String suggestedName) throws SkavaSystemException {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
@@ -46,7 +51,7 @@ public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
             }
         }
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date());
 
         File mediaFile = new File(mediaStorageDir.getPath() + File.separator + suggestedName + timeStamp + ".jpg");
         Uri targetUri = Uri.fromFile(mediaFile);

@@ -48,8 +48,7 @@
             android:name="com.dropbox.client2.android.AuthActivity"
             android:launchMode="singleTask">
             <intent-filter>
-                <!--<data android:scheme="db-bzsvwf0odnoslis" />-->
-                 <data android:scheme="db-m375gz1gq6k8vv1" />
+                 <data android:scheme="db-wv7jc0wirvu2c8y" />
 
                 <action android:name="android.intent.action.VIEW" />
 
@@ -126,10 +125,10 @@
         <activity
             android:name="com.metric.skava.report.activity.MappingReportMainActivity"
             android:label="@string/title_activity_mapping_report_main"
-            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity">
+            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentsListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.metric.skava.assessment.activity.AssessmentStageListActivity" />
+                android:value="com.metric.skava.assessment.activity.AssessmentsListActivity" />
         </activity>
         <activity
             android:name="com.metric.skava.speech.activity.SpeechMainActivity"

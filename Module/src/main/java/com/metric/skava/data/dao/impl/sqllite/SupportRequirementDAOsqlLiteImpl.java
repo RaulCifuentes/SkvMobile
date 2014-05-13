@@ -49,7 +49,7 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
             String code = CursorUtils.getString(SupportRequirementTable.CODE_COLUMN, cursor);
             String name = CursorUtils.getString(SupportRequirementTable.NAME_COLUMN, cursor);
             Double qLower = CursorUtils.getDouble(SupportRequirementTable.Q_LOWER_BOUND_COLUMN, cursor);
-            Double qUpper = CursorUtils.getDouble(SupportRequirementTable.Q_LOWER_BOUND_COLUMN, cursor);
+            Double qUpper = CursorUtils.getDouble(SupportRequirementTable.Q_UPPER_BOUND_COLUMN, cursor);
             String boltTypeCode = CursorUtils.getString(SupportRequirementTable.BOLT_TYPE_CODE_COLUMN, cursor);
             Double boltDiameter = CursorUtils.getDouble(SupportRequirementTable.BOLT_DIAMETER_COLUMN, cursor);
             Double boltLength = CursorUtils.getDouble(SupportRequirementTable.BOLT_LENGTH_COLUMN, cursor);

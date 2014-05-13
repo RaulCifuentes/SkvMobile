@@ -25,6 +25,10 @@
     <PreferenceCategory android:title="Skava Preferences" />
     <CheckBoxPreference android:title="Update data model automatically on start"
         android:key="UPDATE_AUTO"
-        android:summary="Connecting to a dropbox server and download de Data Model automatically every tmie the app starts"/>
+        android:summary="Reload the data model every time the app starts"/>
+
+    <CheckBoxPreference android:title="Unlink the global dropbox account"
+        android:key="UNLINK_DROPBOX"
+        android:summary="Unlink the global Dropbox account, so it will be asked on next login"/>
 
 </PreferenceScreen>

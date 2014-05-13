@@ -146,18 +146,23 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
     }
 
     private List<Uri> getResourcesByAssessmentCode(String code) {
-        Cursor cursor = getRecordsFilteredByColumn(ExternalResourcesTable.EXTERNAL_RESOURCES_DATABASE_TABLE, ExternalResourcesTable.ASSESSMENT_CODE_COLUMN, code, null);
+        Cursor cursor = getRecordsFilteredByColumn(ExternalResourcesTable.EXTERNAL_RESOURCES_DATABASE_TABLE, ExternalResourcesTable.ASSESSMENT_CODE_COLUMN, code, ExternalResourcesTable.RESOURCE_ORDINAL);
         List<Uri> list = assembleResourceList(cursor);
         return list;
     }
 
 
     private List<Uri> assembleResourceList(Cursor cursor) {
-        List<Uri> result = new ArrayList<Uri>();
+        List<Uri> result = new ArrayList<Uri>(5);
+        result.add(null);
+        result.add(null);
+        result.add(null);
+        result.add(null);
         while (cursor.moveToNext()) {
+            Integer resourceIndex = CursorUtils.getInt(ExternalResourcesTable.RESOURCE_ORDINAL, cursor);
             String uriString = CursorUtils.getString(ExternalResourcesTable.RESOURCE_URL_COLUMN, cursor);
             Uri uri = Uri.parse(uriString);
-            result.add(uri);
+            result.set(resourceIndex, uri);
         }
         return result;
     }
@@ -294,7 +299,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         //Save the related recommendation
 
         SupportRecomendation recomendation = newSkavaEntity.getRecomendation();
-        if (recomendation != null && recomendation.isComplete()){
+        if (recomendation != null && recomendation.hasSelectedAnything()){
             String[] recommendationNames = new String[]{
                     SupportRecomendationTable.ASSESSMENT_CODE_COLUMN,
                     SupportRecomendationTable.SUPPORT_REQUIREMENT_BASE_CODE_COLUMN,
@@ -317,20 +322,22 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             };
             Object[] recomendationValues = new Object[]{
                     newSkavaEntity.getCode(),
-                    recomendation.getRequirementBase().getCode(),
+                    recomendation.getRequirementBase() != null ? recomendation.getRequirementBase().getCode() : null,
                     recomendation.getBoltType() != null ? recomendation.getBoltType().getCode() : null,
                     recomendation.getBoltDiameter(),
                     recomendation.getBoltLength(),
-                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getType().getCode() : null,
-                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getDistanceX() : null,
-                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getDistanceY() : null,
-                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getType().getCode() : null,
-                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getDistanceX() : null,
-                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getDistanceY() : null,
+                    null, null, null,
+                    null, null, null,
+//                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getType().getCode() : null,
+//                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getDistanceX() : null,
+//                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getDistanceY() : null,
+//                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getType().getCode() : null,
+//                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getDistanceX() : null,
+//                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getDistanceY() : null,
                     recomendation.getShotcreteType() != null ? recomendation.getShotcreteType().getCode() : null,
                     recomendation.getThickness(),
                     recomendation.getMeshType() != null ? recomendation.getMeshType().getCode() : null,
-                    recomendation.getCoverage(),
+                    recomendation.getCoverage() != null ? recomendation.getCoverage().getCode() : null,
                     recomendation.getArchType() != null ? recomendation.getArchType().getCode() : null,
                     recomendation.getSeparation(),
                     recomendation.getObservations()
@@ -340,18 +347,21 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
 
         //Save the related pictures urls
         List<Uri> pictureList = newSkavaEntity.getPictureUriList();
-        for (Uri uri : pictureList) {
+        for (Integer index = 0; index < pictureList.size(); index++) {
+            Uri uri = pictureList.get(index);
             if (null == uri) {
                 continue;
             }
             String[] resourcesNames = new String[]{
                     ExternalResourcesTable.ASSESSMENT_CODE_COLUMN,
                     ExternalResourcesTable.RESOURCE_TYPE_COLUMN,
+                    ExternalResourcesTable.RESOURCE_ORDINAL,
                     ExternalResourcesTable.RESOURCE_URL_COLUMN
             };
-            String[] resourcesValues = new String[]{
+            Object[] resourcesValues = new Object[]{
                     newSkavaEntity.getCode(),
                     "PICTURE",
+                    index,
                     uri.getPath()
             };
             saveRecord(ExternalResourcesTable.EXTERNAL_RESOURCES_DATABASE_TABLE, resourcesNames, resourcesValues);

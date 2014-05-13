@@ -20,7 +20,6 @@ import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.ExcavationProject;
 import com.metric.skava.app.model.Role;
 import com.metric.skava.app.model.Tunnel;
-import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.app.util.ViewUtils;
@@ -86,10 +85,6 @@ public class SyncMainFragment extends SkavaFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupAssessmentsListView(mInflater);
-//        setupQBartonListView(mInflater);
-//        setupRMRListView(mInflater);
-//        setupFamiliesListView(mInflater);
-//        setupRecommendationsListView(mInflater);
     }
 
     private void setupAssessmentsListView(LayoutInflater inflater) {
@@ -219,30 +214,30 @@ public class SyncMainFragment extends SkavaFragment {
     }
 
 
-    private void setupFacesListView(LayoutInflater inflater) {
-        View facesHeaderView = inflater.inflate(R.layout.calculator_two_column_list_view_header_checked_radio, null, false);
-        facesListView = (ListView) getView().findViewById(R.id.listviewFaces);
-        final List<TunnelFace> listFaces;
-        try {
-            listFaces = daoFactory.getLocalTunnelFaceDAO().getAllTunnelFaces();
-            facesListViewAdapter = new TunnelFaceListViewAdapter(getActivity(),
-                    R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listFaces);
-
-//            TextView firstTextView = (TextView) usersHeaderView.getView().findViewById(R.id.first_column_text_view);
-            TextView secondTextView = (TextView) facesHeaderView.findViewById(R.id.second_column_text_view);
-            secondTextView.setText("Faces");
-
-            facesListView.addHeaderView(facesHeaderView, null, false);
-            final int numberOfHeaders = facesListView.getHeaderViewsCount();
-            facesListView.setAdapter(facesListViewAdapter);
-
-            //This method is necessary only to use a ListView inside a ScrollView
-            ViewUtils.adjustListViewHeightBasedOnChildren(facesListView);
-
-        } catch (DAOException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void setupFacesListView(LayoutInflater inflater) {
+//        View facesHeaderView = inflater.inflate(R.layout.calculator_two_column_list_view_header_checked_radio, null, false);
+//        facesListView = (ListView) getView().findViewById(R.id.listviewFaces);
+//        final List<TunnelFace> listFaces;
+//        try {
+//            listFaces = daoFactory.getLocalTunnelFaceDAO().getAllTunnelFaces();
+//            facesListViewAdapter = new TunnelFaceListViewAdapter(getActivity(),
+//                    R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listFaces);
+//
+////            TextView firstTextView = (TextView) usersHeaderView.getView().findViewById(R.id.first_column_text_view);
+//            TextView secondTextView = (TextView) facesHeaderView.findViewById(R.id.second_column_text_view);
+//            secondTextView.setText("Faces");
+//
+//            facesListView.addHeaderView(facesHeaderView, null, false);
+//            final int numberOfHeaders = facesListView.getHeaderViewsCount();
+//            facesListView.setAdapter(facesListViewAdapter);
+//
+//            //This method is necessary only to use a ListView inside a ScrollView
+//            ViewUtils.adjustListViewHeightBasedOnChildren(facesListView);
+//
+//        } catch (DAOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     @Override
@@ -267,8 +262,8 @@ public class SyncMainFragment extends SkavaFragment {
         assessmentListViewAdapter.addAll(daoFactory.getLocalAssessmentDAO().getAllAssessments());
         assessmentListViewAdapter.notifyDataSetChanged();
 
-        facesListViewAdapter.clear();
-        facesListViewAdapter.addAll(facesDAO.getAllTunnelFaces());
-        facesListViewAdapter.notifyDataSetChanged();
+//        facesListViewAdapter.clear();
+//        facesListViewAdapter.addAll(facesDAO.getAllTunnelFaces());
+//        facesListViewAdapter.notifyDataSetChanged();
     }
 }

@@ -21,7 +21,6 @@ import com.metric.skava.calculator.rmr.model.Infilling;
 import com.metric.skava.calculator.rmr.model.OrientationDiscontinuities;
 import com.metric.skava.calculator.rmr.model.Persistence;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
-import com.metric.skava.calculator.rmr.model.RQD_RMR;
 import com.metric.skava.calculator.rmr.model.Roughness;
 import com.metric.skava.calculator.rmr.model.Spacing;
 import com.metric.skava.calculator.rmr.model.StrengthOfRock;
@@ -122,8 +121,7 @@ public class SkavaUtils {
 
         OrientationDiscontinuities orientation = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.TUNNELS_MINES).get(0);
 
-        RQD_RMR rqdRmr = RQD_RMR.findWrapper(rqd);
-        RMR_Calculation mRMRCalculation = new RMR_Calculation(strenght, rqdRmr, spacing, persistence, aperture, roughness, infilling, weathering, groundwater, orientation);
+        RMR_Calculation mRMRCalculation = new RMR_Calculation(strenght, null, spacing, persistence, aperture, roughness, infilling, weathering, groundwater, orientation);
 
         initialAssessment.setRmrCalculation(mRMRCalculation);
 

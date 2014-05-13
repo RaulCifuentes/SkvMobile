@@ -11,9 +11,9 @@ public class OrientationDiscontinuities extends MappedIndex implements Serializa
     private Group group;
 
     public enum Group {
-        TUNNELS_MINES("Tunnels & Mines"),
-        FOUNDATIONS("Foundations"),
-        SLOPES("Slopes");
+        TUNNELS_MINES("a. Tunnels & Mines"),
+        FOUNDATIONS("b. Foundations"),
+        SLOPES("c. Slopes");
 
         private final String value;
 

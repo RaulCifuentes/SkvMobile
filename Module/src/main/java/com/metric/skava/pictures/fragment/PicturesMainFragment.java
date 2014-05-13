@@ -51,6 +51,14 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
     public static final int TAKE_PHOTO_EXTRA_REQUEST_CODE = 500;
     public static final String EXTRA_PICTURE_NAME = "Extra";
 
+    public static final String ROOF_FILE_NAME_HINT = "_ROOF_";
+    public static final String LEFT_FILE_NAME_HINT = "_LEFT_";
+    public static final String RIGHT_FILE_NAME_HINT = "_RIGHT_";
+    public static final String FACE_FILE_NAME_HINT = "_FACE_";
+    public static final String EXTRA_FILE_NAME_HINT = "_EXTRA_";
+    public static final String WEDGE_FILE_NAME_HINT = "_WEDGE_";
+    public static final String EXPANDED_FILE_NAME_HINT = "_EXPANDED_";
+
     private PictureGridViewAdapter mAdapter;
     private Assessment mAssessment;
     private SkavaPictureFilesUtils mPictureFilesUtils;
@@ -108,11 +116,6 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
     }
 
 
-//    public void onNewPhotoTaken() {
-//        mAdapter.notifyDataSetChanged();
-//    }
-
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -130,7 +133,7 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
         if (id == R.id.action_add_face_picture) {
             Intent photoIntent = new Intent(
                     MediaStore.ACTION_IMAGE_CAPTURE);
-            suggestedName+= "-FACE-";
+            suggestedName+= FACE_FILE_NAME_HINT;
             Uri targetUri = null;
             try {
                 targetUri = mPictureFilesUtils.getOutputUri(suggestedName);
@@ -146,7 +149,7 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
         if (id == R.id.action_add_left_picture) {
             Intent photoIntent = new Intent(
                     MediaStore.ACTION_IMAGE_CAPTURE);
-            suggestedName+= "-LEFT-";
+            suggestedName+= LEFT_FILE_NAME_HINT;
             Uri targetUri = null;
             try {
                 targetUri = mPictureFilesUtils.getOutputUri(suggestedName);
@@ -162,7 +165,7 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
         if (id == R.id.action_add_right_picture) {
             Intent photoIntent = new Intent(
                     MediaStore.ACTION_IMAGE_CAPTURE);
-            suggestedName+= "-RIGHT-";
+            suggestedName+= RIGHT_FILE_NAME_HINT;
             Uri targetUri = null;
             try {
                 targetUri = mPictureFilesUtils.getOutputUri(suggestedName);
@@ -178,7 +181,7 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
         if (id == R.id.action_add_roof_picture) {
             Intent photoIntent = new Intent(
                     MediaStore.ACTION_IMAGE_CAPTURE);
-            suggestedName+= "-ROOF-";
+            suggestedName+= ROOF_FILE_NAME_HINT;
             Uri targetUri = null;
             try {
                 targetUri = mPictureFilesUtils.getOutputUri(suggestedName);
@@ -194,7 +197,7 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
         if (id == R.id.action_add_extra_picture) {
             Intent photoIntent = new Intent(
                     MediaStore.ACTION_IMAGE_CAPTURE);
-            suggestedName+= "-EXTRA-";
+            suggestedName+= EXTRA_FILE_NAME_HINT;
             Uri targetUri = null;
             try {
                 targetUri = mPictureFilesUtils.getOutputUri(suggestedName);

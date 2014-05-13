@@ -9,9 +9,7 @@ import java.util.List;
 
 public class RQD_RMR extends MappedIndex implements Serializable {
 
-	//public static final RQD_RMR DEFAULT_VALUE = MappedIndexDataProvider.getAllRqdRmr().get(0);
-
-    static ArrayList<RQD_RMR> commonValuesTable;
+	static ArrayList<RQD_RMR> commonValuesTable;
     static {
         commonValuesTable = new ArrayList<RQD_RMR>();
         commonValuesTable.add(new RQD_RMR(
@@ -50,15 +48,15 @@ public class RQD_RMR extends MappedIndex implements Serializable {
         super(code, key, shortDescription, longDescription, value);
 	}
 
-    private RQD wrappedRqd;
-
-    public RQD getWrappedRqd() {
-        return wrappedRqd;
-    }
-
-    public void setWrappedRqd(RQD wrappedRqd) {
-        this.wrappedRqd = wrappedRqd;
-    }
+//    private RQD wrappedRqd;
+//
+//    public RQD getWrappedRqd() {
+//        return wrappedRqd;
+//    }
+//
+//    public void setWrappedRqd(RQD wrappedRqd) {
+//        this.wrappedRqd = wrappedRqd;
+//    }
 
     public static RQD_RMR findWrapper(RQD rqd) {
         RQD_RMR rqd_rmr = null;
@@ -76,7 +74,7 @@ public class RQD_RMR extends MappedIndex implements Serializable {
         return rqd_rmr;
     }
 
-    public static RQD_RMR findRQDByKey(String key) {
+    public static RQD_RMR findRQD_RMRByKey(String key) {
         RQD_RMR rqqRmrFound = null;
         for (RQD_RMR rqd_rmr : commonValuesTable) {
             if (rqd_rmr.getKey().equalsIgnoreCase(key)) {

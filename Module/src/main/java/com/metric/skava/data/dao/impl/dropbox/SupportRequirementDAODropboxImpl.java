@@ -62,6 +62,8 @@ public class SupportRequirementDAODropboxImpl extends DropBoxBaseDAO implements 
     }
 
 
+
+
     @Override
     public List<SupportRequirement> getAllSupportRequirements() throws DAOException {
         try {
@@ -74,28 +76,24 @@ public class SupportRequirementDAODropboxImpl extends DropBoxBaseDAO implements 
             for (DbxRecord currentSupportRequirementRecord : supporRequirementsList) {
                 String codigo = currentSupportRequirementRecord.getString("SupportId");
                 String tunnelCode = currentSupportRequirementRecord.getString("TUNNEL_CODE");
-                //TODO The name of this Rock classification column To be defined ..
-                String name = "PENDING";
-                Double lowerQ = 0d;
-                Double upperQ = 100d;
-//                Double lowerQ = currentSupportRequirementRecord.getDouble("Q_LOWER_BOUNDARY");
-//                Double upperQ = currentSupportRequirementRecord.getDouble("Q_UPPER_BOUNDARY");
-//                String name = currentSupportRequirementRecord.getString("NAME");
-                String boltTypeCode = currentSupportRequirementRecord.getString("BOLT_TYPE_CODE");
-                Double boltDiameter = currentSupportRequirementRecord.getDouble("BOLT_DIAMETER");
-                Double boltLength = currentSupportRequirementRecord.getDouble("BOLT_LENGTH");
-                String wallPatternTypeCode = currentSupportRequirementRecord.getString("PatternWallType");
-                Double wallDx = currentSupportRequirementRecord.getDouble("PatternWall_dx");
-                Double wallDy = currentSupportRequirementRecord.getDouble("PatternWall_dy");
-                String roofPatternTypeCode = currentSupportRequirementRecord.getString("PatternRoofType");
-                Double roofDx = currentSupportRequirementRecord.getDouble("PatternRoof_dx");
-                Double roofDy = currentSupportRequirementRecord.getDouble("PatternRoof_dy");
-                String shotcreteTypeCode = currentSupportRequirementRecord.getString("SHOTCRETE_TYPE");
-                Double thickness = currentSupportRequirementRecord.getDouble("THICKNESS");
-                String meshTypeCode = currentSupportRequirementRecord.getString("MESH_TYPE");
-                String coverageCode = currentSupportRequirementRecord.getString("COVERAGE");
-                String archTypeCode = currentSupportRequirementRecord.getString("ARCH_TYPE");
-                Double separation = currentSupportRequirementRecord.getDouble("SEPARATION");
+                Double lowerQ = currentSupportRequirementRecord.getDouble("Q_LOWER_BOUNDARY");
+                Double upperQ = currentSupportRequirementRecord.getDouble("Q_UPPER_BOUNDARY");
+                String name = readString(currentSupportRequirementRecord, "NAME");
+                String boltTypeCode = readString(currentSupportRequirementRecord,"BOLT_TYPE_CODE");
+                Double boltDiameter = readDouble(currentSupportRequirementRecord,"BOLT_DIAMETER");
+                Double boltLength = readDouble(currentSupportRequirementRecord,"BOLT_LENGTH");
+                String wallPatternTypeCode = readString(currentSupportRequirementRecord,"PatternWallType");
+                Double wallDx = readDouble(currentSupportRequirementRecord,"PatternWall_dx");
+                Double wallDy = readDouble(currentSupportRequirementRecord,"PatternWall_dy");
+                String roofPatternTypeCode = readString(currentSupportRequirementRecord,"PatternRoofType");
+                Double roofDx = readDouble(currentSupportRequirementRecord,"PatternRoof_dx");
+                Double roofDy = readDouble(currentSupportRequirementRecord,"PatternRoof_dy");
+                String shotcreteTypeCode = readString(currentSupportRequirementRecord,"SHOTCRETE_TYPE");
+                Double thickness = readDouble(currentSupportRequirementRecord,"THICKNESS");
+                String meshTypeCode = readString(currentSupportRequirementRecord,"MESH_TYPE");
+                String coverageCode = readString(currentSupportRequirementRecord,"COVERAGE");
+                String archTypeCode = readString(currentSupportRequirementRecord,"ARCH_TYPE");
+                Double separation = readDouble(currentSupportRequirementRecord,"SEPARATION");
 
                 Tunnel tunnel = tunnelDAO.getTunnelByUniqueCode(tunnelCode);
 

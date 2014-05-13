@@ -61,6 +61,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     private static final int NAV_MENU_SETTINGS_ITEM_ID = 70;
     private static final int NAV_MENU_ABOUT_ITEM_ID = 80;
     private static final int NAV_MENU_FILESYSTEM_ITEM_ID = 90;
+    private static final int NAV_MENU_LOGOUT_ITEM_ID = 100;
     private boolean dropboxNeverCalled = true;
     private boolean assertNeverCalled = true;
     private DbxAccountManager mDbxAcctMgr;
@@ -89,6 +90,10 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         }
     }
 
+//    public void doDefinitiveOnCreate(){
+//        setupTheDrawer();
+//    }
+
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
         return super.onCreateView(name, context, attrs);
@@ -100,23 +105,25 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         mHomeMainFragment = (MainFragment)
                 getSupportFragmentManager().findFragmentByTag(FRAGMENT_HOME_MAIN_TAG);
     }
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        View view = this.findViewById(android.R.id.content);
+//        View view = this.findViewById(android.R.id.content);
 //        if (shouldUpdateAutomatically()) {
 //            view.post(new Runnable() {
 //                @Override
 //                public void run() {
-////                    showProgressBar(true, "Probando, probando", false);
+//                    showProgressBar(true, "Probando, probando", false);
 //                    setupDataModel();
-////                    showProgressBar(true, "Ya probe, probe", false);
+//                    showProgressBar(true, "Ya probe, probe", false);
 //                }
 //            });
 //        } else {
 //            assertDataAvailable();
 //        }
         setupLinkToDropbox();
+        //TODO Check if the execution returns here when onACtivityResult is triggered
         setupDataModel();
     }
 
@@ -171,7 +178,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     }
 
 
-    private void setupDataModel(){
+    private void setupDataModel() {
         if (shouldUpdateAutomatically()) {
             UpdateDataModelTask task = new UpdateDataModelTask();
             task.execute();
@@ -207,10 +214,8 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                     }
                     getSkavaContext().setDatastore(mDatastore);
                     getSkavaContext().setFileSystem(mFileSystem);
-                    UpdateDataModelTask task = new UpdateDataModelTask();
-                    task.execute();
-//                    downloadAndPopulateDataModel();
-                    mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+                    //TODO Check if this is necessary or if the execution returns to the onPostCreate() when onACtivityResult is triggered
+                    //setupDataModel();
                 } catch (DbxException e) {
                     Log.e(SkavaConstants.LOG, e.getMessage());
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -224,6 +229,14 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
 
+    }
+
+    private void onDropboxFailed() {
+        Toast.makeText(this, "Dropbox linking cancelled by user or failed.", Toast.LENGTH_LONG).show();
+        if (assertNeverCalled) {
+            assertDataAvailable();
+        }
+        Log.d(SkavaConstants.LOG, "Dropbox linking cancelled by user or failed.");
     }
 
 
@@ -315,13 +328,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     }
 
 
-    private void onDropboxFailed() {
-        Toast.makeText(this, "Dropbox linking cancelled by user or failed.", Toast.LENGTH_LONG).show();
-        if (assertNeverCalled) {
-            assertDataAvailable();
-        }
-        Log.d(SkavaConstants.LOG, "Dropbox linking cancelled by user or failed.");
-    }
+
 
 
     private void assertDataAvailable() {
@@ -330,8 +337,8 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         SyncLogEntry lastNonSpecificData = getSkavaContext().getSyncMetadata().getGlobal();
 
         if (lastGlobalData == null) {
-            Log.d(SkavaConstants.LOG, "Skava Mobile needs to connect to Internet in order to load an set of initial data.!!");
-            Toast.makeText(this, "Skava Mobile needs to connect to Internet in order to load an set of initial data. Please find an Internet connection !!", Toast.LENGTH_LONG).show();
+            Log.d(SkavaConstants.LOG, "Skava Mobile needs to download a set of initial data. Please connect to Internet and link to Skava Dropbox account!!");
+            Toast.makeText(this, "Skava Mobile needs to download a set an set of initial data. Please connect to Internet and link to Skava Dropbox account!!", Toast.LENGTH_LONG).show();
         } else {
             if (lastGlobalData.getSource().equals(SyncLogEntry.Source.DROPBOX)) {
                 Log.d(SkavaConstants.LOG, "Using master data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()));
@@ -344,8 +351,8 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         }
 
         if (lastNonSpecificData == null) {
-            Log.d(SkavaConstants.LOG, "Skava Mobile needs to connect to Internet in order to load an set of initial data.!!");
-            Toast.makeText(this, "Skava Mobile needs to connect to Internet in order to load an set of initial data. Please find an Internet connection !!", Toast.LENGTH_LONG).show();
+            Log.d(SkavaConstants.LOG, "Skava Mobile needs to download a set of initial data. Please connect to Internet and link to Skava Dropbox account!!");
+            Toast.makeText(this, "Skava Mobile needs to download a set of initial data. Please connect to Internet and link to Skava Dropbox account!!", Toast.LENGTH_LONG).show();
 
         } else {
             if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DROPBOX)) {
@@ -385,6 +392,9 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         menuAsList.add(NavMenuSection.create(NAV_MENU_GENERAL_SECTION_ID, "General"));
         menuAsList.add(NavMenuItem.create(NAV_MENU_SETTINGS_ITEM_ID, getString(R.string.settings_label), "ic_action_overflow", true, true, this));
         menuAsList.add(NavMenuItem.create(NAV_MENU_ABOUT_ITEM_ID, getString(R.string.about_label), "ic_action_overflow", true, true, this));
+        if (loggedUser != null) {
+            menuAsList.add(NavMenuItem.create(NAV_MENU_LOGOUT_ITEM_ID, getString(R.string.logout_label), "ic_action_overflow", true, true, this));
+        }
         NavDrawerItem[] menuAsArray = menuAsList.toArray(new NavDrawerItem[]{});
 
         NavDrawerActivityConfiguration navDrawerConfig = new NavDrawerActivityConfiguration();
@@ -407,7 +417,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         switch (id) {
             case NAV_MENU_LOGIN_ITEM_ID:
                 intent = new Intent(this, LoginMainActivity.class);
-                intent.putExtra(LoginMainActivity.EXTRA_USERNAME, "geologist1");
+                intent.putExtra(LoginMainActivity.EXTRA_USERNAME, "matias.lazcano");
                 startActivity(intent);
                 break;
             case NAV_MENU_FACE_MAPPING_ITEM_ID:
@@ -426,6 +436,13 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 intent = new Intent(this, AboutMainActivity.class);
                 startActivity(intent);
                 break;
+            case NAV_MENU_LOGOUT_ITEM_ID:
+                if (shouldUnlinkOnLogout()){
+                    if (mDbxAcctMgr != null && mDbxAcctMgr.hasLinkedAccount()){
+                        mDbxAcctMgr.unlink();
+                    }                }
+                getSkavaContext().setLoggedUser(null);
+                setupTheDrawer();
         }
     }
 
@@ -440,13 +457,14 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     public void onClick(View v) {
         new UpdateDataModelTask().execute();
     }
+
     public class UpdateDataModelTask extends AsyncTask<Void, Long, Long> {
 
         @Override
         protected Long doInBackground(Void... params) {
             Long numRecordsCreated = downloadAndPopulateGlobalDataModel();
             publishProgress(numRecordsCreated);
-            numRecordsCreated+=downloadAndPopulateUserRelatedDataModel();
+            numRecordsCreated += downloadAndPopulateUserRelatedDataModel();
             return numRecordsCreated;
         }
 
@@ -473,6 +491,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             Toast.makeText(HomeMainActivity.this, "Load succesfully finished", Toast.LENGTH_LONG);
             mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
             showProgressBar(false, "Finished. " + result + " records created.", true);
+//            doDefinitiveOnCreate();
         }
 
     }

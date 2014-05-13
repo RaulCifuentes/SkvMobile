@@ -12,9 +12,9 @@ public class Groundwater extends MappedIndex {
     private Group group;
 
     public enum Group {
-        INFLOW_LENGHT("Inflow per 10 m tunnel length (l/m)"),
-        JOINT_PRESS_PRINCIPAL("Joint water press / Major principal(σ)"),
-        GENERAL_CONDITIONS("General Conditions");
+        INFLOW_LENGHT("a. Inflow per 10 m tunnel length (l/m)"),
+        JOINT_PRESS_PRINCIPAL("b. Joint water press / Major principal(σ)"),
+        GENERAL_CONDITIONS("c. General Conditions");
 
         private final String value;
 

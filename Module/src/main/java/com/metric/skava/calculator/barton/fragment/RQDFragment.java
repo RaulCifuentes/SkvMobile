@@ -53,10 +53,10 @@ public class RQDFragment extends QBartonCalculatorBaseFragment {
 //                        "El RQD que se guardara es "+ mapeado, Toast.LENGTH_LONG)
 //                        .show();
                     } else {
-                        rqdEditText.setError( "Jv value must be between 0 and 100!" );
+                        rqdEditText.setError( "RQD value must be between 0 and 100!" );
                     }
                 } catch (NumberFormatException e) {
-                    rqdEditText.setError( "Jv value must be between 0 and 100!" );
+                    rqdEditText.setError( "RQD value must be between 0 and 100!" );
                 }
 
             }

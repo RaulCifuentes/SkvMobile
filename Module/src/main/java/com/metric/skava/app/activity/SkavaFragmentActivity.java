@@ -39,7 +39,11 @@ public class SkavaFragmentActivity extends FragmentActivity {
     }
 
     public boolean shouldUpdateAutomatically() {
-        return ((SkavaApplication) getApplication()).isUpdateDatamodelAutomatically();
+        return ((SkavaApplication) getApplication()).isReloadPrefered();
+    }
+
+    public boolean shouldUnlinkOnLogout() {
+        return ((SkavaApplication) getApplication()).isUnlinkPrefered();
     }
 
 
@@ -47,9 +51,6 @@ public class SkavaFragmentActivity extends FragmentActivity {
 		navController =  NavigationController.getInstance();
 	}
 
-	public NavigationController getNavController() {
-		return navController;
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

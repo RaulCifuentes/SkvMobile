@@ -32,6 +32,7 @@ public class SyncMainActivity extends SkavaFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.sync_main_activity);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new SyncMainFragment(), FRAGMENT_TAG)

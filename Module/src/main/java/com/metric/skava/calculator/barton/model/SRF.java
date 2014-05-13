@@ -11,10 +11,10 @@ public class SRF extends MappedIndex implements Serializable {
     private Group group;
 
     public enum Group {
-        a("Weak zones intersecting the underground opening, which may cause loosening of rock mass"),
-        b("Competent, mainly massive rock, stress problems"),
-        c("Squeezing rock: plastic deformation in incompetent rock under the influence of high pressure"),
-        d("Swelling rock: chemical swelling activity depending on the presence of water");
+        a("a. Weak zones intersecting the underground opening, which may cause loosening of rock mass"),
+        b("b. Competent, mainly massive rock, stress problems"),
+        c("c. Squeezing rock: plastic deformation in incompetent rock under the influence of high pressure"),
+        d("d. Swelling rock: chemical swelling activity depending on the presence of water");
 
         private final String value;
 
