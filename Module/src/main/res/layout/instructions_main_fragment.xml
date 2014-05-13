@@ -90,7 +90,6 @@
             android:layout_height="match_parent">
 
             <GridLayout
-                android:layout_gravity="center"
                 android:columnCount="2"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -106,15 +105,14 @@
                     android:layout_row="0"
                     android:layout_column="0" />
 
-
-                <TextView
-                    android:hint="Resin / Self-Drilling / Fully Grouted / End Anchored"
-                    android:id="@+id/instructions_bolt_type_value"
+                <Spinner
+                    android:id="@+id/instructions_bolt_type_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
                     android:layout_row="0"
                     android:layout_column="1" />
+
 
                 <Space
                     android:layout_width="20px"
@@ -139,15 +137,17 @@
                     android:layout_row="2"
                     android:layout_column="0" />
 
-
-                <TextView
+                <EditText
+                    android:hint="Diameter of the bolt in milimeters."
                     android:id="@+id/instructions_bolt_diameter_value"
-                    android:hint="Diameter of the bolt in millimeters."
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:inputType="number"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
                     android:layout_row="2"
                     android:layout_column="1" />
+
 
                 <Space
                     android:layout_width="20px"
@@ -171,12 +171,13 @@
                     android:layout_row="4"
                     android:layout_column="0" />
 
-                <TextView
-                    android:hint="Bolt length in meters considering two decimals."
+                <EditText
+                    android:hint="Length of the bolt in meters considering two decimals."
                     android:id="@+id/instructions_bolt_length_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:numeric="integer"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:inputType="number"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
                     android:layout_row="4"
                     android:layout_column="1" />
@@ -193,7 +194,7 @@
                     android:layout_row="5"
                     android:layout_column="1" />
 
-                //
+
                 <TextView
                     android:id="@+id/textView01"
                     android:layout_width="wrap_content"
@@ -204,14 +205,43 @@
                     android:layout_row="6"
                     android:layout_column="0" />
 
-                <TextView
-                    android:hint="Roof pattern."
-                    android:id="@+id/instructions_roof_pattern_value"
-                    android:layout_width="wrap_content"
+
+                <LinearLayout
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/form_column_left_margin"
+                    android:layout_width="wrap_content"
                     android:layout_row="6"
-                    android:layout_column="1" />
+                    android:layout_column="1"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="@dimen/form_column_left_margin">
+
+                    <Spinner
+                        android:id="@+id/instructions_roof_pattern_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/form_column_left_margin" />
+
+                    <EditText
+                        android:hint="Distance X axis"
+                        android:id="@+id/instructions_roof_pattern_dx"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:inputType="number"
+                        android:layout_marginLeft="@dimen/form_column_left_margin"
+
+                        />
+
+                    <EditText
+                        android:hint="Distance Y axis."
+                        android:id="@+id/instructions_roof_pattern_dy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:inputType="number"
+                        android:layout_marginLeft="@dimen/form_column_left_margin" />
+
+                </LinearLayout>
+
 
                 <Space
                     android:layout_width="20px"
@@ -235,14 +265,46 @@
                     android:layout_row="8"
                     android:layout_column="0" />
 
-                <TextView
-                    android:hint="Roof pattern."
-                    android:id="@+id/instructions_wall_pattern_value"
-                    android:layout_width="wrap_content"
+
+                <LinearLayout
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/form_column_left_margin"
+                    android:layout_width="wrap_content"
                     android:layout_row="8"
-                    android:layout_column="1" />
+                    android:layout_column="1"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="@dimen/form_column_left_margin">
+
+                    <Spinner
+                        android:id="@+id/instructions_wall_pattern_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/form_column_left_margin"
+
+                        />
+
+
+                    <EditText
+                        android:hint="Distance X axis"
+                        android:id="@+id/instructions_wall_pattern_dx"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:inputType="number"
+                        android:layout_marginLeft="@dimen/form_column_left_margin"
+
+                        />
+
+                    <EditText
+                        android:hint="Distance Y axis."
+                        android:id="@+id/instructions_wall_pattern_dy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:inputType="number"
+                        android:layout_marginLeft="@dimen/form_column_left_margin" />
+
+                </LinearLayout>
+
 
                 <Space
                     android:layout_width="20px"
@@ -256,7 +318,7 @@
                     android:layout_row="9"
                     android:layout_column="1" />
 
-                //
+
                 <TextView
                     android:id="@+id/textView01"
                     android:layout_width="wrap_content"
@@ -268,12 +330,10 @@
                     android:layout_column="0" />
 
 
-                <TextView
-                    android:hint="Plain Shotcrete / Steel Fibre Reinforced Shotcrete / Plastic Fibre Reinforced Shotcrete."
-                    android:id="@+id/instructions_shotcrete_type_value"
+                <Spinner
+                    android:id="@+id/instructions_shotcrete_type_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
                     android:layout_row="10"
                     android:layout_column="1" />
@@ -300,16 +360,16 @@
                     android:layout_row="12"
                     android:layout_column="0" />
 
-
-                <TextView
+                <EditText
                     android:hint="Shotcrete thickness in millimeters."
                     android:id="@+id/instructions_thickness_value"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:inputType="number"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
                     android:layout_row="12"
                     android:layout_column="1" />
-
 
                 <Space
                     android:layout_width="20px"
@@ -333,13 +393,10 @@
                     android:layout_row="14"
                     android:layout_column="0" />
 
-
-                <TextView
-                    android:hint="Chain Linked Mesh / Welded Wire Fabric"
-                    android:id="@+id/instructions_mesh_type_value"
+                <Spinner
+                    android:id="@+id/instructions_mesh_type_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
                     android:layout_row="14"
                     android:layout_column="1" />
@@ -366,16 +423,11 @@
                     android:layout_row="16"
                     android:layout_column="0" />
 
-
-                <TextView
-                    android:hint="Complete / Right Side / Left Side / Roof"
+                <Spinner
                     android:id="@+id/instructions_coverage_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:numeric="integer"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_row="16"
                     android:layout_column="1" />
 
@@ -401,13 +453,10 @@
                     android:layout_row="18"
                     android:layout_column="0" />
 
-
-                <TextView
-                    android:hint="SRR / Frame / Steel"
-                    android:id="@+id/instructions_arch_type_value"
+                <Spinner
+                    android:id="@+id/instructions_arch_type_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
                     android:layout_row="18"
                     android:layout_column="1" />
@@ -434,15 +483,17 @@
                     android:layout_row="20"
                     android:layout_column="0" />
 
-
-                <TextView
+                <EditText
                     android:hint="Distance between arches in meters considering two decimals."
                     android:id="@+id/instructions_separation_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:inputType="number"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
                     android:layout_row="20"
                     android:layout_column="1" />
+
 
                 <Space
                     android:layout_width="20px"

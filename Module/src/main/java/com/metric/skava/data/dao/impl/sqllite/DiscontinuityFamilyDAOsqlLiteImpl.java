@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
+import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.calculator.barton.model.Ja;
 import com.metric.skava.calculator.barton.model.Jr;
 import com.metric.skava.calculator.rmr.model.Aperture;
@@ -177,20 +178,20 @@ public class DiscontinuityFamilyDAOsqlLiteImpl extends SqlLiteBasePersistentEnti
                     newDiscontinuityFamily.get_id(),
                     assessmentCode,
                     newDiscontinuityFamily.getNumber(),
-                    newDiscontinuityFamily.getType().getCode(),
-                    newDiscontinuityFamily.getRelevance().getCode(),
+                    SkavaUtils.isUndefined(newDiscontinuityFamily.getType()) ? null : newDiscontinuityFamily.getType().getCode(),
+                    SkavaUtils.isUndefined(newDiscontinuityFamily.getRelevance()) ? null : newDiscontinuityFamily.getRelevance().getCode(),
                     newDiscontinuityFamily.getDipDegrees(),
                     newDiscontinuityFamily.getDipDirDegrees(),
-                    newDiscontinuityFamily.getShape().getCode(),
-                    newDiscontinuityFamily.getSpacing().getCode(),
-                    newDiscontinuityFamily.getRoughness().getCode(),
-                    newDiscontinuityFamily.getWeathering().getCode(),
-                    newDiscontinuityFamily.getWater().getCode(),
-                    newDiscontinuityFamily.getPersistence().getCode(),
-                    newDiscontinuityFamily.getAperture().getCode(),
-                    newDiscontinuityFamily.getInfilling().getCode(),
-                    newDiscontinuityFamily.getJa().getCode(),
-                    newDiscontinuityFamily.getJr().getCode()
+                    SkavaUtils.isUndefined(newDiscontinuityFamily.getShape()) ? null :newDiscontinuityFamily.getShape().getCode(),
+                    SkavaUtils.isUndefined(newDiscontinuityFamily.getSpacing()) ? null :newDiscontinuityFamily.getSpacing().getCode(),
+                    SkavaUtils.isUndefined(newDiscontinuityFamily.getRoughness()) ? null :newDiscontinuityFamily.getRoughness().getCode(),
+                    SkavaUtils.isUndefined(newDiscontinuityFamily.getWeathering()) ? null :newDiscontinuityFamily.getWeathering().getCode(),
+                    SkavaUtils.isUndefined(newDiscontinuityFamily.getWater()) ? null :newDiscontinuityFamily.getWater().getCode(),
+                    SkavaUtils.isUndefined(newDiscontinuityFamily.getPersistence()) ? null :newDiscontinuityFamily.getPersistence().getCode(),
+                    SkavaUtils.isUndefined(newDiscontinuityFamily.getAperture()) ? null :newDiscontinuityFamily.getAperture().getCode(),
+                    SkavaUtils.isUndefined(newDiscontinuityFamily.getInfilling()) ? null :newDiscontinuityFamily.getInfilling().getCode(),
+                    SkavaUtils.isUndefined(newDiscontinuityFamily.getJa()) ? null :newDiscontinuityFamily.getJa().getCode(),
+                    SkavaUtils.isUndefined(newDiscontinuityFamily.getJr()) ? null :newDiscontinuityFamily.getJr().getCode()
             };
 
             Long newDiscontinuityFamilyId = saveRecord(tableName, names, values);

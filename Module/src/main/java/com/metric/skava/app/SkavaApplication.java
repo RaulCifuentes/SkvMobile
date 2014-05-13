@@ -20,19 +20,21 @@ public class SkavaApplication extends MetricApplication {
 
     private int customThemeId;
     private boolean requiresRestart;
-//    private boolean updateDatamodelAutomatically;
     private SkavaContext mSkavaContext;
 
-    public boolean isUpdateDatamodelAutomatically() {
+    public boolean isReloadPrefered() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         Boolean updateDatamodelAutomatically  = sharedPref.getBoolean(SettingsMainFragment.UPDATE_AUTO_PREFERENCE, false);
         return updateDatamodelAutomatically;
     }
 
-//    public void setUpdateDatamodelAutomatically(boolean updateDatamodelAutomatically) {
-//
-//
-//    }
+    public boolean isUnlinkPrefered() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        Boolean unlinkDropboxOnLogout  = sharedPref.getBoolean(SettingsMainFragment.UNLINK_DROPBOX_PREFERENCE, false);
+        return unlinkDropboxOnLogout;
+    }
+
+
 
     public boolean isRequiresRestart() {
         return requiresRestart;

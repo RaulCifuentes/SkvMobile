@@ -9,10 +9,13 @@ public class DatastoreHelper {
 //    private static final String APP_KEY = "bzsvwf0odnoslis";
 
     // **************** DS FABIAN ***********
-    public static final String APP_SECRET = "rjfwy6os8tbpgin";
-    public static final String APP_KEY = "m375gz1gq6k8vv1";
+//    public static final String APP_SECRET = "rjfwy6os8tbpgin";
+//    public static final String APP_KEY = "m375gz1gq6k8vv1";
 
-    public static final String APP_DATASTORE_NAME = "skavatunnelapp";
+    public static final String APP_SECRET = "qebhcnh6lxqu7di";
+    public static final String APP_KEY = "wv7jc0wirvu2c8y";
+
+    public static final String APP_DATASTORE_NAME = "skavatunnel";
 
     public static final int REQUEST_LINK_TO_DROPBOX = 510;
 

@@ -327,7 +327,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
 
             //TODO take the supportRecommendation construction handling out of here, following the same style of Q, RMRCalulation, etc
             SupportRecomendation recomendation = assessment.getRecomendation();
-            if (recomendation != null && recomendation.isComplete()) {
+            if (recomendation != null && recomendation.hasSelectedAnything()) {
 
                 DbxFields supportRecommendationFields = new DbxFields();
 
@@ -335,7 +335,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
 
                 SupportRequirement base = recomendation.getRequirementBase();
                 if (base != null) {
-                supportRecommendationFields.set("supportRequirementBaseCode", base.getCode());
+                    supportRecommendationFields.set("supportRequirementBaseCode", base.getCode());
                 }
 
                 BoltType boltType = recomendation.getBoltType();

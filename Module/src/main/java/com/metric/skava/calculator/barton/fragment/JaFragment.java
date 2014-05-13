@@ -53,11 +53,11 @@ public class JaFragment extends QBartonCalculatorBaseFragment implements RadioGr
 
 
         RadioButton firstRadio = (RadioButton) view.findViewById(R.id.radioButtonFirst);
-        firstRadio.setText("a. Only coatings");
+        firstRadio.setText(Ja.Group.a.toString());
         RadioButton secondRadio = (RadioButton) view.findViewById(R.id.radioButtonSecond);
-        secondRadio.setText("b. Thin mineral fillings");
+        secondRadio.setText(Ja.Group.b.toString());
         RadioButton thirdRadio = (RadioButton) view.findViewById(R.id.radioButtonThird);
-        thirdRadio.setText("c. Thick mineral fillings");
+        thirdRadio.setText(Ja.Group.c.toString());
         RadioButton fourthRadio = (RadioButton) view.findViewById(R.id.radioButtonFourth);
         fourthRadio.setVisibility(View.GONE);
 

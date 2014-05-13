@@ -69,11 +69,13 @@ public class StrengthFragment extends RMRCalculatorBaseFragment  implements Radi
                     uniaxialRadio.setChecked(false);
                     mPointLoadListView.setVisibility(View.VISIBLE);
                     mUniaxialListView.setVisibility(View.GONE);
+                    break;
                 case UNIAXIAL_KEY:
                     pointLoadRadio.setChecked(false);
                     uniaxialRadio.setChecked(true);
                     mPointLoadListView.setVisibility(View.GONE);
                     mUniaxialListView.setVisibility(View.VISIBLE);
+                    break;
             }
         }
 

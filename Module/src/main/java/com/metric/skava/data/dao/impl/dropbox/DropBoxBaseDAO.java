@@ -3,6 +3,7 @@ package com.metric.skava.data.dao.impl.dropbox;
 import android.content.Context;
 
 import com.dropbox.sync.android.DbxDatastore;
+import com.dropbox.sync.android.DbxRecord;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -34,5 +35,20 @@ public class DropBoxBaseDAO {
 
     public DAOFactory getDAOFactory() {
         return skavaContext.getDAOFactory();
+    }
+
+    public Double readDouble(DbxRecord record, String name){
+        if (record.hasField(name)) {
+            return record.getDouble(name);
+        }
+        return null;
+    }
+
+    public String readString(DbxRecord record, String name){
+        if (record.hasField(name)) {
+            return record.getString(name);
+        } else {
+            return null;
+        }
     }
 }

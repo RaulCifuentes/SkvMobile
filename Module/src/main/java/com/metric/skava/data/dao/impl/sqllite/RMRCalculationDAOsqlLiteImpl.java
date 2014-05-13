@@ -66,7 +66,7 @@ public class RMRCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO
         List<RMR_Calculation> list = new ArrayList<RMR_Calculation>();
         while (cursor.moveToNext()) {
             String strenghtCode = CursorUtils.getString(RMRCalculationTable.STRENGTHOFROCK_CODE_COLUMN, cursor);
-            String rqdCode = CursorUtils.getString(RMRCalculationTable.RQD_RMR_CODE_COLUMN, cursor);
+            String rqdKey = CursorUtils.getString(RMRCalculationTable.RQD_RMR_CODE_COLUMN, cursor);
             String spacingCode = CursorUtils.getString(RMRCalculationTable.SPACING_CODE_COLUMN, cursor);
             String persistenceCode = CursorUtils.getString(RMRCalculationTable.PERSISTENCE_CODE_COLUMN, cursor);
             String apertureCode = CursorUtils.getString(RMRCalculationTable.APERTURE_CODE_COLUMN, cursor);
@@ -77,7 +77,7 @@ public class RMRCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO
             String orientationCode = CursorUtils.getString(RMRCalculationTable.ORIENTATION_CODE_COLUMN, cursor);
             //This seems to be persisted only to transfer to Dropbox but not needed in the deserialization/parsing process
             StrengthOfRock strenght = mLocalStrengthDAO.getStrengthByUniqueCode(strenghtCode);
-            RQD_RMR rqd = RQD_RMR.findRQDByKey(rqdCode);
+            RQD_RMR rqd = RQD_RMR.findRQD_RMRByKey(rqdKey);
             Spacing spacing = mLocalSpacingDAO.getSpacingByUniqueCode(spacingCode);
             Groundwater groundwater = mLocalGroundwaterDAO.getGroundwaterByUniqueCode(groundwaterCode);
             Persistence persistence = mLocalPersistenceDAO.getPersistenceByUniqueCode(persistenceCode);

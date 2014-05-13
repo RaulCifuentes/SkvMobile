@@ -24,6 +24,9 @@ import com.metric.skava.app.model.User;
 import com.metric.skava.app.util.PegNumberFormat;
 import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.calculator.barton.helper.QToQualityMapper;
+import com.metric.skava.calculator.barton.logic.QBartonCalculator;
+import com.metric.skava.calculator.barton.logic.QBartonInput;
+import com.metric.skava.calculator.barton.logic.QBartonOutput;
 import com.metric.skava.calculator.barton.model.Ja;
 import com.metric.skava.calculator.barton.model.Jn;
 import com.metric.skava.calculator.barton.model.Jr;
@@ -33,12 +36,16 @@ import com.metric.skava.calculator.barton.model.RQD;
 import com.metric.skava.calculator.barton.model.RockQuality;
 import com.metric.skava.calculator.barton.model.SRF;
 import com.metric.skava.calculator.rmr.helper.RmrToQualityMapper;
+import com.metric.skava.calculator.rmr.logic.RMRCalculator;
+import com.metric.skava.calculator.rmr.logic.RMRInput;
+import com.metric.skava.calculator.rmr.logic.RMROutput;
 import com.metric.skava.calculator.rmr.model.Aperture;
 import com.metric.skava.calculator.rmr.model.Groundwater;
 import com.metric.skava.calculator.rmr.model.Infilling;
 import com.metric.skava.calculator.rmr.model.OrientationDiscontinuities;
 import com.metric.skava.calculator.rmr.model.Persistence;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
+import com.metric.skava.calculator.rmr.model.RQD_RMR;
 import com.metric.skava.calculator.rmr.model.Roughness;
 import com.metric.skava.calculator.rmr.model.Spacing;
 import com.metric.skava.calculator.rmr.model.StrengthOfRock;
@@ -88,7 +95,7 @@ public class MappingReportMainFragment extends SkavaFragment {
 
         ExcavationProject project = currentAssessment.getProject();
         if (project != null) {
-            ((TextView) rootView.findViewById(R.id.report_proyecto_value)).setText(SkavaUtils.breakLongLine(project.getName(),25));
+            ((TextView) rootView.findViewById(R.id.report_proyecto_value)).setText(SkavaUtils.breakLongLine(project.getName(), 25));
         }
 
 
@@ -121,7 +128,7 @@ public class MappingReportMainFragment extends SkavaFragment {
         Double initPk = currentAssessment.getInitialPeg();
         Double lastPk = currentAssessment.getFinalPeg();
         if (initPk != null && lastPk != null) {
-            ((TextView) rootView.findViewById(R.id.report_pk_values)).setText(pkFormat.format(initPk) + " - " + pkFormat.format(lastPk) );
+            ((TextView) rootView.findViewById(R.id.report_pk_values)).setText(pkFormat.format(initPk) + " - " + pkFormat.format(lastPk));
         }
 
         Double currentAdvance = currentAssessment.getCurrentAdvance();
@@ -163,6 +170,8 @@ public class MappingReportMainFragment extends SkavaFragment {
             ((TextView) rootView.findViewById(R.id.report_juntas_m3_value)).setText(numberFormat.format(numberOfJoints));
         }
 
+        // Call a calculation to be sure the result into account any changes on the selection of RMR list options
+        this.calculateRMR();
         RMR_Calculation rmrCalculation = currentAssessment.getRmrCalculation();
 
         StrengthOfRock strengthOfRock = rmrCalculation.getStrengthOfRock();
@@ -233,7 +242,7 @@ public class MappingReportMainFragment extends SkavaFragment {
             ((TextView) rootView.findViewById(R.id.report_rmr_calidad_value)).setText(quality.getName());
         }
 
-        if (currentAssessment.getTunnel()!= null){
+        if (currentAssessment.getTunnel() != null) {
             ExcavationFactors excavationFactors = currentAssessment.getTunnel().getExcavationFactors();
             ESR esr = excavationFactors.getEsr();
             if (esr != null) {
@@ -261,7 +270,8 @@ public class MappingReportMainFragment extends SkavaFragment {
             }
         }
 
-
+        // Call a calculation to be sure the result into account any changes on the selection of Q list options
+        this.calculateQBarton();
         Q_Calculation qCalculation = currentAssessment.getQCalculation();
 
         RQD rqd = qCalculation.getRqd();
@@ -289,13 +299,13 @@ public class MappingReportMainFragment extends SkavaFragment {
 
         Jr jr = qCalculation.getJr();
         if (jr != null) {
-            ((TextView) rootView.findViewById(R.id.report_q_jr_value)).setText(jr.getGroupName() +" "+ jr.getKey());
+            ((TextView) rootView.findViewById(R.id.report_q_jr_value)).setText(jr.getGroupName() + " " + jr.getKey());
             ((TextView) rootView.findViewById(R.id.report_q_jr_rating)).setText(numberFormat.format(jr.getValue()));
         }
 
         Ja ja = qCalculation.getJa();
         if (ja != null) {
-            ((TextView) rootView.findViewById(R.id.report_q_ja_value)).setText(ja.getGroupName() +" "+ja.getKey());
+            ((TextView) rootView.findViewById(R.id.report_q_ja_value)).setText(ja.getGroupName() + " " + ja.getKey());
             ((TextView) rootView.findViewById(R.id.report_q_ja_rating)).setText(numberFormat.format(ja.getValue()));
         }
 
@@ -307,7 +317,7 @@ public class MappingReportMainFragment extends SkavaFragment {
 
         SRF srf = qCalculation.getSrf();
         if (srf != null) {
-            ((TextView) rootView.findViewById(R.id.report_q_srf_value)).setText(srf.getGroupName() +" "+ srf.getKey());
+            ((TextView) rootView.findViewById(R.id.report_q_srf_value)).setText(srf.getGroupName() + " " + srf.getKey());
             ((TextView) rootView.findViewById(R.id.report_q_srf_rating)).setText(numberFormat.format(srf.getValue()));
         }
 
@@ -559,7 +569,7 @@ public class MappingReportMainFragment extends SkavaFragment {
                 }
             }
 
-            if (pictureListSize >= 1) {
+            if (pictureListSize > 1) {
                 Uri leftUri = pictureList.get(1);
                 if (leftUri != null) {
                     Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(leftUri, 400, 300);
@@ -568,23 +578,23 @@ public class MappingReportMainFragment extends SkavaFragment {
                     }
                 }
             }
-            if (pictureListSize >= 2) {
-            Uri rightUri = pictureList.get(2);
-            if (rightUri != null) {
-                Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(rightUri, 400, 300);
-                if (bitmap != null) {
-                    ((ImageView) rootView.findViewById(R.id.summary_report_right_wall_pic)).setImageBitmap(bitmap);
+            if (pictureListSize > 2) {
+                Uri rightUri = pictureList.get(2);
+                if (rightUri != null) {
+                    Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(rightUri, 400, 300);
+                    if (bitmap != null) {
+                        ((ImageView) rootView.findViewById(R.id.summary_report_right_wall_pic)).setImageBitmap(bitmap);
+                    }
                 }
             }
-            }
-            if (pictureListSize >= 3) {
-            Uri roofUri = pictureList.get(3);
-            if (roofUri != null) {
-                Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(roofUri, 400, 300);
-                if (bitmap != null) {
-                    ((ImageView) rootView.findViewById(R.id.summary_report_roof_pic)).setImageBitmap(bitmap);
+            if (pictureListSize > 3) {
+                Uri roofUri = pictureList.get(3);
+                if (roofUri != null) {
+                    Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(roofUri, 400, 300);
+                    if (bitmap != null) {
+                        ((ImageView) rootView.findViewById(R.id.summary_report_roof_pic)).setImageBitmap(bitmap);
+                    }
                 }
-            }
             }
         }
 
@@ -599,5 +609,41 @@ public class MappingReportMainFragment extends SkavaFragment {
         }
 
         return rootView;
+    }
+
+    private void calculateQBarton() {
+        Q_Calculation qCalculation = getQCalculationContext();
+        QBartonInput input = new QBartonInput();
+        input.setRqd(qCalculation.getRqd().getValue());
+        input.setJn(qCalculation.getJn().getValue());
+        input.setJr(qCalculation.getJr().getValue());
+        input.setJa(qCalculation.getJa().getValue());
+        input.setJw(qCalculation.getJw().getValue());
+        input.setSrf(qCalculation.getSrf().getValue());
+        QBartonOutput output = QBartonCalculator.calculate(input);
+        getQCalculationContext().setQResult(output);
+    }
+
+    private void calculateRMR() {
+        RMR_Calculation RMRCalculation = getRMRCalculationContext();
+        RMRInput input = new RMRInput();
+        input.setStrength(RMRCalculation.getStrengthOfRock().getValue());
+        if (RMRCalculation.getRqd() == null){
+            //Pull RQD from QBartonCalculation
+            RQD rqd = getQCalculationContext().getRqd();
+            RQD_RMR rqdRMR = RQD_RMR.findWrapper(rqd);
+            RMRCalculation.setRqd(rqdRMR);
+        }
+        input.setRqd(Double.valueOf(RMRCalculation.getRqd().getValue()));
+        input.setSpacing(RMRCalculation.getSpacing().getValue());
+        input.setRoughness(RMRCalculation.getRoughness().getValue());
+        input.setAperture(RMRCalculation.getAperture().getValue());
+        input.setInfilling(RMRCalculation.getInfilling().getValue());
+        input.setWeathering(RMRCalculation.getWeathering().getValue());
+        input.setPersistence(RMRCalculation.getPersistence().getValue());
+        input.setGroundwater(RMRCalculation.getGroundwater().getValue());
+        input.setOrientation(RMRCalculation.getOrientationDiscontinuities().getValue());
+        RMROutput output = RMRCalculator.calculate(input);
+        getRMRCalculationContext().setRMRResult(output);
     }
 }

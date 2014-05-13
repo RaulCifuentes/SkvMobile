@@ -15,6 +15,7 @@
     <string name="test_write_label">Test (Write files)</string>
     <string name="settings_label">Settings</string>
     <string name="about_label">About</string>
+    <string name="logout_label">LogOut</string>
 
 
     <!--<string-array name="nav_drawer_items">-->

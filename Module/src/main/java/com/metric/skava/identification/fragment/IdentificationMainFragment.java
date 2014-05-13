@@ -245,7 +245,6 @@ public class IdentificationMainFragment extends SkavaFragment implements
         if (projectSpinnerLastPosition == -1) {
             projectSpinnerLastPosition = projectSpinner.getAdapter().getCount() - 1;
         }
-        projectSpinner.setOnItemSelectedListener(this);
         //first time selectedProject will be null, after that we can extract it from the selectedProject
         //The user may have not complete the face selection and leaves the fragment so
         //ExcavationProject project = getCurrentAssessment().getProject() wont work here
@@ -255,6 +254,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
         } else {
             projectSpinner.setSelection(projectAdapter.getCount() - 1); //display hint
         }
+        projectSpinner.setOnItemSelectedListener(this);
 
         // ***************** TUNNEL ******************
         tunnelSpinner = (Spinner) rootView.findViewById(R.id.mapping_gral_info_tunnel_spinner);
