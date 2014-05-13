@@ -11,13 +11,17 @@ import java.util.List;
  */
 public interface LocalSupportRequirementDAO {
 
-    public SupportRequirement getSupportRequirementByTunnel(Tunnel tunnel, Double qBarton) throws DAOException;
+    public SupportRequirement findSupportRequirement(Tunnel tunnel, Double qBarton) throws DAOException;
 
-    public List<SupportRequirement> getAllSupportRequirements() throws DAOException;
+    public List<SupportRequirement> getAllSupportRequirements(Tunnel tunnel) throws DAOException;
+
+    public SupportRequirement getSupportRequirement(String code) throws DAOException;
 
     public void saveSupportRequirement(SupportRequirement SupportRequirement) throws DAOException;
 
-    public boolean deleteSupportRequirementByTunnel(Tunnel tunnel);
+    public boolean deleteSupportRequirements(Tunnel tunnel);
+
+    public boolean deleteSupportRequirement(String code);
 
     public int deleteAllSupportRequirements();
 

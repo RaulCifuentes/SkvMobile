@@ -93,6 +93,7 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
             LocalArchTypeDAO localArchTypeDAO = daoFactory.getLocalArchTypeDAO();
             ArchType archType = localArchTypeDAO.getArchTypeByCode(archTypeCode);
 
+
             SupportRequirement newInstance = new SupportRequirement(tunnel, code, name);
             newInstance.setTunnel(tunnel);
             newInstance.setqBartonLowerBoundary(qLower);
@@ -116,7 +117,7 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
 
 
     @Override
-    public SupportRequirement getSupportRequirementByTunnel(Tunnel tunnel, Double qBarton) throws DAOException {
+    public SupportRequirement findSupportRequirement(Tunnel tunnel, Double qBarton) throws DAOException {
         Cursor cursor = getRecordsFilteredByColumn(SupportRequirementTable.SUPPORT_REQUIREMENT_DATABASE_TABLE, SupportRequirementTable.TUNNEL_CODE_COLUMN, tunnel.getCode(), SupportRequirementTable.Q_LOWER_BOUND_COLUMN);
         List<SupportRequirement> listSupportRequirements = assemblePersistentEntities(cursor);
 
@@ -132,9 +133,14 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
 
 
     @Override
-    public List<SupportRequirement> getAllSupportRequirements() throws DAOException {
+    public List<SupportRequirement> getAllSupportRequirements(Tunnel tunnel) throws DAOException {
         List<SupportRequirement> list = getAllPersistentEntities(SupportRequirementTable.SUPPORT_REQUIREMENT_DATABASE_TABLE);
         return list;
+    }
+
+    @Override
+    public SupportRequirement getSupportRequirement(String code) throws DAOException {
+        return getIdentifiableEntityByCode(SupportRequirementTable.SUPPORT_REQUIREMENT_DATABASE_TABLE, code);
     }
 
 
@@ -168,9 +174,14 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
     }
 
     @Override
-    public boolean deleteSupportRequirementByTunnel(Tunnel tunnel) {
+    public boolean deleteSupportRequirements(Tunnel tunnel) {
         int numDeleted = deletePersistentEntitiesFilteredByColumn(SupportRequirementTable.SUPPORT_REQUIREMENT_DATABASE_TABLE, SupportRequirementTable.TUNNEL_CODE_COLUMN, tunnel.getCode());
         return numDeleted != -1;
+    }
+
+    @Override
+    public boolean deleteSupportRequirement(String code) {
+        return deleteIdentifiableEntity(SupportRequirementTable.SUPPORT_REQUIREMENT_DATABASE_TABLE, code);
     }
 
     @Override

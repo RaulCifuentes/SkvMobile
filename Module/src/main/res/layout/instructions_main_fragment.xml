@@ -96,35 +96,68 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:id="@+id/instructions_requirement_base_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Requirement Base"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+
+                    />
+
+                <TextView
+                    android:id="@+id/instructions_requirement_base_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/form_column_left_margin"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:visibility="gone"
+
+                    />
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+
+                    />
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+
+                    />
+
+                <TextView
                     android:id="@+id/textView01"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/instructions_bolt_type_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="0"
-                    android:layout_column="0" />
+
+                    />
 
                 <Spinner
                     android:id="@+id/instructions_bolt_type_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="0"
-                    android:layout_column="1" />
+
+                    />
 
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="1"
-                    android:layout_column="0" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="1"
-                    android:layout_column="1" />
+
+                    />
 
 
                 <TextView
@@ -134,8 +167,8 @@
                     android:text="@string/instructions_bolt_diameter_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="2"
-                    android:layout_column="0" />
+
+                    />
 
                 <EditText
                     android:hint="Diameter of the bolt in milimeters."
@@ -145,21 +178,21 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:inputType="number"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="2"
-                    android:layout_column="1" />
+
+                    />
 
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="3"
-                    android:layout_column="0" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="3"
-                    android:layout_column="1" />
+
+                    />
 
                 <TextView
                     android:id="@+id/textView01"
@@ -168,8 +201,8 @@
                     android:text="@string/instructions_bolt_length_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="4"
-                    android:layout_column="0" />
+
+                    />
 
                 <EditText
                     android:hint="Length of the bolt in meters considering two decimals."
@@ -179,20 +212,20 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:inputType="number"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="4"
-                    android:layout_column="1" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="5"
-                    android:layout_column="0" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="5"
-                    android:layout_column="1" />
+
+                    />
 
 
                 <TextView
@@ -202,15 +235,13 @@
                     android:text="@string/instructions_roof_pattern_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="6"
-                    android:layout_column="0" />
+
+                    />
 
 
                 <LinearLayout
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:layout_row="6"
-                    android:layout_column="1"
                     android:orientation="horizontal"
                     android:layout_marginLeft="@dimen/form_column_left_margin">
 
@@ -218,7 +249,16 @@
                         android:id="@+id/instructions_roof_pattern_spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/form_column_left_margin" />
+                         />
+
+                    <TextView
+                        android:id="@+id/textView01"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DX"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textStyle="bold"
+                        />
 
                     <EditText
                         android:hint="Distance X axis"
@@ -228,7 +268,15 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:inputType="number"
                         android:layout_marginLeft="@dimen/form_column_left_margin"
+                        />
 
+                    <TextView
+                        android:id="@+id/textView01"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DY"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textStyle="bold"
                         />
 
                     <EditText
@@ -246,14 +294,14 @@
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="7"
-                    android:layout_column="0" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="7"
-                    android:layout_column="1" />
+
+                    />
 
                 <TextView
                     android:id="@+id/textView01"
@@ -262,15 +310,13 @@
                     android:text="@string/instructions_wall_pattern_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="8"
-                    android:layout_column="0" />
+
+                    />
 
 
                 <LinearLayout
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:layout_row="8"
-                    android:layout_column="1"
                     android:orientation="horizontal"
                     android:layout_marginLeft="@dimen/form_column_left_margin">
 
@@ -278,10 +324,16 @@
                         android:id="@+id/instructions_wall_pattern_spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/form_column_left_margin"
-
                         />
 
+                    <TextView
+                        android:id="@+id/textView01"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DX"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textStyle="bold"
+                        />
 
                     <EditText
                         android:hint="Distance X axis"
@@ -292,6 +344,15 @@
                         android:inputType="number"
                         android:layout_marginLeft="@dimen/form_column_left_margin"
 
+                        />
+
+                    <TextView
+                        android:id="@+id/textView01"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DY"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textStyle="bold"
                         />
 
                     <EditText
@@ -309,14 +370,14 @@
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="9"
-                    android:layout_column="0" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="9"
-                    android:layout_column="1" />
+
+                    />
 
 
                 <TextView
@@ -326,8 +387,8 @@
                     android:text="@string/instructions_shotcrete_type_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="10"
-                    android:layout_column="0" />
+
+                    />
 
 
                 <Spinner
@@ -335,20 +396,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="10"
-                    android:layout_column="1" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="11"
-                    android:layout_column="0" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="11"
-                    android:layout_column="1" />
+
+                    />
 
                 <TextView
                     android:id="@+id/textView01"
@@ -357,8 +418,8 @@
                     android:text="@string/instructions_thickness_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="12"
-                    android:layout_column="0" />
+
+                    />
 
                 <EditText
                     android:hint="Shotcrete thickness in millimeters."
@@ -368,20 +429,20 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:inputType="number"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="12"
-                    android:layout_column="1" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="13"
-                    android:layout_column="0" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="13"
-                    android:layout_column="1" />
+
+                    />
 
                 <TextView
                     android:id="@+id/textView01"
@@ -390,28 +451,28 @@
                     android:text="@string/instructions_mesh_type_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="14"
-                    android:layout_column="0" />
+
+                    />
 
                 <Spinner
                     android:id="@+id/instructions_mesh_type_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="14"
-                    android:layout_column="1" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="15"
-                    android:layout_column="0" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="15"
-                    android:layout_column="1" />
+
+                    />
 
                 <TextView
                     android:id="@+id/textView01"
@@ -420,28 +481,28 @@
                     android:text="@string/instructions_coverage_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="16"
-                    android:layout_column="0" />
+
+                    />
 
                 <Spinner
                     android:id="@+id/instructions_coverage_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="16"
-                    android:layout_column="1" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="17"
-                    android:layout_column="0" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="17"
-                    android:layout_column="1" />
+
+                    />
 
                 <TextView
                     android:id="@+id/textView01"
@@ -450,28 +511,28 @@
                     android:text="@string/instructions_arch_type_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="18"
-                    android:layout_column="0" />
+
+                    />
 
                 <Spinner
                     android:id="@+id/instructions_arch_type_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="18"
-                    android:layout_column="1" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="19"
-                    android:layout_column="0" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="19"
-                    android:layout_column="1" />
+
+                    />
 
                 <TextView
                     android:id="@+id/textView01"
@@ -480,8 +541,8 @@
                     android:text="@string/instructions_separation_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="20"
-                    android:layout_column="0" />
+
+                    />
 
                 <EditText
                     android:hint="Distance between arches in meters considering two decimals."
@@ -491,21 +552,21 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:inputType="number"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="20"
-                    android:layout_column="1" />
+
+                    />
 
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="21"
-                    android:layout_column="0" />
+
+                    />
 
                 <Space
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_row="21"
-                    android:layout_column="1" />
+
+                    />
 
                 <TextView
                     android:id="@+id/textView01"
@@ -514,8 +575,8 @@
                     android:text="@string/instructions_observations_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
-                    android:layout_row="22"
-                    android:layout_column="0" />
+
+                    />
 
                 <EditText
                     android:hint="Observations placeholder"
@@ -529,8 +590,8 @@
                     android:scrollbars="vertical"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
-                    android:layout_row="22"
-                    android:layout_column="1" />
+
+                    />
 
 
             </GridLayout>
