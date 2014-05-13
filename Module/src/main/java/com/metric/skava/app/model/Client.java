@@ -16,7 +16,7 @@ public class Client extends SkavaEntity {
     }
 
     public Uri getClientLogo() {
-        return clientLogo;
+        return null;
     }
 
     public void setClientLogo(Uri clientLogo) {
