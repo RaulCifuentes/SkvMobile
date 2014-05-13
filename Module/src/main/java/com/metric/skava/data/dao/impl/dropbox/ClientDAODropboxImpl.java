@@ -44,8 +44,10 @@ public class ClientDAODropboxImpl extends DropBoxBaseDAO implements RemoteClient
                 String nombre = currentDbxRecord.getString("ClientName");
                 String urlLogo = currentDbxRecord.getString("ClientLogo");
                 Client newClient = new Client(codigo, nombre);
-                Uri uri = Uri.parse(urlLogo);
-                newClient.setClientLogo(uri);
+                if (urlLogo != null){
+                    Uri uri = Uri.parse(urlLogo);
+                    newClient.setClientLogo(uri);
+                }
                 listProjects.add(newClient);
             }
             return listProjects;

@@ -29,7 +29,10 @@ public class SupportPatternTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
         while (cursor.moveToNext()) {
             String code = CursorUtils.getString(SupportPatternTypeTable.CODE_COLUMN, cursor);
             String name = CursorUtils.getString(SupportPatternTypeTable.NAME_COLUMN, cursor);
+            String groupName = CursorUtils.getString(SupportPatternTypeTable.GROUP_CODE_COLUMN, cursor);
             SupportPatternType newInstance = new SupportPatternType(code, name);
+            SupportPatternType.Group group = SupportPatternType.Group.valueOf(groupName);
+            newInstance.setGroup(group);
             list.add(newInstance);
         }
         return list;
@@ -37,14 +40,15 @@ public class SupportPatternTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
 
 
     @Override
-    public SupportPatternType getSupportPatternTypeByCode(String code) throws DAOException {
+    public SupportPatternType getSupportPatternTypeByUniqueCode(String code) throws DAOException {
         SupportPatternType entity = getIdentifiableEntityByCode(SupportPatternTypeTable.PATTERN_TYPE_DATABASE_TABLE, code);
         return entity;
     }
 
     @Override
-    public List<SupportPatternType> getAllSupportPatternTypes() throws DAOException {
-        List<SupportPatternType> list = getAllPersistentEntities(SupportPatternTypeTable.PATTERN_TYPE_DATABASE_TABLE);
+    public List<SupportPatternType> getAllSupportPatternTypes(SupportPatternType.Group group ) throws DAOException {
+        Cursor cursor = getRecordsFilteredByColumn(SupportPatternTypeTable.PATTERN_TYPE_DATABASE_TABLE, SupportPatternTypeTable.GROUP_CODE_COLUMN, group.name(), null);
+        List<SupportPatternType> list = assemblePersistentEntities(cursor);
         return list;
     }
 
@@ -55,7 +59,17 @@ public class SupportPatternTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
 
     @Override
     protected void savePersistentEntity(String tableName, SupportPatternType newSkavaEntity) throws DAOException {
-        saveSkavaEntity(tableName, newSkavaEntity);
+        String[] colNames = {
+                SupportPatternTypeTable.GROUP_CODE_COLUMN,
+                SupportPatternTypeTable.CODE_COLUMN,
+                SupportPatternTypeTable.NAME_COLUMN
+              };
+        Object[] colValues = {
+                newSkavaEntity.getGroup().name(),
+                newSkavaEntity.getCode(),
+                newSkavaEntity.getName()
+        };
+        saveRecord(tableName, colNames, colValues);
     }
 
     @Override

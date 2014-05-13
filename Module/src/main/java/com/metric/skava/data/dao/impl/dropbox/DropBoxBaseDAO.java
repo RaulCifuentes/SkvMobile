@@ -37,18 +37,21 @@ public class DropBoxBaseDAO {
         return skavaContext.getDAOFactory();
     }
 
-    public Double readDouble(DbxRecord record, String name){
-        if (record.hasField(name)) {
-            return record.getDouble(name);
+    public Double readDouble(DbxRecord record, String name) {
+        if (record != null) {
+            if (record.hasField(name)) {
+                return record.getDouble(name);
+            }
         }
         return null;
     }
 
-    public String readString(DbxRecord record, String name){
-        if (record.hasField(name)) {
-            return record.getString(name);
-        } else {
-            return null;
+    public String readString(DbxRecord record, String name) {
+        if (record != null) {
+            if (record.hasField(name)) {
+                return record.getString(name);
+            }
         }
+        return null;
     }
 }

@@ -7,8 +7,19 @@ import com.metric.skava.app.data.SkavaEntity;
   */
  public class SupportPatternType extends SkavaEntity {
 
+    public enum Group {ROOF, WALL}
+
+    private Group group;
+
     public SupportPatternType(String code, String name) {
         super(code, name);
     }
 
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
 }
