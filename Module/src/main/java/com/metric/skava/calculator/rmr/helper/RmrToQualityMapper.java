@@ -34,7 +34,7 @@ public class RmrToQualityMapper {
         try {
             List<RockQuality> qualities = daoFactory.getLocalRockQualityDAO().getAllRockQualities(RockQuality.AccordingTo.RMR);
             for (RockQuality currQuality : qualities) {
-                if (currQuality.getLowerBoundary() < rmr && rmr <currQuality.getHigherBoundary() ) {
+                if (currQuality.getLowerBoundary() <= rmr && rmr <currQuality.getHigherBoundary() ) {
                     return currQuality;
                 }
             }

@@ -34,7 +34,7 @@ public class QToQualityMapper {
         try {
             List<RockQuality> qualities = daoFactory.getLocalRockQualityDAO().getAllRockQualities(RockQuality.AccordingTo.Q);
             for (RockQuality currQuality : qualities) {
-                if (currQuality.getLowerBoundary() < qBarton && qBarton <currQuality.getHigherBoundary() ) {
+                if (currQuality.getLowerBoundary() <= qBarton && qBarton <currQuality.getHigherBoundary() ) {
                     return currQuality;
                 }
             }
