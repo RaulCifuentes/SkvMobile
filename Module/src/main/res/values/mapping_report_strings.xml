@@ -2,7 +2,6 @@
 <resources>
 
     <string name="title_activity_mapping_report_main">Summary Report</string>
-
-
+    <string name="title_activity_review_report_main">Summary Report</string>
 
 </resources>

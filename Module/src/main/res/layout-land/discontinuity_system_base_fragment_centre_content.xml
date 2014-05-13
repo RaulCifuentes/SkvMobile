@@ -373,6 +373,14 @@
             />
 
         <Spinner
+            android:id="@+id/discontinuity_system_jr_group_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_marginLeft="@dimen/form_column_left_margin"
+            />
+
+        <Spinner
             android:id="@+id/discontinuity_system_jr_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -400,6 +408,14 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold"
 
+            />
+
+        <Spinner
+            android:id="@+id/discontinuity_system_ja_group_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_marginLeft="@dimen/form_column_left_margin"
             />
 
         <Spinner

@@ -474,6 +474,29 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
                 shotcreteTypeSpinnerLastPosition = position;
             }
         }
+        if (parent == roofPatternSpinner) {
+//            if (methodSpinnerLastPosition == -1){
+//                methodSpinner.setSelection(methodAdapter.getCount());
+//                return;
+//            }
+            if (position != roofPatternSpinner.getAdapter().getCount() && position != roofPatternSpinnerLastPosition) {
+                selectedRoofPattern = (SupportPattern) parent.getItemAtPosition(position);
+                getSkavaContext().getAssessment().getRecomendation().setRoofPattern(selectedRoofPattern);
+                roofPatternSpinnerLastPosition = position;
+            }
+        }
+        if (parent == wallPatternSpinner) {
+//            if (methodSpinnerLastPosition == -1){
+//                methodSpinner.setSelection(methodAdapter.getCount());
+//                return;
+//            }
+            if (position != wallPatternSpinner.getAdapter().getCount() && position != wallPatternSpinnerLastPosition) {
+                selectedwallPattern = (SupportPattern) parent.getItemAtPosition(position);
+                getSkavaContext().getAssessment().getRecomendation().setWallPattern(selectedwallPattern);
+                wallPatternSpinnerLastPosition = position;
+            }
+        }
+        
         if (parent == meshTypeSpinner) {
 //            if (methodSpinnerLastPosition == -1){
 //                methodSpinner.setSelection(methodAdapter.getCount());

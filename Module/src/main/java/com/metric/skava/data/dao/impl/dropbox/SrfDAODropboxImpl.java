@@ -31,7 +31,7 @@ public class SrfDAODropboxImpl extends DropBoxBaseDAO implements RemoteSrfDAO {
 
     private String getSrfParameterId() throws DAOException {
         DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "Q_SRF");
-        String codigo = foundRecord.getString("ParameterId");
+        String codigo = readString(foundRecord, "ParameterId");
         return codigo;
     }
 
@@ -39,23 +39,25 @@ public class SrfDAODropboxImpl extends DropBoxBaseDAO implements RemoteSrfDAO {
     public List<SRF> getAllSrfs() throws DAOException {
         String srfParameterId = getSrfParameterId();
         List<SRF> listSrfs = new ArrayList<SRF>();
-        String[] names = new String[]{"FkParameterId"};
-        String[] values = new String[]{srfParameterId};
-        List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
-        for (DbxRecord currentDbxRecord : recordList) {
-            String code = currentDbxRecord.getString("IndexId");
-            String key = currentDbxRecord.getString("IndexCode");
-            String shortDescription = currentDbxRecord.getString("IndexShortName");
-            String description = currentDbxRecord.getString("IndexName");
-            Double value = currentDbxRecord.getDouble("IndexScore");
-            String groupCode = currentDbxRecord.getString("FkCategoryId");
-            Group group = getDAOFactory().getLocalGroupDAO().getGroupByCode(groupCode);
-            String groupName = group.getKey();
+        if (srfParameterId != null) {
+            String[] names = new String[]{"FkParameterId"};
+            String[] values = new String[]{srfParameterId};
+            List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
+            for (DbxRecord currentDbxRecord : recordList) {
+                String code = currentDbxRecord.getString("IndexId");
+                String key = currentDbxRecord.getString("IndexCode");
+                String shortDescription = currentDbxRecord.getString("IndexShortName");
+                String description = currentDbxRecord.getString("IndexName");
+                Double value = currentDbxRecord.getDouble("IndexScore");
+                String groupCode = currentDbxRecord.getString("FkCategoryId");
+                Group group = getDAOFactory().getLocalGroupDAO().getGroupByCode(groupCode);
+                String groupName = group.getKey();
 
-            SRF.Group jaGroup = SRF.Group.valueOf(groupName);
-            SRF newSrf = new SRF(jaGroup, code, key, shortDescription, description, value);
-            newSrf.setShortDescription(shortDescription);
-            listSrfs.add(newSrf);
+                SRF.Group jaGroup = SRF.Group.valueOf(groupName);
+                SRF newSrf = new SRF(jaGroup, code, key, shortDescription, description, value);
+                newSrf.setShortDescription(shortDescription);
+                listSrfs.add(newSrf);
+            }
         }
         return listSrfs;
     }

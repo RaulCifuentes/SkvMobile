@@ -30,7 +30,7 @@ public class JwDAODropboxImpl extends DropBoxBaseDAO implements RemoteJwDAO {
 
     private String getJwParameterId() throws DAOException {
         DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "Q_JW");
-        String codigo = foundRecord.getString("ParameterId");
+        String codigo = readString(foundRecord, "ParameterId");
         return codigo;
     }
 
@@ -38,19 +38,21 @@ public class JwDAODropboxImpl extends DropBoxBaseDAO implements RemoteJwDAO {
     public List<Jw> getAllJws() throws DAOException {
         String jwParameterId = getJwParameterId();
         List<Jw> listJws = new ArrayList<Jw>();
-        String[] names = new String[]{"FkParameterId"};
-        String[] values = new String[]{jwParameterId};
-        List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
-        for (DbxRecord currentDbxRecord : recordList) {
-            String code = currentDbxRecord.getString("IndexId");
-            String key = currentDbxRecord.getString("IndexCode");
-            String shortDescription = currentDbxRecord.getString("IndexShortName");
-            String description = currentDbxRecord.getString("IndexName");
-            Double value = currentDbxRecord.getDouble("IndexScore");
-            
-            Jw newJw = new Jw(code, key, shortDescription, description, value);
-            newJw.setShortDescription(shortDescription);
-            listJws.add(newJw);
+        if (jwParameterId != null) {
+            String[] names = new String[]{"FkParameterId"};
+            String[] values = new String[]{jwParameterId};
+            List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
+            for (DbxRecord currentDbxRecord : recordList) {
+                String code = currentDbxRecord.getString("IndexId");
+                String key = currentDbxRecord.getString("IndexCode");
+                String shortDescription = currentDbxRecord.getString("IndexShortName");
+                String description = currentDbxRecord.getString("IndexName");
+                Double value = currentDbxRecord.getDouble("IndexScore");
+
+                Jw newJw = new Jw(code, key, shortDescription, description, value);
+                newJw.setShortDescription(shortDescription);
+                listJws.add(newJw);
+            }
         }
         return listJws;
     }

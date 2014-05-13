@@ -30,7 +30,7 @@ public class RoughnessDAODropboxImpl extends DropBoxBaseDAO implements RemoteRou
 
     private String getRoughnessParameterId() throws DAOException {
         DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "RMR_Roughness");
-        String codigo = foundRecord.getString("ParameterId");
+        String codigo = readString(foundRecord, "ParameterId");
         return codigo;
     }
 
@@ -38,21 +38,22 @@ public class RoughnessDAODropboxImpl extends DropBoxBaseDAO implements RemoteRou
     public List<Roughness> getAllRoughnesses() throws DAOException {
         String roughnessParameterId = getRoughnessParameterId();
         List<Roughness> listRoughnesss = new ArrayList<Roughness>();
-        String[] names = new String[]{"FkParameterId"};
-        String[] values = new String[]{roughnessParameterId};
-        List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
-        for (DbxRecord currentDbxRecord : recordList) {
-            String code = currentDbxRecord.getString("IndexId");
-            String key = currentDbxRecord.getString("IndexCode");
-            String shortDescription = currentDbxRecord.getString("IndexShortName");
-            String description = currentDbxRecord.getString("IndexName");
-            Double value = currentDbxRecord.getDouble("IndexScore");
-            Roughness newType = new Roughness(code, key, shortDescription, description, value);
-            listRoughnesss.add(newType);
+        if (roughnessParameterId != null) {
+            String[] names = new String[]{"FkParameterId"};
+            String[] values = new String[]{roughnessParameterId};
+            List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
+            for (DbxRecord currentDbxRecord : recordList) {
+                String code = currentDbxRecord.getString("IndexId");
+                String key = currentDbxRecord.getString("IndexCode");
+                String shortDescription = currentDbxRecord.getString("IndexShortName");
+                String description = currentDbxRecord.getString("IndexName");
+                Double value = currentDbxRecord.getDouble("IndexScore");
+                Roughness newType = new Roughness(code, key, shortDescription, description, value);
+                listRoughnesss.add(newType);
+            }
         }
         return listRoughnesss;
     }
-
 
 
 }

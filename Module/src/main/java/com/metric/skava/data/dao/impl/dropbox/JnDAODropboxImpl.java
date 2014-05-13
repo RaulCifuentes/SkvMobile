@@ -30,7 +30,7 @@ public class JnDAODropboxImpl extends DropBoxBaseDAO implements RemoteJnDAO {
 
     private String getJnParameterId() throws DAOException {
         DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "Q_JN");
-        String codigo = foundRecord.getString("ParameterId");
+        String codigo = readString(foundRecord, "ParameterId");
         return codigo;
     }
 
@@ -38,19 +38,21 @@ public class JnDAODropboxImpl extends DropBoxBaseDAO implements RemoteJnDAO {
     public List<Jn> getAllJns() throws DAOException {
         String jnParameterId = getJnParameterId();
         List<Jn> listJns = new ArrayList<Jn>();
-        String[] names = new String[]{"FkParameterId"};
-        String[] values = new String[]{jnParameterId};
-        List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
-        for (DbxRecord currentDbxRecord : recordList) {
-            String code = currentDbxRecord.getString("IndexId");
-            String key = currentDbxRecord.getString("IndexCode");
-            String shortDescription = currentDbxRecord.getString("IndexShortName");
-            String description = currentDbxRecord.getString("IndexName");
-            Double value = currentDbxRecord.getDouble("IndexScore");
+        if (jnParameterId != null) {
+            String[] names = new String[]{"FkParameterId"};
+            String[] values = new String[]{jnParameterId};
+            List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
+            for (DbxRecord currentDbxRecord : recordList) {
+                String code = currentDbxRecord.getString("IndexId");
+                String key = currentDbxRecord.getString("IndexCode");
+                String shortDescription = currentDbxRecord.getString("IndexShortName");
+                String description = currentDbxRecord.getString("IndexName");
+                Double value = currentDbxRecord.getDouble("IndexScore");
 
-            Jn newJn = new Jn(code, key, shortDescription, description, value);
-            newJn.setShortDescription(shortDescription);
-            listJns.add(newJn);
+                Jn newJn = new Jn(code, key, shortDescription, description, value);
+                newJn.setShortDescription(shortDescription);
+                listJns.add(newJn);
+            }
         }
         return listJns;
     }

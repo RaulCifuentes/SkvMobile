@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -70,11 +71,16 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
     private Spinner discWaterSpinner;
     private SkavaEntityAdapter discWaterAdapter;
 
+
+    private Spinner discJaGroupSpinner;
     private Spinner discJaSpinner;
     private MappedIndexSpinnerArrayAdapter<Ja> discJaAdapter;
+    private ArrayAdapter<Ja.Group> discJaGroupAdapter;
 
     private Spinner discJrSpinner;
+    private Spinner discJrGroupSpinner;
     private MappedIndexSpinnerArrayAdapter<Jr> discJrAdapter;
+    private ArrayAdapter<Jr.Group> discJrGroupAdapter;
 
     private Spinner discInfillingSpinner;
     private MappedIndexSpinnerArrayAdapter<Infilling> discInfillingAdapter;
@@ -441,20 +447,37 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         discWeatheringSpinner.setOnItemSelectedListener(this);
 
 
+        discJrGroupSpinner = (Spinner) rootView.findViewById(R.id.discontinuity_system_jr_group_spinner);
+        discJrGroupSpinner.setOnItemSelectedListener(this);
+        discJrGroupSpinner.setAdapter(discJrGroupAdapter);
+        Jr jr = mDiscontinuityFamilyInstance.getJr();
+        if (jr != null) {
+            discJrGroupSpinner.setSelection(discJrGroupAdapter.getPosition(jr.getGroup()));
+        } else {
+            discJrGroupSpinner.setSelection(discJrGroupAdapter.getCount()-1);
+        }
+
         discJrSpinner = (Spinner) rootView.findViewById(R.id.discontinuity_system_jr_spinner);
         discJrSpinner.setOnItemSelectedListener(this);
         discJrSpinner.setAdapter(discJrAdapter);
-        Jr jr = mDiscontinuityFamilyInstance.getJr();
         if (jr != null) {
             discJrSpinner.setSelection(discJrAdapter.getPosition(jr));
         } else {
             discJrSpinner.setSelection(discJrAdapter.getCount()-1);
         }
 
+        discJaGroupSpinner = (Spinner) rootView.findViewById(R.id.discontinuity_system_ja_group_spinner);
+        discJaGroupSpinner.setOnItemSelectedListener(this);
+        discJaGroupSpinner.setAdapter(discJaGroupAdapter);
+        Ja ja = mDiscontinuityFamilyInstance.getJa();
+        if (ja != null) {
+            discJaGroupSpinner.setSelection(discJaGroupAdapter.getPosition(ja.getGroup()));
+        } else {
+            discJaGroupSpinner.setSelection(discJaGroupAdapter.getCount()-1);
+        }
 
         discJaSpinner = (Spinner) rootView.findViewById(R.id.discontinuity_system_ja_spinner);
         discJaSpinner.setAdapter(discJaAdapter);
-        Ja ja = mDiscontinuityFamilyInstance.getJa();
         if (ja != null) {
             discJaSpinner.setSelection(discJaAdapter.getPosition(ja));
         } else {
