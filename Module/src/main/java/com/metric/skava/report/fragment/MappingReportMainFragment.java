@@ -60,6 +60,8 @@ import com.metric.skava.instructions.model.BoltType;
 import com.metric.skava.instructions.model.Coverage;
 import com.metric.skava.instructions.model.MeshType;
 import com.metric.skava.instructions.model.ShotcreteType;
+import com.metric.skava.instructions.model.SupportPattern;
+import com.metric.skava.instructions.model.SupportPatternType;
 import com.metric.skava.instructions.model.SupportRecomendation;
 import com.metric.skava.pictures.util.SkavaPictureFilesUtils;
 import com.metric.skava.rockmass.model.FractureType;
@@ -380,6 +382,50 @@ public class MappingReportMainFragment extends SkavaFragment {
             String observations = recomendation.getObservations();
             if (observations != null) {
                 ((TextView) rootView.findViewById(R.id.report_observaciones_soporte_value)).setText(observations);
+            }
+
+            SupportPattern wallPattern = recomendation.getWallPattern();
+            if (wallPattern != null) {
+                Double dx = wallPattern.getDistanceX();
+                Double dy = wallPattern.getDistanceY();
+                TextView dxdyTextView = (TextView) rootView.findViewById(R.id.report_wall_pattern_dxdy);
+                String dxdy = "";
+                if (dx != null && dy != null) {
+                    dxdy = dx.toString() + " x " + dy.toString();
+                } else if (dx != null) {
+                    dxdy = dx.toString();
+                } else if (dy != null) {
+                    dxdy = dy.toString();
+                }
+                dxdyTextView.setText(dxdy);
+
+                SupportPatternType patternType = wallPattern.getType();
+                if (patternType != null) {
+                    TextView patternTypeTextView = (TextView) rootView.findViewById(R.id.report_wall_pattern_type);
+                    patternTypeTextView.setText(patternType.getName());
+                }
+            }
+
+            SupportPattern roofPattern = recomendation.getRoofPattern();
+            if (roofPattern != null) {
+                Double dx = roofPattern.getDistanceX();
+                Double dy = roofPattern.getDistanceY();
+                TextView dxdyTextView = (TextView) rootView.findViewById(R.id.report_roof_pattern_dxdy);
+                String dxdy = "";
+                if (dx != null && dy != null) {
+                    dxdy = dx.toString() + " x " + dy.toString();
+                } else if (dx != null) {
+                    dxdy = dx.toString();
+                } else if (dy != null) {
+                    dxdy = dy.toString();
+                }
+                dxdyTextView.setText(dxdy);
+
+                SupportPatternType patternType = roofPattern.getType();
+                if (patternType != null) {
+                    TextView patternTypeTextView = (TextView) rootView.findViewById(R.id.report_roof_pattern_type);
+                    patternTypeTextView.setText(patternType.getName());
+                }
             }
         }
 

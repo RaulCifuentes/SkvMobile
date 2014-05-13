@@ -77,5 +77,7 @@
     <string name="action_report_save_draft">Save draft</string><string name="rockmass_desc_rock_sample_identification">Rock Sample Identification</string>
     <string name="syncing_progress">Syncing data from internet</string>
     <string name="connecting_dropbox">Linking to Dropbox</string>
+    <string name="report_wall_pattern">Wall Pattern</string>
+    <string name="report_roof_pattern">Roof Pattern</string>
 
 </resources>
