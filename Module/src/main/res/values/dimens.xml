@@ -32,5 +32,9 @@
     <dimen name="border_width">0.5dp</dimen>
     <dimen name="border_offset">-0.5dp</dimen>
     <dimen name="summary_report_box_margin">5dp</dimen>
+    <!-- Width used for number input in fragments. Ex: Support Recommendations Bolt diameter-->
+    <dimen name="fragment_number_input_width_medium">400dp</dimen>
+    <!-- Width used for number input in fragments. Ex: Support Recommendations DX-->
+    <dimen name="fragment_number_input_width_small">90dp</dimen>
 
 </resources>
