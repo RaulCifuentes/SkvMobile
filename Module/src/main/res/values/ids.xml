@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="mapping_gral_info_initial_pk_value_formatted" type="id" />
-    <item name="mapping_gral_info_final_pk_value_formatted" type="id" /><item name="rockmass_desc_rock_sample_identification" type="id"/><item name="rockmass_desc_rock_sample_identification_value" type="id"/><item name="summary_report_rock_sample_identification_label" type="id"/><item name="summary_report_rock_sample_identification_value" type="id"/>
+    <item name="mapping_gral_info_final_pk_value_formatted" type="id" /><item name="rockmass_desc_rock_sample_identification" type="id"/><item name="rockmass_desc_rock_sample_identification_value" type="id"/><item name="summary_report_rock_sample_identification_label" type="id"/><item name="summary_report_rock_sample_identification_value" type="id"/><item name="report_wall_pattern_dxdy" type="id"/><item name="report_wall_pattern_type" type="id"/><item name="report_roof_pattern_dxdy" type="id"/><item name="report_roof_pattern_type" type="id"/>
 </resources>
