@@ -30,7 +30,7 @@ public class EsrDAODropboxImpl extends DropBoxBaseDAO implements RemoteEsrDAO {
 
     private String getESRParameterId() throws DAOException {
         DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "Q_ESR");
-        String codigo = foundRecord.getString("ParameterId");
+        String codigo = readString(foundRecord, "ParameterId");
         return codigo;
     }
 
@@ -38,26 +38,28 @@ public class EsrDAODropboxImpl extends DropBoxBaseDAO implements RemoteEsrDAO {
     public List<ESR> getAllESRs() throws DAOException {
         String ESRParameterId = getESRParameterId();
         List<ESR> listESRs = new ArrayList<ESR>();
-        String[] names = new String[]{"FkParameterId"};
-        String[] values = new String[]{ESRParameterId};
-        List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
-        for (DbxRecord currentDbxRecord : recordList) {
-            String code = currentDbxRecord.getString("IndexId");
-            String key = currentDbxRecord.getString("IndexCode");
-            String shortDescription = currentDbxRecord.getString("IndexShortName");
-            String description = currentDbxRecord.getString("IndexName");
-            Double value = currentDbxRecord.getDouble("IndexScore");
+        if (ESRParameterId != null) {
+            String[] names = new String[]{"FkParameterId"};
+            String[] values = new String[]{ESRParameterId};
+            List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
+            for (DbxRecord currentDbxRecord : recordList) {
+                String code = currentDbxRecord.getString("IndexId");
+                String key = currentDbxRecord.getString("IndexCode");
+                String shortDescription = currentDbxRecord.getString("IndexShortName");
+                String description = currentDbxRecord.getString("IndexName");
+                Double value = currentDbxRecord.getDouble("IndexScore");
 
 //            ESR Currently has not groups
 //            String groupCode = currentDbxRecord.getString("FkCategoryId");
 //            Group group = getDAOFactory().getLocalGroupDAO().getGroupByCode(groupCode);
 //            String groupName = group.getKey();
 //            ESR.Group esrGroup = ESR.Group.valueOf(groupName);
-            ESR.Group esrGroup = null;
+                ESR.Group esrGroup = null;
 
-            ESR newESR = new ESR(esrGroup, code, key, shortDescription, description, value);
-            newESR.setShortDescription(shortDescription);
-            listESRs.add(newESR);
+                ESR newESR = new ESR(esrGroup, code, key, shortDescription, description, value);
+                newESR.setShortDescription(shortDescription);
+                listESRs.add(newESR);
+            }
         }
         return listESRs;
     }

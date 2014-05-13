@@ -11,10 +11,12 @@ import android.widget.TextView;
 
 import com.metric.skava.R;
 import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.calculator.barton.model.RQD;
 import com.metric.skava.calculator.rmr.logic.RMRCalculator;
 import com.metric.skava.calculator.rmr.logic.RMRInput;
 import com.metric.skava.calculator.rmr.logic.RMROutput;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
+import com.metric.skava.calculator.rmr.model.RQD_RMR;
 
 /**
  * Created by metricboy on 3/9/14.
@@ -51,6 +53,12 @@ public class RmrResultsFragment extends RMRCalculatorBaseFragment {
         RMR_Calculation RMRCalculation = getRMRCalculationContext();
         RMRInput input = new RMRInput();
         input.setStrength(RMRCalculation.getStrengthOfRock().getValue());
+        if (RMRCalculation.getRqd() == null){
+            //Pull RQD from QBartonCalculation
+            RQD rqd = (RQD)getQCalculationContext().getRqd();
+            RQD_RMR rqdRMR = RQD_RMR.findWrapper(rqd);
+            RMRCalculation.setRqd(rqdRMR);
+        }
         input.setRqd(Double.valueOf(RMRCalculation.getRqd().getValue()));
         input.setSpacing(RMRCalculation.getSpacing().getValue());
         input.setRoughness(RMRCalculation.getRoughness().getValue());

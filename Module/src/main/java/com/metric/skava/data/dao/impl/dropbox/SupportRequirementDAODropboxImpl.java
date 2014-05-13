@@ -46,7 +46,6 @@ public class SupportRequirementDAODropboxImpl extends DropBoxBaseDAO implements 
     private LocalArchTypeDAO archTypeDAO;
 
 
-
     public SupportRequirementDAODropboxImpl(Context context, SkavaContext skavaContext) throws DAOException {
         super(context, skavaContext);
         this.mSupportRequirementTable = new SupportRequirementDropboxTable(getDatastore());
@@ -60,8 +59,6 @@ public class SupportRequirementDAODropboxImpl extends DropBoxBaseDAO implements 
         this.archTypeDAO = getDAOFactory().getLocalArchTypeDAO();
 
     }
-
-
 
 
     @Override
@@ -79,34 +76,60 @@ public class SupportRequirementDAODropboxImpl extends DropBoxBaseDAO implements 
                 Double lowerQ = currentSupportRequirementRecord.getDouble("Q_LOWER_BOUNDARY");
                 Double upperQ = currentSupportRequirementRecord.getDouble("Q_UPPER_BOUNDARY");
                 String name = readString(currentSupportRequirementRecord, "NAME");
-                String boltTypeCode = readString(currentSupportRequirementRecord,"BOLT_TYPE_CODE");
-                Double boltDiameter = readDouble(currentSupportRequirementRecord,"BOLT_DIAMETER");
-                Double boltLength = readDouble(currentSupportRequirementRecord,"BOLT_LENGTH");
-                String wallPatternTypeCode = readString(currentSupportRequirementRecord,"PatternWallType");
-                Double wallDx = readDouble(currentSupportRequirementRecord,"PatternWall_dx");
-                Double wallDy = readDouble(currentSupportRequirementRecord,"PatternWall_dy");
-                String roofPatternTypeCode = readString(currentSupportRequirementRecord,"PatternRoofType");
-                Double roofDx = readDouble(currentSupportRequirementRecord,"PatternRoof_dx");
-                Double roofDy = readDouble(currentSupportRequirementRecord,"PatternRoof_dy");
-                String shotcreteTypeCode = readString(currentSupportRequirementRecord,"SHOTCRETE_TYPE");
-                Double thickness = readDouble(currentSupportRequirementRecord,"THICKNESS");
-                String meshTypeCode = readString(currentSupportRequirementRecord,"MESH_TYPE");
-                String coverageCode = readString(currentSupportRequirementRecord,"COVERAGE");
-                String archTypeCode = readString(currentSupportRequirementRecord,"ARCH_TYPE");
-                Double separation = readDouble(currentSupportRequirementRecord,"SEPARATION");
+                String boltTypeCode = readString(currentSupportRequirementRecord, "BOLT_TYPE_CODE");
+                Double boltDiameter = readDouble(currentSupportRequirementRecord, "BOLT_DIAMETER");
+                Double boltLength = readDouble(currentSupportRequirementRecord, "BOLT_LENGTH");
+                String wallPatternTypeCode = readString(currentSupportRequirementRecord, "PatternWallType");
+                Double wallDx = readDouble(currentSupportRequirementRecord, "PatternWall_dx");
+                Double wallDy = readDouble(currentSupportRequirementRecord, "PatternWall_dy");
+                String roofPatternTypeCode = readString(currentSupportRequirementRecord, "PatternRoofType");
+                Double roofDx = readDouble(currentSupportRequirementRecord, "PatternRoof_dx");
+                Double roofDy = readDouble(currentSupportRequirementRecord, "PatternRoof_dy");
+                String shotcreteTypeCode = readString(currentSupportRequirementRecord, "SHOTCRETE_TYPE");
+                Double thickness = readDouble(currentSupportRequirementRecord, "THICKNESS");
+                String meshTypeCode = readString(currentSupportRequirementRecord, "MESH_TYPE");
+                String coverageCode = readString(currentSupportRequirementRecord, "COVERAGE");
+                String archTypeCode = readString(currentSupportRequirementRecord, "ARCH_TYPE");
+                Double separation = readDouble(currentSupportRequirementRecord, "SEPARATION");
 
                 Tunnel tunnel = tunnelDAO.getTunnelByUniqueCode(tunnelCode);
 
-                BoltType boltType = boltTypeDAO.getBoltTypeByCode(boltTypeCode);
-                SupportPatternType roofPatternType = supportPatternTypeDAO.getSupportPatternTypeByCode(roofPatternTypeCode);
-                SupportPatternType wallPatternType = supportPatternTypeDAO.getSupportPatternTypeByCode(wallPatternTypeCode);
-                SupportPattern roofPattern = new SupportPattern(roofPatternType, roofDx, roofDy);
-                SupportPattern wallPattern = new SupportPattern(wallPatternType, wallDx, wallDy);
-                ShotcreteType shotcreteType = shotcreteTypeDAO.getShotcreteTypeByCode(shotcreteTypeCode);
-                MeshType meshType = meshTypeDAO.getMeshTypeByCode(meshTypeCode);
-                Coverage coverage = coverageDAO.getCoverageByCode(coverageCode);
-                ArchType archType = archTypeDAO.getArchTypeByCode(archTypeCode);
+                BoltType boltType = null;
+                if (boltTypeCode != null) {
+                    boltType = boltTypeDAO.getBoltTypeByCode(boltTypeCode);
+                }
 
+                SupportPattern roofPattern = null;
+                if (roofPatternTypeCode != null) {
+                    SupportPatternType roofPatternType = supportPatternTypeDAO.getSupportPatternTypeByCode(roofPatternTypeCode);
+                    roofPattern = new SupportPattern(roofPatternType, roofDx, roofDy);
+                }
+
+                SupportPattern wallPattern = null;
+                if (wallPatternTypeCode != null) {
+                    SupportPatternType wallPatternType = supportPatternTypeDAO.getSupportPatternTypeByCode(wallPatternTypeCode);
+                    wallPattern = new SupportPattern(wallPatternType, wallDx, wallDy);
+                }
+
+                ShotcreteType shotcreteType = null;
+                if (shotcreteTypeCode != null) {
+                    shotcreteType = shotcreteTypeDAO.getShotcreteTypeByCode(shotcreteTypeCode);
+                }
+
+                MeshType meshType = null;
+                if (meshTypeCode != null) {
+                    meshType = meshTypeDAO.getMeshTypeByCode(meshTypeCode);
+                }
+
+                Coverage coverage = null;
+                if (coverageCode != null) {
+                    coverage = coverageDAO.getCoverageByCode(coverageCode);
+                }
+
+                ArchType archType = null;
+                if (archTypeCode != null) {
+                    archType = archTypeDAO.getArchTypeByCode(archTypeCode);
+                }
                 SupportRequirement newSupportRequirement = new SupportRequirement(tunnel, codigo, name);
                 newSupportRequirement.setqBartonLowerBoundary(lowerQ);
                 newSupportRequirement.setqBartonUpperBoundary(upperQ);

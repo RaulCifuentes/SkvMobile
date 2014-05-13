@@ -18,6 +18,7 @@ import com.metric.skava.assessment.fragment.AssessmentListFragment;
 import com.metric.skava.data.dao.LocalRoleDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.report.activity.MappingReportMainActivity;
+import com.metric.skava.report.activity.ReviewReportMainActivity;
 import com.metric.skava.report.fragment.MappingReportMainFragment;
 
 public class AssessmentsListActivity extends SkavaFragmentActivity implements AssessmentListFragment.OnFragmentInteractionListener {
@@ -89,7 +90,7 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
     public void onFragmentInteraction(Assessment selectedAssessment) {
         // Lanzar activity que muestra el reporte
         getSkavaContext().setAssessment(selectedAssessment);
-        Intent detailIntent = new Intent(this, MappingReportMainActivity.class);
+        Intent detailIntent = new Intent(this, ReviewReportMainActivity.class);
         detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, AssesmentStageDataProvider.REPORT);
         detailIntent.putExtra(MappingReportMainActivity.IS_PREVIEW, true);
         startActivity(detailIntent);

@@ -31,7 +31,7 @@ public class JrDAODropboxImpl extends DropBoxBaseDAO implements RemoteJrDAO {
 
     private String getJrParameterId() throws DAOException {
         DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "Q_JR");
-        String codigo = foundRecord.getString("ParameterId");
+        String codigo = readString(foundRecord, "ParameterId");
         return codigo;
     }
 
@@ -39,23 +39,25 @@ public class JrDAODropboxImpl extends DropBoxBaseDAO implements RemoteJrDAO {
     public List<Jr> getAllJrs() throws DAOException {
         String jrParameterId = getJrParameterId();
         List<Jr> listJrs = new ArrayList<Jr>();
-        String[] names = new String[]{"FkParameterId"};
-        String[] values = new String[]{jrParameterId};
-        List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
-        for (DbxRecord currentDbxRecord : recordList) {
-            String code = currentDbxRecord.getString("IndexId");
-            String key = currentDbxRecord.getString("IndexCode");
-            String shortDescription = currentDbxRecord.getString("IndexShortName");
-            String description = currentDbxRecord.getString("IndexName");
-            Double value = currentDbxRecord.getDouble("IndexScore");
-            String groupCode = currentDbxRecord.getString("FkCategoryId");
-            Group group = getDAOFactory().getLocalGroupDAO().getGroupByCode(groupCode);
-            String groupName = group.getKey();
+        if (jrParameterId != null) {
+            String[] names = new String[]{"FkParameterId"};
+            String[] values = new String[]{jrParameterId};
+            List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
+            for (DbxRecord currentDbxRecord : recordList) {
+                String code = currentDbxRecord.getString("IndexId");
+                String key = currentDbxRecord.getString("IndexCode");
+                String shortDescription = currentDbxRecord.getString("IndexShortName");
+                String description = currentDbxRecord.getString("IndexName");
+                Double value = currentDbxRecord.getDouble("IndexScore");
+                String groupCode = currentDbxRecord.getString("FkCategoryId");
+                Group group = getDAOFactory().getLocalGroupDAO().getGroupByCode(groupCode);
+                String groupName = group.getKey();
 
-            Jr.Group jrGroup = Jr.Group.valueOf(groupName);
-            Jr newJr = new Jr(jrGroup, code, key, shortDescription, description, value);
-            newJr.setShortDescription(shortDescription);
-            listJrs.add(newJr);
+                Jr.Group jrGroup = Jr.Group.valueOf(groupName);
+                Jr newJr = new Jr(jrGroup, code, key, shortDescription, description, value);
+                newJr.setShortDescription(shortDescription);
+                listJrs.add(newJr);
+            }
         }
         return listJrs;
     }

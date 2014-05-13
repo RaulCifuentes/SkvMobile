@@ -30,7 +30,7 @@ public class InfillingDAODropboxImpl extends DropBoxBaseDAO implements RemoteInf
 
     private String getSpaceParameterId() throws DAOException {
         DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "RMR_Infilling");
-        String codigo = foundRecord.getString("ParameterId");
+        String codigo = readString(foundRecord, "ParameterId");
         return codigo;
     }
 
@@ -38,21 +38,22 @@ public class InfillingDAODropboxImpl extends DropBoxBaseDAO implements RemoteInf
     public List<Infilling> getAllInfillings() throws DAOException {
         String spacingparameterId = getSpaceParameterId();
         List<Infilling> listInfillings = new ArrayList<Infilling>();
-        String[] names = new String[]{"FkParameterId"};
-        String[] values = new String[]{spacingparameterId};
-        List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
-        for (DbxRecord currentDbxRecord : recordList) {
-            String code = currentDbxRecord.getString("IndexId");
-            String key = currentDbxRecord.getString("IndexCode");
-            String shortDescription = currentDbxRecord.getString("IndexShortName");
-            String description = currentDbxRecord.getString("IndexName");
-            Double value = currentDbxRecord.getDouble("IndexScore");
-            Infilling newType = new Infilling(code, key, shortDescription, description, value);
-            listInfillings.add(newType);
+        if (spacingparameterId != null) {
+            String[] names = new String[]{"FkParameterId"};
+            String[] values = new String[]{spacingparameterId};
+            List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
+            for (DbxRecord currentDbxRecord : recordList) {
+                String code = currentDbxRecord.getString("IndexId");
+                String key = currentDbxRecord.getString("IndexCode");
+                String shortDescription = currentDbxRecord.getString("IndexShortName");
+                String description = currentDbxRecord.getString("IndexName");
+                Double value = currentDbxRecord.getDouble("IndexScore");
+                Infilling newType = new Infilling(code, key, shortDescription, description, value);
+                listInfillings.add(newType);
+            }
         }
         return listInfillings;
     }
-
 
 
 }

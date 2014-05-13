@@ -31,7 +31,7 @@ public class OrientationDiscontinuitiesDAODropboxImpl extends DropBoxBaseDAO imp
 
     private String getOrientationParameterId() throws DAOException {
         DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "RMR_Orientation");
-        String codigo = foundRecord.getString("ParameterId");
+        String codigo = readString(foundRecord, "ParameterId");
         return codigo;
     }
 
@@ -39,39 +39,40 @@ public class OrientationDiscontinuitiesDAODropboxImpl extends DropBoxBaseDAO imp
     public List<OrientationDiscontinuities> getAllOrientationsDiscontinuities() throws DAOException {
         String orientationParameterId = getOrientationParameterId();
         List<OrientationDiscontinuities> listOrientations = new ArrayList<OrientationDiscontinuities>();
-        String[] names = new String[]{"FkParameterId"};
-        String[] values = new String[]{orientationParameterId};
-        List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
-        for (DbxRecord currentDbxRecord : recordList) {
-            String code = currentDbxRecord.getString("IndexId");
-            String key = currentDbxRecord.getString("IndexCode");
-            String shortDescription = currentDbxRecord.getString("IndexShortName");
-            String description = currentDbxRecord.getString("IndexName");
-            Double value = currentDbxRecord.getDouble("IndexScore");
-            String groupCode = currentDbxRecord.getString("FkCategoryId");
+        if (orientationParameterId != null) {
+            String[] names = new String[]{"FkParameterId"};
+            String[] values = new String[]{orientationParameterId};
+            List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
+            for (DbxRecord currentDbxRecord : recordList) {
+                String code = currentDbxRecord.getString("IndexId");
+                String key = currentDbxRecord.getString("IndexCode");
+                String shortDescription = currentDbxRecord.getString("IndexShortName");
+                String description = currentDbxRecord.getString("IndexName");
+                Double value = currentDbxRecord.getDouble("IndexScore");
+                String groupCode = currentDbxRecord.getString("FkCategoryId");
 
-            Group group = getDAOFactory().getLocalGroupDAO().getGroupByCode(groupCode);
-            String groupName = group.getKey();
+                Group group = getDAOFactory().getLocalGroupDAO().getGroupByCode(groupCode);
+                String groupName = group.getKey();
 
-            //tx the model.group into the Class.Group
-            if (groupName.equalsIgnoreCase("a")) {
-                groupName = OrientationDiscontinuities.Group.TUNNELS_MINES.name();
-            }
-            if (groupName.equalsIgnoreCase("b")){
-                groupName = OrientationDiscontinuities.Group.FOUNDATIONS.name();
-            }
-            if (groupName.equalsIgnoreCase("c")){
-                groupName = OrientationDiscontinuities.Group.SLOPES.name();
-            }
-            OrientationDiscontinuities.Group orientationGroup = OrientationDiscontinuities.Group.valueOf(groupName);
-            OrientationDiscontinuities newOrientation = new OrientationDiscontinuities(orientationGroup, code, key, shortDescription, description, value);
-            newOrientation.setShortDescription(shortDescription);
+                //tx the model.group into the Class.Group
+                if (groupName.equalsIgnoreCase("a")) {
+                    groupName = OrientationDiscontinuities.Group.TUNNELS_MINES.name();
+                }
+                if (groupName.equalsIgnoreCase("b")) {
+                    groupName = OrientationDiscontinuities.Group.FOUNDATIONS.name();
+                }
+                if (groupName.equalsIgnoreCase("c")) {
+                    groupName = OrientationDiscontinuities.Group.SLOPES.name();
+                }
+                OrientationDiscontinuities.Group orientationGroup = OrientationDiscontinuities.Group.valueOf(groupName);
+                OrientationDiscontinuities newOrientation = new OrientationDiscontinuities(orientationGroup, code, key, shortDescription, description, value);
+                newOrientation.setShortDescription(shortDescription);
 
-            listOrientations.add(newOrientation);
+                listOrientations.add(newOrientation);
+            }
         }
         return listOrientations;
     }
-
 
 
 }

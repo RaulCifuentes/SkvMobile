@@ -31,7 +31,7 @@ public class StrengthDAODropboxImpl extends DropBoxBaseDAO implements RemoteStre
 
     private String getStrengthParameterId() throws DAOException {
         DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "RMR_UCS");
-        String codigo = foundRecord.getString("ParameterId");
+        String codigo = readString(foundRecord, "ParameterId");
         return codigo;
     }
 
@@ -39,37 +39,38 @@ public class StrengthDAODropboxImpl extends DropBoxBaseDAO implements RemoteStre
     public List<StrengthOfRock> getAllStrengths() throws DAOException {
         String strengthParameterId = getStrengthParameterId();
         List<StrengthOfRock> listStrengths = new ArrayList<StrengthOfRock>();
-        String[] names = new String[]{"FkParameterId"};
-        String[] values = new String[]{strengthParameterId};
-        List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
-        for (DbxRecord currentDbxRecord : recordList) {
-            String code = currentDbxRecord.getString("IndexId");
-            String key = currentDbxRecord.getString("IndexCode");
-            String shortDescription = currentDbxRecord.getString("IndexShortName");
-            String description = currentDbxRecord.getString("IndexName");
-            Double value = currentDbxRecord.getDouble("IndexScore");
-            String groupCode = currentDbxRecord.getString("FkCategoryId");
+        if (strengthParameterId != null) {
+            String[] names = new String[]{"FkParameterId"};
+            String[] values = new String[]{strengthParameterId};
+            List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
+            for (DbxRecord currentDbxRecord : recordList) {
+                String code = currentDbxRecord.getString("IndexId");
+                String key = currentDbxRecord.getString("IndexCode");
+                String shortDescription = currentDbxRecord.getString("IndexShortName");
+                String description = currentDbxRecord.getString("IndexName");
+                Double value = currentDbxRecord.getDouble("IndexScore");
+                String groupCode = currentDbxRecord.getString("FkCategoryId");
 
-            Group group = getDAOFactory().getLocalGroupDAO().getGroupByCode(groupCode);
-            String groupName = group.getKey();
+                Group group = getDAOFactory().getLocalGroupDAO().getGroupByCode(groupCode);
+                String groupName = group.getKey();
 
-            //tx the model.group into the Class.Group
-            if (groupName.equalsIgnoreCase("a")) {
-                groupName = StrengthOfRock.Group.UNIAXIAL_KEY.name();
+                //tx the model.group into the Class.Group
+                if (groupName.equalsIgnoreCase("a")) {
+                    groupName = StrengthOfRock.Group.UNIAXIAL_KEY.name();
+                }
+                if (groupName.equalsIgnoreCase("b")) {
+                    groupName = StrengthOfRock.Group.POINT_LOAD_KEY.name();
+                }
+
+                StrengthOfRock.Group strengthGroup = StrengthOfRock.Group.valueOf(groupName);
+                StrengthOfRock newStrength = new StrengthOfRock(strengthGroup, code, key, shortDescription, description, value);
+                newStrength.setShortDescription(shortDescription);
+
+                listStrengths.add(newStrength);
             }
-            if (groupName.equalsIgnoreCase("b")){
-                groupName = StrengthOfRock.Group.POINT_LOAD_KEY.name();
-            }
-
-            StrengthOfRock.Group strengthGroup = StrengthOfRock.Group.valueOf(groupName);
-            StrengthOfRock newStrength = new StrengthOfRock(strengthGroup, code, key, shortDescription, description, value);
-            newStrength.setShortDescription(shortDescription);
-
-            listStrengths.add(newStrength);
         }
         return listStrengths;
     }
-
 
 
 }
