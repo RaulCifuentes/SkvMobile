@@ -49,8 +49,11 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
         title.setText(getString(R.string.title_section_orientation));
 
         RadioButton tunnelsRadio = (RadioButton) view.findViewById(R.id.radioButtonMines);
+        tunnelsRadio.setText(OrientationDiscontinuities.Group.TUNNELS_MINES.toString());
         RadioButton foundationsRadio = (RadioButton) view.findViewById(R.id.radioButtonFoundations);
+        foundationsRadio.setText(OrientationDiscontinuities.Group.FOUNDATIONS.toString());
         RadioButton slopesRadio = (RadioButton) view.findViewById(R.id.radioButtonSlopes);
+        slopesRadio.setText(OrientationDiscontinuities.Group.SLOPES.toString());
 
         mListTunnels = (ListView) view.findViewById(R.id.listview_tunnels);
         mListTunnels.setVisibility(View.GONE);

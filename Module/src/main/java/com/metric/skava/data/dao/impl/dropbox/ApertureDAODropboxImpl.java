@@ -28,31 +28,32 @@ public class ApertureDAODropboxImpl extends DropBoxBaseDAO implements RemoteAper
     }
 
 
-    private String getSpaceParameterId() throws DAOException {
+    private String getApertureParameterId() throws DAOException {
         DbxRecord foundRecord = mParametersTable.findRecordByCandidateKey("ParameterName", "RMR_Aperture");
-        String codigo = foundRecord.getString("ParameterId");
+        String codigo = readString(foundRecord, "ParameterId");
         return codigo;
     }
 
     @Override
     public List<Aperture> getAllApertures() throws DAOException {
-        String spacingparameterId = getSpaceParameterId();
+        String spacingparameterId = getApertureParameterId();
         List<Aperture> listApertures = new ArrayList<Aperture>();
-        String[] names = new String[]{"FkParameterId"};
-        String[] values = new String[]{spacingparameterId};
-        List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
-        for (DbxRecord currentDbxRecord : recordList) {
-            String code = currentDbxRecord.getString("IndexId");
-            String key = currentDbxRecord.getString("IndexCode");
-            String shortDescription = currentDbxRecord.getString("IndexShortName");
-            String description = currentDbxRecord.getString("IndexName");
-            Double value = currentDbxRecord.getDouble("IndexScore");
-            Aperture newType = new Aperture(code, key, shortDescription, description, value);
-            listApertures.add(newType);
+        if (spacingparameterId != null) {
+            String[] names = new String[]{"FkParameterId"};
+            String[] values = new String[]{spacingparameterId};
+            List<DbxRecord> recordList = mIndexesTable.findRecordsByCriteria(names, values);
+            for (DbxRecord currentDbxRecord : recordList) {
+                String code = currentDbxRecord.getString("IndexId");
+                String key = currentDbxRecord.getString("IndexCode");
+                String shortDescription = currentDbxRecord.getString("IndexShortName");
+                String description = currentDbxRecord.getString("IndexName");
+                Double value = currentDbxRecord.getDouble("IndexScore");
+                Aperture newType = new Aperture(code, key, shortDescription, description, value);
+                listApertures.add(newType);
+            }
         }
         return listApertures;
     }
-
 
 
 }

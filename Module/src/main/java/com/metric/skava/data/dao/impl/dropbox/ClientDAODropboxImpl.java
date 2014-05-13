@@ -1,7 +1,6 @@
 package com.metric.skava.data.dao.impl.dropbox;
 
 import android.content.Context;
-import android.net.Uri;
 
 import com.dropbox.sync.android.DbxDatastoreStatus;
 import com.dropbox.sync.android.DbxException;
@@ -42,12 +41,12 @@ public class ClientDAODropboxImpl extends DropBoxBaseDAO implements RemoteClient
             for (DbxRecord currentDbxRecord : recordList) {
                 String codigo = currentDbxRecord.getString("ClientId");
                 String nombre = currentDbxRecord.getString("ClientName");
-                String urlLogo = currentDbxRecord.getString("ClientLogo");
+//                String urlLogo = currentDbxRecord.getString("ClientLogo");
                 Client newClient = new Client(codigo, nombre);
-                if (urlLogo != null){
-                    Uri uri = Uri.parse(urlLogo);
-                    newClient.setClientLogo(uri);
-                }
+//                if (urlLogo != null){
+//                    Uri uri = Uri.parse(urlLogo);
+//                    newClient.setClientLogo(uri);
+//                }
                 listProjects.add(newClient);
             }
             return listProjects;

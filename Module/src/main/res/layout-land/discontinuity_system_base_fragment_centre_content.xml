@@ -5,8 +5,7 @@
     android:scrollbarSize="10dp"
     android:fadeScrollbars="false"
     android:scrollbarStyle="outsideOverlay"
-    android:scrollbarAlwaysDrawVerticalTrack="true"
-    >
+    android:scrollbarAlwaysDrawVerticalTrack="true">
 
     <GridLayout
         android:columnCount="2"
@@ -28,8 +27,7 @@
             android:id="@+id/discontinuity_system_type_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            android:layout_marginLeft="@dimen/form_column_left_margin" />
 
         <Space
             android:layout_width="40dp"
@@ -59,8 +57,7 @@
             android:id="@+id/discontinuity_system_relevance_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            android:layout_marginLeft="@dimen/form_column_left_margin" />
 
         <Space
             android:layout_width="40dp"
@@ -92,8 +89,7 @@
             android:layout_height="wrap_content"
             android:numeric="integer"
             android:inputType="number"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            android:layout_marginLeft="@dimen/form_column_left_margin" />
 
         <Space
             android:layout_width="40dp"
@@ -125,8 +121,7 @@
             android:numeric="integer"
             android:inputType="number"
             android:hint="Degrees between 0 - 90"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            android:layout_marginLeft="@dimen/form_column_left_margin" />
 
         <Space
             android:layout_width="40dp"
@@ -155,8 +150,7 @@
             android:id="@+id/discontinuity_system_spacing_spinner"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            android:layout_marginLeft="@dimen/form_column_left_margin" />
 
 
         <Space
@@ -188,8 +182,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            android:layout_marginLeft="@dimen/form_column_left_margin" />
 
         <Space
             android:layout_width="40dp"
@@ -222,8 +215,7 @@
             android:inputType="number"
             android:numeric="integer"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            android:layout_marginLeft="@dimen/form_column_left_margin" />
 
         <Space
             android:layout_width="40dp"
@@ -254,8 +246,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            android:layout_marginLeft="@dimen/form_column_left_margin" />
 
         <Space
             android:layout_width="40dp"
@@ -284,8 +275,7 @@
             android:id="@+id/discontinuity_system_roughness_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            android:layout_marginLeft="@dimen/form_column_left_margin" />
 
         <Space
             android:layout_width="40dp"
@@ -315,8 +305,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            android:layout_marginLeft="@dimen/form_column_left_margin" />
 
         <Space
             android:layout_width="40dp"
@@ -347,8 +336,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:inputType="number"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            android:layout_marginLeft="@dimen/form_column_left_margin" />
 
         <Space
             android:layout_width="40dp"
@@ -372,21 +360,26 @@
 
             />
 
-        <Spinner
-            android:id="@+id/discontinuity_system_jr_group_spinner"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            android:orientation="horizontal">
 
-        <Spinner
-            android:id="@+id/discontinuity_system_jr_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            <Spinner
+                android:id="@+id/discontinuity_system_jr_group_spinner"
+                android:layout_width="@dimen/fragment_number_input_width_small"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginLeft="@dimen/form_column_left_margin" />
+
+            <Spinner
+                android:id="@+id/discontinuity_system_jr_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginLeft="@dimen/form_column_left_margin" />
+
+        </LinearLayout>
 
         <Space
             android:layout_width="40dp"
@@ -410,21 +403,26 @@
 
             />
 
-        <Spinner
-            android:id="@+id/discontinuity_system_ja_group_spinner"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            android:orientation="horizontal">
 
-        <Spinner
-            android:id="@+id/discontinuity_system_ja_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            <Spinner
+                android:id="@+id/discontinuity_system_ja_group_spinner"
+                android:layout_width="@dimen/fragment_number_input_width_small"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginLeft="@dimen/form_column_left_margin" />
+
+            <Spinner
+                android:id="@+id/discontinuity_system_ja_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginLeft="@dimen/form_column_left_margin" />
+        </LinearLayout>
+
 
         <Space
             android:layout_width="40dp"
@@ -453,8 +451,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginLeft="@dimen/form_column_left_margin"
-            />
+            android:layout_marginLeft="@dimen/form_column_left_margin" />
 
 
     </GridLayout>

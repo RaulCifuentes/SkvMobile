@@ -19,7 +19,7 @@
             android:id="@+id/radioButtonMines"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tunnels &amp; Mines" />
+            android:text="First" />
 
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
@@ -29,7 +29,7 @@
             android:id="@+id/radioButtonFoundations"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Foundations" />
+            android:text="Second" />
 
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
@@ -39,7 +39,7 @@
             android:id="@+id/radioButtonSlopes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Slopes" />
+            android:text="Third" />
     </RadioGroup>
 
 

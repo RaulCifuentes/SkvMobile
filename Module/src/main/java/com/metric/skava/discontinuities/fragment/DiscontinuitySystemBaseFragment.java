@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -29,6 +28,8 @@ import com.metric.skava.calculator.rmr.model.Spacing;
 import com.metric.skava.calculator.rmr.model.Weathering;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
+import com.metric.skava.discontinuities.adapter.MappedIndexJaGroupSpinnerArrayAdapter;
+import com.metric.skava.discontinuities.adapter.MappedIndexJrGroupSpinnerArrayAdapter;
 import com.metric.skava.discontinuities.adapter.MappedIndexSpinnerArrayAdapter;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
 import com.metric.skava.discontinuities.model.DiscontinuityRelevance;
@@ -75,12 +76,14 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
     private Spinner discJaGroupSpinner;
     private Spinner discJaSpinner;
     private MappedIndexSpinnerArrayAdapter<Ja> discJaAdapter;
-    private ArrayAdapter<Ja.Group> discJaGroupAdapter;
+    private MappedIndexJaGroupSpinnerArrayAdapter<Ja.Group> discJaGroupAdapter;
+    private Ja selectedJa;
 
     private Spinner discJrSpinner;
     private Spinner discJrGroupSpinner;
     private MappedIndexSpinnerArrayAdapter<Jr> discJrAdapter;
-    private ArrayAdapter<Jr.Group> discJrGroupAdapter;
+    private MappedIndexJrGroupSpinnerArrayAdapter<Jr.Group> discJrGroupAdapter;
+    private Jr selectedJr;
 
     private Spinner discInfillingSpinner;
     private MappedIndexSpinnerArrayAdapter<Infilling> discInfillingAdapter;
@@ -91,6 +94,8 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
     private int mDiscontinuityFamilyNumber;
 
     private DAOFactory daoFactory;
+    private int jrGroupSpinnerLastPosition;
+    private int jaGroupSpinnerLastPosition;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -188,7 +193,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
         }
-        discAperturesList.add(new Aperture(null, "HINT", "Select aperture ...",  "Select aperture ...", 0d));
+        discAperturesList.add(new Aperture(null, "HINT", "Select aperture ...", "Select aperture ...", 0d));
         discApertureAdapter = new MappedIndexSpinnerArrayAdapter<Aperture>(
                 getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, discAperturesList);
         // Specify the layout to use when the list of choices appears
@@ -236,37 +241,26 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         // Specify the layout to use when the list of choices appears
         discInfillingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        List<Jr> discJrList = null;
-        try {
-            //TODO Show the whole set of Ja and not only the a group. This depends on
-            //definition from Matias of what should appers here
-            discJrList = daoFactory.getLocalJrDAO().getAllJrs(Jr.Group.a);
-        } catch (DAOException e) {
-            Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
-        }
-        discJrList.add(new Jr(null, null, "HINT", "Select Jr ...", "Select Jr ...", 1d));
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        discJrAdapter = new MappedIndexSpinnerArrayAdapter<Jr>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, discJrList);
-        // Specify the layout to use when the list of choices appears
-        discJrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        List<Jr.Group> jrGroupsList = null;
+        jrGroupsList = new ArrayList<Jr.Group>();
+        jrGroupsList.add(Jr.Group.a);
+        jrGroupsList.add(Jr.Group.b);
+        jrGroupsList.add(Jr.Group.c);
+
+        discJrGroupAdapter = new MappedIndexJrGroupSpinnerArrayAdapter<Jr.Group>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, jrGroupsList);
+        discJrGroupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        discJrAdapter = prepareJrAdapter(Jr.Group.a);
 
 
-        List<Ja> discJaList = null;
-        try {
-            //TODO Show the whole set of Ja and not only the a group. This depends on
-            //definition from Matias of what should appers here
-            discJaList = daoFactory.getLocalJaDAO().getAllJas(Ja.Group.a);
-        } catch (DAOException e) {
-            Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
-        }
-        discJaList.add(new Ja(null, null, "HINT", "Select Ja ...", "Select Ja ...", 10d));
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        discJaAdapter = new MappedIndexSpinnerArrayAdapter<Ja>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, discJaList);
-        // Specify the layout to use when the list of choices appears
-        discJaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
+        List<Ja.Group> jaGroupsList = null;
+        jaGroupsList = new ArrayList<Ja.Group>();
+        jaGroupsList.add(Ja.Group.a);
+        jaGroupsList.add(Ja.Group.b);
+        jaGroupsList.add(Ja.Group.c);
+        discJaGroupAdapter = new MappedIndexJaGroupSpinnerArrayAdapter<Ja.Group>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, jaGroupsList);
+        discJaGroupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        discJaAdapter = prepareJaAdapter(Ja.Group.a);
 
         List<Weathering> discWeatheringList = null;
         try {
@@ -375,7 +369,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         if (spacing != null) {
             discSpacingSpinner.setSelection(discSpacingsAdapter.getPosition(spacing));
         } else {
-            discSpacingSpinner.setSelection(discSpacingsAdapter.getCount()-1);
+            discSpacingSpinner.setSelection(discSpacingsAdapter.getCount() - 1);
         }
 
 
@@ -386,7 +380,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         if (persistence != null) {
             discPersistenceSpinner.setSelection(discPersistenceAdapter.getPosition(persistence));
         } else {
-            discPersistenceSpinner.setSelection(discPersistenceAdapter.getCount()-1);
+            discPersistenceSpinner.setSelection(discPersistenceAdapter.getCount() - 1);
         }
 
 
@@ -397,7 +391,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         if (aperture != null) {
             discApertureSpinner.setSelection(discApertureAdapter.getPosition(aperture));
         } else {
-            discApertureSpinner.setSelection(discApertureAdapter.getCount()-1);
+            discApertureSpinner.setSelection(discApertureAdapter.getCount() - 1);
         }
 
 
@@ -408,7 +402,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         if (shape != null) {
             discShapeSpinner.setSelection(discShapeAdapter.getPosition(shape));
         } else {
-            discShapeSpinner.setSelection(discShapeAdapter.getCount()-1);
+            discShapeSpinner.setSelection(discShapeAdapter.getCount() - 1);
         }
 
 
@@ -419,7 +413,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         if (roughness != null) {
             discRoughnessSpinner.setSelection(discRoughnessAdapter.getPosition(roughness));
         } else {
-            discRoughnessSpinner.setSelection(discRoughnessAdapter.getCount()-1);
+            discRoughnessSpinner.setSelection(discRoughnessAdapter.getCount() - 1);
         }
 
 
@@ -430,7 +424,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         if (infilling != null) {
             discInfillingSpinner.setSelection(discInfillingAdapter.getPosition(infilling));
         } else {
-            discInfillingSpinner.setSelection(discInfillingAdapter.getCount()-1);
+            discInfillingSpinner.setSelection(discInfillingAdapter.getCount() - 1);
         }
 
 
@@ -442,7 +436,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         if (weathering != null) {
             discWeatheringSpinner.setSelection(discWeatheringAdapter.getPosition(weathering));
         } else {
-            discWeatheringSpinner.setSelection(discWeatheringAdapter.getCount()-1);
+            discWeatheringSpinner.setSelection(discWeatheringAdapter.getCount() - 1);
         }
         discWeatheringSpinner.setOnItemSelectedListener(this);
 
@@ -454,7 +448,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         if (jr != null) {
             discJrGroupSpinner.setSelection(discJrGroupAdapter.getPosition(jr.getGroup()));
         } else {
-            discJrGroupSpinner.setSelection(discJrGroupAdapter.getCount()-1);
+            discJrGroupSpinner.setSelection(0);
         }
 
         discJrSpinner = (Spinner) rootView.findViewById(R.id.discontinuity_system_jr_spinner);
@@ -463,7 +457,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         if (jr != null) {
             discJrSpinner.setSelection(discJrAdapter.getPosition(jr));
         } else {
-            discJrSpinner.setSelection(discJrAdapter.getCount()-1);
+            discJrSpinner.setSelection(discJrAdapter.getCount() - 1);
         }
 
         discJaGroupSpinner = (Spinner) rootView.findViewById(R.id.discontinuity_system_ja_group_spinner);
@@ -473,7 +467,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         if (ja != null) {
             discJaGroupSpinner.setSelection(discJaGroupAdapter.getPosition(ja.getGroup()));
         } else {
-            discJaGroupSpinner.setSelection(discJaGroupAdapter.getCount()-1);
+            discJaGroupSpinner.setSelection(0);
         }
 
         discJaSpinner = (Spinner) rootView.findViewById(R.id.discontinuity_system_ja_spinner);
@@ -481,7 +475,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         if (ja != null) {
             discJaSpinner.setSelection(discJaAdapter.getPosition(ja));
         } else {
-            discJaSpinner.setSelection(discJaAdapter.getCount()-1);
+            discJaSpinner.setSelection(discJaAdapter.getCount() - 1);
         }
         discJaSpinner.setOnItemSelectedListener(this);
 
@@ -492,7 +486,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         if (water != null) {
             discWaterSpinner.setSelection(discWaterAdapter.getPosition(water));
         } else {
-            discWaterSpinner.setSelection(discWaterAdapter.getCount()-1); //display hint
+            discWaterSpinner.setSelection(discWaterAdapter.getCount() - 1); //display hint
         }
         discWaterSpinner.setOnItemSelectedListener(this);
 
@@ -556,15 +550,47 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
                 mDiscontinuityFamilyInstance.setWeathering(selectedWeathering);
             }
         }
+        if (parent == discJrGroupSpinner) {
+            if (position != jrGroupSpinnerLastPosition) {
+                Jr.Group selectedJrGroup = (Jr.Group) parent.getItemAtPosition(position);
+                discJrAdapter = prepareJrAdapter(selectedJrGroup);
+                discJrSpinner.setAdapter(discJrAdapter);
+                if(selectedJr != null){
+                    if (discJrAdapter.getPosition(selectedJr) != -1) {
+                        discJrSpinner.setSelection(discJrAdapter.getPosition(selectedJr));
+                    } else {
+                        discJrSpinner.setSelection(discJrAdapter.getCount() - 1);
+                    }
+                } else {
+                    discJrSpinner.setSelection(discJrAdapter.getCount() - 1);
+                }
+            }
+        }
+        if (parent == discJaGroupSpinner) {
+            if (position != jaGroupSpinnerLastPosition) {
+                Ja.Group selectedJaGroup = (Ja.Group) parent.getItemAtPosition(position);
+                discJaAdapter = prepareJaAdapter(selectedJaGroup);
+                discJaSpinner.setAdapter(discJaAdapter);
+                if(selectedJa != null){
+                    if (discJaAdapter.getPosition(selectedJa) != -1) {
+                        discJaSpinner.setSelection(discJaAdapter.getPosition(selectedJa));
+                    } else {
+                        discJaSpinner.setSelection(discJaAdapter.getCount() - 1);
+                    }
+                } else {
+                    discJaSpinner.setSelection(discJaAdapter.getCount() - 1);
+                }
+            }
+        }
         if (parent == discJrSpinner) {
             if (position != discJrSpinner.getAdapter().getCount()) {
-                Jr selectedJr = (Jr) parent.getItemAtPosition(position);
+                selectedJr = (Jr) parent.getItemAtPosition(position);
                 mDiscontinuityFamilyInstance.setJr(selectedJr);
             }
         }
         if (parent == discJaSpinner) {
             if (position != discJaSpinner.getAdapter().getCount()) {
-                Ja selectedJa = (Ja) parent.getItemAtPosition(position);
+                selectedJa = (Ja) parent.getItemAtPosition(position);
                 mDiscontinuityFamilyInstance.setJa(selectedJa);
             }
         }
@@ -577,6 +603,36 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             }
         }
 
+    }
+
+    private MappedIndexSpinnerArrayAdapter<Ja> prepareJaAdapter(Ja.Group selectedJaGroup) {
+        List<Ja> discJaList = null;
+        try {
+            discJaList = daoFactory.getLocalJaDAO().getAllJas(selectedJaGroup);
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+        }
+        discJaList.add(new Ja(null, null, "HINT", "Select Ja ...", "Select Ja ...", 1d));
+        discJaAdapter = new MappedIndexSpinnerArrayAdapter<Ja>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, discJaList);
+        // Specify the layout to use when the list of choices appears
+        discJaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return discJaAdapter;
+    }
+
+    private MappedIndexSpinnerArrayAdapter<Jr> prepareJrAdapter(Jr.Group selectedJrGroup) {
+        List<Jr> discJrList = null;
+        try {
+            discJrList = daoFactory.getLocalJrDAO().getAllJrs(selectedJrGroup);
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+        }
+        discJrList.add(new Jr(null, null, "HINT", "Select Jr ...", "Select Jr ...", 1d));
+        discJrAdapter = new MappedIndexSpinnerArrayAdapter<Jr>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, discJrList);
+        // Specify the layout to use when the list of choices appears
+        discJrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return discJrAdapter;
     }
 
     @Override
