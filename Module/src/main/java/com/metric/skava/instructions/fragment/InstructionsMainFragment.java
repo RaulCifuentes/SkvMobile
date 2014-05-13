@@ -94,8 +94,8 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
     private Spinner wallPatternSpinner;
     private EditText wallPatternDx;
     private EditText wallPatternDy;
-    
-    
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -268,6 +268,15 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
 
         final SupportRecomendation supportRecommendation = getCurrentAssessment().getRecomendation();
 
+        if (supportRecommendation.getRequirementBase() != null){
+            String name = supportRecommendation.getRequirementBase().getName();
+            TextView label = (TextView) mRootView.findViewById(R.id.instructions_requirement_base_label);
+            TextView base = (TextView) mRootView.findViewById(R.id.instructions_requirement_base_value);
+            label.setVisibility(View.VISIBLE);
+            base.setVisibility(View.VISIBLE);
+            base.setText(name);
+        }
+
         BoltType boltType = supportRecommendation.getBoltType();
         boltTypeSpinner = (Spinner) mRootView.findViewById(R.id.instructions_bolt_type_spinner);
         boltTypeSpinner.setAdapter(boltTypeAdapter);
@@ -297,8 +306,8 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
                 }
             }
         });
-        
-        
+
+
         boltLengthEditText = (EditText) mRootView.findViewById(R.id.instructions_bolt_length_value);
         boltLengthEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
         Double boltLength = supportRecommendation.getBoltLength();
@@ -330,7 +339,7 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         }
 
 
-        SupportPattern roofPattern = supportRecommendation.getRoofPattern();        
+        SupportPattern roofPattern = supportRecommendation.getRoofPattern();
         roofPatternSpinner = (Spinner) mRootView.findViewById(R.id.instructions_roof_pattern_spinner);
         roofPatternDx = (EditText) mRootView.findViewById(R.id.instructions_roof_pattern_dx);
         roofPatternDy = (EditText) mRootView.findViewById(R.id.instructions_roof_pattern_dy);
@@ -359,7 +368,7 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
             wallPatternSpinner.setSelection(wallPatternAdapter.getCount() - 1); //display hint
         }
 
-        
+
         thicknessEditText = (EditText) mRootView.findViewById(R.id.instructions_thickness_value);
         thicknessEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
         Double thickness = supportRecommendation.getThickness();

@@ -30,7 +30,10 @@ import com.metric.skava.instructions.model.BoltType;
 import com.metric.skava.instructions.model.Coverage;
 import com.metric.skava.instructions.model.MeshType;
 import com.metric.skava.instructions.model.ShotcreteType;
+import com.metric.skava.instructions.model.SupportPattern;
+import com.metric.skava.instructions.model.SupportPatternType;
 import com.metric.skava.instructions.model.SupportRecomendation;
+import com.metric.skava.rocksupport.model.SupportRequirement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,9 +183,21 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         while (cursor.moveToNext()) {
             String assessment = CursorUtils.getString(SupportRecomendationTable.ASSESSMENT_CODE_COLUMN, cursor);
 
-            String archTypeCode = CursorUtils.getString(SupportRecomendationTable.ARCH_TYPE_CODE_COLUMN, cursor);
-            ArchType archType = daoFactory.getLocalArchTypeDAO().getArchTypeByCode(archTypeCode);
+            String requirementCode = CursorUtils.getString(SupportRecomendationTable.SUPPORT_REQUIREMENT_BASE_CODE_COLUMN, cursor);
+            SupportRequirement requirement = daoFactory.getLocalSupportRequirementDAO().getSupportRequirement(requirementCode);
 
+            String patternTypeCode = CursorUtils.getString(SupportRecomendationTable.ROOF_PATTERN_TYPE_CODE_COLUMN, cursor);
+            Double distanceX = CursorUtils.getDouble(SupportRecomendationTable.ROOF_PATTERN_DX_COLUMN, cursor);
+            Double distanceY = CursorUtils.getDouble(SupportRecomendationTable.ROOF_PATTERN_DY_COLUMN, cursor);
+            SupportPatternType type = daoFactory.getLocalSupportPatternTypeDAO().getSupportPatternTypeByCode(patternTypeCode);
+            SupportPattern roofPattern = new SupportPattern(type, distanceX, distanceY);
+
+            patternTypeCode = CursorUtils.getString(SupportRecomendationTable.WALL_PATTERN_TYPE_CODE_COLUMN, cursor);
+            distanceX = CursorUtils.getDouble(SupportRecomendationTable.WALL_PATTERN_DX_COLUMN, cursor);
+            distanceY = CursorUtils.getDouble(SupportRecomendationTable.WALL_PATTERN_DY_COLUMN, cursor);
+            type = daoFactory.getLocalSupportPatternTypeDAO().getSupportPatternTypeByCode(patternTypeCode);
+            SupportPattern wallPattern = new SupportPattern(type, distanceX, distanceY);
+            
             String boltTypeCode = CursorUtils.getString(SupportRecomendationTable.BOLT_TYPE_CODE_COLUMN, cursor);
             BoltType boltType = daoFactory.getLocalBoltTypeDAO().getBoltTypeByCode(boltTypeCode);
 
@@ -198,18 +213,22 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             String shotcreteTypeCode = CursorUtils.getString(SupportRecomendationTable.SHOTCRETE_TYPE_CODE_COLUMN, cursor);
             ShotcreteType shotcreteType = daoFactory.getLocalShotcreteTypeDAO().getShotcreteTypeByCode(shotcreteTypeCode);
 
+            String archTypeCode = CursorUtils.getString(SupportRecomendationTable.ARCH_TYPE_CODE_COLUMN, cursor);
+            ArchType archType = daoFactory.getLocalArchTypeDAO().getArchTypeByCode(archTypeCode);
+
             Double separation = CursorUtils.getDouble(SupportRecomendationTable.SEPARATION_COLUMN, cursor);
             Double thickness = CursorUtils.getDouble(SupportRecomendationTable.THICKNESS_COLUMN, cursor);
             String observations = CursorUtils.getString(SupportRecomendationTable.OBSERVATIONS_COLUMN, cursor);
 
-
             SupportRecomendation newInstance = new SupportRecomendation();
-
             newInstance.setArchType(archType);
-            newInstance.setBoltDiameter(boltDiameter);
-            newInstance.setBoltLength(boltLength);
             newInstance.setBoltType(boltType);
             newInstance.setCoverage(coverage);
+            newInstance.setRoofPattern(roofPattern);
+            newInstance.setWallPattern(wallPattern);
+            newInstance.setRequirement(requirement);
+            newInstance.setBoltDiameter(boltDiameter);
+            newInstance.setBoltLength(boltLength);
             newInstance.setMeshType(meshType);
             newInstance.setObservations(observations);
             newInstance.setSeparation(separation);
@@ -299,7 +318,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         //Save the related recommendation
 
         SupportRecomendation recomendation = newSkavaEntity.getRecomendation();
-        if (recomendation != null && recomendation.hasSelectedAnything()){
+        if (recomendation != null && recomendation.hasSelectedAnything()) {
             String[] recommendationNames = new String[]{
                     SupportRecomendationTable.ASSESSMENT_CODE_COLUMN,
                     SupportRecomendationTable.SUPPORT_REQUIREMENT_BASE_CODE_COLUMN,
@@ -326,14 +345,12 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                     recomendation.getBoltType() != null ? recomendation.getBoltType().getCode() : null,
                     recomendation.getBoltDiameter(),
                     recomendation.getBoltLength(),
-                    null, null, null,
-                    null, null, null,
-//                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getType().getCode() : null,
-//                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getDistanceX() : null,
-//                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getDistanceY() : null,
-//                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getType().getCode() : null,
-//                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getDistanceX() : null,
-//                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getDistanceY() : null,
+                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getType().getCode() : null,
+                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getDistanceX() : null,
+                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getDistanceY() : null,
+                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getType().getCode() : null,
+                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getDistanceX() : null,
+                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getDistanceY() : null,
                     recomendation.getShotcreteType() != null ? recomendation.getShotcreteType().getCode() : null,
                     recomendation.getThickness(),
                     recomendation.getMeshType() != null ? recomendation.getMeshType().getCode() : null,

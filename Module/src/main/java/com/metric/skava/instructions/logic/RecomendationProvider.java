@@ -33,9 +33,12 @@ public class RecomendationProvider {
         LocalSupportRequirementDAO supportRequirementDAO = daoFactory.getLocalSupportRequirementDAO();
         Tunnel tunnel = assessment.getTunnel();
         SupportRequirement supportRequirement;
-        supportRequirement = supportRequirementDAO.getSupportRequirementByTunnel(tunnel, assessment.getQCalculation().getQResult().getQBarton());
+        supportRequirement = supportRequirementDAO.findSupportRequirement(tunnel, assessment.getQCalculation().getQResult().getQBarton());
         SupportRecomendation recomendation = new SupportRecomendation();
         if (supportRequirement != null) {
+
+            recomendation.setRequirement(supportRequirement);
+
             BoltType boltType = supportRequirement.getBoltType();
             if (boltType != null) {
                 recomendation.setBoltType(boltType);
