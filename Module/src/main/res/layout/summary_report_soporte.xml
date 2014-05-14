@@ -19,7 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/report_recomenda_soporte"
-                android:id="@+id/textView3"
+                android:id="@id/report_soporte_title"
                 android:textStyle="bold"
                 style="@style/ReportLabelContainerBox" />
 
