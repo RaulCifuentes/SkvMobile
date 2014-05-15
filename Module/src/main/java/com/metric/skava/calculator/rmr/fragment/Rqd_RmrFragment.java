@@ -62,6 +62,7 @@ public class Rqd_RmrFragment extends RMRCalculatorBaseFragment {
             int posIndex = adapter.getPosition(rqdRMR);
             posIndex += numberOfHeaders;
             listview.setItemChecked(posIndex, true);
+            listview.setSelection(posIndex);
         }
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {

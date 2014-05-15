@@ -33,14 +33,14 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
             String domainAsString = CursorUtils.getString(SyncLoggingTable.DOMAIN_COLUMN, cursor);
             String sourceAsString = CursorUtils.getString(SyncLoggingTable.SOURCE_COLUMN, cursor);
             String statusAsString = CursorUtils.getString(SyncLoggingTable.STATUS_COLUMN, cursor);
+            Long numRecords = CursorUtils.getLong(SyncLoggingTable.NUMRECORDS_COLUMN, cursor);
 
             SyncLogEntry.Domain domain = SyncLogEntry.Domain.valueOf(domainAsString);
             SyncLogEntry.Status status = SyncLogEntry.Status.valueOf(statusAsString);
             SyncLogEntry.Source source = SyncLogEntry.Source.valueOf(sourceAsString);
 
             Date date = DateDataFormat.getDateFromFormattedLong(dateAsLong);
-            SyncLogEntry newInstance = new SyncLogEntry(date, domain, source , status);
-            newInstance.setSyncDate(date);
+            SyncLogEntry newInstance = new SyncLogEntry(date, domain, source , status, numRecords);
             list.add(newInstance);
         }
         return list;
@@ -66,8 +66,8 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
 
     @Override
     protected void savePersistentEntity(String tableName, SyncLogEntry newSkavaEntity) throws DAOException {
-        String[] columnNames = new String[]{SyncLoggingTable.DATE_COLUMN, SyncLoggingTable.DOMAIN_COLUMN, SyncLoggingTable.SOURCE_COLUMN, SyncLoggingTable.STATUS_COLUMN};
-        Object[] values = new Object[]{DateDataFormat.formatDateAsLong(newSkavaEntity.getSyncDate()), newSkavaEntity.getDomain().name(),  newSkavaEntity.getSource().name(), newSkavaEntity.getStatus().name()};
+        String[] columnNames = new String[]{SyncLoggingTable.DATE_COLUMN, SyncLoggingTable.DOMAIN_COLUMN, SyncLoggingTable.SOURCE_COLUMN, SyncLoggingTable.STATUS_COLUMN, SyncLoggingTable.NUMRECORDS_COLUMN};
+        Object[] values = new Object[]{DateDataFormat.formatDateAsLong(newSkavaEntity.getSyncDate()), newSkavaEntity.getDomain().name(),  newSkavaEntity.getSource().name(), newSkavaEntity.getStatus().name(), newSkavaEntity.getNumRecordsSynced()};
         saveRecord(tableName, columnNames, values);
     }
 

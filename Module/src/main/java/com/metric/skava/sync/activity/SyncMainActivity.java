@@ -17,7 +17,6 @@ import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.LocalClientDAO;
 import com.metric.skava.data.dao.RemoteClientDAO;
 import com.metric.skava.data.dao.exception.DAOException;
-import com.metric.skava.data.dao.impl.dropbox.datastore.DatastoreHelper;
 import com.metric.skava.sync.fragment.SyncMainFragment;
 
 import java.util.List;
@@ -125,7 +124,7 @@ public class SyncMainActivity extends SkavaFragmentActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == DatastoreHelper.REQUEST_LINK_TO_DROPBOX) {
+        if (requestCode == SkavaConstants.REQUEST_LINK_TO_DROPBOX) {
             if (resultCode == RESULT_OK) {
 //                DatastoreHelper datastoreHelper = DatastoreHelper.getInstance(this);
 //                //read info from the intent and set the account I guess

@@ -9,10 +9,10 @@ import android.util.Log;
 
 import com.metric.skava.app.exception.SkavaSystemException;
 import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.app.util.SkavaUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by metricboy on 2/24/14.
@@ -51,7 +51,7 @@ public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
             }
         }
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(SkavaUtils.getCurrentDate());
 
         File mediaFile = new File(mediaStorageDir.getPath() + File.separator + suggestedName + timeStamp + ".jpg");
         Uri targetUri = Uri.fromFile(mediaFile);

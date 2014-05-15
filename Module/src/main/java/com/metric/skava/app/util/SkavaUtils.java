@@ -70,6 +70,10 @@ public class SkavaUtils {
     }
 
 
+    public static Date getCurrentDate() {
+        return new Date();
+    }
+
     public static Assessment createInitialAssessment(SkavaContext skavaContext) throws DAOException {
 
         String code = UUID.randomUUID().toString();
@@ -77,7 +81,7 @@ public class SkavaUtils {
 
         DAOFactory daoFactory = skavaContext.getDAOFactory();
 
-        Date date = new Date();
+        Date date = SkavaUtils.getCurrentDate();
         initialAssessment.setDate(date);
 
         //Q Barton (Deafault values for each one of the components of thr Q process)

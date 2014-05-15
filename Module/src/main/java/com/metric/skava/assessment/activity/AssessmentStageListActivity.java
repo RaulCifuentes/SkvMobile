@@ -23,7 +23,6 @@ import com.metric.skava.calculator.barton.fragment.QBartonCalculatorMainFragment
 import com.metric.skava.calculator.rmr.activity.RMRCalculatorDetailActivity;
 import com.metric.skava.calculator.rmr.fragment.RMRCalculatorMainFragment;
 import com.metric.skava.data.dao.exception.DAOException;
-import com.metric.skava.data.dao.impl.dropbox.datastore.DatastoreHelper;
 import com.metric.skava.discontinuities.activity.DiscontinuitiesMainActivity;
 import com.metric.skava.discontinuities.fragment.DiscontinuitiesMainFragment;
 import com.metric.skava.identification.activity.IdentificationMainActivity;
@@ -412,18 +411,18 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
     }
 
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == DatastoreHelper.REQUEST_LINK_TO_DROPBOX) {
-            if (resultCode == RESULT_OK) {
-                //showPreviousAssessmentsDTOs();
-                //just to see if comes here
-                Toast.makeText(this, "AssessmentStageListActivity :: onActivityResult", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "Link to Dropbox failed.", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == DatastoreHelper.REQUEST_LINK_TO_DROPBOX) {
+//            if (resultCode == RESULT_OK) {
+//                //showPreviousAssessmentsDTOs();
+//                //just to see if comes here
+//                Toast.makeText(this, "AssessmentStageListActivity :: onActivityResult", Toast.LENGTH_LONG).show();
+//            } else {
+//                Toast.makeText(this, "Link to Dropbox failed.", Toast.LENGTH_LONG).show();
+//            }
+//        } else {
+//            super.onActivityResult(requestCode, resultCode, data);
+//        }
+//    }
 
 }

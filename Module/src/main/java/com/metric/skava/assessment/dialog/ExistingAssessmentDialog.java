@@ -18,7 +18,6 @@ import com.metric.skava.assessment.dialog.adapter.AssessmentListAdapter;
 import com.metric.skava.data.dao.RemoteAssessmentDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.AssessmentDAODropboxImpl;
-import com.metric.skava.data.dao.impl.dropbox.datastore.DatastoreHelper;
 
 import java.util.List;
 
@@ -136,7 +135,7 @@ public class ExistingAssessmentDialog extends DialogFragment implements DialogIn
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == DatastoreHelper.REQUEST_LINK_TO_DROPBOX) {
+        if (requestCode == SkavaConstants.REQUEST_LINK_TO_DROPBOX) {
             if (resultCode == Activity.RESULT_OK) {
                 Toast.makeText(getActivity(), "Existing AssessmentDialog :: onActivityResult", Toast.LENGTH_LONG).show();
             } else {

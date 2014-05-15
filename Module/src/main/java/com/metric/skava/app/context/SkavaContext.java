@@ -16,7 +16,6 @@ public class SkavaContext {
     private User loggedUser;
     private Assessment assessment;
     private SyncStatus syncMetadata;
-//    private DatastoreHelper mDatastoreHelper;
     private DbxDatastore mDatastore;
     private DbxFileSystem mFileSystem;
     private DAOFactory daoFactory;
@@ -61,14 +60,6 @@ public class SkavaContext {
     public void setSyncMetadata(SyncStatus syncMetadata) {
         this.syncMetadata = syncMetadata;
     }
-
-//    public DatastoreHelper getDatastoreHelper() {
-//        return mDatastoreHelper;
-//    }
-//
-//    public void setDatastoreHelper(DatastoreHelper mDatastoreHelper) {
-//        this.mDatastoreHelper = mDatastoreHelper;
-//    }
 
     public DbxFileSystem getFileSystem() {
         return mFileSystem;
