@@ -67,6 +67,7 @@ import com.metric.skava.pictures.util.SkavaPictureFilesUtils;
 import com.metric.skava.rockmass.model.FractureType;
 import com.metric.skava.rocksupport.model.ESR;
 import com.metric.skava.rocksupport.model.ExcavationFactors;
+import com.metric.skava.rocksupport.model.SupportRequirement;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -334,6 +335,15 @@ public class MappingReportMainFragment extends SkavaFragment {
 
         SupportRecomendation recomendation = currentAssessment.getRecomendation();
         if (recomendation != null) {
+            SupportRequirement requirement = recomendation.getRequirementBase();
+            if (SkavaUtils.isDefined(requirement)) {
+                String name = requirement.getName();
+                if (name != null && !name.isEmpty()) {
+                    TextView titleTextView = (TextView) rootView.findViewById(R.id.report_soporte_title);
+                    String currentTitle = titleTextView.getText().toString();
+                    titleTextView.setText(currentTitle + ": " + name);
+                }
+            }
             BoltType boltType = recomendation.getBoltType();
             if (boltType != null) {
                 ((TextView) rootView.findViewById(R.id.report_tipo_perno_value)).setText(boltType.getName());

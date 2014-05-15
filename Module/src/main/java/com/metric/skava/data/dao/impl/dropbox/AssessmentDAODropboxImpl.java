@@ -316,6 +316,16 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     if (SkavaUtils.isDefined(water)) {
                         discontinuityFamilyFields.set("waterCode", water.getCode());
                     }
+                    
+                    Jr jr = family.getJr();
+                    if (SkavaUtils.isDefined(jr)) {
+                        discontinuityFamilyFields.set("jrCode", jr.getCode());
+                    }
+
+                    Ja ja = family.getJa();
+                    if (SkavaUtils.isDefined(ja)) {
+                        discontinuityFamilyFields.set("jaCode", ja.getCode());
+                    }
 
                     String familyRecordID = mDiscontinuitiesFamilyDropBoxTable.persist(discontinuityFamilyFields);
 
