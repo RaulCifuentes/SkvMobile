@@ -71,13 +71,11 @@ public class SkavaApplication extends MetricApplication {
         SyncLoggingDAO syncLoggingDAO = null;
         try {
             syncLoggingDAO = daoFactory.getSyncLoggingDAO();
-            SyncLogEntry globalLastSuccess = syncLoggingDAO.getLastSyncByState(SyncLogEntry.Domain.GLOBAL, SyncLogEntry.Status.SUCCESS);
-            SyncLogEntry userSpecificLastSuccess = syncLoggingDAO.getLastSyncByState(SyncLogEntry.Domain.USER_SPECIFIC, SyncLogEntry.Status.SUCCESS);
-            SyncLogEntry nonSpecificLastSuccess = syncLoggingDAO.getLastSyncByState(SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Status.SUCCESS);
+            SyncLogEntry globalLastSuccess = syncLoggingDAO.getLastSyncByState(SyncLogEntry.Domain.GLOBAL_DATA, SyncLogEntry.Status.SUCCESS);
+            SyncLogEntry userSpecificLastSuccess = syncLoggingDAO.getLastSyncByState(SyncLogEntry.Domain.USER_RELATED_DATA, SyncLogEntry.Status.SUCCESS);
             SyncStatus syncStatus = new SyncStatus();
-            syncStatus.setGlobal(globalLastSuccess);
-            syncStatus.setNonUserSpecific(nonSpecificLastSuccess);
-            syncStatus.setUserSpecific(userSpecificLastSuccess);
+            syncStatus.setGlobalData(globalLastSuccess);
+            syncStatus.setUserRelatedData(userSpecificLastSuccess);
             mSkavaContext.setSyncMetadata(syncStatus);
         } catch (DAOException daoe){
             Log.d(SkavaConstants.LOG, "DAO Exception " + daoe.getMessage());

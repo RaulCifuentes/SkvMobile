@@ -11,6 +11,7 @@ public class SyncLoggingTable extends SkavaTable {
     public static final String DOMAIN_COLUMN = "DOMAIN";
     public static final String SOURCE_COLUMN = "SOURCE";
     public static final String STATUS_COLUMN = "STATUS";
+    public static final String NUMRECORDS_COLUMN = "NUMRECORDS";
 
 
     public static final String CREATE_SYNC_LOGGING_TABLE = "create table " +
@@ -20,7 +21,8 @@ public class SyncLoggingTable extends SkavaTable {
             DATE_COLUMN + " integer not null, " +
             DOMAIN_COLUMN + " text not null, " +
             SOURCE_COLUMN + " text not null, " +
-            STATUS_COLUMN  + " text not null  );";
+            STATUS_COLUMN  + " text not null," +
+            NUMRECORDS_COLUMN  + " integer not null"  + "  );";
 
 
 

@@ -8,9 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.metric.skava.R;
+import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.test.model.TestListItem;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -69,7 +69,7 @@ public class TestListAdapter extends ArrayAdapter<TestListItem> {
             TextView text1 = (TextView) wholeRowView.findViewById(R.id.list_content1);
             TextView text2 = (TextView) wholeRowView.findViewById(R.id.list_content2);
             text1.setText(dataItem.getData());
-            text2.setText(new Date().toString());
+            text2.setText(SkavaUtils.getCurrentDate().toString());
 
         }
         if (getItem(position).getViewType().equals(TestListItem.RowType.HEADER_ITEM)){

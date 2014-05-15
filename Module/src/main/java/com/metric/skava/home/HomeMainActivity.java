@@ -3,6 +3,7 @@ package com.metric.skava.home;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -34,19 +35,16 @@ import com.metric.skava.app.navdrawer.NavMenuItem;
 import com.metric.skava.app.navdrawer.NavMenuSection;
 import com.metric.skava.app.util.DateDisplayFormat;
 import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.assessment.activity.AssessmentsListActivity;
 import com.metric.skava.authentication.LoginMainActivity;
-import com.metric.skava.data.dao.DAOFactory;
-import com.metric.skava.data.dao.exception.DAOException;
-import com.metric.skava.data.dao.impl.dropbox.datastore.DatastoreHelper;
 import com.metric.skava.settings.activity.SettingsMainActivity;
 import com.metric.skava.sync.activity.SyncMainActivity;
-import com.metric.skava.sync.dao.SyncLoggingDAO;
+import com.metric.skava.sync.exception.SyncDataFailedException;
 import com.metric.skava.sync.helper.SyncHelper;
 import com.metric.skava.sync.model.SyncLogEntry;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class HomeMainActivity extends AbstractNavDrawerActivity {
@@ -143,10 +141,10 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             showProgressBar(true, message, false);
             try {
                 //Abrir el acount manager que Dropbox ofrece para esta app
-                mDbxAcctMgr = DbxAccountManager.getInstance(this.getApplicationContext(), DatastoreHelper.APP_KEY, DatastoreHelper.APP_SECRET);
+                mDbxAcctMgr = DbxAccountManager.getInstance(this.getApplicationContext(), SkavaConstants.DROBOX_APP_KEY, SkavaConstants.DROBOX_APP_SECRET);
                 //Connect y tener la referencia al account
                 if (!mDbxAcctMgr.hasLinkedAccount()) {
-                    mDbxAcctMgr.startLink(this, DatastoreHelper.REQUEST_LINK_TO_DROPBOX);
+                    mDbxAcctMgr.startLink(this, SkavaConstants.REQUEST_LINK_TO_DROPBOX);
                 } else {
                     //Connect y tener la referencia al account
                     mAccount = mDbxAcctMgr.getLinkedAccount();
@@ -192,7 +190,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == DatastoreHelper.REQUEST_LINK_TO_DROPBOX) {
+        if (requestCode == SkavaConstants.REQUEST_LINK_TO_DROPBOX) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
                     // ... Now go on using the linked account information.
@@ -243,57 +241,44 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // The unlink seems to be unecessary as there will be just one global dropbox account rather than individual accounts per user
-//        mDbxAcctMgr.unlink();
+        if (mDatastore.isOpen()){
+            mDatastore.close();
+        }
     }
 
 
     /*This will run under an AyncTask*/
-    private Long downloadAndPopulateGlobalDataModel() {
+    private Long downloadAndPopulateGlobalDataModel() throws SyncDataFailedException {
         Long totalRecords = 0L;
-        DAOFactory daoFactory = getDAOFactory();
         SyncHelper syncHelper = getSyncHelper();
+        SyncLogEntry newSyncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.GLOBAL_DATA, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, totalRecords);
         try {
-            SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
-            try {
-                totalRecords += syncHelper.downloadGlobalData();
-                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.GLOBAL, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS);
-                syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
-                getSkavaContext().getSyncMetadata().setGlobal(newSyncLogEntry);
-            } catch (DAOException daoe) {
-                Log.e(SkavaConstants.LOG, daoe.getMessage());
-                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.GLOBAL, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.FAIL);
-                syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
-                getSkavaContext().getSyncMetadata().setNonUserSpecific(newSyncLogEntry);
-            }
-        } catch (DAOException daoe) {
-            daoe.printStackTrace();
+            totalRecords += syncHelper.downloadGlobalData();
+            newSyncLogEntry.setNumRecordsSynced(totalRecords);
+            getSkavaContext().getSyncMetadata().setGlobalData(newSyncLogEntry);
+        } catch (Exception daoe) {
             Log.e(SkavaConstants.LOG, daoe.getMessage());
+            newSyncLogEntry.setMessage(daoe.getMessage());
+            newSyncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            getSkavaContext().getSyncMetadata().setGlobalData(newSyncLogEntry);
         }
         return totalRecords;
     }
 
     /*This will run under an AyncTask*/
-    private Long downloadAndPopulateUserRelatedDataModel() {
+    private Long downloadAndPopulateUserRelatedDataModel() throws SyncDataFailedException {
         Long totalRecords = 0L;
-        DAOFactory daoFactory = getDAOFactory();
         SyncHelper syncHelper = getSyncHelper();
+        SyncLogEntry newSyncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.USER_RELATED_DATA, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, totalRecords);
         try {
-            SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
-            try {
-                totalRecords += syncHelper.downloadUserRelatedData();
-                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS);
-                syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
-                getSkavaContext().getSyncMetadata().setNonUserSpecific(newSyncLogEntry);
-            } catch (DAOException daoe) {
-                Log.e(SkavaConstants.LOG, daoe.getMessage());
-                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.FAIL);
-                syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
-                getSkavaContext().getSyncMetadata().setNonUserSpecific(newSyncLogEntry);
-            }
-        } catch (DAOException daoe) {
-            daoe.printStackTrace();
+            totalRecords += syncHelper.downloadUserRelatedData();
+            newSyncLogEntry.setNumRecordsSynced(totalRecords);
+            getSkavaContext().getSyncMetadata().setUserRelatedData(newSyncLogEntry);
+        } catch (Exception daoe) {
             Log.e(SkavaConstants.LOG, daoe.getMessage());
+            newSyncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            newSyncLogEntry.setMessage(daoe.getMessage());
+            getSkavaContext().getSyncMetadata().setUserRelatedData(newSyncLogEntry);
         }
         return totalRecords;
     }
@@ -328,13 +313,10 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     }
 
 
-
-
-
     private void assertDataAvailable() {
 
-        SyncLogEntry lastGlobalData = getSkavaContext().getSyncMetadata().getGlobal();
-        SyncLogEntry lastNonSpecificData = getSkavaContext().getSyncMetadata().getGlobal();
+        SyncLogEntry lastGlobalData = getSkavaContext().getSyncMetadata().getGlobalData();
+        SyncLogEntry lastNonSpecificData = getSkavaContext().getSyncMetadata().getUserRelatedData();
 
         if (lastGlobalData == null) {
             Log.d(SkavaConstants.LOG, "Skava Mobile needs to download a set of initial data. Please connect to Internet and link to Skava Dropbox account!!");
@@ -460,11 +442,23 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 
     public class UpdateDataModelTask extends AsyncTask<Void, Long, Long> {
 
+        private SyncLogEntry errorCondition;
+
         @Override
+
         protected Long doInBackground(Void... params) {
-            Long numRecordsCreated = downloadAndPopulateGlobalDataModel();
+            Long numRecordsCreated = null;
+            try {
+                numRecordsCreated = downloadAndPopulateGlobalDataModel();
+            } catch (SyncDataFailedException e) {
+                errorCondition = e.getEntry();
+            }
             publishProgress(numRecordsCreated);
-            numRecordsCreated += downloadAndPopulateUserRelatedDataModel();
+            try {
+                numRecordsCreated += downloadAndPopulateUserRelatedDataModel();
+            } catch (SyncDataFailedException e) {
+                errorCondition = e.getEntry();
+            }
             return numRecordsCreated;
         }
 
@@ -477,21 +471,31 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 
         @Override
         protected void onProgressUpdate(Long... progress) {
-//            super.onProgressUpdate(progress);
             //mostrar avance
             Long value = (Long) progress[0];
-//            showProgressBar(true,  + value + " records created so far.", false);
+            showProgressBar(true,  + value + " records imported so far.", false);
         }
 
         @Override
         protected void onPostExecute(Long result) {
-//            super.onPostExecute(result);
-            //mostrar que termino
-            dropboxNeverCalled = false;
-            Toast.makeText(HomeMainActivity.this, "Load succesfully finished", Toast.LENGTH_LONG);
-            mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
-            showProgressBar(false, "Finished. " + result + " records created.", true);
-//            doDefinitiveOnCreate();
+            if (errorCondition != null){
+                Toast.makeText(HomeMainActivity.this, "Load data process has failed!!", Toast.LENGTH_LONG);
+                mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+                showProgressBar(true, "Failed. " + result + " records imported.", true);
+                AlertDialog.Builder messageBox = new AlertDialog.Builder(HomeMainActivity.this);
+                messageBox.setTitle("Bad news with " + errorCondition.getSource().name() + " on " + errorCondition.getSyncDate().toString());
+                messageBox.setMessage("Hey buddy, I was syncing " + errorCondition.getDomain().name() + ", but this issue arose : " + errorCondition.getMessage());
+                messageBox.setCancelable(false);
+                messageBox.setNeutralButton("OK", null);
+                messageBox.show();
+            } else {
+                //mostrar que termino exitosamente
+                dropboxNeverCalled = false;
+                Toast.makeText(HomeMainActivity.this, "Load succesfully finished", Toast.LENGTH_LONG);
+                mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+                showProgressBar(true, "Finished. " + result + " records imported.", true);
+                showProgressBar(false, "Hiding me !!", false);
+            }
         }
 
     }

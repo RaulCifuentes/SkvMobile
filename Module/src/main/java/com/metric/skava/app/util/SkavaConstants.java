@@ -2,14 +2,6 @@ package com.metric.skava.app.util;
 
 public class SkavaConstants {
 
-	// Activity request codes
-//	public static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
-//
-//	public static final int MEDIA_TYPE_IMAGE = 1;
-//
-//	public static final String QBARTON_DATA = "QBARTON_DATA";
-//
-//	public static final String CALCULATION_DATA = "CALCULATION_DATA";
 
 	public static final String LOG = "com.metric.skava";
 
@@ -23,15 +15,10 @@ public class SkavaConstants {
 
 	public static final String ROLE_GEOLOGIST_NAME = "GEOLOGIST";
 
+    public static final String DROBOX_APP_NAME = "skavatunnel";
+    public static final String DROBOX_APP_KEY = "wv7jc0wirvu2c8y";
+    public static final String DROBOX_APP_SECRET = "qebhcnh6lxqu7di";
 
+    public static final int REQUEST_LINK_TO_DROPBOX = 510;
 
-//	// Number of columns of Grid View
-//	public static final int NUM_OF_COLUMNS = 3;
-//
-//	// Gridview image padding
-//	public static final int GRID_PADDING = 15; // in dp
-//
-//	// supported file formats
-//	public static final List<String> FILE_EXTN = Arrays.asList("jpg", "jpeg",
-//			"png");
 }

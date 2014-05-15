@@ -60,15 +60,15 @@ public class RQD_RMR extends MappedIndex implements Serializable {
 
     public static RQD_RMR findWrapper(RQD rqd) {
         RQD_RMR rqd_rmr = null;
-        if (rqd.getValue() <= 25) {
+        if (rqd.getValue() < 25) {
             rqd_rmr = commonValuesTable.get(0);
-        } else if (rqd.getValue() <= 50 ){
+        } else if (rqd.getValue() < 50 ){
             rqd_rmr = commonValuesTable.get(1);
-        } else if (rqd.getValue() <= 75) {
+        } else if (rqd.getValue() < 75) {
             rqd_rmr = commonValuesTable.get(2);
-        } else if (rqd.getValue() <= 90) {
+        } else if (rqd.getValue() < 90) {
             rqd_rmr = commonValuesTable.get(3);
-        } else if (rqd.getValue() <= 100) {
+        } else if (rqd.getValue() < 100) {
             rqd_rmr = commonValuesTable.get(4);
         }
         return rqd_rmr;

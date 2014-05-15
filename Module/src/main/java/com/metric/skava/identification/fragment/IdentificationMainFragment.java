@@ -37,6 +37,7 @@ import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
 import com.metric.skava.app.util.PegNumberFormat;
 import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.app.validator.TextValidator;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalExcavationMethodDAO;
@@ -301,7 +302,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
         if (selectedDate != null) {
             ((TextView) rootView.findViewById(R.id.mapping_gral_info_date_value)).setText(DateFormat.getDateInstance().format(selectedDate));
         } else {
-            java.lang.String todayDate = DateFormat.getDateInstance().format(new Date());
+            java.lang.String todayDate = DateFormat.getDateInstance().format(SkavaUtils.getCurrentDate());
             ((TextView) rootView.findViewById(R.id.mapping_gral_info_date_value)).setText(todayDate);
         }
         rootView.findViewById(R.id.mapping_gral_date_button).setOnClickListener(
