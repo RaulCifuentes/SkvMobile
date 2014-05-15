@@ -152,24 +152,58 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
 
     @Override
     protected void savePersistentEntity(String tableName, SupportRequirement newSkavaEntity) throws DAOException {
-        String[] columns = new String[]{SupportRequirementTable.TUNNEL_CODE_COLUMN, SupportRequirementTable.CODE_COLUMN,
-                SupportRequirementTable.NAME_COLUMN, SupportRequirementTable.Q_LOWER_BOUND_COLUMN, SupportRequirementTable.Q_UPPER_BOUND_COLUMN,
-                SupportRequirementTable.BOLT_TYPE_CODE_COLUMN, SupportRequirementTable.BOLT_DIAMETER_COLUMN, SupportRequirementTable.BOLT_LENGTH_COLUMN,
-                SupportRequirementTable.ROOF_PATTERN_TYPE_CODE_COLUMN, SupportRequirementTable.ROOF_PATTERN_DX_COLUMN, SupportRequirementTable.ROOF_PATTERN_DY_COLUMN,
-                SupportRequirementTable.WALL_PATTERN_TYPE_CODE_COLUMN, SupportRequirementTable.WALL_PATTERN_DX_COLUMN, SupportRequirementTable.WALL_PATTERN_DY_COLUMN,
-                SupportRequirementTable.SHOTCRETE_TYPE_CODE_COLUMN, SupportRequirementTable.THICKNESS_COLUMN, SupportRequirementTable.MESH_TYPE_CODE_COLUMN,
-                SupportRequirementTable.COVERAGE_CODE_COLUMN, SupportRequirementTable.ARCH_TYPE_CODE_COLUMN, SupportRequirementTable.SEPARATION_COLUMN
+        String[] columns = new String[]{
+                SupportRequirementTable.TUNNEL_CODE_COLUMN,
+                SupportRequirementTable.CODE_COLUMN,
+                SupportRequirementTable.NAME_COLUMN,
+                SupportRequirementTable.Q_LOWER_BOUND_COLUMN,
+                SupportRequirementTable.Q_UPPER_BOUND_COLUMN,
+                SupportRequirementTable.BOLT_TYPE_CODE_COLUMN,
+                SupportRequirementTable.BOLT_DIAMETER_COLUMN,
+                SupportRequirementTable.BOLT_LENGTH_COLUMN,
+                SupportRequirementTable.ROOF_PATTERN_TYPE_CODE_COLUMN,
+                SupportRequirementTable.ROOF_PATTERN_DX_COLUMN,
+                SupportRequirementTable.ROOF_PATTERN_DY_COLUMN,
+                SupportRequirementTable.WALL_PATTERN_TYPE_CODE_COLUMN,
+                SupportRequirementTable.WALL_PATTERN_DX_COLUMN,
+                SupportRequirementTable.WALL_PATTERN_DY_COLUMN,
+                SupportRequirementTable.SHOTCRETE_TYPE_CODE_COLUMN,
+                SupportRequirementTable.THICKNESS_COLUMN,
+                SupportRequirementTable.MESH_TYPE_CODE_COLUMN,
+                SupportRequirementTable.COVERAGE_CODE_COLUMN,
+                SupportRequirementTable.ARCH_TYPE_CODE_COLUMN,
+                SupportRequirementTable.SEPARATION_COLUMN
         };
         //Currently the relation is mantained by the Tunnel side of the relations so ...
-        Object[] values = new Object[]{newSkavaEntity.getTunnel().getCode(), newSkavaEntity.getCode(),
-                newSkavaEntity.getName(), newSkavaEntity.getqBartonLowerBoundary(), newSkavaEntity.getqBartonUpperBoundary(),
-                newSkavaEntity.getBoltType().getCode(), newSkavaEntity.getDiameter(), newSkavaEntity.getLength(),
-                newSkavaEntity.getRoofPattern().getType().getCode(),
-                newSkavaEntity.getRoofPattern().getDistanceX(),newSkavaEntity.getRoofPattern().getDistanceY(),
-                newSkavaEntity.getWallPattern().getType().getCode(),
-                newSkavaEntity.getWallPattern().getDistanceX(), newSkavaEntity.getWallPattern().getDistanceY(),
-                newSkavaEntity.getShotcreteType().getCode(), newSkavaEntity.getThickness(), newSkavaEntity.getMeshType().getCode(),
-                newSkavaEntity.getCoverage().getCode(), newSkavaEntity.getArchType().getCode(), newSkavaEntity.getSeparation()};
+        SupportPattern roofPattern = newSkavaEntity.getRoofPattern();
+        SupportPattern wallPattern = newSkavaEntity.getWallPattern();
+        ShotcreteType shotcreteType = newSkavaEntity.getShotcreteType();
+        MeshType meshType = newSkavaEntity.getMeshType();
+        Coverage coverage = newSkavaEntity.getCoverage();
+        ArchType archType = newSkavaEntity.getArchType();
+        BoltType boltType = newSkavaEntity.getBoltType();
+
+        Object[] values = new Object[]{
+                newSkavaEntity.getTunnel().getCode(),
+                newSkavaEntity.getCode(),
+                newSkavaEntity.getName(),
+                newSkavaEntity.getqBartonLowerBoundary(),
+                newSkavaEntity.getqBartonUpperBoundary(),
+                boltType != null ? boltType.getCode() : null,
+                newSkavaEntity.getDiameter(),
+                newSkavaEntity.getLength(),
+                roofPattern != null ? roofPattern.getType().getCode() : null,
+                roofPattern != null ? roofPattern.getDistanceX() : null,
+                roofPattern != null ? roofPattern.getDistanceY() : null,
+                wallPattern != null ? wallPattern.getType().getCode() : null,
+                wallPattern != null ? wallPattern.getDistanceX() : null,
+                wallPattern != null ? wallPattern.getDistanceY() : null,
+                shotcreteType != null ? shotcreteType.getCode() : null,
+                newSkavaEntity.getThickness(),
+                meshType != null ? meshType.getCode() : null,
+                coverage != null ? coverage.getCode() : null,
+                archType != null ? archType.getCode() : null,
+                newSkavaEntity.getSeparation()};
         saveRecord(tableName, columns, values);
     }
 
