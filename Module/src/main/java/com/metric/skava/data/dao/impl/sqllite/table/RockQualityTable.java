@@ -18,8 +18,8 @@ public class RockQualityTable extends SkavaEntityTable {
             " integer primary key autoincrement, " +
             CODE_COLUMN + " text not null, " +
             NAME_COLUMN + " text not null, " +
-            LOWERBOUND_COLUMN + " real not null, " +
-            UPPERBOUND_COLUMN + " real not null, " +
+            LOWERBOUND_COLUMN + " real null, " +
+            UPPERBOUND_COLUMN + " real null, " +
             ACCORDING_TO_COLUMN + " text not null, " +
             CLASSIFICATION_COLUMN + " text null " + ");";
 

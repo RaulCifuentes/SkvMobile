@@ -23,7 +23,6 @@ public class CoverageDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Coverage> imple
     }
 
 
-
     @Override
     protected List<Coverage> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<Coverage> list = new ArrayList<Coverage>();
@@ -39,8 +38,11 @@ public class CoverageDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Coverage> imple
 
     @Override
     public Coverage getCoverageByCode(String code) throws DAOException {
-        Coverage entity = getIdentifiableEntityByCode(CoverageTable.COVERAGE_DATABASE_TABLE, code);
-        return entity;
+        if (code != null) {
+            Coverage entity = getIdentifiableEntityByCode(CoverageTable.COVERAGE_DATABASE_TABLE, code);
+            return entity;
+        }
+        return null;
     }
 
     @Override

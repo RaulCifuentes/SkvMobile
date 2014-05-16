@@ -39,8 +39,11 @@ public class ShotcreteTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<ShotcreteT
 
     @Override
     public ShotcreteType getShotcreteTypeByCode(String code) throws DAOException {
-        ShotcreteType entity = getIdentifiableEntityByCode(ShotcreteTypeTable.SHOTCRETE_DATABASE_TABLE, code);
-        return entity;
+        if (code != null){
+            ShotcreteType entity = getIdentifiableEntityByCode(ShotcreteTypeTable.SHOTCRETE_DATABASE_TABLE, code);
+            return entity;
+        }
+        return null;
     }
 
     @Override

@@ -40,8 +40,11 @@ public class BoltTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<BoltType> imple
 
     @Override
     public BoltType getBoltTypeByCode(String code) throws DAOException {
-        BoltType entity = getIdentifiableEntityByCode(BoltTypeTable.BOLT_DATABASE_TABLE, code);
-        return entity;
+        if (code != null){
+            BoltType entity = getIdentifiableEntityByCode(BoltTypeTable.BOLT_DATABASE_TABLE, code);
+            return entity;
+        }
+        return null;
     }
 
     @Override

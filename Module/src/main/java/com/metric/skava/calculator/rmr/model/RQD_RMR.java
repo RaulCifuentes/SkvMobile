@@ -68,7 +68,7 @@ public class RQD_RMR extends MappedIndex implements Serializable {
             rqd_rmr = commonValuesTable.get(2);
         } else if (rqd.getValue() < 90) {
             rqd_rmr = commonValuesTable.get(3);
-        } else if (rqd.getValue() < 100) {
+        } else if (rqd.getValue() <= 100) {
             rqd_rmr = commonValuesTable.get(4);
         }
         return rqd_rmr;

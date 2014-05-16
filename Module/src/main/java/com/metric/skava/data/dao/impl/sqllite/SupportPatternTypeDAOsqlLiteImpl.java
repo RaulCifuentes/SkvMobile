@@ -41,8 +41,11 @@ public class SupportPatternTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
 
     @Override
     public SupportPatternType getSupportPatternTypeByUniqueCode(String code) throws DAOException {
-        SupportPatternType entity = getIdentifiableEntityByCode(SupportPatternTypeTable.PATTERN_TYPE_DATABASE_TABLE, code);
-        return entity;
+        if (code != null){
+            SupportPatternType entity = getIdentifiableEntityByCode(SupportPatternTypeTable.PATTERN_TYPE_DATABASE_TABLE, code);
+            return entity;
+        }
+        return null;
     }
 
     @Override

@@ -38,6 +38,7 @@ import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.assessment.activity.AssessmentsListActivity;
 import com.metric.skava.authentication.LoginMainActivity;
+import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.settings.activity.SettingsMainActivity;
 import com.metric.skava.sync.activity.SyncMainActivity;
 import com.metric.skava.sync.exception.SyncDataFailedException;
@@ -247,6 +248,16 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     }
 
 
+    private void prepareSyncTraceTable()  {
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            syncHelper.clearSyncLoggingTable();
+        } catch (DAOException daoe) {
+            daoe.printStackTrace();
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+        }
+    }
+
     /*This will run under an AyncTask*/
     private Long downloadAndPopulateGlobalDataModel() throws SyncDataFailedException {
         Long totalRecords = 0L;
@@ -256,11 +267,12 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             totalRecords += syncHelper.downloadGlobalData();
             newSyncLogEntry.setNumRecordsSynced(totalRecords);
             getSkavaContext().getSyncMetadata().setGlobalData(newSyncLogEntry);
-        } catch (Exception daoe) {
+        } catch (DAOException daoe) {
             Log.e(SkavaConstants.LOG, daoe.getMessage());
             newSyncLogEntry.setMessage(daoe.getMessage());
             newSyncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
             getSkavaContext().getSyncMetadata().setGlobalData(newSyncLogEntry);
+            throw new SyncDataFailedException(newSyncLogEntry, daoe.getMessage());
         }
         return totalRecords;
     }
@@ -271,14 +283,19 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         SyncHelper syncHelper = getSyncHelper();
         SyncLogEntry newSyncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.USER_RELATED_DATA, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, totalRecords);
         try {
+            totalRecords += syncHelper.downloadClients();
+            totalRecords += syncHelper.downloadProjects();
+            totalRecords += syncHelper.downloadTunnels();
+            totalRecords += syncHelper.downloadSupportRequirements();
             totalRecords += syncHelper.downloadUserRelatedData();
             newSyncLogEntry.setNumRecordsSynced(totalRecords);
             getSkavaContext().getSyncMetadata().setUserRelatedData(newSyncLogEntry);
-        } catch (Exception daoe) {
+        } catch (DAOException daoe) {
             Log.e(SkavaConstants.LOG, daoe.getMessage());
             newSyncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
             newSyncLogEntry.setMessage(daoe.getMessage());
             getSkavaContext().getSyncMetadata().setUserRelatedData(newSyncLogEntry);
+            throw new SyncDataFailedException(newSyncLogEntry, daoe.getMessage());
         }
         return totalRecords;
     }
@@ -447,9 +464,10 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         @Override
 
         protected Long doInBackground(Void... params) {
-            Long numRecordsCreated = null;
+            Long numRecordsCreated = 0L;
+            prepareSyncTraceTable();
             try {
-                numRecordsCreated = downloadAndPopulateGlobalDataModel();
+                numRecordsCreated += downloadAndPopulateGlobalDataModel();
             } catch (SyncDataFailedException e) {
                 errorCondition = e.getEntry();
             }

@@ -182,4 +182,13 @@ public class SkavaUtils {
         }
         return ret;
     }
+
+    public static boolean hasPictures(List<Uri> pictureList) {
+        for (Uri uri : pictureList) {
+            if (uri != null) {
+                return true;
+            };
+        }
+        return false;
+    }
 }

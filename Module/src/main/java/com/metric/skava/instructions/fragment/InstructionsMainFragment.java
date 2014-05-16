@@ -231,6 +231,42 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.instructions_main_fragment, container, false);
 
+        boltTypeSpinner = (Spinner) mRootView.findViewById(R.id.instructions_bolt_type_spinner);
+        boltTypeSpinner.setAdapter(boltTypeAdapter);
+        boltTypeSpinner.setOnItemSelectedListener(this);
+
+        shotcreteTypeSpinner = (Spinner) mRootView.findViewById(R.id.instructions_shotcrete_type_spinner);
+        shotcreteTypeSpinner.setAdapter(shotcreteTypeAdapter);
+        shotcreteTypeSpinner.setOnItemSelectedListener(this);
+
+        roofPatternSpinner = (Spinner) mRootView.findViewById(R.id.instructions_roof_pattern_spinner);
+        roofPatternDx = (EditText) mRootView.findViewById(R.id.instructions_roof_pattern_dx);
+        roofPatternDx.setRawInputType(Configuration.KEYBOARD_12KEY);
+        roofPatternDy = (EditText) mRootView.findViewById(R.id.instructions_roof_pattern_dy);
+        roofPatternDy.setRawInputType(Configuration.KEYBOARD_12KEY);
+        roofPatternSpinner.setAdapter(roofPatternAdapter);
+
+
+        wallPatternSpinner = (Spinner) mRootView.findViewById(R.id.instructions_wall_pattern_spinner);
+        wallPatternDx = (EditText) mRootView.findViewById(R.id.instructions_wall_pattern_dx);
+        wallPatternDx.setRawInputType(Configuration.KEYBOARD_12KEY);
+        wallPatternDy = (EditText) mRootView.findViewById(R.id.instructions_wall_pattern_dy);
+        wallPatternDy.setRawInputType(Configuration.KEYBOARD_12KEY);
+        wallPatternSpinner.setAdapter(wallPatternAdapter);
+        wallPatternSpinner.setOnItemSelectedListener(this);
+
+        meshTypeSpinner = (Spinner) mRootView.findViewById(R.id.instructions_mesh_type_spinner);
+        meshTypeSpinner.setAdapter(meshTypeAdapter);
+        meshTypeSpinner.setOnItemSelectedListener(this);
+
+        coverageSpinner = (Spinner) mRootView.findViewById(R.id.instructions_coverage_spinner);
+        coverageSpinner.setAdapter(coverageAdapter);
+        coverageSpinner.setOnItemSelectedListener(this);
+
+        archTypeSpinner = (Spinner) mRootView.findViewById(R.id.instructions_arch_type_spinner);
+        archTypeSpinner.setAdapter(archTypeAdapter);
+        archTypeSpinner.setOnItemSelectedListener(this);
+
         SupportRecomendation assessmentRecomendation = getCurrentAssessment().getRecomendation();
         SupportRecomendation supportRecomendation = null;
         // Use either the current recomendation for the assessment, or use the one mapped
@@ -250,26 +286,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         return mRootView;
     }
 
-    private void wireEventsForObservations() {
-        EditText observationsEditText = ((EditText) mRootView.findViewById(R.id.instructions_observations_value));
-
-        observationsEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String editableValue = editable.toString();
-                getCurrentAssessment().getRecomendation().setObservations(editableValue);
-            }
-        });
-    }
-
 
     private void mapSupportRecommendationToView() {
 
@@ -287,38 +303,17 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         }
 
         BoltType boltType = supportRecommendation.getBoltType();
-        boltTypeSpinner = (Spinner) mRootView.findViewById(R.id.instructions_bolt_type_spinner);
-        boltTypeSpinner.setAdapter(boltTypeAdapter);
-        boltTypeSpinner.setOnItemSelectedListener(this);
         if (boltType != null) {
             boltTypeSpinner.setSelection(boltTypeAdapter.getPosition(boltType)); //display hint
         } else {
             boltTypeSpinner.setSelection(boltTypeAdapter.getCount() - 1); //display hint
         }
 
-        boltDiameterEditText = (EditText) mRootView.findViewById(R.id.instructions_bolt_diameter_value);
-        boltDiameterEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
         Double boltDiameter = supportRecommendation.getBoltDiameter();
         if (boltDiameter != null) {
             boltDiameterEditText.setText(numberFormatter.format(boltDiameter));
         }
 
-        boltDiameterEditText.addTextChangedListener(new TextValidator(boltDiameterEditText) {
-            @Override
-            public void validate(TextView textView, java.lang.String text) {
-                /* Validation code here */
-                try {
-                    Double enteredValue = Double.parseDouble(text);
-                    supportRecommendation.setBoltDiameter(enteredValue);
-                } catch (NumberFormatException e) {
-                    boltDiameterEditText.setError("Diameter must be a number!");
-                }
-            }
-        });
-
-
-        boltLengthEditText = (EditText) mRootView.findViewById(R.id.instructions_bolt_length_value);
-        boltLengthEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
         Double boltLength = supportRecommendation.getBoltLength();
         if (boltLength != null) {
             boltLengthEditText.setText(numberFormatter.format(boltLength));
@@ -338,9 +333,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         });
 
         ShotcreteType shotcreteType = supportRecommendation.getShotcreteType();
-        shotcreteTypeSpinner = (Spinner) mRootView.findViewById(R.id.instructions_shotcrete_type_spinner);
-        shotcreteTypeSpinner.setAdapter(shotcreteTypeAdapter);
-        shotcreteTypeSpinner.setOnItemSelectedListener(this);
         if (shotcreteType != null) {
             shotcreteTypeSpinner.setSelection(shotcreteTypeAdapter.getPosition(shotcreteType)); //display hint
         } else {
@@ -349,12 +341,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
 
 
         SupportPattern roofPattern = supportRecommendation.getRoofPattern();
-        roofPatternSpinner = (Spinner) mRootView.findViewById(R.id.instructions_roof_pattern_spinner);
-        roofPatternDx = (EditText) mRootView.findViewById(R.id.instructions_roof_pattern_dx);
-        roofPatternDx.setRawInputType(Configuration.KEYBOARD_12KEY);
-        roofPatternDy = (EditText) mRootView.findViewById(R.id.instructions_roof_pattern_dy);
-        roofPatternDy.setRawInputType(Configuration.KEYBOARD_12KEY);
-        roofPatternSpinner.setAdapter(roofPatternAdapter);
         roofPatternSpinner.setOnItemSelectedListener(this);
         if (roofPattern != null) {
             roofPatternSpinner.setSelection(roofPatternAdapter.getPosition(roofPattern)); //display hint
@@ -366,13 +352,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
 
 
         SupportPattern wallPattern = supportRecommendation.getWallPattern();
-        wallPatternSpinner = (Spinner) mRootView.findViewById(R.id.instructions_wall_pattern_spinner);
-        wallPatternDx = (EditText) mRootView.findViewById(R.id.instructions_wall_pattern_dx);
-        wallPatternDx.setRawInputType(Configuration.KEYBOARD_12KEY);
-        wallPatternDy = (EditText) mRootView.findViewById(R.id.instructions_wall_pattern_dy);
-        wallPatternDy.setRawInputType(Configuration.KEYBOARD_12KEY);
-        wallPatternSpinner.setAdapter(wallPatternAdapter);
-        wallPatternSpinner.setOnItemSelectedListener(this);
         if (wallPattern != null) {
             wallPatternSpinner.setSelection(wallPatternAdapter.getPosition(wallPattern)); //display hint
             wallPatternDx.setText(numberFormatter.format(wallPattern.getDistanceX()));
@@ -404,9 +383,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
 
 
         MeshType meshType = supportRecommendation.getMeshType();
-        meshTypeSpinner = (Spinner) mRootView.findViewById(R.id.instructions_mesh_type_spinner);
-        meshTypeSpinner.setAdapter(meshTypeAdapter);
-        meshTypeSpinner.setOnItemSelectedListener(this);
         if (meshType != null) {
             meshTypeSpinner.setSelection(meshTypeAdapter.getPosition(meshType)); //display hint
         } else {
@@ -415,9 +391,7 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
 
 
         Coverage coverage = supportRecommendation.getCoverage();
-        coverageSpinner = (Spinner) mRootView.findViewById(R.id.instructions_coverage_spinner);
-        coverageSpinner.setAdapter(coverageAdapter);
-        coverageSpinner.setOnItemSelectedListener(this);
+
         if (coverage != null) {
             coverageSpinner.setSelection(coverageAdapter.getPosition(coverage)); //display hint
         } else {
@@ -426,9 +400,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
 
 
         ArchType archType = supportRecommendation.getArchType();
-        archTypeSpinner = (Spinner) mRootView.findViewById(R.id.instructions_arch_type_spinner);
-        archTypeSpinner.setAdapter(archTypeAdapter);
-        archTypeSpinner.setOnItemSelectedListener(this);
         if (archType != null) {
             archTypeSpinner.setSelection(archTypeAdapter.getPosition(archType)); //display hint
         } else {
@@ -462,6 +433,25 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         }
     }
 
+    private void wireEventsForObservations() {
+        EditText observationsEditText = ((EditText) mRootView.findViewById(R.id.instructions_observations_value));
+
+        observationsEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String editableValue = editable.toString();
+                getCurrentAssessment().getRecomendation().setObservations(editableValue);
+            }
+        });
+    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
