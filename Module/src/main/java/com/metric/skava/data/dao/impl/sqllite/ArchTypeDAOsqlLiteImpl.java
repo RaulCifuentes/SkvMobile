@@ -38,8 +38,11 @@ public class ArchTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<ArchType> imple
 
     @Override
     public ArchType getArchTypeByCode(String code) throws DAOException {
-        ArchType entity = getIdentifiableEntityByCode(ArchTypeTable.ARCH_DATABASE_TABLE, code);
-        return entity;
+        if (code != null) {
+            ArchType entity = getIdentifiableEntityByCode(ArchTypeTable.ARCH_DATABASE_TABLE, code);
+            return entity;
+        }
+        return null;
     }
 
     @Override

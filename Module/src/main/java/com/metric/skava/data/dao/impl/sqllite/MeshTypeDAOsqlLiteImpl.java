@@ -39,8 +39,11 @@ public class MeshTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<MeshType> imple
 
     @Override
     public MeshType getMeshTypeByCode(String code) throws DAOException {
+        if (code != null){
         MeshType entity = getIdentifiableEntityByCode(MeshTypeTable.MESH_DATABASE_TABLE, code);
         return entity;
+        }
+        return null;
     }
 
     @Override

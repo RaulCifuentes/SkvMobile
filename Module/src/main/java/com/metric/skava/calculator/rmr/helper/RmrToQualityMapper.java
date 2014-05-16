@@ -38,6 +38,9 @@ public class RmrToQualityMapper {
                     return currQuality;
                 }
             }
+            if (rmr == 100) {
+                return qualities.get(qualities.size() - 1);
+            }
         } catch (DAOException e) {
             throw new SkavaSystemException("It was not possible to find the rock quality for RMR value " + rmr, e);
         }

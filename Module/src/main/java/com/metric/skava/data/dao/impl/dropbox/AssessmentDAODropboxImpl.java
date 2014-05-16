@@ -235,7 +235,9 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     uriEncodedList.add(uriEncoded);
                 }
             }
-            uploadPictures(assessment.getInternalCode(), pictureList);
+            if (SkavaUtils.hasPictures(pictureList)){
+                uploadPictures(assessment.getInternalCode(), pictureList);
+            }
             assessmentFields.set("picturesURIs", uriEncodedList);
 
             List<DiscontinuityFamily> discontinuitySystem = assessment.getDiscontinuitySystem();
