@@ -18,9 +18,9 @@ public class QCalculationTable extends SkavaEntityTable {
 
 
     public static final String CREATE_QCALCULATION_TABLE = "create table " +
-            Q_CALCULATION_DATABASE_TABLE + " (" + GLOBAL_KEY_ID +
-            " integer primary key autoincrement, " +
-            ASSESSMENT_CODE_COLUMN + " text not null, " +
+            Q_CALCULATION_DATABASE_TABLE + " (" +
+//            GLOBAL_KEY_ID + " integer primary key autoincrement, " +
+            ASSESSMENT_CODE_COLUMN + " text primary key not null, " +
             RQD_COLUMN + " integer not null, " +
             Jn_CODE_COLUMN + " text not null, " +
             Jr_CODE_COLUMN + " text not null, " +

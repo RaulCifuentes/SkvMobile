@@ -88,7 +88,6 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
     private SkavaFilesUtils mFilesUtils;
 
 
-
     public AssessmentDAODropboxImpl(Context context, SkavaContext skavaContext) throws DAOException {
         super(context, skavaContext);
         this.mAssessmentsTable = new AssessmentDropboxTable(getDatastore());
@@ -235,7 +234,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     uriEncodedList.add(uriEncoded);
                 }
             }
-            if (SkavaUtils.hasPictures(pictureList)){
+            if (SkavaUtils.hasPictures(pictureList)) {
                 uploadPictures(assessment.getInternalCode(), pictureList);
             }
             assessmentFields.set("picturesURIs", uriEncodedList);
@@ -318,7 +317,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     if (SkavaUtils.isDefined(water)) {
                         discontinuityFamilyFields.set("waterCode", water.getCode());
                     }
-                    
+
                     Jr jr = family.getJr();
                     if (SkavaUtils.isDefined(jr)) {
                         discontinuityFamilyFields.set("jrCode", jr.getCode());
@@ -550,7 +549,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         }
     }
 
-    private void uploadPictures(String internalCode, List<Uri> pictures ) throws DAOException {
+    private void uploadPictures(String internalCode, List<Uri> pictures) throws DAOException {
         // Create DbxFileSystem for synchronized file access.
         DbxFileSystem dbxFs = getSkavaContext().getFileSystem();
 
@@ -559,25 +558,28 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             if (!dbxFs.exists(skavaFolderPath)) {
                 //create
                 dbxFs.createFolder(skavaFolderPath);
-            } else {
-                DbxPath projectPath = new DbxPath(skavaFolderPath, internalCode);
-                for (Uri pictureURI : pictures) {
-                    if (pictureURI != null) {
-                        String name = pictureURI.getLastPathSegment();
-                        DbxPath filePath = new DbxPath(projectPath, name);
-                        DbxFile targetFile = dbxFs.create(filePath);
-                        try {
-                            File tabletFile = mFilesUtils.getExistingFileFromUri(pictureURI);
-                            targetFile.writeFromExistingFile(tabletFile, false);
-                        } finally {
-                            targetFile.close();
-                        }
+            }
+            DbxPath projectPath = new DbxPath(skavaFolderPath, internalCode);
+            for (Uri pictureURI : pictures) {
+                if (pictureURI != null) {
+                    String name = pictureURI.getLastPathSegment();
+                    DbxPath filePath = new DbxPath(projectPath, name);
+                    DbxFile targetFile = dbxFs.create(filePath);
+                    try {
+                        File tabletFile = mFilesUtils.getExistingFileFromUri(pictureURI);
+                        targetFile.writeFromExistingFile(tabletFile, false);
+                    } finally {
+                        targetFile.close();
                     }
                 }
             }
-        } catch (IOException e) {
-            Log.e(SkavaConstants.LOG, e.getMessage());
-            throw new DAOException(e);
+
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            if (ioe != null) {
+                Log.e(SkavaConstants.LOG, ioe.getMessage());
+            }
+            throw new DAOException(ioe);
         }
 
     }

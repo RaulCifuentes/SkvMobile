@@ -9,6 +9,10 @@ public class SyncDataFailedException extends Exception {
 
     private SyncLogEntry entry;
 
+    public SyncDataFailedException(Throwable throwable) {
+        super(throwable);
+    }
+
     public SyncDataFailedException(SyncLogEntry entry, String message) {
         super(message);
         this.entry = entry;

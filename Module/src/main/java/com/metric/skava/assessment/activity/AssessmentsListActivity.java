@@ -90,11 +90,14 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
     public void onFragmentInteraction(Assessment selectedAssessment) {
         // Lanzar activity que muestra el reporte
         getSkavaContext().setAssessment(selectedAssessment);
-        Intent detailIntent = new Intent(this, ReviewReportMainActivity.class);
-        detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, AssesmentStageDataProvider.REPORT);
-        detailIntent.putExtra(MappingReportMainActivity.IS_PREVIEW, true);
+        Intent detailIntent;
+        if (selectedAssessment.isSentToCloud()){
+            detailIntent = new Intent(this, ReviewReportMainActivity.class);
+            detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, AssesmentStageDataProvider.REPORT);
+        } else {
+            detailIntent = new Intent(this, MappingReportMainActivity.class);
+            detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, AssesmentStageDataProvider.REPORT);
+        }
         startActivity(detailIntent);
-
-
     }
 }

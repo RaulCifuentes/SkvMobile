@@ -165,7 +165,11 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             Integer resourceIndex = CursorUtils.getInt(ExternalResourcesTable.RESOURCE_ORDINAL, cursor);
             String uriString = CursorUtils.getString(ExternalResourcesTable.RESOURCE_URL_COLUMN, cursor);
             Uri uri = Uri.parse(uriString);
-            result.set(resourceIndex, uri);
+            if (resourceIndex < 3) {
+                result.set(resourceIndex, uri);
+            } else {
+                result.add(resourceIndex, uri);
+            }
         }
         return result;
     }
@@ -197,7 +201,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             distanceY = CursorUtils.getDouble(SupportRecomendationTable.WALL_PATTERN_DY_COLUMN, cursor);
             type = daoFactory.getLocalSupportPatternTypeDAO().getSupportPatternTypeByUniqueCode(patternTypeCode);
             SupportPattern wallPattern = new SupportPattern(type, distanceX, distanceY);
-            
+
             String boltTypeCode = CursorUtils.getString(SupportRecomendationTable.BOLT_TYPE_CODE_COLUMN, cursor);
             BoltType boltType = daoFactory.getLocalBoltTypeDAO().getBoltTypeByCode(boltTypeCode);
 
@@ -250,6 +254,57 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         savePersistentEntity(AssessmentTable.ASSESSMENT_DATABASE_TABLE, assessment);
     }
 
+    public void updateAssessment(Assessment newSkavaEntity, boolean includeRelations) throws DAOException {
+
+        if (includeRelations) {
+            saveAssessment(newSkavaEntity);
+        } else {
+            String[] names = new String[]{
+                    AssessmentTable.CODE_COLUMN,
+                    AssessmentTable.INTERNAL_CODE_COLUMN,
+                    AssessmentTable.GEOLOGIST_CODE_COLUMN,
+                    AssessmentTable.TUNEL_FACE_CODE_COLUMN,
+                    AssessmentTable.DATE_COLUMN,
+                    AssessmentTable.EXCAVATION_SECTION_CODE_COLUMN,
+                    AssessmentTable.EXCAVATION_METHOD_CODE_COLUMN,
+                    AssessmentTable.PK_INITIAL_COLUMN,
+                    AssessmentTable.PK_FINAL_COLUMN,
+                    AssessmentTable.ADVANCE_COLUMN,
+                    AssessmentTable.ORIENTATION_COLUMN,
+                    AssessmentTable.SLOPE_COLUMN,
+                    AssessmentTable.FRACTURE_TYPE_CODE_COLUMN,
+                    AssessmentTable.BLOCKS_SIZE_COLUMN,
+                    AssessmentTable.NUMBER_JOINTS_COLUMN,
+                    AssessmentTable.OUTCROP_COLUMN,
+                    AssessmentTable.ROCK_SAMPLE_IDENTIFICATION_COLUMN,
+                    AssessmentTable.SENT_TO_CLOUD_COLUMN
+            };
+
+            Object[] values = new Object[]{
+                    newSkavaEntity.getCode(),
+                    newSkavaEntity.getInternalCode(),
+                    SkavaUtils.isUndefined(newSkavaEntity.getGeologist()) ? null : newSkavaEntity.getGeologist().getCode(),
+                    SkavaUtils.isUndefined(newSkavaEntity.getFace()) ? null : newSkavaEntity.getFace().getCode(),
+                    DateDataFormat.formatDateAsLong(newSkavaEntity.getDate()),
+                    SkavaUtils.isUndefined(newSkavaEntity.getSection()) ? null : newSkavaEntity.getSection().getCode(),
+                    SkavaUtils.isUndefined(newSkavaEntity.getMethod()) ? null : newSkavaEntity.getMethod().getCode(),
+                    newSkavaEntity.getInitialPeg(),
+                    newSkavaEntity.getFinalPeg(),
+                    newSkavaEntity.getCurrentAdvance(),
+                    newSkavaEntity.getOrientation(),
+                    newSkavaEntity.getSlope(),
+                    SkavaUtils.isUndefined(newSkavaEntity.getFractureType()) ? null : newSkavaEntity.getFractureType().getCode(),
+                    newSkavaEntity.getBlockSize(),
+                    newSkavaEntity.getNumberOfJoints(),
+                    newSkavaEntity.getOutcropDescription(),
+                    newSkavaEntity.getRockSampleIdentification(),
+                    newSkavaEntity.isSentToCloud() ? 1 : 0
+            };
+            Long assesmentId = saveRecord(AssessmentTable.ASSESSMENT_DATABASE_TABLE, names, values);
+            newSkavaEntity.set_id(assesmentId);
+        }
+    }
+
     @Override
     protected void savePersistentEntity(java.lang.String tableName, Assessment newSkavaEntity) throws DAOException {
         String[] names = new String[]{
@@ -269,7 +324,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 AssessmentTable.BLOCKS_SIZE_COLUMN,
                 AssessmentTable.NUMBER_JOINTS_COLUMN,
                 AssessmentTable.OUTCROP_COLUMN,
-                AssessmentTable.ROCK_SAMPLE_IDENTIFICATION_COLUMN
+                AssessmentTable.ROCK_SAMPLE_IDENTIFICATION_COLUMN,
+                AssessmentTable.SENT_TO_CLOUD_COLUMN
         };
 
         Object[] values = new Object[]{
@@ -289,7 +345,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 newSkavaEntity.getBlockSize(),
                 newSkavaEntity.getNumberOfJoints(),
                 newSkavaEntity.getOutcropDescription(),
-                newSkavaEntity.getRockSampleIdentification()
+                newSkavaEntity.getRockSampleIdentification(),
+                newSkavaEntity.isSentToCloud() ? 1 : 0
         };
 
         Long assesmentId = saveRecord(tableName, names, values);

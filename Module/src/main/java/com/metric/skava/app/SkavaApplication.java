@@ -2,17 +2,12 @@ package com.metric.skava.app;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.exception.SkavaExceptionHandler;
-import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.data.dao.DAOFactory;
-import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.settings.fragment.SettingsMainFragment;
-import com.metric.skava.sync.dao.SyncLoggingDAO;
 import com.metric.skava.sync.helper.SyncHelper;
-import com.metric.skava.sync.model.SyncLogEntry;
 import com.metric.skava.sync.model.SyncStatus;
 
 
@@ -57,8 +52,6 @@ public class SkavaApplication extends MetricApplication {
     }
 
 
-
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -68,29 +61,17 @@ public class SkavaApplication extends MetricApplication {
         SyncHelper syncHelper = SyncHelper.getInstance(mSkavaContext);
         mSkavaContext.setSyncHelper(syncHelper);
 
-        SyncLoggingDAO syncLoggingDAO = null;
-        try {
-            syncLoggingDAO = daoFactory.getSyncLoggingDAO();
-            SyncLogEntry globalLastSuccess = syncLoggingDAO.getLastSyncByState(SyncLogEntry.Domain.GLOBAL_DATA, SyncLogEntry.Status.SUCCESS);
-            SyncLogEntry userSpecificLastSuccess = syncLoggingDAO.getLastSyncByState(SyncLogEntry.Domain.USER_RELATED_DATA, SyncLogEntry.Status.SUCCESS);
-            SyncStatus syncStatus = new SyncStatus();
-            syncStatus.setGlobalData(globalLastSuccess);
-            syncStatus.setUserRelatedData(userSpecificLastSuccess);
-            mSkavaContext.setSyncMetadata(syncStatus);
-        } catch (DAOException daoe){
-            Log.d(SkavaConstants.LOG, "DAO Exception " + daoe.getMessage());
-        }
-
-        /// TODO: Ver que se le pasa como segundo parámetro a este setter. Definir tb que SkavaContext tenga valores por defecto
-//        mSkavaContext.setDatastoreHelper(DatastoreHelper.getInstance(this,));
-//        mSkavaDataProvider = SkavaDataProvider.getInstance(this);
-//        mMappedIndexDataProvider = MappedIndexDataProvider.getInstance(this);
+        //TODO Persist syncStatus across executions
+        SyncStatus syncStatus = new SyncStatus();
+        mSkavaContext.setSyncMetadata(syncStatus);
 
         Thread.getDefaultUncaughtExceptionHandler();
         SkavaExceptionHandler handler = new SkavaExceptionHandler(this);
         Thread.setDefaultUncaughtExceptionHandler(handler);
 
     }
+
+
 
     @Override
     public void onTerminate() {

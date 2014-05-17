@@ -1,28 +1,42 @@
 package com.metric.skava.sync.model;
 
+import java.util.Date;
+
 /**
  * Created by metricboy on 4/23/14.
  */
 public class SyncStatus {
 
-    private SyncLogEntry globalData;
-    private SyncLogEntry userRelatedData;
+    private boolean success;
+    private Date lastExecution;
 
-    public SyncLogEntry getGlobalData() {
-        return globalData;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setGlobalData(SyncLogEntry globalData) {
-        this.globalData = globalData;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
-    public SyncLogEntry getUserRelatedData() {
-        return userRelatedData;
+    public Date getLastExecution() {
+        return lastExecution;
     }
 
-    public void setUserRelatedData(SyncLogEntry userRelatedData) {
-        this.userRelatedData = userRelatedData;
+    public void setLastExecution(Date lastExecution) {
+        this.lastExecution = lastExecution;
     }
+
+//    private SyncLogEntry globalData;
+//
+//    public SyncLogEntry getGlobalData() {
+//        return globalData;
+//    }
+//
+//    public void setGlobalData(SyncLogEntry globalData) {
+//        this.globalData = globalData;
+//    }
+
+
 
 
 }

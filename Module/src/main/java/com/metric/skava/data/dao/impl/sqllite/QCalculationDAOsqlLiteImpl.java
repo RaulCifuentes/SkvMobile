@@ -95,7 +95,7 @@ public class QCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Q
     protected void savePersistentEntity(String tableName, String assessmentCode, Q_Calculation newQCalculation) throws DAOException {
         if (newQCalculation != null) {
             String[] qCalculationNames = new String[]{
-                    QCalculationTable.GLOBAL_KEY_ID,
+//                    QCalculationTable.GLOBAL_KEY_ID,
                     QCalculationTable.ASSESSMENT_CODE_COLUMN,
                     QCalculationTable.RQD_COLUMN,
                     QCalculationTable.Jn_CODE_COLUMN,
@@ -106,7 +106,7 @@ public class QCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Q
                     QCalculationTable.Q_COLUMN
             };
             Object[] qCalculationValues = new Object[]{
-                    newQCalculation.get_id(),
+//                    newQCalculation.get_id(),
                     assessmentCode,
                     newQCalculation.getRqd().getValue(),
                     newQCalculation.getJn().getCode(),

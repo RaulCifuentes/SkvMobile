@@ -114,7 +114,7 @@ public class RMRCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO
         if (rmrCalculation != null) {
             //Save the related RMR Calculation
             String[] rmrCalculationNames = new String[]{
-                    RMRCalculationTable.GLOBAL_KEY_ID,
+//                    RMRCalculationTable.GLOBAL_KEY_ID,
                     RMRCalculationTable.ASSESSMENT_CODE_COLUMN,
                     RMRCalculationTable.STRENGTHOFROCK_CODE_COLUMN,
                     RMRCalculationTable.RQD_RMR_CODE_COLUMN,
@@ -129,7 +129,7 @@ public class RMRCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO
             };
 
             Object[] rmrCalculationValues = new Object[]{
-                    rmrCalculation.get_id(),
+//                    rmrCalculation.get_id(),
                     assessmentCode,
                     rmrCalculation.getStrengthOfRock().getCode(),
                     rmrCalculation.getRqd().getKey(),

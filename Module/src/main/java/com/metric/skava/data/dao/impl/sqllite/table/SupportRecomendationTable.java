@@ -28,9 +28,9 @@ public class SupportRecomendationTable extends SkavaTable {
 
 
     public static final String CREATE_RECOMENDATIONS_TABLE = "create table " +
-            RECOMENDATION_DATABASE_TABLE + " (" + GLOBAL_KEY_ID +
-            " integer primary key autoincrement, " +
-            ASSESSMENT_CODE_COLUMN + " text not null, " +
+            RECOMENDATION_DATABASE_TABLE + " (" +
+//            GLOBAL_KEY_ID + " integer primary key autoincrement, " +
+            ASSESSMENT_CODE_COLUMN + " text primary key not null, " +
             SUPPORT_REQUIREMENT_BASE_CODE_COLUMN + " text null, " +
             BOLT_TYPE_CODE_COLUMN + " text null, " +
             BOLT_DIAMETER_COLUMN + " real null, " +
