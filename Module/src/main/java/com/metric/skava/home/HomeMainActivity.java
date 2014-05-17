@@ -44,6 +44,7 @@ import com.metric.skava.sync.activity.SyncMainActivity;
 import com.metric.skava.sync.exception.SyncDataFailedException;
 import com.metric.skava.sync.helper.SyncHelper;
 import com.metric.skava.sync.model.SyncLogEntry;
+import com.metric.skava.sync.model.SyncStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,9 +90,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         }
     }
 
-//    public void doDefinitiveOnCreate(){
-//        setupTheDrawer();
-//    }
 
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
@@ -108,19 +106,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-//        View view = this.findViewById(android.R.id.content);
-//        if (shouldUpdateAutomatically()) {
-//            view.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    showProgressBar(true, "Probando, probando", false);
-//                    setupDataModel();
-//                    showProgressBar(true, "Ya probe, probe", false);
-//                }
-//            });
-//        } else {
-//            assertDataAvailable();
-//        }
         setupLinkToDropbox();
         //TODO Check if the execution returns here when onACtivityResult is triggered
         setupDataModel();
@@ -242,13 +227,13 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mDatastore.isOpen()){
+        if (mDatastore.isOpen()) {
             mDatastore.close();
         }
     }
 
 
-    private void prepareSyncTraceTable()  {
+    private void prepareSyncTraceTable() {
         SyncHelper syncHelper = getSyncHelper();
         try {
             syncHelper.clearSyncLoggingTable();
@@ -258,47 +243,471 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         }
     }
 
+
     /*This will run under an AyncTask*/
-    private Long downloadAndPopulateGlobalDataModel() throws SyncDataFailedException {
+    private Long importRoles() throws SyncDataFailedException {
         Long totalRecords = 0L;
         SyncHelper syncHelper = getSyncHelper();
-        SyncLogEntry newSyncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.GLOBAL_DATA, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, totalRecords);
         try {
-            totalRecords += syncHelper.downloadGlobalData();
-            newSyncLogEntry.setNumRecordsSynced(totalRecords);
-            getSkavaContext().getSyncMetadata().setGlobalData(newSyncLogEntry);
+            totalRecords = syncHelper.downloadRoles();
         } catch (DAOException daoe) {
             Log.e(SkavaConstants.LOG, daoe.getMessage());
-            newSyncLogEntry.setMessage(daoe.getMessage());
-            newSyncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
-            getSkavaContext().getSyncMetadata().setGlobalData(newSyncLogEntry);
-            throw new SyncDataFailedException(newSyncLogEntry, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
         }
         return totalRecords;
     }
 
-    /*This will run under an AyncTask*/
-    private Long downloadAndPopulateUserRelatedDataModel() throws SyncDataFailedException {
+
+    private Long importMethods() throws SyncDataFailedException {
         Long totalRecords = 0L;
         SyncHelper syncHelper = getSyncHelper();
-        SyncLogEntry newSyncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.USER_RELATED_DATA, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, totalRecords);
         try {
-            totalRecords += syncHelper.downloadClients();
-            totalRecords += syncHelper.downloadProjects();
-            totalRecords += syncHelper.downloadTunnels();
-            totalRecords += syncHelper.downloadSupportRequirements();
-            totalRecords += syncHelper.downloadUserRelatedData();
-            newSyncLogEntry.setNumRecordsSynced(totalRecords);
-            getSkavaContext().getSyncMetadata().setUserRelatedData(newSyncLogEntry);
+            totalRecords = syncHelper.downloadExcavationMethods();
         } catch (DAOException daoe) {
             Log.e(SkavaConstants.LOG, daoe.getMessage());
-            newSyncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
-            newSyncLogEntry.setMessage(daoe.getMessage());
-            getSkavaContext().getSyncMetadata().setUserRelatedData(newSyncLogEntry);
-            throw new SyncDataFailedException(newSyncLogEntry, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
         }
         return totalRecords;
     }
+
+    private Long importSections() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadExcavationSections();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+
+    private Long importDiscontinuityTypes() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadDiscontinuityTypes();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importRelevances() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadDiscontinuityRelevances();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importIndexes() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadIndexes();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importGroups() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadGroups();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importSpacings() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadSpacings();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importPersistences() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadPersistences();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importApertures() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadApertures();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importShapes() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadShapes();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importRoughnesses() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadRoughnesses();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importInfillings() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadInfillings();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importWeatherings() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadWeatherings();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importWaters() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadWaters();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importStrengths() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadStrengths();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importGroundwaters() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadGroundwaters();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importOrientations() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadOrientations();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importJns() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadJns();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importJrs() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadJrs();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importJas() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadJas();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importJws() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadJws();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importSRFs() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadSRFs();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importFractureTypes() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadFractureTypes();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importBoltTypes() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords += syncHelper.downloadBoltTypes();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importShotcreteTypes() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords += syncHelper.downloadShotcreteTypes();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importMeshTypes() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords += syncHelper.downloadMeshTypes();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importCoverages() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords += syncHelper.downloadCoverages();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importArchTypes() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords += syncHelper.downloadArchTypes();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importESRs() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords += syncHelper.downloadESRs();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importSupportPatternTypes() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords += syncHelper.downloadSupportPatternTypes();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importRockQualities() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords += syncHelper.downloadRockQualities();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    //************ USER RELATED DATA **************** /
+    private Long importClients() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadClients();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importProjects() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords += syncHelper.downloadProjects();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+
+    private Long importTunnels() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords += syncHelper.downloadTunnels();
+
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importSupportRequirements() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords += syncHelper.downloadSupportRequirements();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+
+    private Long importTunnelFaces() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords += syncHelper.downloadTunnelFaces();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    private Long importUsers() throws SyncDataFailedException {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords += syncHelper.downloadUsers();
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+
 
     /**
      * Shows the progress UI and hides the login form.
@@ -332,37 +741,16 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 
     private void assertDataAvailable() {
 
-        SyncLogEntry lastGlobalData = getSkavaContext().getSyncMetadata().getGlobalData();
-        SyncLogEntry lastNonSpecificData = getSkavaContext().getSyncMetadata().getUserRelatedData();
+        SyncStatus lastSyncState = getSkavaContext().getSyncMetadata();
 
-        if (lastGlobalData == null) {
+        if (lastSyncState == null || !lastSyncState.isSuccess()) {
             Log.d(SkavaConstants.LOG, "Skava Mobile needs to download a set of initial data. Please connect to Internet and link to Skava Dropbox account!!");
             Toast.makeText(this, "Skava Mobile needs to download a set an set of initial data. Please connect to Internet and link to Skava Dropbox account!!", Toast.LENGTH_LONG).show();
         } else {
-            if (lastGlobalData.getSource().equals(SyncLogEntry.Source.DROPBOX)) {
-                Log.d(SkavaConstants.LOG, "Using master data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()));
-                Toast.makeText(this, "Using master data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()), Toast.LENGTH_LONG).show();
-            }
-            if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DEFAULT)) {
-                Log.d(SkavaConstants.LOG, "Operating on previous emergency data created on  " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()));
-                Toast.makeText(this, "Operating on previous emergency data created on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()), Toast.LENGTH_LONG).show();
-            }
+            Log.d(SkavaConstants.LOG, "Using master data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastSyncState.getLastExecution()));
+            Toast.makeText(this, "Using master data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastSyncState.getLastExecution()), Toast.LENGTH_LONG).show();
         }
 
-        if (lastNonSpecificData == null) {
-            Log.d(SkavaConstants.LOG, "Skava Mobile needs to download a set of initial data. Please connect to Internet and link to Skava Dropbox account!!");
-            Toast.makeText(this, "Skava Mobile needs to download a set of initial data. Please connect to Internet and link to Skava Dropbox account!!", Toast.LENGTH_LONG).show();
-
-        } else {
-            if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DROPBOX)) {
-                Log.d(SkavaConstants.LOG, "Using non specific data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()));
-                Toast.makeText(this, "Using non specific data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()), Toast.LENGTH_LONG).show();
-            }
-            if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DEFAULT)) {
-                Log.d(SkavaConstants.LOG, "Operating on previous emergency data created on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()));
-                Toast.makeText(this, "Operating on previous emergency datacreated on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()), Toast.LENGTH_LONG).show();
-            }
-        }
         assertNeverCalled = false;
     }
 
@@ -436,10 +824,11 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 startActivity(intent);
                 break;
             case NAV_MENU_LOGOUT_ITEM_ID:
-                if (shouldUnlinkOnLogout()){
-                    if (mDbxAcctMgr != null && mDbxAcctMgr.hasLinkedAccount()){
+                if (shouldUnlinkOnLogout()) {
+                    if (mDbxAcctMgr != null && mDbxAcctMgr.hasLinkedAccount()) {
                         mDbxAcctMgr.unlink();
-                    }                }
+                    }
+                }
                 getSkavaContext().setLoggedUser(null);
                 setupTheDrawer();
         }
@@ -467,14 +856,93 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             Long numRecordsCreated = 0L;
             prepareSyncTraceTable();
             try {
-                numRecordsCreated += downloadAndPopulateGlobalDataModel();
+                // **** IMPORT GENERAL DATA FIRST *** //
+                numRecordsCreated += importRoles();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importMethods();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importSections();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importDiscontinuityTypes();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importRelevances();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importIndexes();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importGroups();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importSpacings();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importPersistences();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importApertures();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importShapes();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importRoughnesses();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importInfillings();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importWeatherings();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importWaters();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importStrengths();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importGroundwaters();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importOrientations();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importJns();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importJrs();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importJas();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importJws();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importSRFs();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importFractureTypes();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importBoltTypes();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importShotcreteTypes();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importMeshTypes();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importCoverages();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importArchTypes();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importESRs();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importSupportPatternTypes();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importRockQualities();
+                publishProgress(numRecordsCreated);
+
+                // **** IMPORT THEN USER RELATED DATA **** //
+                numRecordsCreated += importClients();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importProjects();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importTunnels();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importSupportRequirements();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importTunnelFaces();
+                publishProgress(numRecordsCreated);
+                numRecordsCreated += importUsers();
+                publishProgress(numRecordsCreated);
+
+                //UPDATE SYNC EXECUTION STATUS ON CONTEXT
+                getSkavaContext().getSyncMetadata().setSuccess(true);
+                getSkavaContext().getSyncMetadata().setLastExecution(SkavaUtils.getCurrentDate());
+
             } catch (SyncDataFailedException e) {
-                errorCondition = e.getEntry();
-            }
-            publishProgress(numRecordsCreated);
-            try {
-                numRecordsCreated += downloadAndPopulateUserRelatedDataModel();
-            } catch (SyncDataFailedException e) {
+                getSkavaContext().getSyncMetadata().setSuccess(false);
+                getSkavaContext().getSyncMetadata().setLastExecution(SkavaUtils.getCurrentDate());
                 errorCondition = e.getEntry();
             }
             return numRecordsCreated;
@@ -491,12 +959,12 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         protected void onProgressUpdate(Long... progress) {
             //mostrar avance
             Long value = (Long) progress[0];
-            showProgressBar(true,  + value + " records imported so far.", false);
+            showProgressBar(true, +value + " records imported so far.", false);
         }
 
         @Override
         protected void onPostExecute(Long result) {
-            if (errorCondition != null){
+            if (errorCondition != null) {
                 Toast.makeText(HomeMainActivity.this, "Load data process has failed!!", Toast.LENGTH_LONG);
                 mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
                 showProgressBar(true, "Failed. " + result + " records imported.", true);
@@ -518,30 +986,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 
     }
 
-    //    @Override
-//    public void onBackPressed() {
-//        // See bug:
-//        // http://stackoverflow.com/questions/13418436/android-4-2-back-stack-behaviour-with-nested-fragments/14030872#14030872
-//        // If the fragment exists and has some back-stack entry
-//        FragmentManager fm = getSupportFragmentManager();
-//        Fragment currentFragment = fm
-//                .findFragmentById(R.id.nav_drawer_main_layout_content_frame);
-//        if (currentFragment != null
-//                && currentFragment.getChildFragmentManager()
-//                .getBackStackEntryCount() > 0) {
-//            // Get the fragment fragment manager - and pop the backstack
-//            currentFragment.getChildFragmentManager().popBackStack();
-//        }
-//        // Else, nothing in the direct fragment back stack
-//        else {
-//            if (!NavigationController.HOME_FRAGMENT_TAG.equals(currentFragment
-//                    .getTag())) {
-//                this.navController.goHomeFragment(this);
-//            } else {
-//                super.onBackPressed();
-//            }
-//        }
-//    }
 
 
 }

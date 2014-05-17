@@ -118,6 +118,8 @@ public class IdentificationMainFragment extends SkavaFragment implements
 
     private UserDataDomain mUserDataDomain;
 
+    private boolean identifictionCompleted;
+
     //********** Callback interface: This is an idea to force the Identification phase before any other stage could be used
     private TunnelFaceIdentificationListener mCallback;
 
@@ -542,8 +544,12 @@ public class IdentificationMainFragment extends SkavaFragment implements
                 selectedProject = (ExcavationProject) parent.getItemAtPosition(position);
                 getSkavaContext().getAssessment().setInternalCode(selectedProject.getInternalCode());
                 internalCodeEditText.setText(selectedProject.getInternalCode());
-                tunnelAdapter = prepareTunnelAdapter(selectedProject);
-                tunnelSpinner.setAdapter(tunnelAdapter);
+                if (identifictionCompleted){
+                 // Do not mess with tunnel spinner
+                } else {
+                    tunnelAdapter = prepareTunnelAdapter(selectedProject);
+                    tunnelSpinner.setAdapter(tunnelAdapter);
+                }
                 if (selectedTunnel != null) {
                     if (tunnelAdapter.getPosition(selectedTunnel) != -1) {
                         tunnelSpinner.setSelection(tunnelAdapter.getPosition(selectedTunnel));
@@ -561,9 +567,12 @@ public class IdentificationMainFragment extends SkavaFragment implements
         if (parent == tunnelSpinner) {
             if (position != tunnelSpinnerLastPosition) {
                 selectedTunnel = (Tunnel) parent.getItemAtPosition(position);
-                faceAdapter = prepareFaceAdapter(selectedTunnel);
-                faceSpinner.setAdapter(faceAdapter);
-
+                if (identifictionCompleted){
+                    // Do not mess with tunnel spinner
+                } else {
+                    faceAdapter = prepareFaceAdapter(selectedTunnel);
+                    faceSpinner.setAdapter(faceAdapter);
+                }
                 if (selectedFace != null) {
                     if (faceAdapter.getPosition(selectedFace) != -1) {
                         faceSpinner.setSelection(faceAdapter.getPosition(selectedFace));
@@ -582,6 +591,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
                 selectedFace = (TunnelFace) parent.getItemAtPosition(position);
                 getSkavaContext().getAssessment().setFace(selectedFace);
                 mCallback.onTunelFaceIdentified();
+                identifictionCompleted = true;
                 faceSpinnerLastPosition = position;
                 //use the orientation from the face as initial value
                 orientationEditText.setText(selectedFace.getOrientation().toString());

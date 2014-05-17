@@ -24,6 +24,8 @@ public interface LocalAssessmentDAO {
 
     public void saveAssessment(Assessment assessment) throws DAOException;
 
+    public void updateAssessment(Assessment newSkavaEntity, boolean includeRelations) throws DAOException;
+
     public boolean deleteAssessment(String code);
 
 

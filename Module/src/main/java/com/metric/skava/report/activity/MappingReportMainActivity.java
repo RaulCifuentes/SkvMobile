@@ -25,8 +25,8 @@ import com.metric.skava.report.fragment.MappingReportMainFragment;
 
 public class MappingReportMainActivity extends SkavaFragmentActivity {
 
-    private Boolean isPreview;
-    public static final String IS_PREVIEW = "MAPPING_REPORT_MAIN_ACTIVITY_IS_PREVIEW";
+//    private Boolean isPreview;
+//    public static final String IS_PREVIEW = "MAPPING_REPORT_MAIN_ACTIVITY_IS_PREVIEW";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
                     .add(R.id.container, new MappingReportMainFragment())
                     .commit();
         }
-        isPreview = getIntent().getBooleanExtra(IS_PREVIEW, false);
+//        isPreview = getIntent().getBooleanExtra(IS_PREVIEW, false);
 
     }
 
@@ -60,17 +60,15 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (!isPreview) {
+        if (getCurrentAssessment().isSentToCloud()){
+            // show no buttons as we dont want edit, re save nor resend
+        } else {
+            menu.findItem(R.id.action_mapping_report_draft).setVisible(true);
             if (getSkavaContext().getDatastore() != null) {
-                menu.findItem(R.id.action_mapping_report_draft).setVisible(false);
-                menu.findItem(R.id.action_mapping_report_send).setVisible(true);
-            } else {
                 menu.findItem(R.id.action_mapping_report_draft).setVisible(true);
+            } else {
                 menu.findItem(R.id.action_mapping_report_send).setVisible(false);
             }
-        } else {
-            menu.findItem(R.id.action_mapping_report_draft).setVisible(false);
-            menu.findItem(R.id.action_mapping_report_send).setVisible(false);
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -155,12 +153,15 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
 
     private boolean sendAsCompleted(){
         try {
-            Assessment assessment = getCurrentAssessment();
-            LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
-            localAssessmentDAO.saveAssessment(assessment);
-
+            //First save locally
+            saveDraft();
+            Assessment currentAssessment = getCurrentAssessment();
             RemoteAssessmentDAO remoteAssessmentDAO = getDAOFactory().getRemoteAssessmentDAO(DAOFactory.Flavour.DROPBOX);
-            remoteAssessmentDAO.saveAssessment(assessment);
+            remoteAssessmentDAO.saveAssessment(currentAssessment);
+
+            currentAssessment.setSentToCloud(true);
+            LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
+            localAssessmentDAO.updateAssessment(currentAssessment, false);
             return true;
         } catch (DAOException e) {
             e.printStackTrace();

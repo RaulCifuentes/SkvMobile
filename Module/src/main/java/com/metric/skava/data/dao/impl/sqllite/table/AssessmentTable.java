@@ -41,15 +41,13 @@ public class AssessmentTable extends SkavaTable {
 
     public static final String ROCK_SAMPLE_IDENTIFICATION_COLUMN = "ROCK_SAMPLE_IDENTIFICATION";
 
-
-    //TODO Solved the relations on the dependant side
-    //    public static final String RECOMENDATION_CODE_COLUMN = "SUPPORT_RECOMENDATION_CODE";
+    public static final String SENT_TO_CLOUD_COLUMN = "SENT_TO_CLOUD";
 
 
     public static final String CREATE_ASSESSMENT_TABLE = "create table " +
-            ASSESSMENT_DATABASE_TABLE + " (" + GLOBAL_KEY_ID +
-            " integer primary key autoincrement, " +
-            CODE_COLUMN + " text not null, " +
+            ASSESSMENT_DATABASE_TABLE + " (" +
+//            GLOBAL_KEY_ID + " integer primary key autoincrement, " +
+            CODE_COLUMN + " text primary key not null, " +
             INTERNAL_CODE_COLUMN + " text null, " +
             GEOLOGIST_CODE_COLUMN + " text null, " +
             TUNEL_FACE_CODE_COLUMN + " text null, " +
@@ -65,7 +63,9 @@ public class AssessmentTable extends SkavaTable {
             BLOCKS_SIZE_COLUMN + " real null, " +
             NUMBER_JOINTS_COLUMN + " integer null, " +
             OUTCROP_COLUMN + " text null, " +
-            ROCK_SAMPLE_IDENTIFICATION_COLUMN + " text null  );";
+            ROCK_SAMPLE_IDENTIFICATION_COLUMN + " text null, " +
+            SENT_TO_CLOUD_COLUMN + " integer not null" +
+            " );";
 
     private static String INSERT_SCRIPT = "insert into " + ASSESSMENT_DATABASE_TABLE + "(" +
             CODE_COLUMN + "," +

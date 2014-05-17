@@ -17,6 +17,8 @@ import java.util.List;
  */
 public class Assessment implements IdentifiableEntity {
 
+    private boolean sentToCloud;
+
     private Long _id;
     private String code;
     private String internalCode;
@@ -49,6 +51,14 @@ public class Assessment implements IdentifiableEntity {
 
     public Assessment(String code) {
         this.code = code;
+    }
+
+    public boolean isSentToCloud() {
+        return sentToCloud;
+    }
+
+    public void setSentToCloud(boolean sentToCloud) {
+        this.sentToCloud = sentToCloud;
     }
 
     public java.lang.String getCode() {

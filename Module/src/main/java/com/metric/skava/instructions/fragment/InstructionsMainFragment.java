@@ -235,6 +235,12 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         boltTypeSpinner.setAdapter(boltTypeAdapter);
         boltTypeSpinner.setOnItemSelectedListener(this);
 
+        boltDiameterEditText = (EditText) mRootView.findViewById(R.id.instructions_bolt_diameter_value);
+        boltDiameterEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
+
+        boltLengthEditText = (EditText) mRootView.findViewById(R.id.instructions_bolt_length_value);
+        boltLengthEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
+
         shotcreteTypeSpinner = (Spinner) mRootView.findViewById(R.id.instructions_shotcrete_type_spinner);
         shotcreteTypeSpinner.setAdapter(shotcreteTypeAdapter);
         shotcreteTypeSpinner.setOnItemSelectedListener(this);
@@ -246,7 +252,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         roofPatternDy.setRawInputType(Configuration.KEYBOARD_12KEY);
         roofPatternSpinner.setAdapter(roofPatternAdapter);
 
-
         wallPatternSpinner = (Spinner) mRootView.findViewById(R.id.instructions_wall_pattern_spinner);
         wallPatternDx = (EditText) mRootView.findViewById(R.id.instructions_wall_pattern_dx);
         wallPatternDx.setRawInputType(Configuration.KEYBOARD_12KEY);
@@ -254,6 +259,9 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         wallPatternDy.setRawInputType(Configuration.KEYBOARD_12KEY);
         wallPatternSpinner.setAdapter(wallPatternAdapter);
         wallPatternSpinner.setOnItemSelectedListener(this);
+
+        thicknessEditText = (EditText) mRootView.findViewById(R.id.instructions_thickness_value);
+        thicknessEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
 
         meshTypeSpinner = (Spinner) mRootView.findViewById(R.id.instructions_mesh_type_spinner);
         meshTypeSpinner.setAdapter(meshTypeAdapter);
@@ -266,6 +274,10 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         archTypeSpinner = (Spinner) mRootView.findViewById(R.id.instructions_arch_type_spinner);
         archTypeSpinner.setAdapter(archTypeAdapter);
         archTypeSpinner.setOnItemSelectedListener(this);
+
+        separationEditText = (EditText) mRootView.findViewById(R.id.instructions_separation_value);
+        separationEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
+
 
         SupportRecomendation assessmentRecomendation = getCurrentAssessment().getRecomendation();
         SupportRecomendation supportRecomendation = null;
@@ -314,6 +326,19 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
             boltDiameterEditText.setText(numberFormatter.format(boltDiameter));
         }
 
+        boltDiameterEditText.addTextChangedListener(new TextValidator(boltDiameterEditText) {
+            @Override
+            public void validate(TextView textView, java.lang.String text) {
+                /* Validation code here */
+                try {
+                    Double enteredValue = Double.parseDouble(text);
+                    supportRecommendation.setBoltDiameter(enteredValue);
+                } catch (NumberFormatException e) {
+                    boltDiameterEditText.setError("Diameter must be a number!");
+                }
+            }
+        });
+
         Double boltLength = supportRecommendation.getBoltLength();
         if (boltLength != null) {
             boltLengthEditText.setText(numberFormatter.format(boltLength));
@@ -339,7 +364,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
             shotcreteTypeSpinner.setSelection(shotcreteTypeAdapter.getCount() - 1); //display hint
         }
 
-
         SupportPattern roofPattern = supportRecommendation.getRoofPattern();
         roofPatternSpinner.setOnItemSelectedListener(this);
         if (roofPattern != null) {
@@ -350,7 +374,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
             roofPatternSpinner.setSelection(roofPatternAdapter.getCount() - 1); //display hint
         }
 
-
         SupportPattern wallPattern = supportRecommendation.getWallPattern();
         if (wallPattern != null) {
             wallPatternSpinner.setSelection(wallPatternAdapter.getPosition(wallPattern)); //display hint
@@ -360,9 +383,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
             wallPatternSpinner.setSelection(wallPatternAdapter.getCount() - 1); //display hint
         }
 
-
-        thicknessEditText = (EditText) mRootView.findViewById(R.id.instructions_thickness_value);
-        thicknessEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
         Double thickness = supportRecommendation.getThickness();
         if (thickness != null) {
             thicknessEditText.setText(numberFormatter.format(thickness));
@@ -389,15 +409,12 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
             meshTypeSpinner.setSelection(meshTypeAdapter.getCount() - 1); //display hint
         }
 
-
         Coverage coverage = supportRecommendation.getCoverage();
-
         if (coverage != null) {
             coverageSpinner.setSelection(coverageAdapter.getPosition(coverage)); //display hint
         } else {
             coverageSpinner.setSelection(coverageAdapter.getCount() - 1); //display hint
         }
-
 
         ArchType archType = supportRecommendation.getArchType();
         if (archType != null) {
@@ -406,9 +423,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
             archTypeSpinner.setSelection(archTypeAdapter.getCount() - 1); //display hint
         }
 
-
-        separationEditText = (EditText) mRootView.findViewById(R.id.instructions_separation_value);
-        separationEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
         Double separation = supportRecommendation.getSeparation();
         if (separation != null) {
             separationEditText.setText(separation.toString());

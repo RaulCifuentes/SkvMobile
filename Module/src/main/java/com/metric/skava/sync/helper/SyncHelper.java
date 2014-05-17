@@ -150,20 +150,16 @@ public class SyncHelper {
     public void clearSyncLoggingTable() throws DAOException {
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         syncLoggingDAO.deleteAllSyncLogs();
-
     }
 
 
-    public Long downloadGlobalData() throws SyncDataFailedException, DAOException {
-
+    public Long downloadRoles() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
-
-        Long numRecords = 0L, totalRecords = 0L;
         SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ROLES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearRoles();
             numRecords = syncRoles();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -171,12 +167,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.EXCAVATIONMETHODS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadExcavationMethods() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.EXCAVATIONMETHODS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearExcavationMethods();
             numRecords = syncExcavationMethods();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -184,12 +184,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.EXCAVATIONSECTIONS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadExcavationSections() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.EXCAVATIONSECTIONS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearExcavationSections();
             numRecords = syncExcavationSections();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -197,12 +201,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.DISCONTINUITYTYPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadDiscontinuityTypes() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.DISCONTINUITYTYPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearDiscontinuityTypes();
             numRecords = syncDiscontinuityTypes();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -210,12 +218,17 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.DISCONTINUITYRELEVANCES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+
+    public Long downloadDiscontinuityRelevances() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.DISCONTINUITYRELEVANCES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearDiscontinuityRelevances();
             numRecords = syncDiscontinuityRelevances();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -223,12 +236,17 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.INDEXES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+
+    public Long downloadIndexes() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.INDEXES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearIndexes();
             numRecords = syncIndexes();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -236,12 +254,17 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.GROUPS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+
+    public Long downloadGroups() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.GROUPS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearGroups();
             numRecords = syncGroups();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -249,12 +272,17 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.SPACINGS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+
+    public Long downloadSpacings() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.SPACINGS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearSpacings();
             numRecords = syncSpacings();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -262,12 +290,17 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.PERSISTENCES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+
+    public Long downloadPersistences() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.PERSISTENCES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearPersistences();
             numRecords = syncPersistences();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -275,12 +308,17 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.APERTURES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+
+    public Long downloadApertures() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.APERTURES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearApertures();
             numRecords = syncApertures();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -288,12 +326,17 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.DISCONTINUITYSHAPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+
+    public Long downloadShapes() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.DISCONTINUITYSHAPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearDiscontinuityShapes();
             numRecords = syncDiscontinuityShapes();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -301,13 +344,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ROUGHNESSES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadRoughnesses() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ROUGHNESSES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearRoughnesses();
             numRecords = syncRoughnesses();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -315,12 +361,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.INFILLINGS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadInfillings() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.INFILLINGS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearInfillings();
             numRecords = syncInfillings();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -328,12 +378,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.WEATHERINGS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadWeatherings() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.WEATHERINGS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearWeatherings();
             numRecords = syncWeatherings();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -341,12 +395,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.DISCONTINUITYWATERS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadWaters() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.DISCONTINUITYWATERS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearDiscontinuityWaters();
             numRecords = syncDiscontinuityWaters();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -354,12 +412,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.STRENGTHS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadStrengths() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.STRENGTHS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearStrengths();
             numRecords = syncStrengths();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -367,12 +429,17 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.GROUDWATERS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+
+    public Long downloadGroundwaters() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.GROUDWATERS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearGroudwaters();
             numRecords = syncGroundwaters();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -380,12 +447,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ORIENTATION, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadOrientations() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ORIENTATION, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearOrientation();
             numRecords = syncOrientation();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -393,12 +464,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.JN, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadJns() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.JN, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearJn();
             numRecords = syncJn();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -406,12 +481,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.JR, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadJrs() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.JR, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearJr();
             numRecords = syncJr();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -419,12 +498,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.JA, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadJas() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.JA, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearJa();
             numRecords = syncJa();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -432,12 +515,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.JW, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadJws() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.JW, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearJw();
             numRecords = syncJw();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -445,12 +532,17 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.SRF, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+
+    public Long downloadSRFs() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.SRF, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearSRF();
             numRecords = syncSRF();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -458,12 +550,17 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.FRACTURETYPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+
+    public Long downloadFractureTypes() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.FRACTURETYPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearFractureTypes();
             numRecords = syncFractureTypes();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -471,12 +568,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.BOLTTYPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadBoltTypes() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.BOLTTYPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearBoltTypes();
             numRecords = syncBoltTypes();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -484,12 +585,17 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.SHOTCRETETYPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+
+    public Long downloadShotcreteTypes() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.SHOTCRETETYPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearShotcreteTypes();
             numRecords = syncShotcreteTypes();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -497,12 +603,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.MESHTYPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadMeshTypes() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.MESHTYPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearMeshTypes();
             numRecords = syncMeshTypes();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -510,12 +620,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.COVERAGES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadCoverages() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.COVERAGES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearCoverages();
             numRecords = syncCoverages();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -523,12 +637,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ARCHTYPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadArchTypes() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ARCHTYPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearArchTypes();
             numRecords = syncArchTypes();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -536,12 +654,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ESRS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadESRs() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ESRS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearESRs();
             numRecords = syncESRs();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -549,12 +671,17 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.SUPPORTPATTERNTYPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+
+    public Long downloadSupportPatternTypes() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.SUPPORTPATTERNTYPES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearSupportPatternTypes();
             numRecords = syncSupportPatternTypes();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -562,12 +689,16 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ROCKQUALITIES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadRockQualities() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ROCKQUALITIES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             clearRockQualities();
             numRecords = syncRockQualities();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -575,13 +706,10 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
-
-        return totalRecords;
-
+        return numRecords;
     }
 
-    //Example of how to take out the downloadUserRalated and downloadGlobal in order to be able to provide more detail info to the ProgressBar
-    //I mean n small methods invocation instead of just two big
+    //**** USER RELATED DATA ***//
     public Long downloadClients() throws DAOException, SyncDataFailedException {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
@@ -653,17 +781,14 @@ public class SyncHelper {
         return numRecords;
     }
 
-
-    public Long downloadUserRelatedData() throws DAOException, SyncDataFailedException {
-        Long numRecords = 0L, totalRecords = 0L;
+    public Long downloadTunnelFaces() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
-
         SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.TUNNELFACES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             //Support Requirements depends on Tunnel
             clearFaces();
             numRecords = syncFaces();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -671,16 +796,19 @@ public class SyncHelper {
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
-
-        syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.USERS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
+    public Long downloadUsers() throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.USERS, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS, numRecords);
         try {
             //HEADS UP: on this strategy users shuold be loaded last coz the assembling will look up some roles and faces DAOs
             //This is not exactly th best option as it will load the entire dataset and not just what this user can see
             //TODO evaluate and implement the userSpecificData
             clearUsers();
             numRecords = syncUsers();
-            totalRecords += numRecords;
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
             syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
@@ -689,7 +817,7 @@ public class SyncHelper {
         }
         syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
 
-        return totalRecords;
+        return numRecords;
     }
 
     //TODO Use the user information to pull just the faces, tunnels, projects anc clients for that user

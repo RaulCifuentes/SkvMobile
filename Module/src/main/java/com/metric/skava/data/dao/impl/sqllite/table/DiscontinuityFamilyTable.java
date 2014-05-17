@@ -25,8 +25,8 @@ public class DiscontinuityFamilyTable extends SkavaEntityTable {
     public static final String JR_CODE_COLUMN = "JR_CODE";
 
     public static final String CREATE_DISCONTINUITY_FAMILIES_TABLE = "create table " +
-            DISCONTINUITY_FAMILY_DATABASE_TABLE + " (" + GLOBAL_KEY_ID +
-            " integer primary key autoincrement, " +
+            DISCONTINUITY_FAMILY_DATABASE_TABLE + " (" +
+//            GLOBAL_KEY_ID + " integer primary key autoincrement, " +
             ASSESSMENT_CODE_COLUMN + " text not null, " +
             NUMBER_COLUMN + " integer not null, " +
             TYPE_CODE_COLUMN + " text null, " +
@@ -43,5 +43,8 @@ public class DiscontinuityFamilyTable extends SkavaEntityTable {
             JR_CODE_COLUMN + " text null, " +
             JA_CODE_COLUMN + " text null, " +
             DISCONTINUITYWATER_CODE_COLUMN + " text null" +
+            ", " +
+            " PRIMARY KEY ( " + ASSESSMENT_CODE_COLUMN + ", " + NUMBER_COLUMN + " )" +
             " );";
+
 }

@@ -20,9 +20,9 @@ public class RMRCalculationTable extends SkavaEntityTable {
     public static final String ORIENTATION_CODE_COLUMN = "ORIENTATION_CODE";
 
     public static final String CREATE_RMRCALCULATION_TABLE = "create table " +
-            RMR_CALCULATION_DATABASE_TABLE + " (" + GLOBAL_KEY_ID +
-            " integer primary key autoincrement, " +
-            ASSESSMENT_CODE_COLUMN + " text not null, " +
+            RMR_CALCULATION_DATABASE_TABLE + " (" +
+//            GLOBAL_KEY_ID + " integer primary key autoincrement, " +
+            ASSESSMENT_CODE_COLUMN + " text primary key not null, " +
             STRENGTHOFROCK_CODE_COLUMN + " text not null, " +
             RQD_RMR_CODE_COLUMN + " text not null, " +
             SPACING_CODE_COLUMN + " text not null, " +

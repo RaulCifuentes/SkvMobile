@@ -44,8 +44,13 @@ public class DiscontinuityFamilyDAOsqlLiteImpl extends SqlLiteBasePersistentEnti
 
     @Override
     protected List<DiscontinuityFamily> assemblePersistentEntities(Cursor cursor) throws DAOException {
-        List<DiscontinuityFamily> list = new ArrayList<DiscontinuityFamily>();
-
+        //Discontinuity System
+        int dfItems = 7;
+        List<DiscontinuityFamily> list = new ArrayList<DiscontinuityFamily>(dfItems);
+        for(int i=0; i < dfItems; i++){
+            DiscontinuityFamily df = new DiscontinuityFamily();
+            list.add(df);
+        }
         while (cursor.moveToNext()) {
             DiscontinuityFamily newDiscontinuityFamily = new DiscontinuityFamily();
             newDiscontinuityFamily.setNumber(CursorUtils.getInt(DiscontinuityFamilyTable.NUMBER_COLUMN, cursor));
@@ -70,7 +75,6 @@ public class DiscontinuityFamilyDAOsqlLiteImpl extends SqlLiteBasePersistentEnti
                 DiscontinuityShape discontinuityShape = daoFactory.getLocalDiscontinuityShapeDAO().getDiscontinuityShapeByCode(discontinuityShapeCode);
                 newDiscontinuityFamily.setShape(discontinuityShape);
             }
-
 
             String discontinuitySpacingCode = CursorUtils.getString(DiscontinuityFamilyTable.SPACING_CODE_COLUMN, cursor);
             if (discontinuitySpacingCode != null) {
@@ -126,7 +130,7 @@ public class DiscontinuityFamilyDAOsqlLiteImpl extends SqlLiteBasePersistentEnti
                 newDiscontinuityFamily.setJr(jr);
             }
 
-            list.add(newDiscontinuityFamily);
+            list.set(newDiscontinuityFamily.getNumber(), newDiscontinuityFamily);
         }
         return list;
     }
@@ -155,7 +159,7 @@ public class DiscontinuityFamilyDAOsqlLiteImpl extends SqlLiteBasePersistentEnti
     protected void savePersistentEntity(String tableName, String assessmentCode, DiscontinuityFamily newDiscontinuityFamily) throws DAOException {
         if (newDiscontinuityFamily != null) {
             String[] names = new String[]{
-                    DiscontinuityFamilyTable.GLOBAL_KEY_ID,
+//                    DiscontinuityFamilyTable.GLOBAL_KEY_ID,
                     DiscontinuityFamilyTable.ASSESSMENT_CODE_COLUMN,
                     DiscontinuityFamilyTable.NUMBER_COLUMN,
                     DiscontinuityFamilyTable.TYPE_CODE_COLUMN,
@@ -175,7 +179,7 @@ public class DiscontinuityFamilyDAOsqlLiteImpl extends SqlLiteBasePersistentEnti
             };
 
             Object[] values = new Object[]{
-                    newDiscontinuityFamily.get_id(),
+//                    newDiscontinuityFamily.get_id(),
                     assessmentCode,
                     newDiscontinuityFamily.getNumber(),
                     SkavaUtils.isUndefined(newDiscontinuityFamily.getType()) ? null : newDiscontinuityFamily.getType().getCode(),

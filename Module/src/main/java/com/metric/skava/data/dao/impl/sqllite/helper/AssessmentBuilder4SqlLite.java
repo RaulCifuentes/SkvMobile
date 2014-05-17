@@ -127,6 +127,8 @@ public class AssessmentBuilder4SqlLite {
         java.lang.String rockSampleIdentification = CursorUtils.getString(AssessmentTable.ROCK_SAMPLE_IDENTIFICATION_COLUMN, cursor);
         babyAssessment.setRockSampleIdentification(rockSampleIdentification);
 
+        Boolean sentToCloud = CursorUtils.getInt(AssessmentTable.SENT_TO_CLOUD_COLUMN, cursor) == 1;
+        babyAssessment.setSentToCloud(sentToCloud);
 
         return babyAssessment;
     }
