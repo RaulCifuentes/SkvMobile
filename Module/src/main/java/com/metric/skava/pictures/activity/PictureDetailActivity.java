@@ -21,6 +21,7 @@ import com.metric.skava.app.activity.SkavaFragmentActivity;
 import com.metric.skava.app.exception.SkavaSystemException;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.assessment.activity.AssessmentStageListActivity;
 import com.metric.skava.pictures.util.SkavaPictureFilesUtils;
 
 import java.util.List;
@@ -112,34 +113,20 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
         }
 
         if (id == android.R.id.home) {
-            backToPictureMenu();
+            backToPicturesMenu();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
 
-//    private void editPicture(){
-//        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-//        shareIntent.setType("image/*");
-//        shareIntent.putExtra(Intent.EXTRA_STREAM, mSeletedPictureUri);
-//        shareIntent.putExtra("WHICH_ONE", mSelectedPictureIndex);
-//        startActivityForResult(shareIntent, EDIT_PICTURE_REQUEST_CODE);
-//
-//    }
-
-//    private void sketchPicture() {
-//        Intent sketchIntent = new Intent(this, MyFingerPaint.class);
-//        sketchIntent.putExtra(MyFingerPaint.ARG_TARGET_IMAGE, mCurrentPictureFile.getPath() );
-//        startActivityForResult(sketchIntent, SKETCH_REQUEST_CODE);
-//    }
 
     public void deletePicture(){
         //dereference
         mAssessment.getPictureUriList().set(mSelectedPictureIndex, null);
         //delete physically
         mPictureFilesUtils.deleteFileFromUri(mSeletedPictureUri);
-        backToPictureMenu();
+        backToPicturesMenu();
     }
 
     public void editWithAviaryApplication() {
@@ -199,9 +186,7 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
                 //clone the editedPhoto overriding the initial photo on Skava folder
                 boolean success = mPictureFilesUtils.copyFileFromUriToUri(editedPictureURI, mSeletedPictureUri);
                 if (success) {
-//                    onBackPressed();
-                    //TODO probar si con el backPressed llego al menu de pictures
-                    backToPictureMenu();
+                    backToPicturesMenu();
                 } else {
                     onBackPressed();
                 }
@@ -217,9 +202,9 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
         //No call for super(). Bug on API Level > 11.
     }
 
-    private void backToPictureMenu() {
+    private void backToPicturesMenu() {
         Intent upIntent = NavUtils.getParentActivityIntent(this);
-        upIntent.putExtra("REDIRECT", true);
+        upIntent.putExtra(AssessmentStageListActivity.REDIRECT_FROM_PICTURES, true);
         if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
             // This activity is NOT part of this app's task, so create a new task
             // when navigating up, with a synthesized back stack.

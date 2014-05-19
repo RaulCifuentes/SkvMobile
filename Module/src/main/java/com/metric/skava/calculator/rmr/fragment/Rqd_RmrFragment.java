@@ -52,12 +52,14 @@ public class Rqd_RmrFragment extends RMRCalculatorBaseFragment {
         final int numberOfHeaders = listview.getHeaderViewsCount();
         listview.setAdapter(adapter);
 
-        RQD_RMR rqdRMR = getRMRCalculationContext().getRqd();
-        if (rqdRMR == null) {
-            //Pull RQD from QBartonCalculation
-            RQD rqd = (RQD)getQCalculationContext().getRqd();
-            rqdRMR = RQD_RMR.findWrapper(rqd);
-        }
+        // *** Forget about you own RQD always use the Barton
+        //        RQD_RMR rqdRMR = getRMRCalculationContext().getRqd();
+        //        if (rqdRMR == null) {
+        //        }
+        //Pull RQD from QBartonCalculation
+        RQD rqd = (RQD)getQCalculationContext().getRqd();
+        RQD_RMR rqdRMR = RQD_RMR.findWrapper(rqd);
+
         if (rqdRMR != null) {
             int posIndex = adapter.getPosition(rqdRMR);
             posIndex += numberOfHeaders;
