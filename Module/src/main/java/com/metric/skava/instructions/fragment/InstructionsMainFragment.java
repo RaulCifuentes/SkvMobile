@@ -367,7 +367,7 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         SupportPattern roofPattern = supportRecommendation.getRoofPattern();
         roofPatternSpinner.setOnItemSelectedListener(this);
         if (roofPattern != null) {
-            roofPatternSpinner.setSelection(roofPatternAdapter.getPosition(roofPattern)); //display hint
+            roofPatternSpinner.setSelection(roofPatternAdapter.getPosition(roofPattern.getType())); //display hint
             roofPatternDx.setText(numberFormatter.format(roofPattern.getDistanceX()));
             roofPatternDy.setText(numberFormatter.format(roofPattern.getDistanceY()));
         } else {
@@ -376,7 +376,7 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
 
         SupportPattern wallPattern = supportRecommendation.getWallPattern();
         if (wallPattern != null) {
-            wallPatternSpinner.setSelection(wallPatternAdapter.getPosition(wallPattern)); //display hint
+            wallPatternSpinner.setSelection(wallPatternAdapter.getPosition(wallPattern.getType())); //display hint
             wallPatternDx.setText(numberFormatter.format(wallPattern.getDistanceX()));
             wallPatternDy.setText(numberFormatter.format(wallPattern.getDistanceY()));
         } else {

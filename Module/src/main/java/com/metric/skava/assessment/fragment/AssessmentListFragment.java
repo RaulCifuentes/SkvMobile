@@ -110,6 +110,8 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
         fourthTextView.setText("Tunnel");
         TextView fifthTextView = (TextView) listHeaderView.findViewById(R.id.fifth_column_text_view);
         fifthTextView.setText("Face");
+        TextView sixthTextView = (TextView) listHeaderView.findViewById(R.id.sixth_column_text_view);
+        sixthTextView.setText("Status");
         mListView.addHeaderView(listHeaderView, null, false);
 
         ((AdapterView<ListAdapter>) mListView).setAdapter(mAssessmentAdapter);

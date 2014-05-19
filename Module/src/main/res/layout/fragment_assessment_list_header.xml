@@ -11,52 +11,64 @@
         android:id="@+id/first_column_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="5dp"
+        android:layout_gravity="center"
         android:gravity="center"
-        android:padding="5dp"
-        android:paddingEnd="5dp"
-        android:paddingStart="5dp"
         android:layout_weight="1"
+        android:text="Code"
         android:textColor="@color/White"
         android:textStyle="bold" />
 
     <TextView
-        android:layout_gravity="center_vertical"
         android:id="@+id/second_column_text_view"
-        android:gravity="right"
+        android:gravity="center"
+        android:layout_gravity="center"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textStyle="bold"
+        android:text="Date"
         android:textColor="@color/White"
         android:layout_weight="1" />
 
     <TextView
-        android:layout_gravity="center_vertical"
         android:id="@+id/third_column_text_view"
-        android:gravity="right"
+        android:gravity="center"
+        android:layout_gravity="center"
         android:layout_width="0dp"
         android:textStyle="bold"
         android:textColor="@color/White"
+        android:text="Project"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
     <TextView
-        android:layout_gravity="center_vertical"
         android:id="@+id/fourth_column_text_view"
         android:gravity="center"
+        android:layout_gravity="center"
         android:layout_width="0dp"
         android:textStyle="bold"
+        android:text="Tunnel"
         android:textColor="@color/White"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
     <TextView
-        android:layout_gravity="center_vertical"
         android:id="@+id/fifth_column_text_view"
         android:gravity="center"
+        android:layout_gravity="center"
         android:layout_width="0dp"
         android:textStyle="bold"
+        android:textColor="@color/White"
+        android:text="Face"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/sixth_column_text_view"
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
+        android:layout_width="0dp"
+        android:textStyle="bold"
+        android:text="Status"
         android:textColor="@color/White"
         android:layout_height="wrap_content"
         android:layout_weight="1" />

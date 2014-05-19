@@ -69,12 +69,12 @@ public class MappedIndexSpinnerArrayAdapter<T extends MappedIndex> extends Array
             dropdownView = super.getDropDownView(position, null, parent);
         }
         parent.setVerticalScrollBarEnabled(false);
-        int mWidth = 280;
-        dropdownView.setMinimumWidth(mWidth);
-        ViewGroup.LayoutParams layoutParams = dropdownView.getLayoutParams();
-        if (layoutParams != null) {
-            layoutParams.width = mWidth;
-        }
+//        int mWidth = 280;
+//        dropdownView.setMinimumWidth(mWidth);
+//        ViewGroup.LayoutParams layoutParams = dropdownView.getLayoutParams();
+//        if (layoutParams != null) {
+//            layoutParams.width = mWidth;
+//        }
         return dropdownView;
     }
 }
