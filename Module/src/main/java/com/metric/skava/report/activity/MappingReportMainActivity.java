@@ -15,6 +15,7 @@ import com.metric.skava.app.exception.SkavaSystemException;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.app.util.SkavaUtils;
+import com.metric.skava.assessment.activity.AssessmentStageListActivity;
 import com.metric.skava.assessment.activity.AssessmentsListActivity;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
@@ -54,13 +55,13 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-            getMenuInflater().inflate(R.menu.mapping_report_main_menu, menu);
+        getMenuInflater().inflate(R.menu.mapping_report_main_menu, menu);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (getCurrentAssessment().isSentToCloud()){
+        if (getCurrentAssessment().isSentToCloud()) {
             // show no buttons as we dont want edit, re save nor resend
         } else {
             menu.findItem(R.id.action_mapping_report_draft).setVisible(true);
@@ -84,7 +85,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
         }
         if (id == R.id.action_mapping_report_draft) {
             boolean successOnSaving = saveDraft();
-            if (successOnSaving){
+            if (successOnSaving) {
                 Log.i(SkavaConstants.LOG, "Geological mapping draft succesfully saved.");
                 Toast.makeText(this, "", Toast.LENGTH_LONG);
                 backToAssessmentList();
@@ -96,7 +97,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
         }
         if (id == R.id.action_mapping_report_send) {
             boolean successOnSend = sendAsCompleted();
-            if (successOnSend){
+            if (successOnSend) {
                 Log.i(SkavaConstants.LOG, "Geological mapping succesfully send.");
                 Toast.makeText(this, "", Toast.LENGTH_LONG);
                 backToAssessmentList();
@@ -106,7 +107,29 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
             }
             return true;
         }
+        if (id == android.R.id.home) {
+            backToStagesMenu();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void backToStagesMenu() {
+        Intent upIntent = NavUtils.getParentActivityIntent(this);
+        upIntent.putExtra(AssessmentStageListActivity.REDIRECT_FROM_REPORT, true);
+        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+            // This activity is NOT part of this app's task, so create a new task
+            // when navigating up, with a synthesized back stack.
+            TaskStackBuilder.create(this)
+                    // Add all of this activity's parents to the back stack
+                    .addNextIntentWithParentStack(upIntent)
+                            // Navigate up to the closest parent
+                    .startActivities();
+        } else {
+            // This activity is part of this app's task, so simply
+            // navigate up to the logical parent activity.
+            NavUtils.navigateUpTo(this, upIntent);
+        }
     }
 
     private void backToAssessmentList() {
@@ -125,7 +148,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
             TaskStackBuilder.create(this)
                     // Add all of this activity's parents to the back stack
                     .addNextIntentWithParentStack(upIntent)
-                    // Navigate up to the closest parent
+                            // Navigate up to the closest parent
                     .startActivities();
         } else {
             // This activity is part of this app's task, so simply
@@ -136,7 +159,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
     }
 
 
-    private boolean saveDraft(){
+    private boolean saveDraft() {
         try {
             Assessment currentAssessment = getCurrentAssessment();
             LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
@@ -151,7 +174,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
     }
 
 
-    private boolean sendAsCompleted(){
+    private boolean sendAsCompleted() {
         try {
             //First save locally
             saveDraft();
@@ -170,7 +193,6 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
             return false;
         }
     }
-
 
 
 }

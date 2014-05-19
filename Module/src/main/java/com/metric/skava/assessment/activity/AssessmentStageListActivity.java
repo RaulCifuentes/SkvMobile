@@ -67,6 +67,9 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
     private static final String FRAGMENT_SUMMARY_STAGE_TAG = "FRAGMENT_SUMMARY_STAGE_TAG";
     private static final String FRAGMENT_SAVE_STAGE_TAG = "FRAGMENT_SAVE_STAGE_TAG";
 
+    public static final String REDIRECT_FROM_PICTURES = "PICTURES";
+    public static final String REDIRECT_FROM_REPORT = "REPORT";
+
 
     public static final String EXCEPTION_DIALOG_TAG = "EXCEPTION_DIALOG_TAG ";
 
@@ -75,7 +78,13 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
      * device.
      */
     private boolean mTwoPane;
-    private boolean isRedirected;
+    private boolean cameFromPictures;
+    private boolean cameFromReport;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,10 +119,15 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
         // TODO: If exposing deep links into your app, handle intents here.
         //This is after getting back from the external picture editor application
         Intent intent = getIntent();
-        isRedirected = intent.getBooleanExtra("REDIRECT", false);
-        if (isRedirected) {
+        cameFromPictures = intent.getBooleanExtra(REDIRECT_FROM_PICTURES, false);
+        if (cameFromPictures) {
             //I want to go back directly to pictures
             onItemSelected(AssesmentStageDataProvider.PICS);
+            //And I want to have the stages items enabled
+            onTunelFaceIdentified();
+        }
+        cameFromReport = intent.getBooleanExtra(REDIRECT_FROM_REPORT, false);
+        if (cameFromReport){
             //And I want to have the stages items enabled
             onTunelFaceIdentified();
         }
