@@ -107,7 +107,11 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         if (getArguments() != null) {
             mDiscontinuityFamilyNumber = getArguments().getInt(ARG_BASKET_ID, 0);
         }
-        ///Look like execution actually will never enter on these cases as assessment always include a
+
+        jaGroupSpinnerLastPosition = -1;
+        jrGroupSpinnerLastPosition = -1;
+
+        ///Look like execution will never enter on these cases as assessment always include a
         //six nulls DiscontinuityFamily list
         if (getCurrentAssessment().getDiscontinuitySystem().isEmpty()) {
             mDiscontinuityFamilyInstance = new DiscontinuityFamily();
@@ -257,8 +261,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         discJrAdapter = prepareJrAdapter(Jr.Group.a);
 
 
-        List<Ja.Group> jaGroupsList = null;
-        jaGroupsList = new ArrayList<Ja.Group>();
+        List<Ja.Group> jaGroupsList = new ArrayList<Ja.Group>();
         jaGroupsList.add(Ja.Group.a);
         jaGroupsList.add(Ja.Group.b);
         jaGroupsList.add(Ja.Group.c);
@@ -568,6 +571,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
                 } else {
                     discJrSpinner.setSelection(discJrAdapter.getCount() - 1);
                 }
+                jrGroupSpinnerLastPosition = position;
             }
         }
         if (parent == discJaGroupSpinner) {
@@ -584,6 +588,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
                 } else {
                     discJaSpinner.setSelection(discJaAdapter.getCount() - 1);
                 }
+                jaGroupSpinnerLastPosition = position;
             }
         }
         if (parent == discJrSpinner) {

@@ -47,14 +47,13 @@ public class MappedIndexJrGroupSpinnerArrayAdapter<Group> extends ArrayAdapter<J
     public View getView(int position, View convertView, ViewGroup parent) {
         View wholeRowView = super.getView(position,  convertView, parent);
         TextView targetSpinnerTextView = (TextView) wholeRowView.findViewById(mTextViewResourceId);
-//        targetSpinnerTextView.setText(getItem(position).toString());
         targetSpinnerTextView.setText(getItem(position).name());
-        int mWidth = 140;
-        wholeRowView.setMinimumWidth(mWidth);
-        ViewGroup.LayoutParams layoutParams = wholeRowView.getLayoutParams();
-        if (layoutParams != null) {
-            layoutParams.width = mWidth;
-        }
+//        int mWidth = 140;
+//        wholeRowView.setMinimumWidth(mWidth);
+//        ViewGroup.LayoutParams layoutParams = wholeRowView.getLayoutParams();
+//        if (layoutParams != null) {
+//            layoutParams.width = mWidth;
+//        }
         return wholeRowView;
     }
 
@@ -64,12 +63,12 @@ public class MappedIndexJrGroupSpinnerArrayAdapter<Group> extends ArrayAdapter<J
         View dropdownView;
         dropdownView = super.getDropDownView(position, null, parent);
         parent.setVerticalScrollBarEnabled(false);
-        int mWidth = 140;
-        dropdownView.setMinimumWidth(mWidth);
-        ViewGroup.LayoutParams layoutParams = dropdownView.getLayoutParams();
-        if (layoutParams != null) {
-            layoutParams.width = mWidth;
-        }
+//        int mWidth = 140;
+//        dropdownView.setMinimumWidth(mWidth);
+//        ViewGroup.LayoutParams layoutParams = dropdownView.getLayoutParams();
+//        if (layoutParams != null) {
+//            layoutParams.width = mWidth;
+//        }
         return dropdownView;
     }
 }

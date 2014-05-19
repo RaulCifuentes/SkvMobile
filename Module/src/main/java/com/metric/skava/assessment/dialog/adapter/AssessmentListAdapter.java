@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.metric.skava.R;
@@ -75,7 +76,8 @@ public class AssessmentListAdapter extends BaseAdapter {
         if (currentItem != null) {
             if (currentItem.getCode() != null){
                 TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_code);
-                text.setText(currentItem.getCode());
+//                text.setText(currentItem.getCode());
+                text.setText(currentItem.getCode().substring(0,8));
             }
             Date date = currentItem.getDate();
             if (date != null) {
@@ -97,6 +99,14 @@ public class AssessmentListAdapter extends BaseAdapter {
                 TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_face);
                 text.setText(face.getName());
             }
+
+            ImageView imageView = (ImageView) assessmentViewItem.findViewById(R.id.assessment_sent);
+            if(currentItem.isSentToCloud()){
+                imageView.setImageResource(R.drawable.cloud_icon);
+            } else {
+                imageView.setImageResource(R.drawable.ic_menu_emoticons);
+            }
+
         }
 
 
