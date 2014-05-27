@@ -165,7 +165,7 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
     public void updateAssessmentList() {
         List<Assessment> updatedList = null;
         try {
-            updatedList = localAssessmentDAO.getAllAssessments();
+            updatedList = localAssessmentDAO.getAssessmentsByUser(getSkavaContext().getLoggedUser());
         } catch (DAOException daoe) {
             daoe.printStackTrace();
             Toast.makeText(getActivity(), daoe.getMessage(), Toast.LENGTH_LONG).show();
