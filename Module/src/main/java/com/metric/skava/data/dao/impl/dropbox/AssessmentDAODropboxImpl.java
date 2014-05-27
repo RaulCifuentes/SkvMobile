@@ -45,6 +45,7 @@ import com.metric.skava.calculator.rmr.model.Roughness;
 import com.metric.skava.calculator.rmr.model.Spacing;
 import com.metric.skava.calculator.rmr.model.StrengthOfRock;
 import com.metric.skava.calculator.rmr.model.Weathering;
+import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.RemoteAssessmentDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.datastore.tables.AssessmentDropboxTable;
@@ -558,6 +559,48 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         }
     }
 
+
+    public void deleteAllAssessments(boolean cascade) throws DAOException {
+        List<DbxRecord> recordList = mAssessmentsTable.findAll();
+        for (DbxRecord dbxRecord : recordList) {
+            String assessmentCode = dbxRecord.getString("code");
+            deleteAssessment(assessmentCode, cascade);
+        }
+    }
+
+
+    @Override
+    public void deleteAssessment(String code, boolean cascade) throws DAOException {
+        DbxRecord record = mAssessmentsTable.findRecordByCode(code);
+        record.deleteRecord();
+        if (cascade) {
+            record = mQBartonCalculationDropBoxTable.findRecordByCandidateKey("assessmentCode", code);
+            if (record != null) {
+                record.deleteRecord();
+            }
+
+            record = mRMRCalculationDropBoxTable.findRecordByCandidateKey("assessmentCode", code);
+            if (record != null) {
+                record.deleteRecord();
+            }
+
+            record = mSupportRecommendationDropboxTable.findRecordByCandidateKey("assessmentCode", code);
+            if (record != null) {
+                record.deleteRecord();
+            }
+
+            record = mDiscontinuitiesFamilyDropBoxTable.findRecordByCandidateKey("assesmentCode", code);
+            if (record != null) {
+                record.deleteRecord();
+            }
+        }
+        try {
+            getDatastore().sync();
+        } catch (DbxException e) {
+            throw new DAOException(e);
+        }
+    }
+
     class PictureUploader extends AsyncTask<Object, Void, Integer> {
 
         SyncLogEntry errorCondition;
@@ -593,6 +636,15 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             } else {
                 //mostrar que termino exitosamente
                 Toast.makeText(mContext, "Picture uploading succesfully finished", Toast.LENGTH_LONG);
+                Assessment currentAssessment = getSkavaContext().getAssessment();
+                currentAssessment.setSentToCloud(true);
+                try {
+                    LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
+                    localAssessmentDAO.updateAssessment(currentAssessment, false);
+                } catch (DAOException e) {
+                    Log.e(SkavaConstants.LOG, e.getMessage());
+                }
+
             }
         }
 

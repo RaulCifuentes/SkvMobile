@@ -791,8 +791,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             }
             if (loggedUser.hasRole(admin) || loggedUser.hasRole(metricAdmin)) {
                 menuAsList.add(NavMenuSection.create(NAV_MENU_ADMIN_SECTION_ID, "Admin"));
-                menuAsList.add(NavMenuItem.create(NAV_MENU_FILESYSTEM_ITEM_ID, "Dropbox with files", "ic_menu_copy_holo_dark", true, true, this));
-                menuAsList.add(NavMenuItem.create(NAV_MENU_SYNC_ITEM_ID, "Sync admin", "ic_menu_copy_holo_dark", true, true, this));
+                menuAsList.add(NavMenuItem.create(NAV_MENU_SYNC_ITEM_ID, "Data management", "ic_menu_copy_holo_dark", true, true, this));
             }
         }
         menuAsList.add(NavMenuSection.create(NAV_MENU_GENERAL_SECTION_ID, "General"));

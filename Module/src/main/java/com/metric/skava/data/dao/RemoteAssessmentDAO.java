@@ -20,5 +20,9 @@ public interface RemoteAssessmentDAO {
 
     public void saveAssessment(Assessment assessment) throws DAOException;
 
+    public void deleteAssessment(String code, boolean cascade) throws DAOException;
+
+    public void deleteAllAssessments(boolean cascade) throws DAOException;
+
 
 }

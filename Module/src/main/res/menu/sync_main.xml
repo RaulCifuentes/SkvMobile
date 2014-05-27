@@ -2,9 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.metric.skava.sync.activity.SyncMainActivity" >
 
+    <item android:id="@+id/action_clear_local_assessments"
+        android:title="Clear local assessments"
+        android:showAsAction="ifRoom" />
 
-    <item android:id="@+id/action_clear_assessments"
-        android:title="Clear assessments"
+    <item android:id="@+id/action_clear_remote_assessments"
+        android:title="Clear remote assessments"
         android:showAsAction="ifRoom" />
 
 
