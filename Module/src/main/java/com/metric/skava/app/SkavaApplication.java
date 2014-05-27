@@ -1,14 +1,18 @@
 package com.metric.skava.app;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.metric.skava.R;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.exception.SkavaExceptionHandler;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.settings.fragment.SettingsMainFragment;
 import com.metric.skava.sync.helper.SyncHelper;
 import com.metric.skava.sync.model.SyncStatus;
+
+import java.util.Date;
 
 
 public class SkavaApplication extends MetricApplication {
@@ -61,8 +65,14 @@ public class SkavaApplication extends MetricApplication {
         SyncHelper syncHelper = SyncHelper.getInstance(mSkavaContext);
         mSkavaContext.setSyncHelper(syncHelper);
 
-        //TODO Persist syncStatus across executions
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        boolean syncSucceed = sharedPref.getBoolean(getString(R.string.last_sync_succeed), false);
+        Long when = sharedPref.getLong(getString(R.string.last_sync_date), 0);
+
         SyncStatus syncStatus = new SyncStatus();
+        syncStatus.setSuccess(syncSucceed);
+        syncStatus.setLastExecution(new Date(when));
+
         mSkavaContext.setSyncMetadata(syncStatus);
 
         Thread.getDefaultUncaughtExceptionHandler();

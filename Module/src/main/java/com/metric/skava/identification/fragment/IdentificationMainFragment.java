@@ -407,6 +407,9 @@ public class IdentificationMainFragment extends SkavaFragment implements
                         //TODO format and parse Peg values
                         enteredValue = Double.parseDouble(text);
                         finalPeg = enteredValue;
+                        if (finalPeg < initialPeg) {
+                            finalPegEditText.setError("Final Peg must be greater than Initial Peg!");
+                        }
                     } catch (NumberFormatException e) {
                         finalPegEditText.setError("Final Peg must be a number!");
                     }
@@ -592,6 +595,8 @@ public class IdentificationMainFragment extends SkavaFragment implements
                 getSkavaContext().getAssessment().setFace(selectedFace);
                 mCallback.onTunelFaceIdentified();
                 identificationCompleted = true;
+                projectSpinner.setEnabled(false);
+                tunnelSpinner.setEnabled(false);
                 faceSpinnerLastPosition = position;
                 //use the orientation from the face as initial value
                 orientationEditText.setText(selectedFace.getOrientation().toString());

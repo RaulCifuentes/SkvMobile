@@ -26,6 +26,7 @@
     <dimen name="summary_report_face_image_height">660dp</dimen>
 
     <dimen name="form_column_left_margin">30dp</dimen>
+    <dimen name="form_column_left_margin_short">15dp</dimen>
     <dimen name="grid_space_separation_width">40dp</dimen>
     <dimen name="grid_space_separation_height">40dp</dimen>
 

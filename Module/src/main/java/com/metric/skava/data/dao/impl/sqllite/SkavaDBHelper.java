@@ -51,7 +51,7 @@ import com.metric.skava.data.dao.impl.sqllite.table.ShotcreteTypeTable;
 import com.metric.skava.data.dao.impl.sqllite.table.SpacingTable;
 import com.metric.skava.data.dao.impl.sqllite.table.StrengthTable;
 import com.metric.skava.data.dao.impl.sqllite.table.SupportPatternTypeTable;
-import com.metric.skava.data.dao.impl.sqllite.table.SupportRecomendationTable;
+import com.metric.skava.data.dao.impl.sqllite.table.SupportRecommendationTable;
 import com.metric.skava.data.dao.impl.sqllite.table.SupportRequirementTable;
 import com.metric.skava.data.dao.impl.sqllite.table.SyncLoggingTable;
 import com.metric.skava.data.dao.impl.sqllite.table.TunnelFaceTable;
@@ -67,7 +67,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "mySkavaDatabase.db";
 
-    public static final int DATABASE_VERSION = 42;
+    public static final int DATABASE_VERSION = 43;
 
     public SkavaDBHelper(Context context, String name,
                          SQLiteDatabase.CursorFactory factory, int version) {
@@ -127,7 +127,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
         db.execSQL(SupportRequirementTable.CREATE_SUPPORTS_REQUIREMENT_TABLE);
 
-        db.execSQL(SupportRecomendationTable.CREATE_RECOMENDATIONS_TABLE);
+        db.execSQL(SupportRecommendationTable.CREATE_RECOMENDATIONS_TABLE);
 
         // ******************** Discontinuities ********************
         db.execSQL(DiscontinuityTypeTable.CREATE_DISCONTINUITIES_TABLE);
@@ -249,7 +249,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + ShotcreteTypeTable.SHOTCRETE_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + SupportPatternTypeTable.PATTERN_TYPE_DATABASE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + SupportRequirementTable.SUPPORT_REQUIREMENT_DATABASE_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + SupportRecomendationTable.RECOMENDATION_DATABASE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + SupportRecommendationTable.RECOMENDATION_DATABASE_TABLE);
 
         // ******************** Discontinuities ********************
         db.execSQL("DROP TABLE IF EXISTS " + DiscontinuityTypeTable.DISCONTINUITY_DATABASE_TABLE);

@@ -251,11 +251,15 @@
                         android:layout_height="wrap_content"
                          />
 
+                    <Space
+                        android:layout_width="20px"
+                        android:layout_height="20px"></Space>
+
                     <TextView
                         android:id="@+id/textView01"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DX"
+                        android:text="DX :"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold"
                         />
@@ -267,14 +271,18 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:inputType="number"
-                        android:layout_marginLeft="@dimen/form_column_left_margin"
+                        android:layout_marginLeft="@dimen/form_column_left_margin_short"
                         />
+
+                    <Space
+                        android:layout_width="20px"
+                        android:layout_height="20px"></Space>
 
                     <TextView
                         android:id="@+id/textView01"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DY"
+                        android:text="DY :"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold"
                         />
@@ -286,7 +294,7 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:inputType="number"
-                        android:layout_marginLeft="@dimen/form_column_left_margin" />
+                        android:layout_marginLeft="@dimen/form_column_left_margin_short" />
 
                 </LinearLayout>
 
@@ -326,11 +334,15 @@
                         android:layout_height="wrap_content"
                         />
 
+                    <Space
+                        android:layout_width="20px"
+                        android:layout_height="20px"></Space>
+
                     <TextView
                         android:id="@+id/textView01"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DX"
+                        android:text="DX :"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold"
                         />
@@ -342,15 +354,19 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:inputType="number"
-                        android:layout_marginLeft="@dimen/form_column_left_margin"
+                        android:layout_marginLeft="@dimen/form_column_left_margin_short"
 
                         />
+
+                    <Space
+                        android:layout_width="20px"
+                        android:layout_height="20px"></Space>
 
                     <TextView
                         android:id="@+id/textView01"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DY"
+                        android:text="DY :"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold"
                         />
@@ -362,7 +378,7 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:inputType="number"
-                        android:layout_marginLeft="@dimen/form_column_left_margin" />
+                        android:layout_marginLeft="@dimen/form_column_left_margin_short" />
 
                 </LinearLayout>
 

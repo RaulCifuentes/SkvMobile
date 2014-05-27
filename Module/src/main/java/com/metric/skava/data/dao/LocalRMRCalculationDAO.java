@@ -12,7 +12,7 @@ public interface LocalRMRCalculationDAO {
 
     public void saveRMRCalculation(String assessmentCode, RMR_Calculation newEntity) throws DAOException;
 
-    public boolean deleteRMRCalculation(String assessmentCode);
+    public boolean deleteRMRCalculation(String assessmentCode) throws DAOException;
 
     public int deleteAllRMRCalculations() throws DAOException;
 

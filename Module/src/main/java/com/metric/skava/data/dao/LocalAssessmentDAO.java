@@ -28,5 +28,7 @@ public interface LocalAssessmentDAO {
 
     public boolean deleteAssessment(String code);
 
+    public int deleteAllAssessments();
+
 
 }

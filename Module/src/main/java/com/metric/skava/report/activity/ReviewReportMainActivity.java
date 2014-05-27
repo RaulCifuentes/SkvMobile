@@ -1,25 +1,9 @@
 package com.metric.skava.report.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.metric.skava.R;
 import com.metric.skava.app.activity.SkavaFragmentActivity;
-import com.metric.skava.app.exception.SkavaSystemException;
-import com.metric.skava.app.model.Assessment;
-import com.metric.skava.app.util.SkavaConstants;
-import com.metric.skava.app.util.SkavaUtils;
-import com.metric.skava.assessment.activity.AssessmentsListActivity;
-import com.metric.skava.data.dao.DAOFactory;
-import com.metric.skava.data.dao.LocalAssessmentDAO;
-import com.metric.skava.data.dao.RemoteAssessmentDAO;
-import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.report.fragment.MappingReportMainFragment;
 
 
@@ -46,128 +30,7 @@ public class ReviewReportMainActivity extends SkavaFragmentActivity {
                     .add(R.id.container, new MappingReportMainFragment())
                     .commit();
         }
-        isPreview = getIntent().getBooleanExtra(IS_PREVIEW, false);
 
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-            getMenuInflater().inflate(R.menu.mapping_report_main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (!isPreview) {
-            if (getSkavaContext().getDatastore() != null) {
-                menu.findItem(R.id.action_mapping_report_draft).setVisible(false);
-                menu.findItem(R.id.action_mapping_report_send).setVisible(true);
-            } else {
-                menu.findItem(R.id.action_mapping_report_draft).setVisible(true);
-                menu.findItem(R.id.action_mapping_report_send).setVisible(false);
-            }
-        } else {
-            menu.findItem(R.id.action_mapping_report_draft).setVisible(false);
-            menu.findItem(R.id.action_mapping_report_send).setVisible(false);
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        if (id == R.id.action_mapping_report_draft) {
-            boolean successOnSaving = saveDraft();
-            if (successOnSaving){
-                Log.i(SkavaConstants.LOG, "Geological mapping draft succesfully saved.");
-                Toast.makeText(this, "", Toast.LENGTH_LONG);
-                backToAssessmentList();
-            } else {
-                Log.e(SkavaConstants.LOG, "Failed when saving geological mapping draft.");
-                Toast.makeText(this, "Failed when saving geological mapping " + getCurrentAssessment().getInternalCode() + " :: " + getCurrentAssessment().getCode(), Toast.LENGTH_LONG);
-            }
-            return true;
-        }
-        if (id == R.id.action_mapping_report_send) {
-            boolean successOnSend = sendAsCompleted();
-            if (successOnSend){
-                Log.i(SkavaConstants.LOG, "Geological mapping succesfully send.");
-                Toast.makeText(this, "", Toast.LENGTH_LONG);
-                backToAssessmentList();
-            } else {
-                Log.e(SkavaConstants.LOG, "Failed when saving geological mapping.");
-                Toast.makeText(this, "Failed when saving geological mapping " + getCurrentAssessment().getInternalCode() + " :: " + getCurrentAssessment().getCode(), Toast.LENGTH_LONG);
-            }
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void backToAssessmentList() {
-        //Clear the current assessment, as this is a new stating point
-        try {
-            getSkavaContext().setAssessment(SkavaUtils.createInitialAssessment(getSkavaContext()));
-        } catch (DAOException e) {
-            throw new SkavaSystemException(e);
-        }
-
-        Intent upIntent = new Intent(this, AssessmentsListActivity.class);
-//        upIntent.putExtra("REDIRECT", true);
-        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-            // This activity is NOT part of this app's task, so create a new task
-            // when navigating up, with a synthesized back stack.
-            TaskStackBuilder.create(this)
-                    // Add all of this activity's parents to the back stack
-                    .addNextIntentWithParentStack(upIntent)
-                    // Navigate up to the closest parent
-                    .startActivities();
-        } else {
-            // This activity is part of this app's task, so simply
-            // navigate up to the logical parent activity.
-            NavUtils.navigateUpTo(this, upIntent);
-        }
-
-    }
-
-
-    private boolean saveDraft(){
-        try {
-            Assessment currentAssessment = getCurrentAssessment();
-            LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
-            localAssessmentDAO.saveAssessment(currentAssessment);
-            return true;
-        } catch (DAOException e) {
-            e.printStackTrace();
-            Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-            return false;
-        }
-    }
-
-
-    private boolean sendAsCompleted(){
-        try {
-            Assessment assessment = getCurrentAssessment();
-            LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
-            localAssessmentDAO.saveAssessment(assessment);
-
-            RemoteAssessmentDAO remoteAssessmentDAO = getDAOFactory().getRemoteAssessmentDAO(DAOFactory.Flavour.DROPBOX);
-            remoteAssessmentDAO.saveAssessment(assessment);
-            return true;
-        } catch (DAOException e) {
-            e.printStackTrace();
-            Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-            return false;
-        }
     }
 
 

@@ -42,14 +42,14 @@ public class AssessmentListViewAdapter extends ArrayAdapter<Assessment> {
         if (actualAssessment != null) {
 
             TextView text = (TextView) assessmentViewItem.findViewById(R.id.first_column_text_view);
-            text.setText(actualAssessment.getCode());
+            text.setText(actualAssessment.getInternalCode());
 
             text = (TextView) assessmentViewItem.findViewById(R.id.second_column_text_view);
             text.setText(actualAssessment.getCode());
 
             if (actualAssessment.getInternalCode() != null) {
                 text = (TextView) assessmentViewItem.findViewById(R.id.third_column_text_view);
-                text.setText(actualAssessment.getInternalCode());
+                text.setText(actualAssessment.getDate().toString());
             }
         }
 

@@ -129,7 +129,6 @@ public class SkavaUtils {
 
         initialAssessment.setRmrCalculation(mRMRCalculation);
 
-
         //Default 4 picture placeholders
         ArrayList<Uri> pictureUriList = new ArrayList<Uri>(5);
         pictureUriList.add(null);
@@ -143,8 +142,9 @@ public class SkavaUtils {
         int dfItems = 7;
         ArrayList<DiscontinuityFamily> discontinuitySystem = new ArrayList<DiscontinuityFamily>(dfItems);
         for(int i=0; i < dfItems; i++){
-            DiscontinuityFamily df = new DiscontinuityFamily();
-            discontinuitySystem.add(df);
+//            DiscontinuityFamily df = new DiscontinuityFamily();
+//            df.setNumber(i);
+            discontinuitySystem.add(null);
         }
 
         initialAssessment.setDiscontinuitySystem(discontinuitySystem);

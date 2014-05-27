@@ -48,7 +48,12 @@
             android:name="com.dropbox.client2.android.AuthActivity"
             android:launchMode="singleTask">
             <intent-filter>
-                 <data android:scheme="db-wv7jc0wirvu2c8y" />
+                <!--SKAVAAPP-->
+                 <data android:scheme="db-wipi7ui8mgii76j" />
+                 <!--<data android:scheme="db-1xwvqk4tepx9w1r" />-->
+                 <!--<data android:scheme="db-wv7jc0wirvu2c8y" />-->
+                 <!--<data android:scheme="db-bzsvwf0odnoslis" />-->
+
 
                 <action android:name="android.intent.action.VIEW" />
 

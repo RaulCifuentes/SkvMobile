@@ -115,10 +115,12 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         //six nulls DiscontinuityFamily list
         if (getCurrentAssessment().getDiscontinuitySystem().isEmpty()) {
             mDiscontinuityFamilyInstance = new DiscontinuityFamily();
+            mDiscontinuityFamilyInstance.setNumber(mDiscontinuityFamilyNumber - 1);
             getCurrentAssessment().getDiscontinuitySystem().add(mDiscontinuityFamilyInstance);
         } else {
             if (getCurrentAssessment().getDiscontinuitySystem().size() < mDiscontinuityFamilyNumber) {
                 mDiscontinuityFamilyInstance = new DiscontinuityFamily();
+                mDiscontinuityFamilyInstance.setNumber(mDiscontinuityFamilyNumber - 1);
                 //add as many as necessary
                 for (int i = getCurrentAssessment().getDiscontinuitySystem().size(); i < mDiscontinuityFamilyNumber; i++) {
                     getCurrentAssessment().getDiscontinuitySystem().add(null);
@@ -130,6 +132,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
                 if (mDiscontinuityFamilyInstance == null) {
                     mDiscontinuityFamilyInstance = new DiscontinuityFamily();
                     mDiscontinuityFamilyInstance.setNumber(mDiscontinuityFamilyNumber - 1);
+                    getCurrentAssessment().getDiscontinuitySystem().set(mDiscontinuityFamilyNumber - 1, mDiscontinuityFamilyInstance);
                 } else {
                     System.out.println("mDiscontinuityFamilyNumber:: " + mDiscontinuityFamilyNumber + " tiene el mDiscontinuityFamilyInstance :: " + mDiscontinuityFamilyInstance);
                 }

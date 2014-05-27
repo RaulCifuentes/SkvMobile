@@ -28,6 +28,7 @@ import com.metric.skava.data.dao.impl.dropbox.JnDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.JrDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.JwDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.MeshTypeDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.MetadataDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.OrientationDiscontinuitiesDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.PersistenceDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.RockQualityDAODropboxImpl;
@@ -82,6 +83,7 @@ import com.metric.skava.data.dao.impl.sqllite.SpacingDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.SrfDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.StrengthDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.SupportPatternTypeDAOsqlLiteImpl;
+import com.metric.skava.data.dao.impl.sqllite.SupportRecommendationDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.SupportRequirementDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.TunnelDAOsqlLiteImpl;
 import com.metric.skava.data.dao.impl.sqllite.TunnelFaceDAOsqlLiteImpl;
@@ -123,6 +125,8 @@ public class DAOFactory {
         this.mSkavaContext = mSkavaContext;
     }
 
+
+
     public LocalUserDAO getLocalUserDAO() throws DAOException {
         LocalUserDAO localUserDAO = new UserDAOsqlLiteImpl(mContext, mSkavaContext);
         return localUserDAO;
@@ -136,6 +140,16 @@ public class DAOFactory {
                 break;
         }
         return remoteUserDAO;
+    }
+
+    public RemoteMetadataDAO getRemoteMetadataDAO(Flavour daoFlavour) throws DAOException {
+        RemoteMetadataDAO remoteMetadataDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteMetadataDAO = new MetadataDAODropboxImpl(mContext, mSkavaContext);
+                break;
+        }
+        return remoteMetadataDAO;
     }
 
     public LocalRoleDAO getLocalRoleDAO() throws DAOException {
@@ -188,6 +202,12 @@ public class DAOFactory {
         LocalRMRCalculationDAO rmrCalculationDAO = new RMRCalculationDAOsqlLiteImpl(mContext, mSkavaContext);
         return rmrCalculationDAO;
     }
+
+    public LocalSupportRecommendationDAO getLocalSupportRecommendationDAO() throws DAOException {
+        LocalSupportRecommendationDAO supportRecommendationDAO = new SupportRecommendationDAOsqlLiteImpl(mContext, mSkavaContext);
+        return supportRecommendationDAO;
+    }
+
 
     public LocalExcavationProjectDAO getLocalExcavationProjectDAO() throws DAOException {
         LocalExcavationProjectDAO projectDAO = new ExcavationProjectDAOsqlLiteImpl(mContext, mSkavaContext);

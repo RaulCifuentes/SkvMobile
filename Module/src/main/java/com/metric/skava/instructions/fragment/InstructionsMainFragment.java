@@ -38,7 +38,7 @@ import com.metric.skava.instructions.model.MeshType;
 import com.metric.skava.instructions.model.ShotcreteType;
 import com.metric.skava.instructions.model.SupportPattern;
 import com.metric.skava.instructions.model.SupportPatternType;
-import com.metric.skava.instructions.model.SupportRecomendation;
+import com.metric.skava.instructions.model.SupportRecommendation;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -99,6 +99,14 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.archTypeSpinnerLastPosition = -1;
+        this.boltTypeSpinnerLastPosition = -1;
+        this.coverageSpinnerLastPosition = -1;
+        this.meshTypeSpinnerLastPosition = -1;
+        this.roofPatternSpinnerLastPosition = -1;
+        this.shotcreteTypeSpinnerLastPosition = -1;
+        this.wallPatternSpinnerLastPosition = -1;
 
         //******BOLT_TYPE ***///
         List<BoltType> boltTypeList;
@@ -246,19 +254,22 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         shotcreteTypeSpinner.setOnItemSelectedListener(this);
 
         roofPatternSpinner = (Spinner) mRootView.findViewById(R.id.instructions_roof_pattern_spinner);
+        roofPatternSpinner.setAdapter(roofPatternAdapter);
+        roofPatternSpinner.setOnItemSelectedListener(this);
+
         roofPatternDx = (EditText) mRootView.findViewById(R.id.instructions_roof_pattern_dx);
         roofPatternDx.setRawInputType(Configuration.KEYBOARD_12KEY);
         roofPatternDy = (EditText) mRootView.findViewById(R.id.instructions_roof_pattern_dy);
         roofPatternDy.setRawInputType(Configuration.KEYBOARD_12KEY);
-        roofPatternSpinner.setAdapter(roofPatternAdapter);
 
         wallPatternSpinner = (Spinner) mRootView.findViewById(R.id.instructions_wall_pattern_spinner);
+        wallPatternSpinner.setAdapter(wallPatternAdapter);
+        wallPatternSpinner.setOnItemSelectedListener(this);
+
         wallPatternDx = (EditText) mRootView.findViewById(R.id.instructions_wall_pattern_dx);
         wallPatternDx.setRawInputType(Configuration.KEYBOARD_12KEY);
         wallPatternDy = (EditText) mRootView.findViewById(R.id.instructions_wall_pattern_dy);
         wallPatternDy.setRawInputType(Configuration.KEYBOARD_12KEY);
-        wallPatternSpinner.setAdapter(wallPatternAdapter);
-        wallPatternSpinner.setOnItemSelectedListener(this);
 
         thicknessEditText = (EditText) mRootView.findViewById(R.id.instructions_thickness_value);
         thicknessEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
@@ -279,11 +290,11 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         separationEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
 
 
-        SupportRecomendation assessmentRecomendation = getCurrentAssessment().getRecomendation();
-        SupportRecomendation supportRecomendation = null;
+        SupportRecommendation currentRecommendation = getCurrentAssessment().getRecomendation();
         // Use either the current recomendation for the assessment, or use the one mapped
         // from the requirements
-        if (assessmentRecomendation == null) {
+        if (currentRecommendation == null) {
+            SupportRecommendation supportRecomendation = null;
             RecomendationProvider provider = new RecomendationProvider(getSkavaContext());
             try {
                 supportRecomendation = provider.recomend(getCurrentAssessment());
@@ -303,9 +314,9 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
 
         NumberFormat numberFormatter = DecimalFormat.getNumberInstance();
 
-        final SupportRecomendation supportRecommendation = getCurrentAssessment().getRecomendation();
+        final SupportRecommendation supportRecommendation = getCurrentAssessment().getRecomendation();
 
-        if (supportRecommendation.getRequirementBase() != null){
+        if (supportRecommendation.getRequirementBase() != null) {
             String name = supportRecommendation.getRequirementBase().getName();
             TextView label = (TextView) mRootView.findViewById(R.id.instructions_requirement_base_label);
             TextView base = (TextView) mRootView.findViewById(R.id.instructions_requirement_base_value);
@@ -372,7 +383,40 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
             roofPatternDy.setText(numberFormatter.format(roofPattern.getDistanceY()));
         } else {
             roofPatternSpinner.setSelection(roofPatternAdapter.getCount() - 1); //display hint
+            roofPatternDx.setEnabled(false);
+            roofPatternDy.setEnabled(false);
         }
+        roofPatternDx.addTextChangedListener(new TextValidator(roofPatternDx) {
+            @Override
+            public void validate(TextView textView, String text) {
+                try {
+                    Double enteredValue = Double.parseDouble(text);
+                    if (supportRecommendation.getRoofPattern() != null) {
+                        supportRecommendation.getRoofPattern().setDistanceX(enteredValue);
+                    } else {
+                        supportRecommendation.setRoofPattern(new SupportPattern(null, enteredValue, 0d));
+                    }
+                } catch (NumberFormatException nfe) {
+                    roofPatternDx.setError("Length must be a number!");
+                }
+            }
+        });
+        roofPatternDy.addTextChangedListener(new TextValidator(roofPatternDy) {
+            @Override
+            public void validate(TextView textView, String text) {
+                try {
+                    Double enteredValue = Double.parseDouble(text);
+                    if (supportRecommendation.getRoofPattern() != null) {
+                        supportRecommendation.getRoofPattern().setDistanceY(enteredValue);
+                    } else {
+                        supportRecommendation.setRoofPattern(new SupportPattern(null, 0d, enteredValue));
+                    }
+                } catch (NumberFormatException nfe) {
+                    roofPatternDy.setError("Length must be a number!");
+                }
+            }
+        });
+
 
         SupportPattern wallPattern = supportRecommendation.getWallPattern();
         if (wallPattern != null) {
@@ -381,7 +425,40 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
             wallPatternDy.setText(numberFormatter.format(wallPattern.getDistanceY()));
         } else {
             wallPatternSpinner.setSelection(wallPatternAdapter.getCount() - 1); //display hint
+            wallPatternDx.setEnabled(false);
+            wallPatternDy.setEnabled(false);
         }
+        wallPatternDx.addTextChangedListener(new TextValidator(wallPatternDx) {
+            @Override
+            public void validate(TextView textView, String text) {
+                try {
+                    Double enteredValue = Double.parseDouble(text);
+                    if (supportRecommendation.getWallPattern() != null) {
+                        supportRecommendation.getWallPattern().setDistanceX(enteredValue);
+                    } else {
+                        supportRecommendation.setWallPattern(new SupportPattern(null, enteredValue, 0d));
+                    }
+                } catch (NumberFormatException nfe) {
+                    wallPatternDx.setError("Length must be a number!");
+                }
+            }
+        });
+        wallPatternDy.addTextChangedListener(new TextValidator(wallPatternDy) {
+            @Override
+            public void validate(TextView textView, String text) {
+                try {
+                    Double enteredValue = Double.parseDouble(text);
+                    if (supportRecommendation.getWallPattern() != null) {
+                        supportRecommendation.getWallPattern().setDistanceY(enteredValue);
+                    } else {
+                        supportRecommendation.setWallPattern(new SupportPattern(null, 0d, enteredValue));
+                    }
+                } catch (NumberFormatException nfe) {
+                    wallPatternDy.setError("Length must be a number!");
+                }
+            }
+        });
+
 
         Double thickness = supportRecommendation.getThickness();
         if (thickness != null) {
@@ -470,10 +547,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (parent == boltTypeSpinner) {
-//            if (methodSpinnerLastPosition == -1){
-//                methodSpinner.setSelection(methodAdapter.getCount());
-//                return;
-//            }
             if (position != boltTypeSpinner.getAdapter().getCount() && position != boltTypeSpinnerLastPosition) {
                 selectedBoltType = (BoltType) parent.getItemAtPosition(position);
                 getSkavaContext().getAssessment().getRecomendation().setBoltType(selectedBoltType);
@@ -481,10 +554,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
             }
         }
         if (parent == shotcreteTypeSpinner) {
-//            if (methodSpinnerLastPosition == -1){
-//                methodSpinner.setSelection(methodAdapter.getCount());
-//                return;
-//            }
             if (position != shotcreteTypeSpinner.getAdapter().getCount() && position != shotcreteTypeSpinnerLastPosition) {
                 selectedShotcreteType = (ShotcreteType) parent.getItemAtPosition(position);
                 getSkavaContext().getAssessment().getRecomendation().setShotcreteType(selectedShotcreteType);
@@ -492,42 +561,45 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
             }
         }
         if (parent == roofPatternSpinner) {
-//            if (methodSpinnerLastPosition == -1){
-//                methodSpinner.setSelection(methodAdapter.getCount());
-//                return;
-//            }
             if (position != roofPatternSpinner.getAdapter().getCount() && position != roofPatternSpinnerLastPosition) {
-                SupportRecomendation recommendation = getSkavaContext().getAssessment().getRecomendation();
+                SupportRecommendation recommendation = getSkavaContext().getAssessment().getRecomendation();
                 if (recommendation != null) {
                     selectedRoofPatternType = (SupportPatternType) parent.getItemAtPosition(position);
-                    SupportPattern supportPattern = recommendation.getRoofPattern();
-                    supportPattern.setType(selectedRoofPatternType);
+                    SupportPattern supportPattern;
+                    if (recommendation.getRoofPattern() != null) {
+                        supportPattern = recommendation.getRoofPattern();
+                        supportPattern.setType(selectedRoofPatternType);
+                    } else {
+                        supportPattern = new SupportPattern(selectedRoofPatternType, 0d, 0d);
+                        recommendation.setRoofPattern(supportPattern);
+                    }
                 }
+                roofPatternDx.setEnabled(true);
+                roofPatternDy.setEnabled(true);
                 roofPatternSpinnerLastPosition = position;
             }
         }
         if (parent == wallPatternSpinner) {
-//            if (methodSpinnerLastPosition == -1){
-//                methodSpinner.setSelection(methodAdapter.getCount());
-//                return;
-//            }
-
             if (position != wallPatternSpinner.getAdapter().getCount() && position != wallPatternSpinnerLastPosition) {
-                SupportRecomendation recommendation = getSkavaContext().getAssessment().getRecomendation();
+                SupportRecommendation recommendation = getSkavaContext().getAssessment().getRecomendation();
                 if (recommendation != null) {
                     selectedWallPatternType = (SupportPatternType) parent.getItemAtPosition(position);
-                    SupportPattern supportPattern = recommendation.getWallPattern();
-                    supportPattern.setType(selectedWallPatternType);
+                    SupportPattern supportPattern;
+                    if (recommendation.getWallPattern() != null) {
+                        supportPattern = recommendation.getWallPattern();
+                        supportPattern.setType(selectedWallPatternType);
+                    } else {
+                        supportPattern = new SupportPattern(selectedWallPatternType, 0d, 0d);
+                        recommendation.setWallPattern(supportPattern);
+                    }
                 }
+                wallPatternDx.setEnabled(true);
+                wallPatternDy.setEnabled(true);
                 wallPatternSpinnerLastPosition = position;
             }
         }
-        
+
         if (parent == meshTypeSpinner) {
-//            if (methodSpinnerLastPosition == -1){
-//                methodSpinner.setSelection(methodAdapter.getCount());
-//                return;
-//            }
             if (position != meshTypeSpinner.getAdapter().getCount() && position != meshTypeSpinnerLastPosition) {
                 selectedMeshType = (MeshType) parent.getItemAtPosition(position);
                 getSkavaContext().getAssessment().getRecomendation().setMeshType(selectedMeshType);
@@ -535,10 +607,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
             }
         }
         if (parent == coverageSpinner) {
-//            if (methodSpinnerLastPosition == -1){
-//                methodSpinner.setSelection(methodAdapter.getCount());
-//                return;
-//            }
             if (position != coverageSpinner.getAdapter().getCount() && position != coverageSpinnerLastPosition) {
                 selectedCoverage = (Coverage) parent.getItemAtPosition(position);
                 getSkavaContext().getAssessment().getRecomendation().setCoverage(selectedCoverage);
@@ -546,10 +614,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
             }
         }
         if (parent == archTypeSpinner) {
-//            if (methodSpinnerLastPosition == -1){
-//                methodSpinner.setSelection(methodAdapter.getCount());
-//                return;
-//            }
             if (position != archTypeSpinner.getAdapter().getCount() && position != archTypeSpinnerLastPosition) {
                 selectedArchType = (ArchType) parent.getItemAtPosition(position);
                 getSkavaContext().getAssessment().getRecomendation().setArchType(selectedArchType);

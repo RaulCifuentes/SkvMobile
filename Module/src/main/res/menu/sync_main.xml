@@ -3,21 +3,8 @@
     tools:context="com.metric.skava.sync.activity.SyncMainActivity" >
 
 
-
-    <item android:id="@+id/action_sync_clients"
-        android:title="@string/action_sync_clients"
-        android:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_sync_assessments"
-        android:title="@string/action_sync_assessments"
-        android:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_sync_all"
-        android:title="@string/action_sync_all"
-        android:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_clear_tables"
-        android:title="Clear tables"
+    <item android:id="@+id/action_clear_assessments"
+        android:title="Clear assessments"
         android:showAsAction="ifRoom" />
 
 

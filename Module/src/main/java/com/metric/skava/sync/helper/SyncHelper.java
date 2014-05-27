@@ -91,6 +91,7 @@ import com.metric.skava.data.dao.RemoteJnDAO;
 import com.metric.skava.data.dao.RemoteJrDAO;
 import com.metric.skava.data.dao.RemoteJwDAO;
 import com.metric.skava.data.dao.RemoteMeshTypeDAO;
+import com.metric.skava.data.dao.RemoteMetadataDAO;
 import com.metric.skava.data.dao.RemoteOrientationDiscontinuitiesDAO;
 import com.metric.skava.data.dao.RemotePersistenceDAO;
 import com.metric.skava.data.dao.RemoteRockQualityDAO;
@@ -152,6 +153,14 @@ public class SyncHelper {
         syncLoggingDAO.deleteAllSyncLogs();
     }
 
+
+    public Long getRecordCount() throws DAOException {
+        /**Update the excavation methods data*/
+        RemoteMetadataDAO dropBoxMetadataDAO = daoFactory.getRemoteMetadataDAO(DAOFactory.Flavour.DROPBOX);
+        //Read from DropBox
+        Long totalRecords = dropBoxMetadataDAO.getRecordsCount();
+        return totalRecords;
+    }
 
     public Long downloadRoles() throws DAOException, SyncDataFailedException {
         Long numRecords = 0L;
