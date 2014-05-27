@@ -349,6 +349,10 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
                 }
             }
         });
+        Short dipDir = mDiscontinuityFamilyInstance.getDipDirDegrees();
+        if (dipDir != null) {
+            dipDirEditText.setText(dipDir);
+        }
 
         final EditText dipEditText = (EditText) rootView.findViewById(R.id.discontinuity_system_dip_value);
         dipEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
@@ -370,6 +374,10 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
                 }
             }
         });
+        Short dipDegrees = mDiscontinuityFamilyInstance.getDipDegrees();
+        if (dipDegrees != null) {
+            dipEditText.setText(dipDegrees);
+        }
 
 
         discSpacingSpinner = (Spinner) rootView.findViewById(R.id.discontinuity_system_spacing_spinner);

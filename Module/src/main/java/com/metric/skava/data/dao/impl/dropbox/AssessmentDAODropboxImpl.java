@@ -45,7 +45,6 @@ import com.metric.skava.calculator.rmr.model.Roughness;
 import com.metric.skava.calculator.rmr.model.Spacing;
 import com.metric.skava.calculator.rmr.model.StrengthOfRock;
 import com.metric.skava.calculator.rmr.model.Weathering;
-import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.RemoteAssessmentDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.datastore.tables.AssessmentDropboxTable;
@@ -231,19 +230,6 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 assessmentFields.set("rockSampleIdentification", rockSampleIdentification);
             }
 
-            List<Uri> pictureList = assessment.getPictureUriList();
-            DbxList uriEncodedList = new DbxList();
-            for (Uri uri : pictureList) {
-                if (uri != null) {
-                    java.lang.String uriEncoded = uri.getLastPathSegment();
-                    uriEncodedList.add(uriEncoded);
-                }
-            }
-            if (SkavaUtils.hasPictures(pictureList)) {
-                // executes the uploading as an async task
-                new PictureUploader().execute(assessment.getInternalCode(), pictureList);
-            }
-            assessmentFields.set("picturesURIs", uriEncodedList);
 
             List<DiscontinuityFamily> discontinuitySystem = assessment.getDiscontinuitySystem();
             if (discontinuitySystem != null) {
@@ -548,9 +534,25 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 mQBartonCalculationDropBoxTable.persist(qCalculationFields);
             }
 
+            List<Uri> pictureList = assessment.getPictureUriList();
+            DbxList uriEncodedList = new DbxList();
+            for (Uri uri : pictureList) {
+                if (uri != null) {
+                    java.lang.String uriEncoded = uri.getLastPathSegment();
+                    uriEncodedList.add(uriEncoded);
+                }
+            }
+
+            assessmentFields.set("picturesURIs", uriEncodedList);
+
             mAssessmentsTable.persist(assessmentFields);
 
             getDatastore().sync();
+
+            if (SkavaUtils.hasPictures(pictureList)) {
+                // executes the uploading as an async task
+                new PictureUploader().execute(assessment.getInternalCode(), pictureList);
+            }
 
         } catch (DbxException e) {
             throw new DAOException(e);
@@ -566,6 +568,18 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             String assessmentCode = dbxRecord.getString("code");
             deleteAssessment(assessmentCode, cascade);
         }
+        List<DbxRecord> discontinuities = mDiscontinuitiesFamilyDropBoxTable.findAll();
+        if (discontinuities != null && !discontinuities.isEmpty()){
+            for (DbxRecord discontinuity : discontinuities) {
+                discontinuity.deleteRecord();
+            }
+            try {
+                getDatastore().sync();
+            } catch (DbxException e) {
+                throw new DAOException(e);
+            }
+        }
+
     }
 
 
@@ -635,16 +649,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 messageBox.show();
             } else {
                 //mostrar que termino exitosamente
-                Toast.makeText(mContext, "Picture uploading succesfully finished", Toast.LENGTH_LONG);
-                Assessment currentAssessment = getSkavaContext().getAssessment();
-                currentAssessment.setSentToCloud(true);
-                try {
-                    LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
-                    localAssessmentDAO.updateAssessment(currentAssessment, false);
-                } catch (DAOException e) {
-                    Log.e(SkavaConstants.LOG, e.getMessage());
-                }
-
+//                Toast.makeText(mContext, "Picture uploading succesfully finished", Toast.LENGTH_LONG);
             }
         }
 
