@@ -25,8 +25,11 @@ public class SkavaConstants {
 //    public static final String DROBOX_APP_SECRET = "qebhcnh6lxqu7di";
 
     // SKAVA ONLY FILE ACCESS
-    public static final String DROBOX_APP_KEY = "wipi7ui8mgii76j";
-    public static final String DROBOX_APP_SECRET = "rzqlw9qn9i24ttv";
+//    public static final String DROBOX_APP_KEY = "wipi7ui8mgii76j";
+//    public static final String DROBOX_APP_SECRET = "rzqlw9qn9i24ttv";
+//
+    public static final String DROBOX_APP_KEY = "1ij9s1t1ab2evpu";
+    public static final String DROBOX_APP_SECRET = "sxr158c6hlqajex";
 
     //    SKAVAAPP FULL ACCESS
 //    public static final String DROBOX_APP_KEY = "1xwvqk4tepx9w1r";

@@ -118,7 +118,7 @@
 
                     <ListView
                         android:layout_weight="1"
-                        android:id="@+id/listview_assessments"
+                        android:id="@+id/listview_local_assessments"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:choiceMode="singleChoice" />
@@ -128,6 +128,28 @@
                 <Space
                     android:layout_width="@dimen/grid_space_separation_width"
                     android:layout_height="@dimen/grid_space_separation_height" />
+
+
+                <!--Very First row -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <ListView
+                        android:layout_weight="1"
+                        android:id="@+id/listview_remote_assessments"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:choiceMode="singleChoice" />
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="@dimen/grid_space_separation_width"
+                    android:layout_height="@dimen/grid_space_separation_height" />
+
 
 
                 <!--Not so very First row -->

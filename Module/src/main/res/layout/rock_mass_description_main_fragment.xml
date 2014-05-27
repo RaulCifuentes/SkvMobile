@@ -85,192 +85,138 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true">
 
-
-
-    <!--<LinearLayout-->
-        <!--android:orientation="vertical"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="fill_parent">-->
-
-        <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:columnCount="2"
-            >
-
-            <TextView
-                android:id="@+id/rockmass_desc_fracture_type_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/rockmass_desc_fracture_type"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <Spinner
-                android:id="@+id/rockmass_desc_fracture_type_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px" />
-
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px" />
-
-            <TextView
-                android:id="@+id/rockmass_desc_block_size_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/rockmass_desc_block_size"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <EditText
-                android:id="@+id/rockmass_desc_block_size_value"
-                android:inputType="number|numberDecimal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Approximate block diameter in meters."
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px" />
-
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px" />
-
-            <TextView
-                android:id="@+id/rockmass_desc_junctures_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/rockmass_desc_joints_m3"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <EditText
-                android:id="@+id/rockmass_desc_junctures_value"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="Number of joints per cubic meter" />
-
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px" />
-
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px" />
-
-            <TextView
-                android:id="@id/rockmass_desc_rock_sample_identification"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/rockmass_desc_rock_sample_identification"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/rockmass_desc_rock_sample_identification"
-                android:inputType="text"
-                android:id="@id/rockmass_desc_rock_sample_identification_value"
-                android:maxLength="@integer/inputlength_large"
-                android:gravity="top" />
-
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px" />
-
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px" />
-
-
-
-        <LinearLayout android:layout_columnSpan="2"
-            android:orientation="vertical"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <!--<TextView-->
-                <!--android:id="@id/rockmass_desc_rock_sample_identification"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="@string/rockmass_desc_rock_sample_identification"-->
-                <!--android:textAppearance="?android:attr/textAppearanceMedium" />-->
-
-            <!--<Space-->
-                <!--android:layout_width="20px"-->
-                <!--android:layout_height="20px"-->
-                <!--android:id="@+id/space2" />-->
-
-            <!--<EditText-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:hint="@string/rockmass_desc_rock_sample_identification"-->
-                <!--android:inputType="textMultiLine"-->
-                <!--android:id="@id/rockmass_desc_rock_sample_identification_value"-->
-                <!--android:layout_columnSpan="2"-->
-                <!--android:lines="4"-->
-                <!--android:maxLength="@integer/inputlength_large"-->
-                <!--android:gravity="top" />-->
-
-            <TextView
-                android:id="@+id/rockmass_desc_details_label"
+            <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/rockmass_desc_details"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:orientation="horizontal"
+                android:columnCount="2"
+                >
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Detailed custom description ... (max lenght 1140 characters ) "
-                android:inputType="textMultiLine"
-                android:id="@+id/rockmass_desc_details_value"
-                android:lines="4"
-                android:maxLength="@integer/inputlength_large"
-                android:gravity="top" />
+                <TextView
+                    android:id="@+id/rockmass_desc_fracture_type_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rockmass_desc_fracture_type"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px"
-                android:id="@+id/space" />
+                <Spinner
+                    android:id="@+id/rockmass_desc_fracture_type_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <!--<LinearLayout-->
-                <!--android:orientation="horizontal"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content">-->
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px" />
 
-                <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
-                    <!--android:text="Maximum length:"-->
-                    <!--android:id="@+id/textView2" />-->
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px" />
 
-                <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
-                    <!--android:text="@integer/inputlength_large"-->
-                    <!--android:id="@+id/textView" />-->
+                <TextView
+                    android:id="@+id/rockmass_desc_block_size_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rockmass_desc_block_size"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
-                    <!--android:text=" characters"-->
-                    <!--android:id="@+id/textView3" />-->
-            <!--</LinearLayout>-->
-        </LinearLayout>
+                <EditText
+                    android:id="@+id/rockmass_desc_block_size_value"
+                    android:inputType="number|numberDecimal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Approximate block diameter in meters."
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        </GridLayout>
-    <!--</LinearLayout>-->
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px" />
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px" />
+
+                <TextView
+                    android:id="@+id/rockmass_desc_junctures_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rockmass_desc_joints_m3"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/rockmass_desc_junctures_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Number of joints per cubic meter" />
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px" />
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px" />
+
+                <TextView
+                    android:id="@id/rockmass_desc_rock_sample_identification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rockmass_desc_rock_sample_identification"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/rockmass_desc_rock_sample_identification"
+                    android:inputType="text"
+                    android:id="@id/rockmass_desc_rock_sample_identification_value"
+                    android:maxLength="@integer/inputlength_large"
+                    android:gravity="top" />
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px" />
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px" />
+
+                <LinearLayout android:layout_columnSpan="2"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/rockmass_desc_details_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rockmass_desc_details"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <EditText
+                        android:id="@+id/rockmass_desc_details_value"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Detailed custom description ...(max lenght 1140 characters ) "
+                        android:inputType="textMultiLine"
+                        android:lines="8"
+                        android:minLines="6"
+                        android:gravity="top|left"
+                        android:maxLines="10"
+                        android:scrollbars="vertical"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:maxLength="@integer/inputlength_large" />
+
+                </LinearLayout>
+
+            </GridLayout>
+
+        </ScrollView>
 
     </GridLayout>
 </RelativeLayout>
