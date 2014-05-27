@@ -104,11 +104,10 @@ public class AssessmentListAdapter extends BaseAdapter {
             if(currentItem.isSentToCloud()){
                 imageView.setImageResource(R.drawable.cloud_icon);
             } else {
-                imageView.setImageResource(R.drawable.ic_menu_emoticons);
+                imageView.setImageResource(R.drawable.tablet_icon);
             }
 
         }
-
 
         return assessmentViewItem;
     }

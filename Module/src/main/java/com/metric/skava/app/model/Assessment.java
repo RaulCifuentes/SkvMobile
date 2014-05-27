@@ -6,7 +6,7 @@ import com.metric.skava.app.data.IdentifiableEntity;
 import com.metric.skava.calculator.barton.model.Q_Calculation;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
-import com.metric.skava.instructions.model.SupportRecomendation;
+import com.metric.skava.instructions.model.SupportRecommendation;
 import com.metric.skava.rockmass.model.FractureType;
 
 import java.util.Date;
@@ -42,7 +42,7 @@ public class Assessment implements IdentifiableEntity {
     private String outcropDescription;
     private String rockSampleIdentification;
 
-    private SupportRecomendation recomendation;
+    private SupportRecommendation recomendation;
     private List<DiscontinuityFamily> discontinuitySystem;
     private List<Uri> pictureUriList;
     private Q_Calculation qCalculation;
@@ -251,11 +251,11 @@ public class Assessment implements IdentifiableEntity {
         this.rockSampleIdentification = rockSampleIdentification;
     }
 
-    public SupportRecomendation getRecomendation() {
+    public SupportRecommendation getRecomendation() {
         return recomendation;
     }
 
-    public void setRecomendation(SupportRecomendation recomendation) {
+    public void setRecomendation(SupportRecommendation recomendation) {
         this.recomendation = recomendation;
     }
 

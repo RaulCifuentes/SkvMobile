@@ -1,8 +1,11 @@
 package com.metric.skava.data.dao.impl.dropbox;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFields;
@@ -61,11 +64,12 @@ import com.metric.skava.instructions.model.Coverage;
 import com.metric.skava.instructions.model.MeshType;
 import com.metric.skava.instructions.model.ShotcreteType;
 import com.metric.skava.instructions.model.SupportPattern;
-import com.metric.skava.instructions.model.SupportRecomendation;
+import com.metric.skava.instructions.model.SupportRecommendation;
 import com.metric.skava.pictures.util.SkavaFilesUtils;
 import com.metric.skava.rockmass.model.FractureType;
 import com.metric.skava.rocksupport.model.ESR;
 import com.metric.skava.rocksupport.model.SupportRequirement;
+import com.metric.skava.sync.model.SyncLogEntry;
 
 import java.io.File;
 import java.io.IOException;
@@ -235,7 +239,8 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 }
             }
             if (SkavaUtils.hasPictures(pictureList)) {
-                uploadPictures(assessment.getInternalCode(), pictureList);
+                // executes the uploading as an async task
+                new PictureUploader().execute(assessment.getInternalCode(), pictureList);
             }
             assessmentFields.set("picturesURIs", uriEncodedList);
 
@@ -336,8 +341,8 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 assessmentFields.set("discontinuitiesSystem", discontinuitiesFamilySystem);
             }
 
-            //TODO take the supportRecommendation construction handling out of here, following the same style of Q, RMRCalulation, etc
-            SupportRecomendation recomendation = assessment.getRecomendation();
+
+            SupportRecommendation recomendation = assessment.getRecomendation();
             if (recomendation != null && recomendation.hasSelectedAnything()) {
 
                 DbxFields supportRecommendationFields = new DbxFields();
@@ -350,7 +355,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 }
 
                 BoltType boltType = recomendation.getBoltType();
-                if (boltType != null) {
+                if (SkavaUtils.isDefined(boltType)) {
                     supportRecommendationFields.set("boltTypeCode", boltType.getCode());
                 }
 
@@ -366,20 +371,24 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
 
                 SupportPattern roofPattern = recomendation.getRoofPattern();
                 if (roofPattern != null) {
-                    supportRecommendationFields.set("roofPatternTypeCode", roofPattern.getType().getCode());
+                    if (SkavaUtils.isDefined(roofPattern.getType())) {
+                        supportRecommendationFields.set("roofPatternTypeCode", roofPattern.getType().getCode());
+                    }
                     supportRecommendationFields.set("roofPatternDx", roofPattern.getDistanceX());
                     supportRecommendationFields.set("roofPatternDy", roofPattern.getDistanceY());
                 }
 
                 SupportPattern wallPattern = recomendation.getWallPattern();
                 if (wallPattern != null) {
-                    supportRecommendationFields.set("wallPatternTypeCode", wallPattern.getType().getCode());
+                    if (SkavaUtils.isDefined(wallPattern.getType())) {
+                        supportRecommendationFields.set("wallPatternTypeCode", wallPattern.getType().getCode());
+                    }
                     supportRecommendationFields.set("wallPatternDx", wallPattern.getDistanceX());
                     supportRecommendationFields.set("wallPatternDy", wallPattern.getDistanceY());
                 }
 
                 ShotcreteType shotcreteType = recomendation.getShotcreteType();
-                if (shotcreteType != null) {
+                if (SkavaUtils.isDefined(shotcreteType)) {
                     supportRecommendationFields.set("shotcreteTypeCode", shotcreteType.getCode());
                 }
 
@@ -389,17 +398,17 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 }
 
                 MeshType meshType = recomendation.getMeshType();
-                if (meshType != null) {
+                if (SkavaUtils.isDefined(meshType)) {
                     supportRecommendationFields.set("meshTypeCode", meshType.getCode());
                 }
 
                 Coverage coverage = recomendation.getCoverage();
-                if (coverage != null) {
+                if (SkavaUtils.isDefined(coverage)) {
                     supportRecommendationFields.set("coverageCode", coverage.getCode());
                 }
 
                 ArchType archType = recomendation.getArchType();
-                if (archType != null) {
+                if (SkavaUtils.isDefined(archType)) {
                     supportRecommendationFields.set("archTypeCode", archType.getCode());
                 }
 
@@ -425,47 +434,47 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 rmrCalculationFields.set("assessmentCode", assessment.getCode());
 
                 StrengthOfRock strengthOfRock = rmrCalculation.getStrengthOfRock();
-                if (strengthOfRock != null) {
+                if (SkavaUtils.isDefined(strengthOfRock)) {
                     rmrCalculationFields.set("strengthCode", strengthOfRock.getCode());
                 }
 
                 Spacing spacingDiscontinuities = rmrCalculation.getSpacing();
-                if (spacingDiscontinuities != null) {
+                if (SkavaUtils.isDefined(spacingDiscontinuities)) {
                     rmrCalculationFields.set("spacingCode", spacingDiscontinuities.getCode());
                 }
 
                 Persistence persistence = rmrCalculation.getPersistence();
-                if (persistence != null) {
+                if (SkavaUtils.isDefined(persistence)) {
                     rmrCalculationFields.set("persistenceCode", persistence.getCode());
                 }
 
                 Aperture aperture = rmrCalculation.getAperture();
-                if (aperture != null) {
+                if (SkavaUtils.isDefined(aperture)) {
                     rmrCalculationFields.set("apertureCode", aperture.getCode());
                 }
 
                 Roughness roughness = rmrCalculation.getRoughness();
-                if (roughness != null) {
+                if (SkavaUtils.isDefined(roughness)) {
                     rmrCalculationFields.set("roughnessCode", roughness.getCode());
                 }
 
                 Infilling infilling = rmrCalculation.getInfilling();
-                if (infilling != null) {
+                if (SkavaUtils.isDefined(infilling)) {
                     rmrCalculationFields.set("infillingCode", infilling.getCode());
                 }
 
                 Weathering weathering = rmrCalculation.getWeathering();
-                if (weathering != null) {
+                if (SkavaUtils.isDefined(weathering)) {
                     rmrCalculationFields.set("weatheringCode", weathering.getCode());
                 }
 
                 Groundwater groundwater = rmrCalculation.getGroundwater();
-                if (groundwater != null) {
+                if (SkavaUtils.isDefined(groundwater)) {
                     rmrCalculationFields.set("groundwaterCode", groundwater.getCode());
                 }
 
                 OrientationDiscontinuities orientationDiscontinuities = rmrCalculation.getOrientationDiscontinuities();
-                if (orientationDiscontinuities != null) {
+                if (SkavaUtils.isDefined(orientationDiscontinuities)) {
                     rmrCalculationFields.set("orientationCode", orientationDiscontinuities.getCode());
                 }
 
@@ -549,16 +558,70 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         }
     }
 
-    private void uploadPictures(String internalCode, List<Uri> pictures) throws DAOException {
+    class PictureUploader extends AsyncTask<Object, Void, Integer> {
+
+        SyncLogEntry errorCondition;
+
+        @Override
+        protected Integer doInBackground(Object[] params) {
+            String assessmentCode = (String) params[0];
+            List<Uri> urlList = (List<Uri>) params[1];
+            try {
+                Integer numPictures = uploadPictures(assessmentCode, urlList);
+                if (numPictures == -1) {
+                    errorCondition = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.PICTURES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.FAIL, 0L);
+                }
+                return numPictures;
+            } catch (DAOException e) {
+                Log.e(SkavaConstants.LOG, e.getMessage());
+                errorCondition = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.PICTURES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.FAIL, 0L);
+                errorCondition.setMessage(e.getMessage());
+                return -1;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            if (result == -1 || errorCondition != null) {
+                Toast.makeText(mContext, "Picture uploading has failed!!", Toast.LENGTH_LONG);
+                AlertDialog.Builder messageBox = new AlertDialog.Builder(mContext);
+                messageBox.setTitle("Bad news with " + errorCondition.getSource().name() + " on " + errorCondition.getSyncDate().toString());
+                messageBox.setMessage("Hey buddy, I was syncing " + errorCondition.getDomain().name() + ", but this issue arose : " + errorCondition.getMessage());
+                messageBox.setCancelable(false);
+                messageBox.setNeutralButton("OK", null);
+                messageBox.show();
+            } else {
+                //mostrar que termino exitosamente
+                Toast.makeText(mContext, "Picture uploading succesfully finished", Toast.LENGTH_LONG);
+            }
+        }
+
+
+    }
+
+
+    private int uploadPictures(String internalCode, List<Uri> pictures) throws DAOException {
         // Create DbxFileSystem for synchronized file access.
         DbxFileSystem dbxFs = getSkavaContext().getFileSystem();
+
+        if (dbxFs.isShutDown()) {
+            Log.e(SkavaConstants.LOG, "DbxFileSystem is shutted down");
+            throw new DAOException("DbxFileSystem is shutted down");
+        }
 
         DbxPath skavaFolderPath = new DbxPath(DbxPath.ROOT, "SkavaMobile");
         try {
             if (!dbxFs.exists(skavaFolderPath)) {
-                //create
                 dbxFs.createFolder(skavaFolderPath);
             }
+//            boolean hasSynced = dbxFs.hasSynced();
+//            System.out.println("hasSynced = " + hasSynced);
+//
+//            DbxSyncStatus syncStatus = dbxFs.getSyncStatus();
+//            System.out.println("syncStatus = " + syncStatus);
+//
+//            DbxFileInfo fileInfo = dbxFs.getFileInfo(skavaFolderPath);
+//            System.out.println("fileInfo = " + fileInfo);
             DbxPath projectPath = new DbxPath(skavaFolderPath, internalCode);
             for (Uri pictureURI : pictures) {
                 if (pictureURI != null) {
@@ -573,15 +636,28 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     }
                 }
             }
-
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-            if (ioe != null) {
-                Log.e(SkavaConstants.LOG, ioe.getMessage());
+            dbxFs.syncNowAndWait();
+            return pictures.size();
+        } catch (NullPointerException npe) {
+            if (npe != null) {
+                npe.printStackTrace();
+                Log.e(SkavaConstants.LOG, npe.getMessage());
+                throw new DAOException(npe);
             }
-            throw new DAOException(ioe);
+        } catch (DbxException dbxe) {
+            if (dbxe != null) {
+                dbxe.printStackTrace();
+                Log.e(SkavaConstants.LOG, dbxe.getMessage());
+                throw new DAOException(dbxe);
+            }
+        } catch (IOException ioe) {
+            if (ioe != null) {
+                ioe.printStackTrace();
+                Log.e(SkavaConstants.LOG, ioe.getMessage());
+                throw new DAOException(ioe);
+            }
         }
-
+        return -1;
     }
 
 }

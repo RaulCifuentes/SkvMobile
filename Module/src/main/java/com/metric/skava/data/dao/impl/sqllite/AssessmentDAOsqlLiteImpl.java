@@ -13,27 +13,18 @@ import com.metric.skava.app.util.DateDataFormat;
 import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.calculator.barton.model.Q_Calculation;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
-import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.LocalDiscontinuityFamilyDAO;
 import com.metric.skava.data.dao.LocalQCalculationDAO;
 import com.metric.skava.data.dao.LocalRMRCalculationDAO;
+import com.metric.skava.data.dao.LocalSupportRecommendationDAO;
 import com.metric.skava.data.dao.LocalTunnelFaceDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.helper.AssessmentBuilder4SqlLite;
 import com.metric.skava.data.dao.impl.sqllite.table.AssessmentTable;
 import com.metric.skava.data.dao.impl.sqllite.table.ExternalResourcesTable;
-import com.metric.skava.data.dao.impl.sqllite.table.SupportRecomendationTable;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
-import com.metric.skava.instructions.model.ArchType;
-import com.metric.skava.instructions.model.BoltType;
-import com.metric.skava.instructions.model.Coverage;
-import com.metric.skava.instructions.model.MeshType;
-import com.metric.skava.instructions.model.ShotcreteType;
-import com.metric.skava.instructions.model.SupportPattern;
-import com.metric.skava.instructions.model.SupportPatternType;
-import com.metric.skava.instructions.model.SupportRecomendation;
-import com.metric.skava.rocksupport.model.SupportRequirement;
+import com.metric.skava.instructions.model.SupportRecommendation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +34,12 @@ import java.util.List;
  */
 public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Assessment> implements LocalAssessmentDAO {
 
-    //    private LocalPermissionDAO mLocalPermissionDAO;
     private LocalTunnelFaceDAO mLocalTunnelFaceDAO;
     private LocalDiscontinuityFamilyDAO mLocalDiscontinuityFamilyDAO;
     private LocalQCalculationDAO mLocalQCalculationDAO;
     private LocalRMRCalculationDAO mLocalRMRCalculationDAO;
+    private LocalSupportRecommendationDAO mLocalSupportRecommendationDAO;
+
 
 
     private AssessmentBuilder4SqlLite assessmentBuilder;
@@ -55,11 +47,11 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
     public AssessmentDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
         super(context, skavaContext);
         assessmentBuilder = new AssessmentBuilder4SqlLite(mContext, skavaContext);
-        //        mLocalPermissionDAO = getDAOFactory().getLocalPermissionDAO();
         mLocalTunnelFaceDAO = getDAOFactory().getLocalTunnelFaceDAO();
         mLocalDiscontinuityFamilyDAO = getDAOFactory().getLocalDiscontinuityFamilyDAO();
         mLocalQCalculationDAO = getDAOFactory().getLocalQCalculationDAO();
         mLocalRMRCalculationDAO = getDAOFactory().getLocalRMRCalculationDAO();
+        mLocalSupportRecommendationDAO = getDAOFactory().getLocalSupportRecommendationDAO();
     }
 
     @Override
@@ -137,11 +129,11 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             RMR_Calculation rmrCalculation = mLocalRMRCalculationDAO.getRMRCalculation(assessmentCode);
             reconstructedAssessment.setRmrCalculation(rmrCalculation);
 
+            SupportRecommendation recomendation = mLocalSupportRecommendationDAO.getSupportRecommendation(assessmentCode);
+            reconstructedAssessment.setRecomendation(recomendation);
+
             List<Uri> resourceList = getResourcesByAssessmentCode(assessmentCode);
             reconstructedAssessment.setPictureUriList(resourceList);
-
-            SupportRecomendation recomendation = getRecommendationByAssessmentCode(assessmentCode);
-            reconstructedAssessment.setRecomendation(recomendation);
 
             list.add(reconstructedAssessment);
         }
@@ -175,79 +167,6 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
     }
 
 
-    private SupportRecomendation getRecommendationByAssessmentCode(String code) throws DAOException {
-        Cursor cursor = getRecordsFilteredByColumn(SupportRecomendationTable.RECOMENDATION_DATABASE_TABLE, SupportRecomendationTable.ASSESSMENT_CODE_COLUMN, code, null);
-        SupportRecomendation recomendation = assembleSupportRecommendation(cursor);
-        return recomendation;
-    }
-
-    private SupportRecomendation assembleSupportRecommendation(Cursor cursor) throws DAOException {
-        List<SupportRecomendation> resultList = new ArrayList<SupportRecomendation>();
-        DAOFactory daoFactory = getDAOFactory();
-        while (cursor.moveToNext()) {
-            String assessment = CursorUtils.getString(SupportRecomendationTable.ASSESSMENT_CODE_COLUMN, cursor);
-
-            String requirementCode = CursorUtils.getString(SupportRecomendationTable.SUPPORT_REQUIREMENT_BASE_CODE_COLUMN, cursor);
-            SupportRequirement requirement = daoFactory.getLocalSupportRequirementDAO().getSupportRequirement(requirementCode);
-
-            String patternTypeCode = CursorUtils.getString(SupportRecomendationTable.ROOF_PATTERN_TYPE_CODE_COLUMN, cursor);
-            Double distanceX = CursorUtils.getDouble(SupportRecomendationTable.ROOF_PATTERN_DX_COLUMN, cursor);
-            Double distanceY = CursorUtils.getDouble(SupportRecomendationTable.ROOF_PATTERN_DY_COLUMN, cursor);
-            SupportPatternType type = daoFactory.getLocalSupportPatternTypeDAO().getSupportPatternTypeByUniqueCode(patternTypeCode);
-            SupportPattern roofPattern = new SupportPattern(type, distanceX, distanceY);
-
-            patternTypeCode = CursorUtils.getString(SupportRecomendationTable.WALL_PATTERN_TYPE_CODE_COLUMN, cursor);
-            distanceX = CursorUtils.getDouble(SupportRecomendationTable.WALL_PATTERN_DX_COLUMN, cursor);
-            distanceY = CursorUtils.getDouble(SupportRecomendationTable.WALL_PATTERN_DY_COLUMN, cursor);
-            type = daoFactory.getLocalSupportPatternTypeDAO().getSupportPatternTypeByUniqueCode(patternTypeCode);
-            SupportPattern wallPattern = new SupportPattern(type, distanceX, distanceY);
-
-            String boltTypeCode = CursorUtils.getString(SupportRecomendationTable.BOLT_TYPE_CODE_COLUMN, cursor);
-            BoltType boltType = daoFactory.getLocalBoltTypeDAO().getBoltTypeByCode(boltTypeCode);
-
-            Double boltDiameter = CursorUtils.getDouble(SupportRecomendationTable.BOLT_DIAMETER_COLUMN, cursor);
-            Double boltLength = CursorUtils.getDouble(SupportRecomendationTable.BOLT_LENGTH_COLUMN, cursor);
-
-            String coverageCode = CursorUtils.getString(SupportRecomendationTable.COVERAGE_CODE_COLUMN, cursor);
-            Coverage coverage = daoFactory.getLocalCoverageDAO().getCoverageByCode(coverageCode);
-
-            String meshTypeCode = CursorUtils.getString(SupportRecomendationTable.MESH_TYPE_CODE_COLUMN, cursor);
-            MeshType meshType = daoFactory.getLocalMeshTypeDAO().getMeshTypeByCode(meshTypeCode);
-
-            String shotcreteTypeCode = CursorUtils.getString(SupportRecomendationTable.SHOTCRETE_TYPE_CODE_COLUMN, cursor);
-            ShotcreteType shotcreteType = daoFactory.getLocalShotcreteTypeDAO().getShotcreteTypeByCode(shotcreteTypeCode);
-
-            String archTypeCode = CursorUtils.getString(SupportRecomendationTable.ARCH_TYPE_CODE_COLUMN, cursor);
-            ArchType archType = daoFactory.getLocalArchTypeDAO().getArchTypeByCode(archTypeCode);
-
-            Double separation = CursorUtils.getDouble(SupportRecomendationTable.SEPARATION_COLUMN, cursor);
-            Double thickness = CursorUtils.getDouble(SupportRecomendationTable.THICKNESS_COLUMN, cursor);
-            String observations = CursorUtils.getString(SupportRecomendationTable.OBSERVATIONS_COLUMN, cursor);
-
-            SupportRecomendation newInstance = new SupportRecomendation();
-            newInstance.setArchType(archType);
-            newInstance.setBoltType(boltType);
-            newInstance.setCoverage(coverage);
-            newInstance.setRoofPattern(roofPattern);
-            newInstance.setWallPattern(wallPattern);
-            newInstance.setRequirement(requirement);
-            newInstance.setBoltDiameter(boltDiameter);
-            newInstance.setBoltLength(boltLength);
-            newInstance.setMeshType(meshType);
-            newInstance.setObservations(observations);
-            newInstance.setSeparation(separation);
-            newInstance.setShotcreteType(shotcreteType);
-            newInstance.setThickness(thickness);
-            resultList.add(newInstance);
-        }
-        //TODO This should be one and only one Check is not null and stuff
-        if (!resultList.isEmpty()) {
-            return resultList.get(0);
-        } else {
-            return null;
-        }
-    }
-
 
     @Override
     public void saveAssessment(Assessment assessment) throws DAOException {
@@ -255,7 +174,6 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
     }
 
     public void updateAssessment(Assessment newSkavaEntity, boolean includeRelations) throws DAOException {
-
         if (includeRelations) {
             saveAssessment(newSkavaEntity);
         } else {
@@ -373,51 +291,9 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
 
 
         //Save the related recommendation
+        SupportRecommendation recommendation = newSkavaEntity.getRecomendation();
+        mLocalSupportRecommendationDAO.saveSupportRecommendation(newSkavaEntity.getCode(), recommendation);
 
-        SupportRecomendation recomendation = newSkavaEntity.getRecomendation();
-        if (recomendation != null && recomendation.hasSelectedAnything()) {
-            String[] recommendationNames = new String[]{
-                    SupportRecomendationTable.ASSESSMENT_CODE_COLUMN,
-                    SupportRecomendationTable.SUPPORT_REQUIREMENT_BASE_CODE_COLUMN,
-                    SupportRecomendationTable.BOLT_TYPE_CODE_COLUMN,
-                    SupportRecomendationTable.BOLT_DIAMETER_COLUMN,
-                    SupportRecomendationTable.BOLT_LENGTH_COLUMN,
-                    SupportRecomendationTable.ROOF_PATTERN_TYPE_CODE_COLUMN,
-                    SupportRecomendationTable.ROOF_PATTERN_DX_COLUMN,
-                    SupportRecomendationTable.ROOF_PATTERN_DY_COLUMN,
-                    SupportRecomendationTable.WALL_PATTERN_TYPE_CODE_COLUMN,
-                    SupportRecomendationTable.WALL_PATTERN_DX_COLUMN,
-                    SupportRecomendationTable.WALL_PATTERN_DY_COLUMN,
-                    SupportRecomendationTable.SHOTCRETE_TYPE_CODE_COLUMN,
-                    SupportRecomendationTable.THICKNESS_COLUMN,
-                    SupportRecomendationTable.MESH_TYPE_CODE_COLUMN,
-                    SupportRecomendationTable.COVERAGE_CODE_COLUMN,
-                    SupportRecomendationTable.ARCH_TYPE_CODE_COLUMN,
-                    SupportRecomendationTable.SEPARATION_COLUMN,
-                    SupportRecomendationTable.OBSERVATIONS_COLUMN
-            };
-            Object[] recomendationValues = new Object[]{
-                    newSkavaEntity.getCode(),
-                    recomendation.getRequirementBase() != null ? recomendation.getRequirementBase().getCode() : null,
-                    recomendation.getBoltType() != null ? recomendation.getBoltType().getCode() : null,
-                    recomendation.getBoltDiameter(),
-                    recomendation.getBoltLength(),
-                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getType().getCode() : null,
-                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getDistanceX() : null,
-                    recomendation.getRoofPattern() != null ? recomendation.getRoofPattern().getDistanceY() : null,
-                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getType().getCode() : null,
-                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getDistanceX() : null,
-                    recomendation.getWallPattern() != null ? recomendation.getWallPattern().getDistanceY() : null,
-                    recomendation.getShotcreteType() != null ? recomendation.getShotcreteType().getCode() : null,
-                    recomendation.getThickness(),
-                    recomendation.getMeshType() != null ? recomendation.getMeshType().getCode() : null,
-                    recomendation.getCoverage() != null ? recomendation.getCoverage().getCode() : null,
-                    recomendation.getArchType() != null ? recomendation.getArchType().getCode() : null,
-                    recomendation.getSeparation(),
-                    recomendation.getObservations()
-            };
-            saveRecord(SupportRecomendationTable.RECOMENDATION_DATABASE_TABLE, recommendationNames, recomendationValues);
-        }
 
         //Save the related pictures urls
         List<Uri> pictureList = newSkavaEntity.getPictureUriList();
@@ -445,6 +321,14 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
 
     @Override
     public boolean deleteAssessment(String code) {
-        return false;
+        return deleteIdentifiableEntity(AssessmentTable.ASSESSMENT_DATABASE_TABLE, code);
     }
+
+
+    @Override
+    public int deleteAllAssessments() {
+        return deleteAllPersistentEntities(AssessmentTable.ASSESSMENT_DATABASE_TABLE);
+    }
+
+
 }

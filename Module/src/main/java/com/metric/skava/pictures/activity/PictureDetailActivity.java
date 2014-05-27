@@ -122,8 +122,15 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
 
 
     public void deletePicture(){
-        //dereference
-        mAssessment.getPictureUriList().set(mSelectedPictureIndex, null);
+        //dereference or remove depending on the photo classification
+        //0..3 are always present
+        //4 or greater are extras
+        if (mSelectedPictureIndex > 3){
+            mAssessment.getPictureUriList().remove(mSelectedPictureIndex);
+        } else {
+            mAssessment.getPictureUriList().set(mSelectedPictureIndex, null);
+        }
+
         //delete physically
         mPictureFilesUtils.deleteFileFromUri(mSeletedPictureUri);
         backToPicturesMenu();

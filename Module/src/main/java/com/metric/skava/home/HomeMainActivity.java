@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -71,6 +72,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     private DbxFileSystem mFileSystem;
     private MainFragment mHomeMainFragment;
     private static final String FRAGMENT_HOME_MAIN_TAG = "FRAGMENT_HOME_MAIN_TAG";
+    private boolean linkDropboxCompleted;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -108,7 +110,9 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         super.onPostCreate(savedInstanceState);
         setupLinkToDropbox();
         //TODO Check if the execution returns here when onACtivityResult is triggered
-        setupDataModel();
+        if (linkDropboxCompleted) {
+            setupDataModel();
+        }
     }
 
     @Override
@@ -141,13 +145,14 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 //                        String datastore = currDatastore.toString();
 //                    }
 //                    //Abrir el datastore
-//                    mDatastore = mDatastoreManager.openDatastore(DatastoreHelper.APP_DATASTORE_NAME);
+                    mDatastore = mDatastoreManager.openDatastore(SkavaConstants.DROPBOX_DS_NAME);
                     if (mDatastore == null) {
                         mDatastore = mDatastoreManager.openDefaultDatastore();
                     }
                     if (mFileSystem == null) {
                         mFileSystem = DbxFileSystem.forAccount(mAccount);
                     }
+                    linkDropboxCompleted = true;
                     getSkavaContext().setDatastore(mDatastore);
                     getSkavaContext().setFileSystem(mFileSystem);
                 }
@@ -189,7 +194,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 //                        String datastore = currDatastore.toString();
 //                    }
 //                    //Abrir el datastore
-//                    mDatastore = mDatastoreManager.openDatastore(DatastoreHelper.APP_DATASTORE_NAME);
+                    mDatastore = mDatastoreManager.openDatastore(SkavaConstants.DROPBOX_DS_NAME);
                     if (mDatastore == null) {
                         mDatastore = mDatastoreManager.openDefaultDatastore();
                     }
@@ -199,6 +204,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                     getSkavaContext().setDatastore(mDatastore);
                     getSkavaContext().setFileSystem(mFileSystem);
                     //TODO Check if this is necessary or if the execution returns to the onPostCreate() when onACtivityResult is triggered
+                    linkDropboxCompleted = true;
                     //setupDataModel();
                 } catch (DbxException e) {
                     Log.e(SkavaConstants.LOG, e.getMessage());
@@ -227,7 +233,10 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mDatastore.isOpen()) {
+        if (mFileSystem != null && !mFileSystem.isShutDown()) {
+            mFileSystem.shutDown();
+        }
+        if (mDatastore != null && mDatastore.isOpen()) {
             mDatastore.close();
         }
     }
@@ -241,6 +250,17 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             daoe.printStackTrace();
             Log.e(SkavaConstants.LOG, daoe.getMessage());
         }
+    }
+
+    private Long findOutNumberOfRecordsToImport() {
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            return syncHelper.getRecordCount();
+        } catch (DAOException daoe) {
+            daoe.printStackTrace();
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+        }
+        return null;
     }
 
 
@@ -708,7 +728,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     }
 
 
-
     /**
      * Shows the progress UI and hides the login form.
      */
@@ -826,6 +845,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             case NAV_MENU_LOGOUT_ITEM_ID:
                 if (shouldUnlinkOnLogout()) {
                     if (mDbxAcctMgr != null && mDbxAcctMgr.hasLinkedAccount()) {
+                        linkDropboxCompleted = false;
                         mDbxAcctMgr.unlink();
                     }
                 }
@@ -842,6 +862,14 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    public void saveSyncStatus(boolean success) {
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(getString(R.string.last_sync_succeed), success);
+        editor.putLong(getString(R.string.last_sync_date), SkavaUtils.getCurrentDate().getTime());
+        editor.commit();
+    }
+
     public void onClick(View v) {
         new UpdateDataModelTask().execute();
     }
@@ -849,6 +877,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     public class UpdateDataModelTask extends AsyncTask<Void, Long, Long> {
 
         private SyncLogEntry errorCondition;
+        private Long totalRecordsToImport;
 
         @Override
 
@@ -856,86 +885,90 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             Long numRecordsCreated = 0L;
             prepareSyncTraceTable();
             try {
-                // **** IMPORT GENERAL DATA FIRST *** //
-                numRecordsCreated += importRoles();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importMethods();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importSections();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importDiscontinuityTypes();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importRelevances();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importIndexes();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importGroups();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importSpacings();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importPersistences();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importApertures();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importShapes();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importRoughnesses();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importInfillings();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importWeatherings();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importWaters();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importStrengths();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importGroundwaters();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importOrientations();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importJns();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importJrs();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importJas();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importJws();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importSRFs();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importFractureTypes();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importBoltTypes();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importShotcreteTypes();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importMeshTypes();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importCoverages();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importArchTypes();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importESRs();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importSupportPatternTypes();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importRockQualities();
-                publishProgress(numRecordsCreated);
+                //FIND OUT THE TOTAL NUMBER OF RECORDS
+                totalRecordsToImport = findOutNumberOfRecordsToImport();
+                if (totalRecordsToImport > 0) {
 
-                // **** IMPORT THEN USER RELATED DATA **** //
-                numRecordsCreated += importClients();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importProjects();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importTunnels();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importSupportRequirements();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importTunnelFaces();
-                publishProgress(numRecordsCreated);
-                numRecordsCreated += importUsers();
-                publishProgress(numRecordsCreated);
+                    // **** IMPORT GENERAL DATA FIRST *** //
+                    numRecordsCreated += importRoles();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importMethods();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importSections();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importDiscontinuityTypes();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importRelevances();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importIndexes();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importGroups();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importSpacings();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importPersistences();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importApertures();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importShapes();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importRoughnesses();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importInfillings();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importWeatherings();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importWaters();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importStrengths();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importGroundwaters();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importOrientations();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importJns();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importJrs();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importJas();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importJws();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importSRFs();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importFractureTypes();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importBoltTypes();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importShotcreteTypes();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importMeshTypes();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importCoverages();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importArchTypes();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importESRs();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importSupportPatternTypes();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importRockQualities();
+                    publishProgress(numRecordsCreated);
 
+                    // **** IMPORT THEN USER RELATED DATA **** //
+                    numRecordsCreated += importClients();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importProjects();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importTunnels();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importSupportRequirements();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importTunnelFaces();
+                    publishProgress(numRecordsCreated);
+                    numRecordsCreated += importUsers();
+                    publishProgress(numRecordsCreated);
+                }
                 //UPDATE SYNC EXECUTION STATUS ON CONTEXT
                 getSkavaContext().getSyncMetadata().setSuccess(true);
                 getSkavaContext().getSyncMetadata().setLastExecution(SkavaUtils.getCurrentDate());
@@ -959,14 +992,14 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         protected void onProgressUpdate(Long... progress) {
             //mostrar avance
             Long value = (Long) progress[0];
-            showProgressBar(true, +value + " records imported so far.", false);
+            showProgressBar(true, +value + " of " + totalRecordsToImport + " records imported so far.", false);
         }
 
         @Override
         protected void onPostExecute(Long result) {
             if (errorCondition != null) {
                 Toast.makeText(HomeMainActivity.this, "Load data process has failed!!", Toast.LENGTH_LONG);
-                mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+                saveSyncStatus(false);
                 showProgressBar(true, "Failed. " + result + " records imported.", true);
                 AlertDialog.Builder messageBox = new AlertDialog.Builder(HomeMainActivity.this);
                 messageBox.setTitle("Bad news with " + errorCondition.getSource().name() + " on " + errorCondition.getSyncDate().toString());
@@ -976,6 +1009,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 messageBox.show();
             } else {
                 //mostrar que termino exitosamente
+                saveSyncStatus(true);
                 dropboxNeverCalled = false;
                 Toast.makeText(HomeMainActivity.this, "Load succesfully finished", Toast.LENGTH_LONG);
                 mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
@@ -985,7 +1019,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         }
 
     }
-
 
 
 }

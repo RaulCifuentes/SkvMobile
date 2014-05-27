@@ -62,7 +62,7 @@ import com.metric.skava.instructions.model.MeshType;
 import com.metric.skava.instructions.model.ShotcreteType;
 import com.metric.skava.instructions.model.SupportPattern;
 import com.metric.skava.instructions.model.SupportPatternType;
-import com.metric.skava.instructions.model.SupportRecomendation;
+import com.metric.skava.instructions.model.SupportRecommendation;
 import com.metric.skava.pictures.util.SkavaPictureFilesUtils;
 import com.metric.skava.rockmass.model.FractureType;
 import com.metric.skava.rocksupport.model.ESR;
@@ -228,7 +228,7 @@ public class MappingReportMainFragment extends SkavaFragment {
 
         OrientationDiscontinuities orientationDiscontinuities = rmrCalculation.getOrientationDiscontinuities();
         if (orientationDiscontinuities != null) {
-            ((TextView) rootView.findViewById(R.id.report_rmr_ajuste_value)).setText(orientationDiscontinuities.getGroupName() + " - " + orientationDiscontinuities.getKey());
+            ((TextView) rootView.findViewById(R.id.report_rmr_ajuste_value)).setText(orientationDiscontinuities.getGroup().toString() + " - " + orientationDiscontinuities.getKey());
             ((TextView) rootView.findViewById(R.id.report_rmr_ajuste_value_rating)).setText(numberFormat.format(orientationDiscontinuities.getValue()));
         }
 
@@ -333,7 +333,7 @@ public class MappingReportMainFragment extends SkavaFragment {
             ((TextView) rootView.findViewById(R.id.report_q_calidad_value)).setText(quality.getName());
         }
 
-        SupportRecomendation recomendation = currentAssessment.getRecomendation();
+        SupportRecommendation recomendation = currentAssessment.getRecomendation();
         if (recomendation != null) {
             SupportRequirement requirement = recomendation.getRequirementBase();
             if (SkavaUtils.isDefined(requirement)) {
@@ -347,51 +347,71 @@ public class MappingReportMainFragment extends SkavaFragment {
             BoltType boltType = recomendation.getBoltType();
             if (boltType != null) {
                 ((TextView) rootView.findViewById(R.id.report_tipo_perno_value)).setText(boltType.getName());
+            } else {
+                ((TextView) rootView.findViewById(R.id.report_tipo_perno_value)).setText("-");
             }
 
             Double boltDiameter = recomendation.getBoltDiameter();
             if (boltDiameter != null) {
                 ((TextView) rootView.findViewById(R.id.report_diametro_perno_value)).setText(numberFormat.format(boltDiameter));
+            }  else {
+                ((TextView) rootView.findViewById(R.id.report_diametro_perno_value)).setText("-");
             }
 
             Double boltLength = recomendation.getBoltLength();
             if (boltLength != null) {
                 ((TextView) rootView.findViewById(R.id.report_largo_perno_value)).setText(numberFormat.format(boltLength));
+            } else {
+                ((TextView) rootView.findViewById(R.id.report_largo_perno_value)).setText("-");
             }
 
             ShotcreteType shotcreteType = recomendation.getShotcreteType();
             if (shotcreteType != null) {
                 ((TextView) rootView.findViewById(R.id.report_tipo_shotcrete_value)).setText(shotcreteType.getName());
+            } else {
+                ((TextView) rootView.findViewById(R.id.report_tipo_shotcrete_value)).setText("-");
             }
 
             Double shotcreteThickness = recomendation.getThickness();
             if (shotcreteThickness != null) {
                 ((TextView) rootView.findViewById(R.id.report_espesor_shotcrete_value)).setText(shotcreteThickness.toString());
+            } else {
+                ((TextView) rootView.findViewById(R.id.report_espesor_shotcrete_value)).setText("-");
             }
 
             MeshType meshType = recomendation.getMeshType();
             if (meshType != null) {
                 ((TextView) rootView.findViewById(R.id.report_tipo_malla_value)).setText(meshType.getName());
+            } else {
+                ((TextView) rootView.findViewById(R.id.report_tipo_malla_value)).setText("-");
             }
 
             Coverage coverage = recomendation.getCoverage();
             if (coverage != null) {
                 ((TextView) rootView.findViewById(R.id.report_cobertura_value)).setText(coverage.getName());
+            } else {
+                ((TextView) rootView.findViewById(R.id.report_cobertura_value)).setText("-");
             }
 
             ArchType archType = recomendation.getArchType();
             if (archType != null) {
                 ((TextView) rootView.findViewById(R.id.report_tipo_marco_value)).setText(archType.getName());
+            } else {
+                ((TextView) rootView.findViewById(R.id.report_tipo_marco_value)).setText("-");
             }
 
             Double separation = recomendation.getSeparation();
             if (separation != null) {
                 ((TextView) rootView.findViewById(R.id.report_separacion_value)).setText(numberFormat.format(separation));
+            } else {
+                ((TextView) rootView.findViewById(R.id.report_separacion_value)).setText("-");
             }
 
             String observations = recomendation.getObservations();
             if (observations != null) {
                 ((TextView) rootView.findViewById(R.id.report_observaciones_soporte_value)).setText(observations);
+            } else {
+                ((TextView) rootView.findViewById(R.id.report_observaciones_soporte_value)).setText("-");
             }
 
             SupportPattern wallPattern = recomendation.getWallPattern();
@@ -410,9 +430,11 @@ public class MappingReportMainFragment extends SkavaFragment {
                 dxdyTextView.setText(dxdy);
 
                 SupportPatternType patternType = wallPattern.getType();
+                TextView patternTypeTextView = (TextView) rootView.findViewById(R.id.report_wall_pattern_type);
                 if (patternType != null) {
-                    TextView patternTypeTextView = (TextView) rootView.findViewById(R.id.report_wall_pattern_type);
                     patternTypeTextView.setText(patternType.getName());
+                } else {
+                    patternTypeTextView.setText("-");
                 }
             }
 
@@ -432,9 +454,11 @@ public class MappingReportMainFragment extends SkavaFragment {
                 dxdyTextView.setText(dxdy);
 
                 SupportPatternType patternType = roofPattern.getType();
+                TextView patternTypeTextView = (TextView) rootView.findViewById(R.id.report_roof_pattern_type);
                 if (patternType != null) {
-                    TextView patternTypeTextView = (TextView) rootView.findViewById(R.id.report_roof_pattern_type);
                     patternTypeTextView.setText(patternType.getName());
+                } else {
+                    patternTypeTextView.setText("-");
                 }
             }
         }
@@ -456,15 +480,23 @@ public class MappingReportMainFragment extends SkavaFragment {
                 textViewNumber.setGravity(Gravity.CENTER);
                 numberRow.addView(textViewNumber);
 
+
                 TableRow typeRow = (TableRow) rootView.findViewById(R.id.report_disc_type_row);
                 TextView textViewType = new TextView(getActivity());
                 textViewType.setLayoutParams(new TableRow.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
                 textViewType.setBackgroundResource(R.drawable.text_box);
                 textViewType.setGravity(Gravity.CENTER);
                 typeRow.addView(textViewType);
-                DiscontinuityType type = currentDiscFamily.getType();
-                if (type != null) {
-                    textViewType.setText(type.getName());
+
+                if (currentDiscFamily != null) {
+                    DiscontinuityType type = currentDiscFamily.getType();
+                    if (SkavaUtils.isDefined(type)) {
+                        textViewType.setText(type.getName());
+                    } else {
+                        textViewType.setText("-");
+                    }
+                } else {
+                    textViewType.setText("-");
                 }
 
                 TableRow relevanceRow = (TableRow) rootView.findViewById(R.id.report_disc_relevance_row);
@@ -473,10 +505,17 @@ public class MappingReportMainFragment extends SkavaFragment {
                 textViewRelevance.setBackgroundResource(R.drawable.text_box);
                 textViewRelevance.setGravity(Gravity.CENTER);
                 relevanceRow.addView(textViewRelevance);
-                DiscontinuityRelevance relevance = currentDiscFamily.getRelevance();
-                if (relevance != null) {
-                    textViewRelevance.setText(relevance.toString());
+                if (currentDiscFamily != null) {
+                    DiscontinuityRelevance relevance = currentDiscFamily.getRelevance();
+                    if (SkavaUtils.isDefined(relevance)) {
+                        textViewRelevance.setText(relevance.toString());
+                    } else {
+                        textViewRelevance.setText("-");
+                    }
+                } else {
+                    textViewRelevance.setText("-");
                 }
+
 
                 TableRow dipDirRow = (TableRow) rootView.findViewById(R.id.report_disc_dip_dir_row);
                 TextView textViewDipDir = new TextView(getActivity());
@@ -484,9 +523,15 @@ public class MappingReportMainFragment extends SkavaFragment {
                 textViewDipDir.setBackgroundResource(R.drawable.text_box);
                 textViewDipDir.setGravity(Gravity.CENTER);
                 dipDirRow.addView(textViewDipDir);
-                Short dipDir = currentDiscFamily.getDipDirDegrees();
-                if (dipDir != null) {
-                    textViewDipDir.setText(dipDir.toString());
+                if (currentDiscFamily != null) {
+                    Short dipDir = currentDiscFamily.getDipDirDegrees();
+                    if (dipDir != null) {
+                        textViewDipDir.setText(dipDir.toString());
+                    } else {
+                        textViewDipDir.setText("-");
+                    }
+                } else {
+                    textViewDipDir.setText("-");
                 }
 
                 TableRow dipRow = (TableRow) rootView.findViewById(R.id.report_disc_dip_row);
@@ -495,9 +540,15 @@ public class MappingReportMainFragment extends SkavaFragment {
                 textViewDip.setBackgroundResource(R.drawable.text_box);
                 textViewDip.setGravity(Gravity.CENTER);
                 dipRow.addView(textViewDip);
-                Short dip = currentDiscFamily.getDipDegrees();
-                if (dip != null) {
-                    textViewDip.setText(dip.toString());
+                if (currentDiscFamily != null) {
+                    Short dip = currentDiscFamily.getDipDegrees();
+                    if (dip != null) {
+                        textViewDip.setText(dip.toString());
+                    } else {
+                        textViewDip.setText("-");
+                    }
+                } else {
+                    textViewDip.setText("-");
                 }
 
                 TableRow spacingRow = (TableRow) rootView.findViewById(R.id.report_disc_spacing_row);
@@ -506,9 +557,15 @@ public class MappingReportMainFragment extends SkavaFragment {
                 textViewSpacing.setBackgroundResource(R.drawable.text_box);
                 textViewSpacing.setGravity(Gravity.CENTER);
                 spacingRow.addView(textViewSpacing);
-                Spacing discFamilySpacing = currentDiscFamily.getSpacing();
-                if (discFamilySpacing != null) {
-                    textViewSpacing.setText(discFamilySpacing.getShortDescription());
+                if (currentDiscFamily != null) {
+                    Spacing discFamilySpacing = currentDiscFamily.getSpacing();
+                    if (SkavaUtils.isDefined(discFamilySpacing)) {
+                        textViewSpacing.setText(discFamilySpacing.getShortDescription());
+                    } else {
+                        textViewSpacing.setText("-");
+                    }
+                } else {
+                    textViewSpacing.setText("-");
                 }
 
                 TableRow persistenceRow = (TableRow) rootView.findViewById(R.id.report_disc_persistence_row);
@@ -517,9 +574,15 @@ public class MappingReportMainFragment extends SkavaFragment {
                 textViewPersistence.setBackgroundResource(R.drawable.text_box);
                 textViewPersistence.setGravity(Gravity.CENTER);
                 persistenceRow.addView(textViewPersistence);
-                Persistence discFamilyPersistence = currentDiscFamily.getPersistence();
-                if (discFamilyPersistence != null) {
-                    textViewPersistence.setText(discFamilyPersistence.getShortDescription());
+                if (currentDiscFamily != null) {
+                    Persistence discFamilyPersistence = currentDiscFamily.getPersistence();
+                    if (SkavaUtils.isDefined(discFamilyPersistence)) {
+                        textViewPersistence.setText(discFamilyPersistence.getShortDescription());
+                    } else {
+                        textViewPersistence.setText("-");
+                    }
+                } else {
+                    textViewPersistence.setText("-");
                 }
 
                 TableRow apertureRow = (TableRow) rootView.findViewById(R.id.report_disc_aperture_row);
@@ -528,9 +591,15 @@ public class MappingReportMainFragment extends SkavaFragment {
                 textViewAperture.setBackgroundResource(R.drawable.text_box);
                 textViewAperture.setGravity(Gravity.CENTER);
                 apertureRow.addView(textViewAperture);
-                Aperture discFamilyAperture = currentDiscFamily.getAperture();
-                if (discFamilyAperture != null) {
-                    textViewAperture.setText(discFamilyAperture.getShortDescription());
+                if (currentDiscFamily != null) {
+                    Aperture discFamilyAperture = currentDiscFamily.getAperture();
+                    if (SkavaUtils.isDefined(discFamilyAperture)) {
+                        textViewAperture.setText(discFamilyAperture.getShortDescription());
+                    } else {
+                        textViewAperture.setText("-");
+                    }
+                } else {
+                    textViewAperture.setText("-");
                 }
 
                 TableRow shapeRow = (TableRow) rootView.findViewById(R.id.report_disc_shape_row);
@@ -539,9 +608,15 @@ public class MappingReportMainFragment extends SkavaFragment {
                 textViewShape.setBackgroundResource(R.drawable.text_box);
                 textViewShape.setGravity(Gravity.CENTER);
                 shapeRow.addView(textViewShape);
-                DiscontinuityShape shape = currentDiscFamily.getShape();
-                if (shape != null) {
-                    textViewShape.setText(shape.getName());
+                if (currentDiscFamily != null) {
+                    DiscontinuityShape shape = currentDiscFamily.getShape();
+                    if (SkavaUtils.isDefined(shape)) {
+                        textViewShape.setText(shape.getName());
+                    } else {
+                        textViewShape.setText("-");
+                    }
+                } else {
+                    textViewShape.setText("-");
                 }
 
                 TableRow conditionRow = (TableRow) rootView.findViewById(R.id.report_disc_condition_row);
@@ -550,9 +625,15 @@ public class MappingReportMainFragment extends SkavaFragment {
                 textViewCondition.setBackgroundResource(R.drawable.text_box);
                 textViewCondition.setGravity(Gravity.CENTER);
                 conditionRow.addView(textViewCondition);
-                Roughness discFamilyRoughness = currentDiscFamily.getRoughness();
-                if (discFamilyRoughness != null) {
-                    textViewCondition.setText(discFamilyRoughness.getShortDescription());
+                if (currentDiscFamily != null) {
+                    Roughness discFamilyRoughness = currentDiscFamily.getRoughness();
+                    if (SkavaUtils.isDefined(discFamilyRoughness)) {
+                        textViewCondition.setText(discFamilyRoughness.getShortDescription());
+                    } else {
+                        textViewCondition.setText("-");
+                    }
+                } else {
+                    textViewCondition.setText("-");
                 }
 
                 TableRow infillingRow = (TableRow) rootView.findViewById(R.id.report_disc_infilling_row);
@@ -561,9 +642,15 @@ public class MappingReportMainFragment extends SkavaFragment {
                 textViewInfilling.setBackgroundResource(R.drawable.text_box);
                 textViewInfilling.setGravity(Gravity.CENTER);
                 infillingRow.addView(textViewInfilling);
-                Infilling discFamilyInfilling = currentDiscFamily.getInfilling();
-                if (discFamilyInfilling != null) {
-                    textViewInfilling.setText(discFamilyInfilling.getShortDescription());
+                if (currentDiscFamily != null) {
+                    Infilling discFamilyInfilling = currentDiscFamily.getInfilling();
+                    if (SkavaUtils.isDefined(discFamilyInfilling)) {
+                        textViewInfilling.setText(discFamilyInfilling.getShortDescription());
+                    } else {
+                        textViewInfilling.setText("-");
+                    }
+                } else {
+                    textViewInfilling.setText("-");
                 }
 
                 TableRow weatheringRow = (TableRow) rootView.findViewById(R.id.report_disc_weathering_row);
@@ -572,10 +659,17 @@ public class MappingReportMainFragment extends SkavaFragment {
                 textViewWeathering.setBackgroundResource(R.drawable.text_box);
                 textViewWeathering.setGravity(Gravity.CENTER);
                 weatheringRow.addView(textViewWeathering);
-                Weathering discFamilyWeathering = currentDiscFamily.getWeathering();
-                if (discFamilyWeathering != null) {
-                    textViewWeathering.setText(discFamilyWeathering.getShortDescription());
+                if (currentDiscFamily != null) {
+                    Weathering discFamilyWeathering = currentDiscFamily.getWeathering();
+                    if (SkavaUtils.isDefined(discFamilyWeathering)) {
+                        textViewWeathering.setText(discFamilyWeathering.getShortDescription());
+                    } else {
+                        textViewWeathering.setText("-");
+                    }
+                } else {
+                    textViewWeathering.setText("-");
                 }
+
 
                 TableRow jrRow = (TableRow) rootView.findViewById(R.id.report_disc_jr_row);
                 TextView textViewJr = new TextView(getActivity());
@@ -583,9 +677,15 @@ public class MappingReportMainFragment extends SkavaFragment {
                 textViewJr.setBackgroundResource(R.drawable.text_box);
                 textViewJr.setGravity(Gravity.CENTER);
                 jrRow.addView(textViewJr);
-                Jr discFamilyJr = currentDiscFamily.getJr();
-                if (discFamilyJr != null) {
-                    textViewJr.setText(discFamilyJr.getShortDescription());
+                if (currentDiscFamily != null) {
+                    Jr discFamilyJr = currentDiscFamily.getJr();
+                    if (SkavaUtils.isDefined(discFamilyJr)) {
+                        textViewJr.setText(discFamilyJr.getShortDescription());
+                    } else {
+                        textViewJr.setText("-");
+                    }
+                } else {
+                    textViewJr.setText("-");
                 }
 
                 TableRow jaRow = (TableRow) rootView.findViewById(R.id.report_disc_ja_row);
@@ -594,10 +694,17 @@ public class MappingReportMainFragment extends SkavaFragment {
                 textViewJa.setBackgroundResource(R.drawable.text_box);
                 textViewJa.setGravity(Gravity.CENTER);
                 jaRow.addView(textViewJa);
-                Ja discFamilyJa = currentDiscFamily.getJa();
-                if (discFamilyJa != null) {
-                    textViewJa.setText(discFamilyJa.getShortDescription());
+                if (currentDiscFamily != null) {
+                    Ja discFamilyJa = currentDiscFamily.getJa();
+                    if (SkavaUtils.isDefined(discFamilyJa)) {
+                        textViewJa.setText(discFamilyJa.getShortDescription());
+                    } else {
+                        textViewJa.setText("-");
+                    }
+                } else {
+                    textViewJa.setText("-");
                 }
+
 
                 TableRow dipDirWater = (TableRow) rootView.findViewById(R.id.report_disc_water_row);
                 TextView textViewWater = new TextView(getActivity());
@@ -605,10 +712,17 @@ public class MappingReportMainFragment extends SkavaFragment {
                 textViewWater.setBackgroundResource(R.drawable.text_box);
                 textViewWater.setGravity(Gravity.CENTER);
                 dipDirWater.addView(textViewWater);
-                DiscontinuityWater water = currentDiscFamily.getWater();
-                if (water != null) {
-                    textViewWater.setText(water.getName());
+                if (currentDiscFamily != null) {
+                    DiscontinuityWater water = currentDiscFamily.getWater();
+                    if (SkavaUtils.isDefined(water)) {
+                        textViewWater.setText(water.getName());
+                    } else {
+                        textViewWater.setText("-");
+                    }
+                } else {
+                    textViewWater.setText("-");
                 }
+
             }
         }
 
@@ -684,7 +798,7 @@ public class MappingReportMainFragment extends SkavaFragment {
         RMR_Calculation RMRCalculation = getRMRCalculationContext();
         RMRInput input = new RMRInput();
         input.setStrength(RMRCalculation.getStrengthOfRock().getValue());
-        if (RMRCalculation.getRqd() == null){
+        if (RMRCalculation.getRqd() == null) {
             //Pull RQD from QBartonCalculation
             RQD rqd = getQCalculationContext().getRqd();
             RQD_RMR rqdRMR = RQD_RMR.findWrapper(rqd);

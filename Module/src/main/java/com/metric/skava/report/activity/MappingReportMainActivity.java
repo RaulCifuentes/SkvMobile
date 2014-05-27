@@ -47,7 +47,6 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
                     .add(R.id.container, new MappingReportMainFragment())
                     .commit();
         }
-//        isPreview = getIntent().getBooleanExtra(IS_PREVIEW, false);
 
     }
 
@@ -160,17 +159,18 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
 
 
     private boolean saveDraft() {
+        boolean success = false;
         try {
             Assessment currentAssessment = getCurrentAssessment();
             LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
             localAssessmentDAO.saveAssessment(currentAssessment);
-            return true;
+            success = true;
         } catch (DAOException e) {
             e.printStackTrace();
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-            return false;
         }
+        return success;
     }
 
 
@@ -181,7 +181,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
             Assessment currentAssessment = getCurrentAssessment();
             RemoteAssessmentDAO remoteAssessmentDAO = getDAOFactory().getRemoteAssessmentDAO(DAOFactory.Flavour.DROPBOX);
             remoteAssessmentDAO.saveAssessment(currentAssessment);
-
+            //it executes succesfully then
             currentAssessment.setSentToCloud(true);
             LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
             localAssessmentDAO.updateAssessment(currentAssessment, false);

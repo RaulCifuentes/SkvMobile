@@ -6,7 +6,7 @@ import com.metric.skava.rocksupport.model.SupportRequirement;
 /**
  * Created by metricboy on 3/4/14.
  */
-public class SupportRecomendation {
+public class SupportRecommendation {
 
     private Long _id;
     private SupportRequirement requirementBase;

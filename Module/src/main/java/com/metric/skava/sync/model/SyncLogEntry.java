@@ -11,6 +11,7 @@ public class SyncLogEntry implements Serializable {
     public enum Domain {
         GLOBAL_DATA,
         USER_RELATED_DATA,
+        PICTURES,
         ROLES,
         EXCAVATIONMETHODS,
         EXCAVATIONSECTIONS,
