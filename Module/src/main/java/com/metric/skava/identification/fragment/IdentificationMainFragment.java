@@ -407,9 +407,6 @@ public class IdentificationMainFragment extends SkavaFragment implements
                         //TODO format and parse Peg values
                         enteredValue = Double.parseDouble(text);
                         finalPeg = enteredValue;
-                        if (finalPeg < initialPeg) {
-                            finalPegEditText.setError("Final Peg must be greater than Initial Peg!");
-                        }
                     } catch (NumberFormatException e) {
                         finalPegEditText.setError("Final Peg must be a number!");
                     }
