@@ -8,6 +8,7 @@ import com.dropbox.sync.android.DbxTable;
  */
 public class ClientDropboxTable extends DropboxBaseTable implements DropboxTable {
 
+    public static final String CLIENTS_DROPBOX_TABLE = "Clients";
 
     public ClientDropboxTable(DbxDatastore datastore) {
         super(datastore);
@@ -15,7 +16,7 @@ public class ClientDropboxTable extends DropboxBaseTable implements DropboxTable
 
     @Override
     public DbxTable getBaseDropboxTable() {
-        return mDatastore.getTable("Clients");
+        return mDatastore.getTable(CLIENTS_DROPBOX_TABLE);
     }
 
     @Override

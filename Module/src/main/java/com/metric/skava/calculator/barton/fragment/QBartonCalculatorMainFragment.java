@@ -17,9 +17,18 @@ import com.metric.skava.BuildConfig;
 import com.metric.skava.R;
 import com.metric.skava.app.fragment.SkavaFragment;
 import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.calculator.barton.model.Ja;
+import com.metric.skava.calculator.barton.model.Jn;
+import com.metric.skava.calculator.barton.model.Jr;
+import com.metric.skava.calculator.barton.model.Jw;
+import com.metric.skava.calculator.barton.model.RQD;
+import com.metric.skava.calculator.barton.model.SRF;
+
+import java.util.Observable;
+import java.util.Observer;
 
 public class QBartonCalculatorMainFragment extends SkavaFragment
-        implements OnTabChangeListener {
+        implements OnTabChangeListener, Observer {
 
     public static final String TAB_RQD = "RQD";
     public static final String TAB_JN = "Jn";
@@ -180,4 +189,44 @@ public class QBartonCalculatorMainFragment extends SkavaFragment
         }
     }
 
+    @Override
+    public void update(Observable observable, Object data) {
+        int colorBlue = this.getResources().getColor(R.color.holo_blue_dark);
+        if (data instanceof RQD) {
+            mTabWidget = (TabWidget) mRoot.findViewById(android.R.id.tabs);
+            View view = mTabWidget.getChildAt(0);
+            TextView tv = (TextView) view.findViewById(android.R.id.title);
+            tv.setTextColor(colorBlue);
+        }
+        if (data instanceof Jn) {
+            mTabWidget = (TabWidget) mRoot.findViewById(android.R.id.tabs);
+            View view = mTabWidget.getChildAt(0);
+            TextView tv = (TextView) view.findViewById(android.R.id.title);
+            tv.setTextColor(colorBlue);
+        }
+        if (data instanceof Jr) {
+            mTabWidget = (TabWidget) mRoot.findViewById(android.R.id.tabs);
+            View view = mTabWidget.getChildAt(0);
+            TextView tv = (TextView) view.findViewById(android.R.id.title);
+            tv.setTextColor(colorBlue);
+        }
+        if (data instanceof Ja) {
+            mTabWidget = (TabWidget) mRoot.findViewById(android.R.id.tabs);
+            View view = mTabWidget.getChildAt(0);
+            TextView tv = (TextView) view.findViewById(android.R.id.title);
+            tv.setTextColor(colorBlue);
+        }
+        if (data instanceof Jw) {
+            mTabWidget = (TabWidget) mRoot.findViewById(android.R.id.tabs);
+            View view = mTabWidget.getChildAt(0);
+            TextView tv = (TextView) view.findViewById(android.R.id.title);
+            tv.setTextColor(colorBlue);
+        }
+        if (data instanceof SRF) {
+            mTabWidget = (TabWidget) mRoot.findViewById(android.R.id.tabs);
+            View view = mTabWidget.getChildAt(0);
+            TextView tv = (TextView) view.findViewById(android.R.id.title);
+            tv.setTextColor(colorBlue);
+        }
+    }
 }

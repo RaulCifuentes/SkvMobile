@@ -61,15 +61,20 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
     private ShotcreteType selectedShotcreteType;
     private SkavaEntityAdapter shotcreteTypeAdapter;
 
+    private Spinner shotcreteCoverageSpinner;
+    private int shotcreteCoverageSpinnerLastPosition;
+    private Coverage selectedShotcreteCoverage;
+    private SkavaEntityAdapter shotcreteCoverageAdapter;
+
     private Spinner meshTypeSpinner;
     private int meshTypeSpinnerLastPosition;
     private MeshType selectedMeshType;
     private SkavaEntityAdapter meshTypeAdapter;
 
-    private Spinner coverageSpinner;
-    private int coverageSpinnerLastPosition;
-    private Coverage selectedCoverage;
-    private SkavaEntityAdapter coverageAdapter;
+    private Spinner meshCoverageSpinner;
+    private int meshCoverageSpinnerLastPosition;
+    private Coverage selectedMeshCoverage;
+    private SkavaEntityAdapter meshCoverageAdapter;
 
     private Spinner archTypeSpinner;
     private int archTypeSpinnerLastPosition;
@@ -102,7 +107,7 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
 
         this.archTypeSpinnerLastPosition = -1;
         this.boltTypeSpinnerLastPosition = -1;
-        this.coverageSpinnerLastPosition = -1;
+        this.meshCoverageSpinnerLastPosition = -1;
         this.meshTypeSpinnerLastPosition = -1;
         this.roofPatternSpinnerLastPosition = -1;
         this.shotcreteTypeSpinnerLastPosition = -1;
@@ -144,6 +149,25 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         shotcreteTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
 
+        //******SHOTCRETE COVERAGE_TYPE ***///
+        List<Coverage> shotcreteCoverageList;
+        LocalCoverageDAO localShotcreteCoverageDAO = null;
+        try {
+            localShotcreteCoverageDAO = getDAOFactory().getLocalCoverageDAO();
+            shotcreteCoverageList = localShotcreteCoverageDAO.getAllCoverages();
+            shotcreteCoverageList.add(new Coverage("HINT", "Select one type ..."));
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            return;
+        }
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        shotcreteCoverageAdapter = new SkavaEntityAdapter<Coverage>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, shotcreteCoverageList);
+        // Specify the layout to use when the list of choices appears
+        shotcreteCoverageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+
+
         //******MESH_TYPE ***///
         List<MeshType> meshTypeList;
         LocalMeshTypeDAO localMeshTypeDAO = null;
@@ -162,22 +186,22 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         meshTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
 
-        //******COVERAGE_TYPE ***///
-        List<Coverage> coverageList;
-        LocalCoverageDAO localCoverageDAO = null;
+        //******MESH COVERAGE_TYPE ***///
+        List<Coverage> meshCoverageList;
+        LocalCoverageDAO localMeshCoverageDAO = null;
         try {
-            localCoverageDAO = getDAOFactory().getLocalCoverageDAO();
-            coverageList = localCoverageDAO.getAllCoverages();
-            coverageList.add(new Coverage("HINT", "Select one type ..."));
+            localMeshCoverageDAO = getDAOFactory().getLocalCoverageDAO();
+            meshCoverageList = localMeshCoverageDAO.getAllCoverages();
+            meshCoverageList.add(new Coverage("HINT", "Select one type ..."));
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             return;
         }
         // Create an ArrayAdapter using the string array and a default spinner layout
-        coverageAdapter = new SkavaEntityAdapter<Coverage>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, coverageList);
+        meshCoverageAdapter = new SkavaEntityAdapter<Coverage>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, meshCoverageList);
         // Specify the layout to use when the list of choices appears
-        coverageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        meshCoverageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
 
         //******MESH_TYPE ***///
@@ -253,6 +277,10 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         shotcreteTypeSpinner.setAdapter(shotcreteTypeAdapter);
         shotcreteTypeSpinner.setOnItemSelectedListener(this);
 
+        shotcreteCoverageSpinner = (Spinner) mRootView.findViewById(R.id.instructions_shotcrete_coverage_spinner);
+        shotcreteCoverageSpinner.setAdapter(shotcreteCoverageAdapter);
+        shotcreteCoverageSpinner.setOnItemSelectedListener(this);
+
         roofPatternSpinner = (Spinner) mRootView.findViewById(R.id.instructions_roof_pattern_spinner);
         roofPatternSpinner.setAdapter(roofPatternAdapter);
         roofPatternSpinner.setOnItemSelectedListener(this);
@@ -278,9 +306,9 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         meshTypeSpinner.setAdapter(meshTypeAdapter);
         meshTypeSpinner.setOnItemSelectedListener(this);
 
-        coverageSpinner = (Spinner) mRootView.findViewById(R.id.instructions_coverage_spinner);
-        coverageSpinner.setAdapter(coverageAdapter);
-        coverageSpinner.setOnItemSelectedListener(this);
+        meshCoverageSpinner = (Spinner) mRootView.findViewById(R.id.instructions_mesh_coverage_spinner);
+        meshCoverageSpinner.setAdapter(meshCoverageAdapter);
+        meshCoverageSpinner.setOnItemSelectedListener(this);
 
         archTypeSpinner = (Spinner) mRootView.findViewById(R.id.instructions_arch_type_spinner);
         archTypeSpinner.setAdapter(archTypeAdapter);
@@ -373,6 +401,13 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
             shotcreteTypeSpinner.setSelection(shotcreteTypeAdapter.getPosition(shotcreteType)); //display hint
         } else {
             shotcreteTypeSpinner.setSelection(shotcreteTypeAdapter.getCount() - 1); //display hint
+        }
+
+        Coverage shotcreteCoverage = supportRecommendation.getShotcreteCoverage();
+        if (shotcreteCoverage != null) {
+            shotcreteCoverageSpinner.setSelection(shotcreteCoverageAdapter.getPosition(shotcreteCoverage)); //display hint
+        } else {
+            shotcreteCoverageSpinner.setSelection(shotcreteCoverageAdapter.getCount() - 1); //display hint
         }
 
         SupportPattern roofPattern = supportRecommendation.getRoofPattern();
@@ -486,11 +521,11 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
             meshTypeSpinner.setSelection(meshTypeAdapter.getCount() - 1); //display hint
         }
 
-        Coverage coverage = supportRecommendation.getCoverage();
-        if (coverage != null) {
-            coverageSpinner.setSelection(coverageAdapter.getPosition(coverage)); //display hint
+        Coverage meshCoverage = supportRecommendation.getMeshCoverage();
+        if (meshCoverage != null) {
+            meshCoverageSpinner.setSelection(meshCoverageAdapter.getPosition(meshCoverage)); //display hint
         } else {
-            coverageSpinner.setSelection(coverageAdapter.getCount() - 1); //display hint
+            meshCoverageSpinner.setSelection(meshCoverageAdapter.getCount() - 1); //display hint
         }
 
         ArchType archType = supportRecommendation.getArchType();
@@ -560,6 +595,13 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
                 shotcreteTypeSpinnerLastPosition = position;
             }
         }
+        if (parent == shotcreteCoverageSpinner) {
+            if (position != shotcreteCoverageSpinner.getAdapter().getCount() && position != shotcreteCoverageSpinnerLastPosition) {
+                selectedShotcreteCoverage = (Coverage) parent.getItemAtPosition(position);
+                getSkavaContext().getAssessment().getRecomendation().setShotcreteCoverage(selectedShotcreteCoverage);
+                shotcreteCoverageSpinnerLastPosition = position;
+            }
+        }
         if (parent == roofPatternSpinner) {
             if (position != roofPatternSpinner.getAdapter().getCount() && position != roofPatternSpinnerLastPosition) {
                 SupportRecommendation recommendation = getSkavaContext().getAssessment().getRecomendation();
@@ -606,11 +648,11 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
                 meshTypeSpinnerLastPosition = position;
             }
         }
-        if (parent == coverageSpinner) {
-            if (position != coverageSpinner.getAdapter().getCount() && position != coverageSpinnerLastPosition) {
-                selectedCoverage = (Coverage) parent.getItemAtPosition(position);
-                getSkavaContext().getAssessment().getRecomendation().setCoverage(selectedCoverage);
-                coverageSpinnerLastPosition = position;
+        if (parent == meshCoverageSpinner) {
+            if (position != meshCoverageSpinner.getAdapter().getCount() && position != meshCoverageSpinnerLastPosition) {
+                selectedMeshCoverage = (Coverage) parent.getItemAtPosition(position);
+                getSkavaContext().getAssessment().getRecomendation().setMeshCoverage(selectedMeshCoverage);
+                meshCoverageSpinnerLastPosition = position;
             }
         }
         if (parent == archTypeSpinner) {

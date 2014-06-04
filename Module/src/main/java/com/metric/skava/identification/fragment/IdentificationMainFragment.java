@@ -3,6 +3,7 @@ package com.metric.skava.identification.fragment;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -11,18 +12,17 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.metric.skava.R;
@@ -56,7 +56,7 @@ import java.util.List;
 /**
  * Created by metricboy on 2/21/14.
  */
-public class IdentificationMainFragment extends SkavaFragment implements
+public class IdentificationMainFragment extends SkavaFragment implements TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
 
 
@@ -66,6 +66,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
     private EditText slopeTextEdit;
     private EditText orientationEditText;
     private TextView advanceTextView;
+    private TextView accumAdvanceTextView;
 
     private Spinner projectSpinner;
     private int projectSpinnerLastPosition;
@@ -85,6 +86,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
     private DAOFactory daoFactory;
     private NumberFormat numberFormatter;
     private Typeface iconTypeFace;
+    private Typeface anotherTypeFace;
 
     private SkavaEntityAdapter projectAdapter;
     private ExcavationProject selectedProject;
@@ -110,8 +112,9 @@ public class IdentificationMainFragment extends SkavaFragment implements
 
     private Double finalPeg;
     private Double initialPeg;
-    private Date selectedDate;
+    private Calendar selectedDateTime;
     private Double advance;
+    private Double accumAdvance;
 
     private PegNumberFormat pegNumberFormat;
 
@@ -122,6 +125,8 @@ public class IdentificationMainFragment extends SkavaFragment implements
 
     //********** Callback interface: This is an idea to force the Identification phase before any other stage could be used
     private TunnelFaceIdentificationListener mCallback;
+
+
 
     public interface TunnelFaceIdentificationListener {
         public void onTunelFaceIdentified();
@@ -149,6 +154,9 @@ public class IdentificationMainFragment extends SkavaFragment implements
 
         iconTypeFace = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Android-Dev-Icons-1.ttf");
+
+        anotherTypeFace = Typeface.createFromAsset(getActivity().getAssets(),
+                "fonts/Android-Dev-Icons-2.ttf");
 
         methodSpinnerLastPosition = -1;
         sectionSpinnerLastPosition = -1;
@@ -213,7 +221,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
         methodAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
 
-        selectedDate = getCurrentAssessment().getDate();
+        selectedDateTime = getCurrentAssessment().getDateTime();
         selectedFace = getCurrentAssessment().getFace();
         selectedTunnel = getCurrentAssessment().getTunnel();
         selectedProject = getCurrentAssessment().getProject();
@@ -222,6 +230,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
         initialPeg = getSkavaContext().getAssessment().getInitialPeg();
         finalPeg = getSkavaContext().getAssessment().getFinalPeg();
         advance = getSkavaContext().getAssessment().getCurrentAdvance();
+        accumAdvance = getSkavaContext().getAssessment().getAccummAdvance();
 
         pegNumberFormat = new PegNumberFormat();
 
@@ -262,8 +271,8 @@ public class IdentificationMainFragment extends SkavaFragment implements
         // ***************** TUNNEL ******************
         tunnelSpinner = (Spinner) rootView.findViewById(R.id.mapping_gral_info_tunnel_spinner);
         //tunnel adapter remains null until a project is selected
-        //tunnelSpinner.setAdapter(tunnelAdapter);
         if (selectedTunnel != null) {
+            tunnelSpinner.setAdapter(tunnelAdapter);
             tunnelSpinner.setSelection(tunnelSpinnerLastPosition);
 //            tunnelAdapter = prepareTunnelAdapter(selectedTunnel.getProject());
 //            tunnelSpinner.setSelection(tunnelAdapter.getPosition(selectedTunnel));
@@ -273,13 +282,19 @@ public class IdentificationMainFragment extends SkavaFragment implements
         // ***************** TUNNEL FACE ******************
         faceSpinner = (Spinner) rootView.findViewById(R.id.mapping_gral_info_face_spinner);
         //face adapter remains null until a project is selected
-        //faceSpinner.setAdapter(faceAdapter);
         if (selectedFace != null) {
+            faceSpinner.setAdapter(faceAdapter);
             faceSpinner.setSelection(faceSpinnerLastPosition);
 //            faceAdapter = prepareFaceAdapter(selectedFace.getTunnel());
 //            faceSpinner.setSelection(faceAdapter.getPosition(selectedFace)); //display hint
         }
         faceSpinner.setOnItemSelectedListener(this);
+
+        if (identificationCompleted){
+            projectSpinner.setEnabled(false);
+            tunnelSpinner.setEnabled(false);
+            faceSpinner.setEnabled(false);
+        }
 
         // ***************** EXCAVATION SECTION ******************
         sectionSpinner = (Spinner) rootView.findViewById(R.id.mapping_gral_info_section_spinner);
@@ -301,11 +316,15 @@ public class IdentificationMainFragment extends SkavaFragment implements
         icon.setTypeface(iconTypeFace);
         icon.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
 
-        if (selectedDate != null) {
-            ((TextView) rootView.findViewById(R.id.mapping_gral_info_date_value)).setText(DateFormat.getDateInstance().format(selectedDate));
+        if (selectedDateTime != null) {
+            Date calendarAsDate = selectedDateTime.getTime();
+            DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
+            String dateAsString = formatter.format(calendarAsDate);
+            ((TextView) rootView.findViewById(R.id.mapping_gral_info_date_value)).setText(dateAsString);
         } else {
-            java.lang.String todayDate = DateFormat.getDateInstance().format(SkavaUtils.getCurrentDate());
-            ((TextView) rootView.findViewById(R.id.mapping_gral_info_date_value)).setText(todayDate);
+            DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
+            String dateAsString = formatter.format(SkavaUtils.getCurrentDate());
+            ((TextView) rootView.findViewById(R.id.mapping_gral_info_date_value)).setText(dateAsString);
         }
         rootView.findViewById(R.id.mapping_gral_date_button).setOnClickListener(
                 new View.OnClickListener() {
@@ -332,26 +351,93 @@ public class IdentificationMainFragment extends SkavaFragment implements
                     }
                 });
 
+        ///*****************  TIME ************
+        TextView timeIcon = (TextView) rootView.findViewById(R.id.mapping_gral_time_button);
+        timeIcon.setTypeface(anotherTypeFace);
+        timeIcon.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+
+//        if (selectedDateTime != null) {
+//            ((TextView) rootView.findViewById(R.id.mapping_gral_info_date_value)).setText(DateFormat.getDateInstance().format(selectedDateTime));
+//        } else {
+//            java.lang.String todayDate = DateFormat.getDateInstance().format(SkavaUtils.getCurrentDate());
+//            ((TextView) rootView.findViewById(R.id.mapping_gral_info_date_value)).setText(todayDate);
+//        }
+        rootView.findViewById(R.id.mapping_gral_time_button).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DialogFragment newFragment = new DialogFragment() {
+                            @Override
+                            public Dialog onCreateDialog(
+                                    Bundle savedInstanceState) {
+                                final Calendar c = Calendar.getInstance();
+                                int hour = c.get(Calendar.HOUR_OF_DAY);
+                                int minute = c.get(Calendar.MINUTE);
+
+                                // Create a new instance of DatePickerDialog and
+                                // return it
+//                                return new TimePickerDialog(getActivity(),
+//                                        IdentificationMainFragment.this,
+//                                        hour, minute, android.text.format.DateFormat.is24HourFormat(getActivity()));
+                                return new TimePickerDialog(getActivity(),
+                                        IdentificationMainFragment.this,
+                                        hour, minute, false);
+                            }
+                        };
+                        newFragment.show(getActivity().getSupportFragmentManager(),
+                                "timePicker");
+                    }
+                });
+
+
 
         // ***************** GEOLOGIST ******************
         TextView geologistTextView = (TextView) rootView.findViewById(R.id.mapping_gral_info_geologist_value);
         geologistTextView.setText(geologist.getName());
 
-        // ***************** PK ******************
+        // ***************** INITIAL CHAINAGE ******************
         initialPegEditText = (EditText) rootView.findViewById(R.id.mapping_gral_info_initial_pk_value);
         initialPegEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
 
         if (initialPeg != null) {
             initialPegEditText.setText(initialPeg.toString());
         }
-        initialPegEditText.addTextChangedListener(new TextValidator(initialPegEditText) {
+        initialPegEditText.addTextChangedListener(new TextWatcher() {
+
             @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String text = initialPegEditText.getText().toString();
+                validate(initialPegEditText, text);
+                //do job here owhen Edittext lose focus
+                if (initialPeg != null) {
+                    getCurrentAssessment().setInitialPeg(initialPeg);
+                    String initialPegFormatted = pegNumberFormat.format(initialPeg);
+                    TextView initialPegFormattedEditText = (TextView) rootView.findViewById(R.id.mapping_gral_info_initial_pk_value_formatted);
+                    initialPegFormattedEditText.setText(initialPegFormatted);
+                    if (finalPeg != null) {
+                        advance = Math.abs(finalPeg - initialPeg);
+                        getCurrentAssessment().setCurrentAdvance(advance);
+                        advanceTextView.setText(numberFormatter.format(advance));
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = initialPegEditText.getText().toString();
+                validate(initialPegEditText, text);
+            }
+
             public void validate(TextView textView, java.lang.String text) {
                 if (!text.equals("")) {
                     /* Validation code here */
                     Double enteredValue = 0d;
                     try {
-                        //TODO format and parse Peg values
                         enteredValue = Double.parseDouble(text);
                         initialPeg = enteredValue;
                     } catch (NumberFormatException e) {
@@ -359,46 +445,77 @@ public class IdentificationMainFragment extends SkavaFragment implements
                     }
                 }
             }
+
         });
 
-        initialPegEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE ||
-                        actionId == EditorInfo.IME_ACTION_NEXT) {
-                    finalPegEditText.requestFocus();
-                    return false;
-                }
-                return false;
-            }
-        });
+//        initialPegEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_DONE ||
+//                        actionId == EditorInfo.IME_ACTION_NEXT) {
+//                    finalPegEditText.requestFocus();
+//                    return false;
+//                }
+//                return false;
+//            }
+//        });
+//
+//        initialPegEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (!hasFocus) {
+//                    //do job here owhen Edittext lose focus
+//                    if (initialPeg != null) {
+//                        getCurrentAssessment().setInitialPeg(initialPeg);
+//                        String initialPegFormatted = pegNumberFormat.format(initialPeg);
+//                        TextView initialPegFormattedEditText = (TextView) rootView.findViewById(R.id.mapping_gral_info_initial_pk_value_formatted);
+//                        initialPegFormattedEditText.setText(initialPegFormatted);
+//                    }
+//                }
+//            }
+//        });
 
-        initialPegEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    //do job here owhen Edittext lose focus
-                    if (initialPeg != null) {
-                        getCurrentAssessment().setInitialPeg(initialPeg);
-                        String initialPegFormatted = pegNumberFormat.format(initialPeg);
-                        TextView initialPegFormattedEditText = (TextView) rootView.findViewById(R.id.mapping_gral_info_initial_pk_value_formatted);
-                        initialPegFormattedEditText.setText(initialPegFormatted);
-                    }
-                }
-            }
-        });
-
-        advanceTextView = (TextView) rootView.findViewById(R.id.mapping_gral_info_actual_advance_value);
-        if(advance!=null){
-            advanceTextView.setText(numberFormatter.format(advance));
-        }
 
         finalPegEditText = (EditText) rootView.findViewById(R.id.mapping_gral_info_final_pk_value);
         finalPegEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
         if (finalPeg != null) {
             finalPegEditText.setText(finalPeg.toString());
         }
-        finalPegEditText.addTextChangedListener(new TextValidator(finalPegEditText) {
+        finalPegEditText.addTextChangedListener(new TextWatcher() {
+
             @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String text = finalPegEditText.getText().toString();
+                validate(finalPegEditText, text);
+                //do job here owhen Edittext lose focus
+                if (finalPeg  != null) {
+                    getCurrentAssessment().setFinalPeg(finalPeg);
+                    String finalPegFormatted = pegNumberFormat.format(finalPeg);
+                    TextView finalPegFormattedEditText = (TextView) rootView.findViewById(R.id.mapping_gral_info_final_pk_value_formatted);
+                    finalPegFormattedEditText.setText(finalPegFormatted);
+                    if (initialPeg != null) {
+                        advance = Math.abs(finalPeg - initialPeg);
+                        getCurrentAssessment().setCurrentAdvance(advance);
+                        advanceTextView.setText(numberFormatter.format(advance));
+                    }
+                    if (selectedFace != null) {
+                        accumAdvance = Math.abs(finalPeg - selectedFace.getReferencePK());
+                        getCurrentAssessment().setAccummAdvance(accumAdvance);
+                        accumAdvanceTextView.setText(numberFormatter.format(accumAdvance));
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = finalPegEditText.getText().toString();
+                validate(finalPegEditText, text);
+            }
+
             public void validate(TextView textView, java.lang.String text) {
                 if (!text.equals("")) {
                     /* Validation code here */
@@ -412,40 +529,54 @@ public class IdentificationMainFragment extends SkavaFragment implements
                     }
                 }
             }
+
         });
 
-        finalPegEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE ||
-                        actionId == EditorInfo.IME_ACTION_NEXT) {
-                    methodSpinner.requestFocus();
-                    return false;
-                }
-                return false;
-            }
-        });
+//        finalPegEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_DONE ||
+//                        actionId == EditorInfo.IME_ACTION_NEXT) {
+//                    methodSpinner.requestFocus();
+//                    return false;
+//                }
+//                return false;
+//            }
+//        });
+//
+//        finalPegEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (!hasFocus) {
+//                    //do job here owhen Edittext lose focus
+//                    if (finalPeg != null) {
+//                        getCurrentAssessment().setFinalPeg(finalPeg);
+//                        String finalPegFormatted = pegNumberFormat.format(finalPeg);
+//                        TextView finalPegFormattedEditText = (TextView) rootView.findViewById(R.id.mapping_gral_info_final_pk_value_formatted);
+//                        finalPegFormattedEditText.setText(finalPegFormatted);
+//                    }
+//                    if (finalPeg != null && initialPeg != null) {
+//                        advance = Math.abs(finalPeg - initialPeg);
+//                    }
+//                    if (advance != null && selectedFace != null) {
+//                        getCurrentAssessment().setCurrentAdvance(advance);
+//                        advanceTextView.setText(numberFormatter.format(advance));
+//                        accumAdvance = Math.abs(finalPeg - selectedFace.getReferencePK());
+//                        getCurrentAssessment().setAccummAdvance(accumAdvance);
+//                        accumAdvanceTextView.setText(numberFormatter.format(accumAdvance));
+//                    }
+//                }
+//            }
+//        });
 
-        finalPegEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    //do job here owhen Edittext lose focus
-                    if (finalPeg != null) {
-                        getCurrentAssessment().setFinalPeg(finalPeg);
-                        String finalPegFormatted = pegNumberFormat.format(finalPeg);
-                        TextView finalPegFormattedEditText = (TextView) rootView.findViewById(R.id.mapping_gral_info_final_pk_value_formatted);
-                        finalPegFormattedEditText.setText(finalPegFormatted);
-                    }
-                    if (finalPeg != null && initialPeg != null) {
-                        advance = Math.abs(finalPeg - initialPeg);
-                    }
-                    if (advance != null) {
-                        getCurrentAssessment().setCurrentAdvance(advance);
-                        advanceTextView.setText(numberFormatter.format(advance));
-                    }
-                }
-            }
-        });
+        advanceTextView = (TextView) rootView.findViewById(R.id.mapping_gral_info_actual_advance_value);
+        if (advance != null) {
+            advanceTextView.setText(numberFormatter.format(advance));
+        }
+
+        accumAdvanceTextView = (TextView) rootView.findViewById(R.id.mapping_gral_info_accum_advance_value);
+        if (accumAdvance != null) {
+            accumAdvanceTextView.setText(numberFormatter.format(accumAdvance));
+        }
 
         // ************* EXCAVATION METHOD ****************
 
@@ -474,7 +605,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
                 Short enteredValue = 0;
                 try {
                     enteredValue = Short.parseShort(text);
-                    if (enteredValue > 0 && enteredValue < 360) {
+                    if (enteredValue >= 0 && enteredValue <= 360) {
                         getSkavaContext().getAssessment().setOrientation(enteredValue);
                     } else {
                         orientationEditText.setError("Orientation must be between 0 and 360!");
@@ -530,12 +661,27 @@ public class IdentificationMainFragment extends SkavaFragment implements
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
-        Date selectedDate = new Date(datePicker.getCalendarView().getDate());
-        java.lang.String formattedDate = DateFormat.getDateInstance().format(selectedDate);
-        ((TextView) getView().findViewById(R.id.mapping_gral_info_date_value))
-                .setText(formattedDate);
-        getSkavaContext().getAssessment().setDate(selectedDate);
+        Calendar calendar = getSkavaContext().getAssessment().getDateTime();
+        //it's mutable so just change it and see what happens
+        calendar.set(year, monthOfYear, dayOfMonth);
+        //getSkavaContext().getAssessment().setDateTime(calendar);
+        Date selectedDate = getSkavaContext().getAssessment().getDateTime().getTime();
+        DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
+        String dateAsString = formatter.format(selectedDate);
+        ((TextView) getView().findViewById(R.id.mapping_gral_info_date_value)).setText(dateAsString);
     }
+
+    @Override
+    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+        Calendar calendar = getSkavaContext().getAssessment().getDateTime();
+        calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
+        calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
+        Date selectedDate = getSkavaContext().getAssessment().getDateTime().getTime();
+        DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
+        String dateAsString = formatter.format(selectedDate);
+        ((TextView) getView().findViewById(R.id.mapping_gral_info_date_value)).setText(dateAsString);
+    }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -562,7 +708,6 @@ public class IdentificationMainFragment extends SkavaFragment implements
                 projectSpinnerLastPosition = position;
             }
         }
-
 
         if (parent == tunnelSpinner) {
             if (position != tunnelSpinnerLastPosition) {
@@ -594,6 +739,7 @@ public class IdentificationMainFragment extends SkavaFragment implements
                 identificationCompleted = true;
                 projectSpinner.setEnabled(false);
                 tunnelSpinner.setEnabled(false);
+                faceSpinner.setEnabled(false);
                 faceSpinnerLastPosition = position;
                 //use the orientation from the face as initial value
                 orientationEditText.setText(selectedFace.getOrientation().toString());
@@ -628,7 +774,6 @@ public class IdentificationMainFragment extends SkavaFragment implements
     }
 
     private SkavaEntityAdapter prepareTunnelAdapter(ExcavationProject project) {
-
         tunnelList = mUserDataDomain.getTunnels(project);
         tunnelList.add(new Tunnel(null, "HINT", "Select a tunnel ...", null));
         tunnelAdapter = new SkavaEntityAdapter<Tunnel>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, tunnelList);

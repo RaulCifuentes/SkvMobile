@@ -26,10 +26,13 @@ import com.metric.skava.R;
 import com.metric.skava.app.SkavaApplication;
 import com.metric.skava.app.activity.SkavaActivity;
 import com.metric.skava.app.model.User;
+import com.metric.skava.app.util.SkavaBasicAuthenticator;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalUserDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +45,9 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
     /**
      * The default email to populate the email field with.
      */
-    public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
-    public static final String EXTRA_USERNAME = "com.example.android.authenticatordemo.extra.EMAIL";
+    public static final String EXTRA_EMAIL = "INTENT_EXTRA_EMAIL";
+    public static final String EXTRA_USERNAME = "INTENT_EXTRA_EMAIL";
+    public static final String EXTRA_PASSWORD = "INTENT_EXTRA_PASSWORD";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -75,7 +79,9 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
         mUsernameView = (EditText) findViewById(R.id.username);
         mUsernameView.setText(mUsername);
 
+        mPassword = getIntent().getStringExtra(EXTRA_PASSWORD);
         mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView.setText(mPassword);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -128,17 +134,16 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
         boolean cancel = false;
         View focusView = null;
 
-        //COMENTED OUT TO MAKE TESTS EASY
         // Check for a valid password.
-//        if (TextUtils.isEmpty(mPassword)) {
-//            mPasswordView.setError(getString(R.string.error_field_required));
-//            focusView = mPasswordView;
-//            cancel = true;
-//        } else if (mPassword.length() < 4) {
-//            mPasswordView.setError(getString(R.string.error_invalid_password));
-//            focusView = mPasswordView;
-//            cancel = true;
-//        }
+        if (TextUtils.isEmpty(mPassword)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (mPassword.length() < 6) {
+            mPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordView;
+            cancel = true;
+        }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(mUsername)) {
@@ -146,11 +151,6 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
             focusView = mUsernameView;
             cancel = true;
         }
-//        else if (!mUsername.contains("@")) {
-//            mUsernameView.setError(getString(R.string.error_invalid_email));
-//            focusView = mUsernameView;
-//            cancel = true;
-//        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -223,15 +223,22 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
         protected Boolean doInBackground(String... params) {
             DAOFactory daoFactory = getDAOFactory();
             LocalUserDAO userDAO = null;
+            Boolean matched;
             try {
                 userDAO = daoFactory.getLocalUserDAO();
                 mUser = userDAO.getUserByUsername(params[0]);
-//                mUser = userDAO.getUserByEmail(params[0]);
+                matched = SkavaBasicAuthenticator.verifyHashedPassword(mUser.getPassword(), mPassword);
             } catch (DAOException e) {
                 e.printStackTrace();
                 return false;
+            } catch (InvalidKeySpecException e) {
+                e.printStackTrace();
+                return false;
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+                return false;
             }
-            return true;
+            return matched;
         }
 
         @Override
@@ -244,7 +251,11 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
 //                onBackPressed();
 //                finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                if (mUser ==  null){
+                    mPasswordView.setError(getString(R.string.error_user_unknown));
+                } else {
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                }
                 mPasswordView.requestFocus();
             }
         }

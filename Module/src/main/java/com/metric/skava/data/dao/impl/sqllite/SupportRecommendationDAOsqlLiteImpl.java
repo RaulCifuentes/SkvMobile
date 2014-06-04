@@ -65,13 +65,16 @@ public class SupportRecommendationDAOsqlLiteImpl extends SqlLiteBasePersistentEn
             Double boltDiameter = CursorUtils.getDouble(SupportRecommendationTable.BOLT_DIAMETER_COLUMN, cursor);
             Double boltLength = CursorUtils.getDouble(SupportRecommendationTable.BOLT_LENGTH_COLUMN, cursor);
 
-            String coverageCode = CursorUtils.getString(SupportRecommendationTable.COVERAGE_CODE_COLUMN, cursor);
-            Coverage coverage = daoFactory.getLocalCoverageDAO().getCoverageByCode(coverageCode);
+            String coverageCode = CursorUtils.getString(SupportRecommendationTable.MESH_COVERAGE_CODE_COLUMN, cursor);
+            Coverage meshCoverage = daoFactory.getLocalCoverageDAO().getCoverageByCode(coverageCode);
 
             String meshTypeCode = CursorUtils.getString(SupportRecommendationTable.MESH_TYPE_CODE_COLUMN, cursor);
             MeshType meshType = daoFactory.getLocalMeshTypeDAO().getMeshTypeByCode(meshTypeCode);
 
             String shotcreteTypeCode = CursorUtils.getString(SupportRecommendationTable.SHOTCRETE_TYPE_CODE_COLUMN, cursor);
+            coverageCode = CursorUtils.getString(SupportRecommendationTable.SHOTCRETE_COVERAGE_CODE_COLUMN, cursor);
+            Coverage shotcreteCoverage = daoFactory.getLocalCoverageDAO().getCoverageByCode(coverageCode);
+
             ShotcreteType shotcreteType = daoFactory.getLocalShotcreteTypeDAO().getShotcreteTypeByCode(shotcreteTypeCode);
 
             String archTypeCode = CursorUtils.getString(SupportRecommendationTable.ARCH_TYPE_CODE_COLUMN, cursor);
@@ -84,16 +87,17 @@ public class SupportRecommendationDAOsqlLiteImpl extends SqlLiteBasePersistentEn
             SupportRecommendation newInstance = new SupportRecommendation();
             newInstance.setArchType(archType);
             newInstance.setBoltType(boltType);
-            newInstance.setCoverage(coverage);
             newInstance.setRoofPattern(roofPattern);
             newInstance.setWallPattern(wallPattern);
             newInstance.setRequirement(baseRequirement);
             newInstance.setBoltDiameter(boltDiameter);
             newInstance.setBoltLength(boltLength);
             newInstance.setMeshType(meshType);
+            newInstance.setMeshCoverage(meshCoverage);
             newInstance.setObservations(observations);
             newInstance.setSeparation(separation);
             newInstance.setShotcreteType(shotcreteType);
+            newInstance.setShotcreteCoverage(shotcreteCoverage);
             newInstance.setThickness(thickness);
 
             resultList.add(newInstance);
@@ -138,9 +142,10 @@ public class SupportRecommendationDAOsqlLiteImpl extends SqlLiteBasePersistentEn
                     SupportRecommendationTable.WALL_PATTERN_DX_COLUMN,
                     SupportRecommendationTable.WALL_PATTERN_DY_COLUMN,
                     SupportRecommendationTable.SHOTCRETE_TYPE_CODE_COLUMN,
+                    SupportRecommendationTable.SHOTCRETE_COVERAGE_CODE_COLUMN,
                     SupportRecommendationTable.THICKNESS_COLUMN,
                     SupportRecommendationTable.MESH_TYPE_CODE_COLUMN,
-                    SupportRecommendationTable.COVERAGE_CODE_COLUMN,
+                    SupportRecommendationTable.MESH_COVERAGE_CODE_COLUMN,
                     SupportRecommendationTable.ARCH_TYPE_CODE_COLUMN,
                     SupportRecommendationTable.SEPARATION_COLUMN,
                     SupportRecommendationTable.OBSERVATIONS_COLUMN
@@ -159,9 +164,10 @@ public class SupportRecommendationDAOsqlLiteImpl extends SqlLiteBasePersistentEn
                     recommendation.getWallPattern() != null ? recommendation.getWallPattern().getDistanceX() : null,
                     recommendation.getWallPattern() != null ? recommendation.getWallPattern().getDistanceY() : null,
                     SkavaUtils.isDefined(recommendation.getShotcreteType()) ? recommendation.getShotcreteType().getCode() : null,
+                    SkavaUtils.isDefined(recommendation.getShotcreteCoverage()) ? recommendation.getShotcreteCoverage().getCode() : null,
                     recommendation.getThickness(),
                     SkavaUtils.isDefined(recommendation.getMeshType()) ? recommendation.getMeshType().getCode() : null,
-                    SkavaUtils.isDefined(recommendation.getCoverage()) ? recommendation.getCoverage().getCode() : null,
+                    SkavaUtils.isDefined(recommendation.getMeshCoverage()) ? recommendation.getMeshCoverage().getCode() : null,
                     SkavaUtils.isDefined(recommendation.getArchType()) ? recommendation.getArchType().getCode() : null,
                     recommendation.getSeparation(),
                     recommendation.getObservations()

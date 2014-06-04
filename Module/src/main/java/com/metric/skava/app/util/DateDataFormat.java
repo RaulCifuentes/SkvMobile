@@ -36,14 +36,10 @@ public class DateDataFormat {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
     
-    public static long formatDateAsLong(Calendar cal){
-    	return Long.parseLong(dateFormat.format(cal.getTime()));
-    }
 
     public static long formatDateAsLong(Date date){
         return Long.parseLong(dateFormat.format(date));
     }
-
 
     public static Date getDateFromFormattedLong(long l){
         try {
@@ -55,7 +51,11 @@ public class DateDataFormat {
         }
     }
 
-    public static Calendar getCalendarFromFormattedLong(long l){
+    public static long formatDateTimeAsLong(Calendar cal){
+        return Long.parseLong(dateFormat.format(cal.getTime()));
+    }
+
+    public static Calendar getDateTimeFromFormattedLong(long l){
     	try {
 			Calendar c = Calendar.getInstance();
 			c.setTime(dateFormat.parse(String.valueOf(l)));
@@ -66,7 +66,11 @@ public class DateDataFormat {
 		}
     }
     
-    public static long getNowFormattedLong(){
-    	return DateDataFormat.formatDateAsLong(Calendar.getInstance());
+    public static long getNowCalendarFormattedLong(){
+    	return DateDataFormat.formatDateTimeAsLong(Calendar.getInstance());
+    }
+
+    public static long getNowDateFormattedLong(){
+        return DateDataFormat.formatDateAsLong(new Date());
     }
 }

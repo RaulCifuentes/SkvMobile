@@ -77,7 +77,7 @@ public class RecomendationProvider {
             }
             Coverage coverage = supportRequirement.getCoverage();
             if (coverage != null) {
-                recommendation.setCoverage(coverage);
+                recommendation.setMeshCoverage(coverage);
             }
             ArchType archType = supportRequirement.getArchType();
             if (meshType != null) {

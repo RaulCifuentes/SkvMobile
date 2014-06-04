@@ -72,7 +72,7 @@ import com.metric.skava.rocksupport.model.SupportRequirement;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -117,10 +117,11 @@ public class MappingReportMainFragment extends SkavaFragment {
             ((TextView) rootView.findViewById(R.id.report_tipo_seccion_value)).setText(section.getName());
         }
 
-        Date date = currentAssessment.getDate();
-        if (date != null) {
-            DateFormat dateFormater = DateFormat.getDateInstance();
-            ((TextView) rootView.findViewById(R.id.report_fecha_value)).setText(dateFormater.format(date));
+        Calendar dateTime = currentAssessment.getDateTime();
+        if (dateTime != null) {
+            DateFormat dateFormater = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
+            String dateAsString = dateFormater.format(dateTime.getTime());
+            ((TextView) rootView.findViewById(R.id.report_fecha_value)).setText(dateAsString);
         }
 
         User geologist = currentAssessment.getGeologist();
@@ -372,6 +373,13 @@ public class MappingReportMainFragment extends SkavaFragment {
                 ((TextView) rootView.findViewById(R.id.report_tipo_shotcrete_value)).setText("-");
             }
 
+            Coverage shotcreteCoverage = recomendation.getShotcreteCoverage();
+            if (shotcreteCoverage != null) {
+                ((TextView) rootView.findViewById(R.id.report_shotcrete_cobertura_value)).setText(shotcreteCoverage.getName());
+            } else {
+                ((TextView) rootView.findViewById(R.id.report_shotcrete_cobertura_value)).setText("-");
+            }
+
             Double shotcreteThickness = recomendation.getThickness();
             if (shotcreteThickness != null) {
                 ((TextView) rootView.findViewById(R.id.report_espesor_shotcrete_value)).setText(shotcreteThickness.toString());
@@ -386,11 +394,11 @@ public class MappingReportMainFragment extends SkavaFragment {
                 ((TextView) rootView.findViewById(R.id.report_tipo_malla_value)).setText("-");
             }
 
-            Coverage coverage = recomendation.getCoverage();
-            if (coverage != null) {
-                ((TextView) rootView.findViewById(R.id.report_cobertura_value)).setText(coverage.getName());
+            Coverage meshCoverage = recomendation.getMeshCoverage();
+            if (meshCoverage != null) {
+                ((TextView) rootView.findViewById(R.id.report_mesh_cobertura_value)).setText(meshCoverage.getName());
             } else {
-                ((TextView) rootView.findViewById(R.id.report_cobertura_value)).setText("-");
+                ((TextView) rootView.findViewById(R.id.report_mesh_cobertura_value)).setText("-");
             }
 
             ArchType archType = recomendation.getArchType();

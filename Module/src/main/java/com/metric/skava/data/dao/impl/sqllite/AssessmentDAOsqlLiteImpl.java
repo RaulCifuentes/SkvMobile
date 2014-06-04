@@ -203,7 +203,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                     newSkavaEntity.getInternalCode(),
                     SkavaUtils.isUndefined(newSkavaEntity.getGeologist()) ? null : newSkavaEntity.getGeologist().getCode(),
                     SkavaUtils.isUndefined(newSkavaEntity.getFace()) ? null : newSkavaEntity.getFace().getCode(),
-                    DateDataFormat.formatDateAsLong(newSkavaEntity.getDate()),
+                    DateDataFormat.formatDateTimeAsLong(newSkavaEntity.getDateTime()),
                     SkavaUtils.isUndefined(newSkavaEntity.getSection()) ? null : newSkavaEntity.getSection().getCode(),
                     SkavaUtils.isUndefined(newSkavaEntity.getMethod()) ? null : newSkavaEntity.getMethod().getCode(),
                     newSkavaEntity.getInitialPeg(),
@@ -216,7 +216,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                     newSkavaEntity.getNumberOfJoints(),
                     newSkavaEntity.getOutcropDescription(),
                     newSkavaEntity.getRockSampleIdentification(),
-                    newSkavaEntity.isSentToCloud() ? 1 : 0
+                    newSkavaEntity.getSentToCloud()
             };
             Long assesmentId = saveRecord(AssessmentTable.ASSESSMENT_DATABASE_TABLE, names, values);
             newSkavaEntity.set_id(assesmentId);
@@ -251,7 +251,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 newSkavaEntity.getInternalCode(),
                 SkavaUtils.isUndefined(newSkavaEntity.getGeologist()) ? null : newSkavaEntity.getGeologist().getCode(),
                 SkavaUtils.isUndefined(newSkavaEntity.getFace()) ? null : newSkavaEntity.getFace().getCode(),
-                DateDataFormat.formatDateAsLong(newSkavaEntity.getDate()),
+                DateDataFormat.formatDateTimeAsLong(newSkavaEntity.getDateTime()),
                 SkavaUtils.isUndefined(newSkavaEntity.getSection()) ? null : newSkavaEntity.getSection().getCode(),
                 SkavaUtils.isUndefined(newSkavaEntity.getMethod()) ? null : newSkavaEntity.getMethod().getCode(),
                 newSkavaEntity.getInitialPeg(),
@@ -264,7 +264,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 newSkavaEntity.getNumberOfJoints(),
                 newSkavaEntity.getOutcropDescription(),
                 newSkavaEntity.getRockSampleIdentification(),
-                newSkavaEntity.isSentToCloud() ? 1 : 0
+                newSkavaEntity.getSentToCloud()
         };
 
         Long assesmentId = saveRecord(tableName, names, values);

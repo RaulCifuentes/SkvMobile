@@ -38,14 +38,22 @@ public class SkavaFragmentActivity extends FragmentActivity {
         return getSkavaContext().getAssessment();
     }
 
-    public boolean shouldUpdateAutomatically() {
-        return ((SkavaApplication) getApplication()).isReloadPrefered();
+    public boolean shouldImportUserData() {
+        return ((SkavaApplication) getApplication()).isReloadUserDataPrefered();
     }
+
+    public boolean shouldImportAppData() {
+        return ((SkavaApplication) getApplication()).isReloadAppDataPrefered();
+    }
+
 
     public boolean shouldUnlinkOnLogout() {
         return ((SkavaApplication) getApplication()).isUnlinkPrefered();
     }
 
+    public String getTargetEnvironment(){
+        return getSkavaContext().getTargetEnvironment();
+    }
 
     private void pseudoInjection() {
 		navController =  NavigationController.getInstance();
@@ -54,8 +62,8 @@ public class SkavaFragmentActivity extends FragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-        int themeID = ((SkavaApplication) getApplication()).getCustomThemeId();
-        setTheme(themeID);
+//        int themeID = ((SkavaApplication) getApplication()).getCustomThemeId();
+//        setTheme(themeID);
         super.onCreate(savedInstanceState);
 		pseudoInjection();
 		mActionBar = getActionBar();
@@ -91,12 +99,12 @@ public class SkavaFragmentActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (((SkavaApplication) getApplication()).isRequiresRestart()) {
-            ((SkavaApplication) getApplication()).setRequiresRestart(false);
-            Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
-        }
+//        if (((SkavaApplication) getApplication()).isRequiresRestart()) {
+//            ((SkavaApplication) getApplication()).setRequiresRestart(false);
+//            Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+//            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(i);
+//        }
     }
 
 

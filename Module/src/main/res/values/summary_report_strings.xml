@@ -9,12 +9,12 @@
     <string name="report_tipo_seccion">Section</string>
     <string name="report_fecha">Date</string>
     <string name="report_geologo">Geologist</string>
-    <string name="report_pk">Peg Numbers</string>
+    <string name="report_pk">Chainage</string>
     <string name="report_avance">Current Advance (m)</string>
     <string name="report_accumm_avance">Accum Advance (m)</string>
     <string name="report_metodo">Method</string>
     <string name="report_orientacion">Orientation (°)</string>
-    <string name="report_pendiente">Slope (%)</string>
+    <string name="report_pendiente">Inclination (%)</string>
 
     <string name="report_macizo">Rock Mass</string>
     <string name="report_tipo_fracturacion">Fracture Type</string>
@@ -25,10 +25,12 @@
     <string name="report_recomenda_soporte">Support Recommendation</string>
     <string name="report_tipo_perno">Bolt Type</string>
     <string name="report_largo_perno">Bolt Length (m)</string>
+    <string name="report_diametro_perno">Bolt Diameter (m)</string>
     <string name="report_tipo_shotcrete">Shotcrete Type</string>
     <string name="report_espesor_shotcrete">Thickness (mm)</string>
     <string name="report_tipo_malla">Mesh Type</string>
-    <string name="report_cobertura">Coverage</string>
+    <string name="report_mesh_cobertura">Coverage</string>
+    <string name="report_shotcrete_cobertura">Coverage</string>
     <string name="report_tipo_marco">Arch Type</string>
     <string name="report_separacion">Separation (m)</string>
 

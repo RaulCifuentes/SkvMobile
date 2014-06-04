@@ -17,7 +17,13 @@ public class SkavaConstants {
 
     public static final String DROPBOX_APP_NAME = "skavasyncservice";
 
-    public static final String DROPBOX_DS_NAME = "skava";
+    public static final String DROPBOX_DS_DEV_NAME = "skavadev";
+    public static final String DROPBOX_DS_QA_NAME = "skavaqa";
+    public static final String DROPBOX_DS_PROD_NAME = "skava";
+
+    public static final String DEV_KEY = "DEV";
+    public static final String QA_KEY = "QA";
+    public static final String PROD_KEY = "PROD";
 
 
 //    SKAVAAPP DATASTORE ONLY

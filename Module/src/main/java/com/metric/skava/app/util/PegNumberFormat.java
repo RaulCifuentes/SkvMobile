@@ -7,8 +7,9 @@ import java.text.DecimalFormatSymbols;
  * Implements formatting rules for Peg Numbers
  */
 public class PegNumberFormat extends DecimalFormat {
+
     public PegNumberFormat() {
-        DecimalFormatSymbols custom=new DecimalFormatSymbols();
+        DecimalFormatSymbols custom = new DecimalFormatSymbols();
         custom.setGroupingSeparator('+');
         custom.setDecimalSeparator(',');
         this.setMaximumFractionDigits(2);

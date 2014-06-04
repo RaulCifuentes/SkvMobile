@@ -91,12 +91,18 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
         // Lanzar activity que muestra el reporte
         getSkavaContext().setAssessment(selectedAssessment);
         Intent detailIntent;
-        if (selectedAssessment.isSentToCloud()){
-            detailIntent = new Intent(this, ReviewReportMainActivity.class);
-            detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, AssesmentStageDataProvider.REPORT);
-        } else {
-            detailIntent = new Intent(this, MappingReportMainActivity.class);
-            detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, AssesmentStageDataProvider.REPORT);
+        int sentStatus = selectedAssessment.getSentToCloud();
+        switch (sentStatus) {
+            case Assessment.DATA_SENT_TO_CLOUD:
+            case Assessment.PICS_SENT_TO_CLOUD:
+            case Assessment.DATA_SENT_TO_DATASTORE:
+            case Assessment.PICS_SENT_TO_DATASTORE:
+                detailIntent = new Intent(this, ReviewReportMainActivity.class);
+                detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, AssesmentStageDataProvider.REPORT);
+                break;
+            default:
+                detailIntent = new Intent(this, MappingReportMainActivity.class);
+                detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, AssesmentStageDataProvider.REPORT);
         }
         startActivity(detailIntent);
     }

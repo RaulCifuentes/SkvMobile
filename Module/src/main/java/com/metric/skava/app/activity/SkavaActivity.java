@@ -51,8 +51,8 @@ public class SkavaActivity extends Activity implements ThemeChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        int themeID = ((SkavaApplication) getApplication()).getCustomThemeId();
-        setTheme(themeID);
+//        int themeID = ((SkavaApplication) getApplication()).getCustomThemeId();
+//        setTheme(themeID);
         super.onCreate(savedInstanceState);
         pseudoInjection();
         mActionBar = getActionBar();
@@ -64,12 +64,12 @@ public class SkavaActivity extends Activity implements ThemeChangeListener {
     @Override
     protected void onResume() {
         super.onResume();
-        if (((SkavaApplication) getApplication()).isRequiresRestart()) {
-            ((SkavaApplication) getApplication()).setRequiresRestart(false);
-            Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
-        }
+//        if (((SkavaApplication) getApplication()).isRequiresRestart()) {
+//            ((SkavaApplication) getApplication()).setRequiresRestart(false);
+//            Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+//            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(i);
+//        }
     }
 
 

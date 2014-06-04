@@ -8,6 +8,7 @@ import com.dropbox.sync.android.DbxTable;
  */
 public class RoleDropboxTable extends DropboxBaseTable implements DropboxTable {
 
+    public static final String ROLES_DROPBOX_TABLE = "Roles";
 
     public RoleDropboxTable(DbxDatastore datastore) {
         super(datastore);
@@ -15,7 +16,7 @@ public class RoleDropboxTable extends DropboxBaseTable implements DropboxTable {
 
     @Override
     public DbxTable getBaseDropboxTable() {
-        return mDatastore.getTable("Roles");
+        return mDatastore.getTable(ROLES_DROPBOX_TABLE);
     }
 
     @Override

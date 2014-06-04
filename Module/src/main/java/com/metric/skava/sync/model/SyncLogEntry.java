@@ -9,8 +9,6 @@ import java.util.Date;
 public class SyncLogEntry implements Serializable {
 
     public enum Domain {
-        GLOBAL_DATA,
-        USER_RELATED_DATA,
         PICTURES,
         ROLES,
         EXCAVATIONMETHODS,
@@ -52,7 +50,7 @@ public class SyncLogEntry implements Serializable {
 
     public enum Status {SUCCESS, FAIL}
 
-    public enum Source {DROPBOX, DEFAULT}
+    public enum Source {DROPBOX_LOCAL_DATASTORE, DROPBOX_REMOTE_DATASTORE, DEFAULT}
 
     private Date syncDate;
     private Status status;

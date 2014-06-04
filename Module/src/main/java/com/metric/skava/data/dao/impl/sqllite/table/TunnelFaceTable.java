@@ -17,6 +17,9 @@ public class TunnelFaceTable extends SkavaEntityTable {
     public static final String SLOPE_COLUMN =
             "SLOPE";
 
+    public static final String REFERENCE_PK_COLUMN =
+            "REFERENCE_PK";
+
     public static final String CREATE_FACES_TABLE = "create table " +
             FACE_DATABASE_TABLE + " (" + GLOBAL_KEY_ID +
             " integer primary key autoincrement, " +
@@ -24,7 +27,9 @@ public class TunnelFaceTable extends SkavaEntityTable {
             CODE_COLUMN + " text not null, " +
             NAME_COLUMN + " text not null, " +
             ORIENTATION_COLUMN + " integer not null, " +
-            SLOPE_COLUMN + " integer not null " + ");";
+            SLOPE_COLUMN + " integer not null, " +
+            REFERENCE_PK_COLUMN + " real null "
+            + ");";
 
     public static final String INSERT_FACES_TABLE = "insert into " + FACE_DATABASE_TABLE + "(" +  TUNNEL_CODE_COLUMN +  "," +  CODE_COLUMN + "," + NAME_COLUMN + "," + ORIENTATION_COLUMN + "," + SLOPE_COLUMN + ") values('TNL_A', 'TFC_1','Face One',10,20)";
     public static final String INSERT_FACES_TABLE_SECOND = "insert into " + FACE_DATABASE_TABLE + "(" + TUNNEL_CODE_COLUMN +  "," + CODE_COLUMN + "," + NAME_COLUMN + "," + ORIENTATION_COLUMN +"," + SLOPE_COLUMN + ") values('TNL_A','TFC_2','Face Two',30,40)";

@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.metric.skava.R;
 import com.metric.skava.app.model.Assessment;
 
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -40,14 +42,20 @@ public class RemoteAssessmentListViewAdapter extends ArrayAdapter<Assessment> {
         if (actualAssessment != null) {
 
             TextView text = (TextView) assessmentViewItem.findViewById(R.id.first_column_text_view);
-            text.setText(actualAssessment.getInternalCode());
+            if (actualAssessment.getInternalCode() != null) {
+                text.setText(actualAssessment.getInternalCode());
+            }
 
             text = (TextView) assessmentViewItem.findViewById(R.id.second_column_text_view);
-            text.setText(actualAssessment.getCode());
+            if (actualAssessment.getCode() != null) {
+                text.setText(actualAssessment.getCode());
+            }
 
-            if (actualAssessment.getInternalCode() != null) {
+            if (actualAssessment.getDateTime() != null) {
                 text = (TextView) assessmentViewItem.findViewById(R.id.third_column_text_view);
-                text.setText(actualAssessment.getDate().toString());
+                Calendar dateTime = actualAssessment.getDateTime();
+                String dateAsString = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(dateTime.getTime());
+                text.setText(dateAsString);
             }
         }
         return assessmentViewItem;

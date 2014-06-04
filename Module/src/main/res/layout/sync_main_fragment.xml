@@ -129,7 +129,6 @@
                     android:layout_width="@dimen/grid_space_separation_width"
                     android:layout_height="@dimen/grid_space_separation_height" />
 
-
                 <!--Very First row -->
                 <LinearLayout
                     android:orientation="horizontal"

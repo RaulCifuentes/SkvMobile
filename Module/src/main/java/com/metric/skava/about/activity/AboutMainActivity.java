@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import com.metric.skava.R;
 import com.metric.skava.about.fragment.AboutMainFragment;
+import com.metric.skava.about.fragment.AppDetailsFragment;
 import com.metric.skava.app.activity.SkavaFragmentActivity;
 
 public class AboutMainActivity extends SkavaFragmentActivity {
@@ -37,7 +38,10 @@ public class AboutMainActivity extends SkavaFragmentActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_app_details) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, new AppDetailsFragment())
+                    .commit();
             return true;
         }
         return super.onOptionsItemSelected(item);

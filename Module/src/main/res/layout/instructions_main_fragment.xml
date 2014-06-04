@@ -252,14 +252,14 @@
                          />
 
                     <Space
-                        android:layout_width="20px"
+                        android:layout_width="10px"
                         android:layout_height="20px"></Space>
 
                     <TextView
                         android:id="@+id/textView01"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DX :"
+                        android:text="X(m):"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold"
                         />
@@ -275,14 +275,14 @@
                         />
 
                     <Space
-                        android:layout_width="20px"
+                        android:layout_width="10px"
                         android:layout_height="20px"></Space>
 
                     <TextView
                         android:id="@+id/textView01"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DY :"
+                        android:text="Y(m):"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold"
                         />
@@ -335,14 +335,14 @@
                         />
 
                     <Space
-                        android:layout_width="20px"
+                        android:layout_width="10px"
                         android:layout_height="20px"></Space>
 
                     <TextView
                         android:id="@+id/textView01"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DX :"
+                        android:text="X(m):"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold"
                         />
@@ -359,14 +359,14 @@
                         />
 
                     <Space
-                        android:layout_width="20px"
+                        android:layout_width="10px"
                         android:layout_height="20px"></Space>
 
                     <TextView
                         android:id="@+id/textView01"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DY :"
+                        android:text="Y(m):"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold"
                         />
@@ -409,6 +409,37 @@
 
                 <Spinner
                     android:id="@+id/instructions_shotcrete_type_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/form_column_left_margin"
+
+                    />
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+
+                    />
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+
+                    />
+
+                <TextView
+                    android:id="@+id/textView01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructions_shotcrete_coverage_label"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+
+                    />
+
+
+                <Spinner
+                    android:id="@+id/instructions_shotcrete_coverage_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/form_column_left_margin"
@@ -494,14 +525,14 @@
                     android:id="@+id/textView01"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/instructions_coverage_label"
+                    android:text="@string/instructions_mesh_coverage_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold"
 
                     />
 
                 <Spinner
-                    android:id="@+id/instructions_coverage_spinner"
+                    android:id="@+id/instructions_mesh_coverage_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/form_column_left_margin"

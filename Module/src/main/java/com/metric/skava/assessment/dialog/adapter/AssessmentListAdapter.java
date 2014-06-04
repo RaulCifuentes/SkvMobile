@@ -13,11 +13,17 @@ import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.ExcavationProject;
 import com.metric.skava.app.model.Tunnel;
 import com.metric.skava.app.model.TunnelFace;
+import com.metric.skava.app.util.PegNumberFormat;
 import com.metric.skava.app.util.SkavaUtils;
 
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+
+import static com.metric.skava.app.model.Assessment.DATA_SENT_TO_CLOUD;
+import static com.metric.skava.app.model.Assessment.DATA_SENT_TO_DATASTORE;
+import static com.metric.skava.app.model.Assessment.PICS_SENT_TO_CLOUD;
+import static com.metric.skava.app.model.Assessment.PICS_SENT_TO_DATASTORE;
 
 /**
  * Created by metricboy on 3/5/14.
@@ -79,10 +85,19 @@ public class AssessmentListAdapter extends BaseAdapter {
 //                text.setText(currentItem.getCode());
                 text.setText(currentItem.getCode().substring(0,8));
             }
-            Date date = currentItem.getDate();
+            Double initChainage = currentItem.getInitialPeg();
+            Double finalChainage = currentItem.getFinalPeg();
+            if (initChainage != null && finalChainage != null){
+                TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_chainage);
+                PegNumberFormat pegNumberFormat = new PegNumberFormat();
+                String initialText = pegNumberFormat.format(initChainage);
+                String finalText = pegNumberFormat.format(finalChainage);
+                text.setText(initialText + " - " + finalText );
+            }
+            Date date = currentItem.getDateTime().getTime();
             if (date != null) {
                 TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_date);
-                text.setText(DateFormat.getDateInstance().format(date));
+                text.setText(DateFormat.getDateTimeInstance().format(date));
             }
             ExcavationProject project = currentItem.getProject();
             if (SkavaUtils.isDefined(project)){
@@ -99,14 +114,22 @@ public class AssessmentListAdapter extends BaseAdapter {
                 TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_face);
                 text.setText(face.getName());
             }
-
             ImageView imageView = (ImageView) assessmentViewItem.findViewById(R.id.assessment_sent);
-            if(currentItem.isSentToCloud()){
-                imageView.setImageResource(R.drawable.cloud_icon);
-            } else {
-                imageView.setImageResource(R.drawable.tablet_icon);
+            switch (currentItem.getSentToCloud()){
+                case DATA_SENT_TO_CLOUD:
+                    imageView.setImageResource(R.drawable.single_cloud_icon);
+                    break;
+                case PICS_SENT_TO_CLOUD:
+                    imageView.setImageResource(R.drawable.cloud_icon);
+                    break;
+                case DATA_SENT_TO_DATASTORE:
+                case PICS_SENT_TO_DATASTORE:
+//                    imageView.setImageResource(R.drawable.cloud_upload);
+                    imageView.setImageResource(R.drawable.cloud_icon);
+                    break;
+                default:
+                    imageView.setImageResource(R.drawable.tablet_icon);
             }
-
         }
 
         return assessmentViewItem;

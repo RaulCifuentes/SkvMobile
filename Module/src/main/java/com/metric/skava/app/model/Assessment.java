@@ -9,7 +9,7 @@ import com.metric.skava.discontinuities.model.DiscontinuityFamily;
 import com.metric.skava.instructions.model.SupportRecommendation;
 import com.metric.skava.rockmass.model.FractureType;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -17,7 +17,12 @@ import java.util.List;
  */
 public class Assessment implements IdentifiableEntity {
 
-    private boolean sentToCloud;
+    public static final int DATA_SENT_TO_CLOUD = 10;
+    public static final int PICS_SENT_TO_CLOUD = 20;
+    public static final int DATA_SENT_TO_DATASTORE = 30;
+    public static final int PICS_SENT_TO_DATASTORE = 40;
+
+    private int sentToCloud;
 
     private Long _id;
     private String code;
@@ -26,7 +31,7 @@ public class Assessment implements IdentifiableEntity {
 
     private User geologist;
     private ExcavationSection section;
-    private Date date;
+    private Calendar date;
     private Double initialPeg;
     private Double finalPeg;
     private Double currentAdvance;
@@ -53,11 +58,11 @@ public class Assessment implements IdentifiableEntity {
         this.code = code;
     }
 
-    public boolean isSentToCloud() {
+    public int getSentToCloud() {
         return sentToCloud;
     }
 
-    public void setSentToCloud(boolean sentToCloud) {
+    public void setSentToCloud(int sentToCloud) {
         this.sentToCloud = sentToCloud;
     }
 
@@ -98,7 +103,6 @@ public class Assessment implements IdentifiableEntity {
     }
 
 
-
     public TunnelFace getFace() {
         return face;
     }
@@ -107,11 +111,11 @@ public class Assessment implements IdentifiableEntity {
         this.face = face;
     }
 
-    public Date getDate() {
+    public Calendar getDateTime() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDateTime(Calendar date) {
         this.date = date;
     }
 
@@ -274,7 +278,6 @@ public class Assessment implements IdentifiableEntity {
     public void set_id(Long _id) {
         this._id = _id;
     }
-
 
 
     @Override

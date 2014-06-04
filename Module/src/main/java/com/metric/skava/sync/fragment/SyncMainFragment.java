@@ -4,6 +4,10 @@ package com.metric.skava.sync.fragment;
  * Created by metricboy on 3/7/14.
  */
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.metric.skava.R;
+import com.metric.skava.app.SkavaApplication;
 import com.metric.skava.app.fragment.SkavaFragment;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.util.SkavaConstants;
@@ -29,6 +34,7 @@ import com.metric.skava.data.dao.LocalRMRCalculationDAO;
 import com.metric.skava.data.dao.LocalSupportRecommendationDAO;
 import com.metric.skava.data.dao.RemoteAssessmentDAO;
 import com.metric.skava.data.dao.exception.DAOException;
+import com.metric.skava.home.activity.HomeMainActivity;
 
 import java.util.List;
 
@@ -71,8 +77,9 @@ public class SyncMainFragment extends SkavaFragment {
             mRemoteAsssessmentDAO = getDAOFactory().getRemoteAssessmentDAO(DAOFactory.Flavour.DROPBOX);
 
 
-        } catch (DAOException e) {
-            Log.e(SkavaConstants.LOG, e.getMessage());
+        } catch (DAOException daoe) {
+            daoe.printStackTrace();
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
         }
     }
 
@@ -101,7 +108,7 @@ public class SyncMainFragment extends SkavaFragment {
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listAssessments);
 
             TextView firstTextView = (TextView) usersHeaderView.findViewById(R.id.headerText);
-            firstTextView.setText("Local Assessments");
+            firstTextView.setText("Local Mappings");
 
             localAssessmentsListView.addHeaderView(usersHeaderView, null, false);
             final int numberOfHeaders = localAssessmentsListView.getHeaderViewsCount();
@@ -110,8 +117,9 @@ public class SyncMainFragment extends SkavaFragment {
             //This method is necessary only to use a ListView inside a ScrollView
             ViewUtils.adjustListViewHeightBasedOnChildren(localAssessmentsListView);
 
-        } catch (DAOException e) {
-            e.printStackTrace();
+        } catch (DAOException daoe) {
+            daoe.printStackTrace();
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
         }
     }
 
@@ -125,7 +133,7 @@ public class SyncMainFragment extends SkavaFragment {
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listAssessments);
 
             TextView firstTextView = (TextView) usersHeaderView.findViewById(R.id.headerText);
-            firstTextView.setText("Remote Assessments");
+            firstTextView.setText("Remote Mappings");
 
             remoteAssessmentsListView.addHeaderView(usersHeaderView, null, false);
             final int numberOfHeaders = remoteAssessmentsListView.getHeaderViewsCount();
@@ -134,11 +142,11 @@ public class SyncMainFragment extends SkavaFragment {
             //This method is necessary only to use a ListView inside a ScrollView
             ViewUtils.adjustListViewHeightBasedOnChildren(remoteAssessmentsListView);
 
-        } catch (DAOException e) {
-            e.printStackTrace();
+        } catch (DAOException daoe) {
+            daoe.printStackTrace();
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
         }
     }
-
 
 
     @Override
@@ -165,8 +173,34 @@ public class SyncMainFragment extends SkavaFragment {
                     Log.d(SkavaConstants.LOG, daoe.getMessage());
                     Toast.makeText(getActivity(), daoe.getMessage(), Toast.LENGTH_LONG);
                 }
+                break;
+            case R.id.action_unlink_dropbox_account:
+                ((SkavaApplication)getActivity().getApplication()).setWantUnlinkDropboxAccount(true);
+                restartApp();
+                break;
+            case R.id.action_import_app_data:
+                ((SkavaApplication)getActivity().getApplication()).setWantImportAppData(true);
+                restartApp();
+                break;
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+
+    private void restartAppWontCloseEnough(){
+        Intent i = getActivity().getBaseContext().getPackageManager()
+                .getLaunchIntentForPackage(getActivity().getBaseContext().getPackageName());
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+    }
+
+    private void restartApp(){
+        Intent mStartActivity = new Intent(getActivity().getApplicationContext(), HomeMainActivity.class);
+        int mPendingIntentId = 123456;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(getActivity().getApplicationContext(), mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager)getActivity().getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        System.exit(0);
     }
 
 

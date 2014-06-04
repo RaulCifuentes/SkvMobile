@@ -3,7 +3,6 @@ package com.metric.skava.data.dao.impl.dropbox.helper;
 import com.dropbox.sync.android.DbxRecord;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.Assessment;
-import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalExcavationMethodDAO;
 import com.metric.skava.data.dao.LocalExcavationProjectDAO;
@@ -14,6 +13,7 @@ import com.metric.skava.data.dao.LocalTunnelFaceDAO;
 import com.metric.skava.data.dao.LocalUserDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -53,14 +53,21 @@ public class AssessmentBuilder4DropBox {
         String assessmentCode = assessmentRecord.getString("code");
         babyAssessment.setCode(assessmentCode);
 
-        java.lang.String faceID = assessmentRecord.getString("faceCode");
-        TunnelFace tunnelFace = localTunnelFaceDAO.getTunnelFaceByCode(faceID);
-        babyAssessment.setFace(tunnelFace);
-
+//        java.lang.String faceID = assessmentRecord.getString("faceCode");
+//        try {
+//            TunnelFace tunnelFace = localTunnelFaceDAO.getTunnelFaceByCode(faceID);
+//            babyAssessment.setFace(tunnelFace);
+//        } catch (DAOException e) {
+//            Log.e(SkavaConstants.LOG, e.getMessage());
+//        }
         Date date = assessmentRecord.getDate("date");
-        babyAssessment.setDate(date);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        babyAssessment.setDateTime(calendar);
 
         return babyAssessment;
     }
+
+
 
 }

@@ -8,6 +8,7 @@ import com.dropbox.sync.android.DbxTable;
  */
 public class ExcavationProjectDropboxTable extends DropboxBaseTable implements DropboxTable {
 
+    public static final String PROJECTS_DROPBOX_TABLE = "Projects";
 
     public ExcavationProjectDropboxTable(DbxDatastore datastore) {
         super(datastore);
@@ -15,7 +16,7 @@ public class ExcavationProjectDropboxTable extends DropboxBaseTable implements D
 
     @Override
     public DbxTable getBaseDropboxTable() {
-        return mDatastore.getTable("Projects");
+        return mDatastore.getTable(PROJECTS_DROPBOX_TABLE);
     }
 
     @Override

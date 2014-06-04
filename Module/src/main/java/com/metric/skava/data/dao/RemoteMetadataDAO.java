@@ -8,7 +8,9 @@ import com.metric.skava.data.dao.exception.DAOException;
 public interface RemoteMetadataDAO {
 
 
-    public Long getRecordsCount() throws DAOException;
+    public Long getAppDataRecordsCount() throws DAOException;
+
+    public Long getUserDataRecordsCount() throws DAOException;
 
 
 }

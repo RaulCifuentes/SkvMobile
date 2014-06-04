@@ -21,11 +21,11 @@ import com.metric.skava.app.util.SkavaConstants;
 
 
 /**
- * The Authenticator activity.
+ * The SkavaAuthenticator activity.
  *
- * Called by the Authenticator and in charge of identifing the user.
+ * Called by the SkavaAuthenticator and in charge of identifing the user.
  *
- * It sends back to the Authenticator the result.
+ * It sends back to the SkavaAuthenticator the result.
  */
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
