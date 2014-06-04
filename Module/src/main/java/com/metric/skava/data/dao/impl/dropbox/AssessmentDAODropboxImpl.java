@@ -1,12 +1,13 @@
 package com.metric.skava.data.dao.impl.dropbox;
 
-import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.dropbox.sync.android.DbxDatastoreStatus;
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFields;
 import com.dropbox.sync.android.DbxFile;
@@ -14,6 +15,7 @@ import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxList;
 import com.dropbox.sync.android.DbxPath;
 import com.dropbox.sync.android.DbxRecord;
+import com.metric.skava.R;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.ExcavationMethod;
@@ -160,7 +162,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 assessmentFields.set("sectionCode", section.getCode());
             }
 
-            Date date = assessment.getDate();
+            Date date = assessment.getDateTime().getTime();
             if (date != null) {
                 assessmentFields.set("date", date);
             }
@@ -389,7 +391,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     supportRecommendationFields.set("meshTypeCode", meshType.getCode());
                 }
 
-                Coverage coverage = recomendation.getCoverage();
+                Coverage coverage = recomendation.getMeshCoverage();
                 if (SkavaUtils.isDefined(coverage)) {
                     supportRecommendationFields.set("coverageCode", coverage.getCode());
                 }
@@ -618,20 +620,24 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
     class PictureUploader extends AsyncTask<Object, Void, Integer> {
 
         SyncLogEntry errorCondition;
+        String assessmentCode;
 
         @Override
         protected Integer doInBackground(Object[] params) {
-            String assessmentCode = (String) params[0];
+            assessmentCode = (String) params[0];
             List<Uri> urlList = (List<Uri>) params[1];
+            SyncLogEntry.Source source = null;
             try {
+                DbxDatastoreStatus status = getDatastore().getSyncStatus();
+                source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
                 Integer numPictures = uploadPictures(assessmentCode, urlList);
                 if (numPictures == -1) {
-                    errorCondition = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.PICTURES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.FAIL, 0L);
+                    errorCondition = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.PICTURES, source, SyncLogEntry.Status.FAIL, 0L);
                 }
                 return numPictures;
             } catch (DAOException e) {
                 Log.e(SkavaConstants.LOG, e.getMessage());
-                errorCondition = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.PICTURES, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.FAIL, 0L);
+                errorCondition = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.PICTURES, source, SyncLogEntry.Status.FAIL, 0L);
                 errorCondition.setMessage(e.getMessage());
                 return -1;
             }
@@ -640,20 +646,37 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         @Override
         protected void onPostExecute(Integer result) {
             if (result == -1 || errorCondition != null) {
-                Toast.makeText(mContext, "Picture uploading has failed!!", Toast.LENGTH_LONG);
-                AlertDialog.Builder messageBox = new AlertDialog.Builder(mContext);
-                messageBox.setTitle("Bad news with " + errorCondition.getSource().name() + " on " + errorCondition.getSyncDate().toString());
-                messageBox.setMessage("Hey buddy, I was syncing " + errorCondition.getDomain().name() + ", but this issue arose : " + errorCondition.getMessage());
-                messageBox.setCancelable(false);
-                messageBox.setNeutralButton("OK", null);
-                messageBox.show();
+                NotificationCompat.Builder mBuilder;
+                mBuilder = new NotificationCompat.Builder(mContext)
+                        .setSmallIcon(R.drawable.cloud_icon)
+                        .setContentTitle("Skava Mobile notifies")
+                        .setContentText("Picture uploading failed :( ");
+                // Sets an ID for the notification
+                int mNotificationId = 001;
+                // Gets an instance of the NotificationManager service
+                NotificationManager mNotifyMgr = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
+                // Builds the notification and issues it.
+                mNotifyMgr.notify(mNotificationId, mBuilder.build());
             } else {
                 //mostrar que termino exitosamente
-//                Toast.makeText(mContext, "Picture uploading succesfully finished", Toast.LENGTH_LONG);
+                NotificationCompat.Builder mBuilder;
+                mBuilder = new NotificationCompat.Builder(mContext)
+                        .setSmallIcon(R.drawable.cloud_icon)
+                        .setContentTitle("Skava Mobile notifies")
+                        .setContentText("Picture uploading succeed !!");
+                int mNotificationId = 010;
+                // Gets an instance of the NotificationManager service
+                NotificationManager mNotifyMgr = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
+                mNotifyMgr.notify(mNotificationId, mBuilder.build());
+                // Update the assessment to inform also the pictures complete
+                try {
+                    Assessment localAssessment = getDAOFactory().getLocalAssessmentDAO().getAssessment(assessmentCode);
+                    localAssessment.setSentToCloud(Assessment.PICS_SENT_TO_CLOUD);
+                } catch (DAOException e) {
+                    Log.e(SkavaConstants.LOG, e.getMessage());
+                }
             }
         }
-
-
     }
 
 
@@ -666,7 +689,19 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             throw new DAOException("DbxFileSystem is shutted down");
         }
 
-        DbxPath skavaFolderPath = new DbxPath(DbxPath.ROOT, "SkavaMobile");
+        //Create a folder named after the datastore's name
+        //The datastore name depends on the target environment, so ...
+        String folderName = null;
+        String target =  getSkavaContext().getTargetEnvironment();
+        if (target.equalsIgnoreCase(SkavaConstants.DEV_KEY)) {
+            folderName = SkavaConstants.DROPBOX_DS_DEV_NAME;
+        } else if (target.equalsIgnoreCase(SkavaConstants.QA_KEY)) {
+            folderName = SkavaConstants.DROPBOX_DS_QA_NAME;
+        } else if (target.equalsIgnoreCase(SkavaConstants.PROD_KEY)) {
+            folderName = SkavaConstants.DROPBOX_DS_PROD_NAME;
+        }
+
+        DbxPath skavaFolderPath = new DbxPath(DbxPath.ROOT, folderName);
         try {
             if (!dbxFs.exists(skavaFolderPath)) {
                 dbxFs.createFolder(skavaFolderPath);

@@ -12,6 +12,7 @@ import com.metric.skava.data.dao.exception.DAOException;
  */
 public class AssessmentDropboxTable extends DropboxBaseTable implements DropboxTable {
 
+    public static final String ASSESSMENT_TABLE = "Assessment";
 
     public AssessmentDropboxTable(DbxDatastore datastore) {
         super(datastore);
@@ -19,7 +20,7 @@ public class AssessmentDropboxTable extends DropboxBaseTable implements DropboxT
 
     @Override
     public DbxTable getBaseDropboxTable() {
-        return mDatastore.getTable("Assessment");
+        return mDatastore.getTable(ASSESSMENT_TABLE);
     }
 
     @Override

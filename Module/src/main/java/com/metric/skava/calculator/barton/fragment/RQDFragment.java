@@ -49,9 +49,6 @@ public class RQDFragment extends QBartonCalculatorBaseFragment {
                         RQD plainRqd = new RQD(enteredValue);
 //                        RQD mapeado = RQDMapper.getInstance().mapJvToRQD(enteredValue);
 						getQCalculationContext().setRqd(plainRqd);
-//                        Toast.makeText(getActivity().getApplicationContext(),
-//                        "El RQD que se guardara es "+ mapeado, Toast.LENGTH_LONG)
-//                        .show();
                     } else {
                         rqdEditText.setError( "RQD value must be between 0 and 100!" );
                     }
@@ -62,11 +59,9 @@ public class RQDFragment extends QBartonCalculatorBaseFragment {
             }
         });
 
-
 		return rootView;
 	}
 
-	
-	
+
 
 }

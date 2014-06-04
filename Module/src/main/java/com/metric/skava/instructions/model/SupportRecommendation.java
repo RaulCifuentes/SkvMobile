@@ -16,9 +16,10 @@ public class SupportRecommendation {
     private SupportPattern roofPattern;
     private SupportPattern wallPattern;
     private ShotcreteType shotcreteType;
+    private Coverage shotcreteCoverage;
     private Double thickness;
     private MeshType meshType;
-    private Coverage coverage;
+    private Coverage meshCoverage;
     private ArchType archType;
     private Double separation;
     private String observations;
@@ -87,6 +88,14 @@ public class SupportRecommendation {
         this.shotcreteType = shotcreteType;
     }
 
+    public Coverage getShotcreteCoverage() {
+        return shotcreteCoverage;
+    }
+
+    public void setShotcreteCoverage(Coverage shotcreteCoverage) {
+        this.shotcreteCoverage = shotcreteCoverage;
+    }
+
     public Double getThickness() {
         return thickness;
     }
@@ -103,12 +112,12 @@ public class SupportRecommendation {
         this.meshType = meshType;
     }
 
-    public Coverage getCoverage() {
-        return coverage;
+    public Coverage getMeshCoverage() {
+        return meshCoverage;
     }
 
-    public void setCoverage(Coverage coverage) {
-        this.coverage = coverage;
+    public void setMeshCoverage(Coverage meshCoverage) {
+        this.meshCoverage = meshCoverage;
     }
 
     public ArchType getArchType() {
@@ -140,12 +149,13 @@ public class SupportRecommendation {
                 getBoltDiameter() != null &&
                 getBoltLength() != null &&
                 getBoltType() != null &&
-                getCoverage() != null &&
+                getMeshCoverage() != null &&
                 getMeshType() != null &&
                 getObservations() != null &&
                 getRoofPattern() != null &&
                 getSeparation() != null &&
                 getShotcreteType() != null &&
+                getShotcreteCoverage() != null &&
                 getThickness() != null &&
                 getWallPattern() != null;
 
@@ -156,12 +166,13 @@ public class SupportRecommendation {
                 (getBoltDiameter() != null) ||
                 (getBoltLength() != null) ||
                 SkavaUtils.isDefined(getBoltType()) ||
-                SkavaUtils.isDefined(getCoverage()) ||
+                SkavaUtils.isDefined(getMeshCoverage()) ||
                 SkavaUtils.isDefined(getMeshType()) ||
                 (getObservations() != null) ||
                 (getRoofPattern() != null) ||
                 (getSeparation() != null) ||
                 SkavaUtils.isDefined(getShotcreteType()) ||
+                SkavaUtils.isDefined(getShotcreteCoverage()) ||
                 (getThickness() != null) ||
                 (getWallPattern() != null);
     }

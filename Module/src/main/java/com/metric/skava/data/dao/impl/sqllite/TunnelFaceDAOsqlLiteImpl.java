@@ -39,11 +39,13 @@ public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<T
             String tunnelCode = CursorUtils.getString(TunnelFaceTable.TUNNEL_CODE_COLUMN, cursor);
             Integer orientation = CursorUtils.getInt(TunnelFaceTable.ORIENTATION_COLUMN, cursor);
             Double slope = CursorUtils.getDouble(TunnelFaceTable.SLOPE_COLUMN, cursor);
+            Double referencePK = CursorUtils.getDouble(TunnelFaceTable.REFERENCE_PK_COLUMN, cursor);
 
             LocalTunnelDAO localTunnelDAO = getDAOFactory().getLocalTunnelDAO();
             Tunnel tunnel = localTunnelDAO.getTunnelByUniqueCode(tunnelCode);
 
             TunnelFace newInstance = new TunnelFace(tunnel, code, name, orientation.shortValue(), slope);
+            newInstance.setReferencePK(referencePK);
             list.add(newInstance);
         }
         return list;
@@ -117,8 +119,8 @@ public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<T
 
     @Override
     protected void savePersistentEntity(String tableName, TunnelFace newSkavaEntity) throws DAOException {
-        String[] colNames = {TunnelFaceTable.TUNNEL_CODE_COLUMN, TunnelFaceTable.CODE_COLUMN, TunnelFaceTable.NAME_COLUMN, TunnelFaceTable.ORIENTATION_COLUMN, TunnelFaceTable.SLOPE_COLUMN};
-        Object[] colValues = {newSkavaEntity.getTunnel().getCode(), newSkavaEntity.getCode(),newSkavaEntity.getName(), newSkavaEntity.getOrientation(), newSkavaEntity.getSlope() };
+        String[] colNames = {TunnelFaceTable.TUNNEL_CODE_COLUMN, TunnelFaceTable.CODE_COLUMN, TunnelFaceTable.NAME_COLUMN, TunnelFaceTable.ORIENTATION_COLUMN, TunnelFaceTable.SLOPE_COLUMN, TunnelFaceTable.REFERENCE_PK_COLUMN};
+        Object[] colValues = {newSkavaEntity.getTunnel().getCode(), newSkavaEntity.getCode(),newSkavaEntity.getName(), newSkavaEntity.getOrientation(), newSkavaEntity.getSlope(), newSkavaEntity.getReferencePK() };
         saveRecord(TunnelFaceTable.FACE_DATABASE_TABLE, colNames, colValues);
     }
 
@@ -136,7 +138,6 @@ public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<T
     public int deleteAllTunnelFaces() {
         return deleteAllPersistentEntities(TunnelFaceTable.FACE_DATABASE_TABLE);
     }
-
 
 
 }

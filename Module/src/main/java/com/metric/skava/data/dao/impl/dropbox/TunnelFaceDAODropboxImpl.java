@@ -45,9 +45,11 @@ public class TunnelFaceDAODropboxImpl extends DropBoxBaseDAO implements RemoteTu
             String nombre = faceRecord.getString("Name");
             Double orientation = faceRecord.getDouble("Orientation");
             Double slope = faceRecord.getDouble("Slope");
+            Double referencePK = readDouble(faceRecord, "Reference_Pk");
             String tunnelCode = faceRecord.getString("TunnelId");
             Tunnel tunnel = tunnelDAO.getTunnelByUniqueCode(tunnelCode);
             TunnelFace face = new TunnelFace(tunnel, codigo, nombre, orientation.shortValue(), slope );
+            face.setReferencePK(referencePK);
             listFaces.add(face);
         }
         return listFaces;
@@ -73,9 +75,11 @@ public class TunnelFaceDAODropboxImpl extends DropBoxBaseDAO implements RemoteTu
         String nombre = faceRecord.getString("Name");
         Double orientation = faceRecord.getDouble("Orientation");
         Double slope = faceRecord.getDouble("Slope");
+        Double referencePK = readDouble(faceRecord, "Reference_Pk");
         String tunnelCode = faceRecord.getString("TunnelId");
         Tunnel tunnel = tunnelDAO.getTunnelByUniqueCode(tunnelCode);
         TunnelFace face = new TunnelFace(tunnel, codigo, nombre, orientation.shortValue(), slope );
+        face.setReferencePK(referencePK);
         return face;
     }
 

@@ -8,13 +8,15 @@ import com.dropbox.sync.android.DbxTable;
  */
 public class TunnelDropboxTable extends DropboxBaseTable implements DropboxTable {
 
+    public static final String TUNNELS_DROPBOX_TABLE = "Tunnels";
+
     public TunnelDropboxTable(DbxDatastore datastore) {
         super(datastore);
     }
 
     @Override
     public DbxTable getBaseDropboxTable() {
-        return mDatastore.getTable("Tunnels");
+        return mDatastore.getTable(TUNNELS_DROPBOX_TABLE);
     }
 
     @Override

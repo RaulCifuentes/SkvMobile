@@ -10,6 +10,8 @@ public class TunnelFace extends SkavaEntity {
     private Tunnel tunnel;
     private Short orientation;
     private Double slope;
+    private Double referencePK;
+
 
     public TunnelFace(Tunnel tunnel, String code, String name, Short orientation, Double slope) {
         super(code, name);
@@ -40,5 +42,13 @@ public class TunnelFace extends SkavaEntity {
 
     public void setSlope(Double slope) {
         this.slope = slope;
+    }
+
+    public Double getReferencePK() {
+        return referencePK;
+    }
+
+    public void setReferencePK(Double referencePK) {
+        this.referencePK = referencePK;
     }
 }

@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="action_about">About</string>
+
+    <string name="about_skava">Skava Consulting started as the driver of technological change in underground works and mining. \nOur highly skilled team provides this industry with state of the art products and services. </string>
+    <string name="about_skava_values">EXCELLENCE. Best in quality and in everything we do.\n\nINNOVATION. Innovate in everything, from products to processes.\n\nCOMMITMENT. Accountable for our work. Business decisions are taken considering experience and good judgment.\n\nINTEGRITY. Honesty and integrity are above and before everything we do.\n\nOPEN COMMUNICATION.Every member of the team is encouraged to openly share their opinion.\n\nSOCIAL COMMITMENT.Through improvement of the industry standards.\n\nCONSTRUCTIVE ATTITUDE.Our team is optimistic and creative, always.</string>
+
+    <string name="action_app_details">App details ...</string>
+
+
 </resources>

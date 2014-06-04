@@ -4,7 +4,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.metric.skava.R;
 import com.metric.skava.app.activity.SkavaFragmentActivity;
-import com.metric.skava.home.MainFragment;
+import com.metric.skava.home.fragment.MainFragment;
 
 
 public class NavigationController {

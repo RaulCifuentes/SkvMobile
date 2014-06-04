@@ -93,8 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:columnCount="2"
-                >
+                android:columnCount="2">
 
                 <TextView
                     android:id="@+id/rockmass_desc_fracture_type_label"
@@ -162,21 +161,33 @@
                     android:layout_width="20px"
                     android:layout_height="20px" />
 
-                <TextView
-                    android:id="@id/rockmass_desc_rock_sample_identification"
+                <LinearLayout
+                    android:layout_columnSpan="2"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rockmass_desc_rock_sample_identification"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:layout_height="match_parent">
 
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/rockmass_desc_rock_sample_identification"
-                    android:inputType="text"
-                    android:id="@id/rockmass_desc_rock_sample_identification_value"
-                    android:maxLength="@integer/inputlength_large"
-                    android:gravity="top" />
+                    <TextView
+                        android:id="@id/rockmass_desc_rock_sample_identification"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rockmass_desc_rock_sample_identification"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/rockmass_desc_rock_sample_identification"
+                        android:inputType="textMultiLine"
+                        android:lines="8"
+                        android:minLines="6"
+                        android:gravity="top|left"
+                        android:maxLines="10"
+                        android:scrollbars="vertical"
+                        android:id="@id/rockmass_desc_rock_sample_identification_value"
+                        android:maxLength="@integer/inputlength_large" />
+
+                </LinearLayout>
 
                 <Space
                     android:layout_width="20px"
@@ -186,7 +197,8 @@
                     android:layout_width="20px"
                     android:layout_height="20px" />
 
-                <LinearLayout android:layout_columnSpan="2"
+                <LinearLayout
+                    android:layout_columnSpan="2"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">

@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <!--<PreferenceCategory android:title="@string/preferences_security_label" >-->
-        <!--<CheckBoxPreference-->
-            <!--android:key="PREFERENCE_SECURITY"-->
-            <!--android:title="Force login"-->
-            <!--android:summary="Ask to login every single time..."-->
-            <!--android:defaultValue="true"-->
-             <!--/>-->
-    <!--</PreferenceCategory>-->
+    <PreferenceCategory android:title="Skava Preferences">
 
-    <!--<PreferenceCategory android:title="@string/preferences_gui_label" >-->
-        <!--<ListPreference-->
-            <!--android:key="PREFERENCE_THEME"-->
-            <!--android:title="Theme"-->
-            <!--android:summary="Dress the app with diferent colors..."-->
-            <!--android:defaultValue="DAY_THEME"-->
-            <!--android:dialogTitle="What's your choice?"-->
-            <!--android:entries="@array/change_theme_options"-->
-            <!--android:entryValues="@array/change_theme_values"-->
-             <!--/>-->
-    <!--</PreferenceCategory>-->
+    <CheckBoxPreference android:key="UPDATE_USER_DATA_AUTO"
+        android:title="@string/settings_importUserDataOnStart_title"
+        android:summary="@string/settings_importUserDataOnStart_desc"
+        android:defaultValue="true"/>
 
-    <PreferenceCategory android:title="Skava Preferences" />
-    <CheckBoxPreference android:title="Update data model automatically on start"
-        android:key="UPDATE_AUTO"
-        android:summary="Reload the data model every time the app starts"/>
+    <CheckBoxPreference android:key="UPDATE_APP_DATA_AUTO"
+        android:title="@string/settings_importAppDataOnStart_title"
+        android:summary="@string/settings_importAppDataOnStart_desc"
+        android:defaultValue="false"
+        />
 
-    <CheckBoxPreference android:title="Unlink the global dropbox account"
-        android:key="UNLINK_DROPBOX"
-        android:summary="Unlink the global Dropbox account, so it will be asked on next login"/>
+    <ListPreference
+        android:key="TARGET_ENVIRONMENT"
+        android:title="@string/settings_targetEnvironment_title"
+        android:dialogTitle="@string/settings_targetEnvironment_desc"
+        android:entries="@array/settings_targetEnvironment_entries"
+        android:entryValues="@array/settings_targetEnvironment_values"
+        android:defaultValue="@string/settings_targetEnvironment_default" />
+
+    <CheckBoxPreference android:key="UNLINK_DROPBOX"
+        android:title="@string/settings_unlinkDropboxOnClose_title"
+        android:summary="@string/settings_unlinkDropboxOnClose_desc"
+        android:defaultValue="false"
+        />
+
+    </PreferenceCategory>
+
 
 </PreferenceScreen>

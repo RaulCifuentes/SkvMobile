@@ -15,11 +15,21 @@ public class SkavaContext {
 
     private User loggedUser;
     private Assessment assessment;
-    private SyncStatus syncMetadata;
+    private SyncStatus userDataSyncMetadata;
+    private SyncStatus appDataSyncMetadata;
     private DbxDatastore mDatastore;
     private DbxFileSystem mFileSystem;
     private DAOFactory daoFactory;
     private SyncHelper syncHelper;
+    private String targetEnvironment;
+
+    public String getTargetEnvironment() {
+        return targetEnvironment;
+    }
+
+    public void setTargetEnvironment(String targetEnvironment) {
+        this.targetEnvironment = targetEnvironment;
+    }
 
     public SyncHelper getSyncHelper() {
         return syncHelper;
@@ -53,12 +63,20 @@ public class SkavaContext {
         this.assessment = assessment;
     }
 
-    public SyncStatus getSyncMetadata() {
-        return syncMetadata;
+    public SyncStatus getUserDataSyncMetadata() {
+        return userDataSyncMetadata;
     }
 
-    public void setSyncMetadata(SyncStatus syncMetadata) {
-        this.syncMetadata = syncMetadata;
+    public void setUserDataSyncMetadata(SyncStatus userDataSyncMetadata) {
+        this.userDataSyncMetadata = userDataSyncMetadata;
+    }
+
+    public SyncStatus getAppDataSyncMetadata() {
+        return appDataSyncMetadata;
+    }
+
+    public void setAppDataSyncMetadata(SyncStatus appDataSyncMetadata) {
+        this.appDataSyncMetadata = appDataSyncMetadata;
     }
 
     public DbxFileSystem getFileSystem() {

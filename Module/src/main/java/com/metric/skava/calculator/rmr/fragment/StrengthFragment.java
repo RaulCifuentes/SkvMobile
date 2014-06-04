@@ -60,7 +60,9 @@ public class StrengthFragment extends RMRCalculatorBaseFragment  implements Radi
         fourthRadio.setVisibility(View.GONE);
 
         mPointLoadListView = (ListView) getView().findViewById(R.id.listview_a);
+        mPointLoadListView.setVisibility(View.GONE);
         mUniaxialListView = (ListView) getView().findViewById(R.id.listview_b);
+        mUniaxialListView.setVisibility(View.GONE);
 
         if (selectedStrength != null){
             switch (selectedStrength.getGroup()){

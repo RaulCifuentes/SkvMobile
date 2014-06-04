@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="persistence_bucket_file_key">com.skava.mobile.MY_PREFS_FILE</string>
+    <string name="settings_preference_file_key">com.metric.skava_preferences</string>
+
+    <string name="user_data_last_sync_succeed">user_data_sync_sucess_key</string>
+    <string name="user_data_last_sync_date">user_data_sync_date_key</string>
+
+    <string name="app_data_last_sync_succeed">app_data_sync_sucess_key</string>
+    <string name="app_data_last_sync_date">app_data_sync_date_key</string>
+
+
     <string name="preferences_security_label">Security</string>
     <string name="preferences_gui_label">User Interface</string>
     <string name="yes">Yes</string>
@@ -21,5 +31,31 @@
         <item>Night Theme</item>
         <item>Default Theme</item>
     </string-array>
+
+    <string-array name="settings_targetEnvironment_values">
+        <item>DEV</item>
+        <item>QA</item>
+        <item>PROD</item>
+    </string-array>
+
+    <string-array name="settings_targetEnvironment_entries">
+        <item>Development</item>
+        <item>QA</item>
+        <item>Production</item>
+    </string-array>
+
+    <string name="settings_targetEnvironment_default">DEV</string>
+
+    <string name="settings_targetEnvironment_title">Target environment (Development, QA, Production) ... </string>
+    <string name="settings_targetEnvironment_desc">Select the target environment</string>
+
+    <string name="settings_importUserDataOnStart_title">Download user data automatically on start</string>
+    <string name="settings_importUserDataOnStart_desc">Download the user data model (users, projects, etc.) when app starts</string>
+
+    <string name="settings_importAppDataOnStart_title">Download app data automatically on start</string>
+    <string name="settings_importAppDataOnStart_desc">Download the app data model (configuration parameters) every time the app starts</string>
+
+    <string name="settings_unlinkDropboxOnClose_title">Unlink from remote repository</string>
+    <string name="settings_unlinkDropboxOnClose_desc">Unlink the global Dropbox account, so it will be asked on next login</string>
 
 </resources>

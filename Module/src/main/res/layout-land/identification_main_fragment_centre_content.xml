@@ -183,18 +183,34 @@
             android:layout_marginLeft="@dimen/form_column_left_margin">
 
             <TextView
-                android:hint="DD/MM/YYYY"
+                android:hint="Day/Month/Year HH:MM"
                 android:id="@+id/mapping_gral_info_date_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:inputType="date" />
+                android:inputType="datetime" />
+
+            <Space
+                android:layout_width="@dimen/grid_space_separation_width"
+                android:layout_height="wrap_content"
+                />
 
             <Button
                 android:id="@+id/mapping_gral_date_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="l" />
+
+            <Space
+                android:layout_width="@dimen/grid_space_separation_width"
+                android:layout_height="wrap_content"
+                />
+
+            <Button
+                android:id="@+id/mapping_gral_time_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="o" />
 
         </LinearLayout>
 
@@ -263,7 +279,7 @@
                 android:inputType="number|numberSigned|numberDecimal"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_marginLeft="@dimen/form_column_left_margin"
-                android:hint="Initial Peg N°" />
+                android:hint="Initial Chainage" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -314,7 +330,7 @@
                 android:inputType="number|numberSigned|numberDecimal"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_marginLeft="@dimen/form_column_left_margin"
-                android:hint="Final Peg N°" />
+                android:hint="Final Chainage" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -355,7 +371,7 @@
 
 
         <TextView
-            android:hint="Absolute value of last Peg N° substracted from actual Peg N°"
+            android:hint="Absolute value of last chainage substracted from actual chainage"
             android:id="@+id/mapping_gral_info_actual_advance_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

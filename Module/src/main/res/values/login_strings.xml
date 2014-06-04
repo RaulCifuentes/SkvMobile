@@ -16,6 +16,7 @@
 
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This user is not registered</string>
+    <string name="error_incorrect_password">The password does not match</string>
+    <string name="error_user_unknown">This user is not registered</string>
     <string name="error_field_required">This field is required</string>
 </resources>

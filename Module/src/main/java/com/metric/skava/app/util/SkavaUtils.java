@@ -7,29 +7,14 @@ import android.os.Build.VERSION_CODES;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.data.IdentifiableEntity;
 import com.metric.skava.app.model.Assessment;
-import com.metric.skava.calculator.barton.helper.RQDMapper;
-import com.metric.skava.calculator.barton.model.Ja;
-import com.metric.skava.calculator.barton.model.Jn;
-import com.metric.skava.calculator.barton.model.Jr;
-import com.metric.skava.calculator.barton.model.Jw;
 import com.metric.skava.calculator.barton.model.Q_Calculation;
-import com.metric.skava.calculator.barton.model.RQD;
-import com.metric.skava.calculator.barton.model.SRF;
-import com.metric.skava.calculator.rmr.model.Aperture;
-import com.metric.skava.calculator.rmr.model.Groundwater;
-import com.metric.skava.calculator.rmr.model.Infilling;
-import com.metric.skava.calculator.rmr.model.OrientationDiscontinuities;
-import com.metric.skava.calculator.rmr.model.Persistence;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
-import com.metric.skava.calculator.rmr.model.Roughness;
-import com.metric.skava.calculator.rmr.model.Spacing;
-import com.metric.skava.calculator.rmr.model.StrengthOfRock;
-import com.metric.skava.calculator.rmr.model.Weathering;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -74,6 +59,12 @@ public class SkavaUtils {
         return new Date();
     }
 
+    public static Calendar getCurrentDateTime() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar;
+    }
+
+
     public static Assessment createInitialAssessment(SkavaContext skavaContext) throws DAOException {
 
         String code = UUID.randomUUID().toString();
@@ -81,53 +72,59 @@ public class SkavaUtils {
 
         DAOFactory daoFactory = skavaContext.getDAOFactory();
 
-        Date date = SkavaUtils.getCurrentDate();
-        initialAssessment.setDate(date);
+        // Get the current time
+        Calendar currentDateTime = SkavaUtils.getCurrentDateTime();
+        initialAssessment.setDateTime(currentDateTime);
 
-        //Q Barton (Deafault values for each one of the components of thr Q process)
+        //Q Barton (Default values for each one of the components of thr Q process)
 
-        RQD rqd = RQDMapper.getInstance().mapJvToRQD(4);
+//        RQD rqd = RQDMapper.getInstance().mapJvToRQD(4);
+//
+//        List<SRF> listSRF = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.Group.a);
+//        SRF sRF = listSRF.get(0);
+//
+//        List<Jw> listJw = daoFactory.getLocalJwDAO().getAllJws();
+//        Jw jw = listJw.get(0);
+//
+//        List<Ja> listJa = daoFactory.getLocalJaDAO().getAllJas(Ja.Group.a);
+//        Ja ja = listJa.get(0);
+//
+//        List<Jn> listJn = daoFactory.getLocalJnDAO().getAllJns();
+//        Jn jn = listJn.get(0);
+//
+//        List<Jr> listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.Group.a);
+//        Jr jr =  listJr.get(0);
+//
+//        Q_Calculation mQCalculation = new Q_Calculation(rqd, jn, jr, ja, jw, sRF);
+//
 
-        List<SRF> listSRF = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.Group.a);
-        SRF sRF = listSRF.get(0);
-
-        List<Jw> listJw = daoFactory.getLocalJwDAO().getAllJws();
-        Jw jw = listJw.get(0);
-
-        List<Ja> listJa = daoFactory.getLocalJaDAO().getAllJas(Ja.Group.a);
-        Ja ja = listJa.get(0);
-
-        List<Jn> listJn = daoFactory.getLocalJnDAO().getAllJns();
-        Jn jn = listJn.get(0);
-
-        List<Jr> listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.Group.a);
-        Jr jr =  listJr.get(0);
-
-        Q_Calculation mQCalculation = new Q_Calculation(rqd, jn, jr, ja, jw, sRF);
-
+        Q_Calculation mQCalculation = new Q_Calculation(null, null, null, null, null, null);
         initialAssessment.setQCalculation(mQCalculation);
-
-        StrengthOfRock strenght = daoFactory.getLocalStrengthDAO().getAllStrengths(StrengthOfRock.Group.POINT_LOAD_KEY).get(0);
-
-        Spacing spacing =  daoFactory.getLocalSpacingDAO().getAllSpacings().get(0);
-
-        Persistence persistence = daoFactory.getLocalPersistenceDAO().getAllPersistences().get(0);
-
-        Aperture aperture = daoFactory.getLocalApertureDAO().getAllApertures().get(0);
-
-        Roughness roughness = daoFactory.getLocalRoughnessDAO().getAllRoughnesses().get(0);
-
-        Infilling infilling = daoFactory.getLocalInfillingDAO().getAllInfillings().get(0);
-
-        Weathering weathering = daoFactory.getLocalWeatheringDAO().getAllWeatherings().get(0);
-
-        Groundwater groundwater = daoFactory.getLocalGroundwaterDAO().getAllGroundwaters(Groundwater.Group.INFLOW_LENGHT).get(0);
-
-        OrientationDiscontinuities orientation = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.TUNNELS_MINES).get(0);
-
-        RMR_Calculation mRMRCalculation = new RMR_Calculation(strenght, null, spacing, persistence, aperture, roughness, infilling, weathering, groundwater, orientation);
-
+//
+//        StrengthOfRock strenght = daoFactory.getLocalStrengthDAO().getAllStrengths(StrengthOfRock.Group.POINT_LOAD_KEY).get(0);
+//
+//        Spacing spacing =  daoFactory.getLocalSpacingDAO().getAllSpacings().get(0);
+//
+//        Persistence persistence = daoFactory.getLocalPersistenceDAO().getAllPersistences().get(0);
+//
+//        Aperture aperture = daoFactory.getLocalApertureDAO().getAllApertures().get(0);
+//
+//        Roughness roughness = daoFactory.getLocalRoughnessDAO().getAllRoughnesses().get(0);
+//
+//        Infilling infilling = daoFactory.getLocalInfillingDAO().getAllInfillings().get(0);
+//
+//        Weathering weathering = daoFactory.getLocalWeatheringDAO().getAllWeatherings().get(0);
+//
+//        Groundwater groundwater = daoFactory.getLocalGroundwaterDAO().getAllGroundwaters(Groundwater.Group.INFLOW_LENGHT).get(0);
+//
+//        OrientationDiscontinuities orientation = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.TUNNELS_MINES).get(0);
+//
+//        RMR_Calculation mRMRCalculation = new RMR_Calculation(strenght, null, spacing, persistence, aperture, roughness, infilling, weathering, groundwater, orientation);
+//
+        RMR_Calculation mRMRCalculation = new RMR_Calculation(null, null, null, null, null, null, null, null, null, null);
         initialAssessment.setRmrCalculation(mRMRCalculation);
+
+
 
         //Default 4 picture placeholders
         ArrayList<Uri> pictureUriList = new ArrayList<Uri>(5);

@@ -36,9 +36,11 @@ public class UserDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<User> i
             String code = CursorUtils.getString(UserTable.CODE_COLUMN, cursor);
             String name = CursorUtils.getString(UserTable.NAME_COLUMN, cursor);
             String email = CursorUtils.getString(UserTable.EMAIL_COLUMN, cursor);
+            String password = CursorUtils.getString(UserTable.PASSWORD_COLUMN, cursor);
+
             //find out the roles associated
             List<Role> listRoles = ((RoleDAOsqlLiteImpl) localRoleDAO).getRolesByUserCode(code);
-            User newInstance = new User(code, name, email, null);
+            User newInstance = new User(code, name, email, password, null);
             newInstance.grantRoles(listRoles);
             list.add(newInstance);
         }
@@ -76,8 +78,8 @@ public class UserDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<User> i
 
     @Override
     protected void savePersistentEntity(String tableName, User newSkavaEntity) throws DAOException {
-        String[] colNames = {UserTable.CODE_COLUMN, UserTable.NAME_COLUMN, UserTable.EMAIL_COLUMN};
-        String[] colValues = {newSkavaEntity.getCode(), newSkavaEntity.getName(), newSkavaEntity.getEmail()};
+        String[] colNames = {UserTable.CODE_COLUMN, UserTable.NAME_COLUMN, UserTable.PASSWORD_COLUMN, UserTable.EMAIL_COLUMN};
+        String[] colValues = {newSkavaEntity.getCode(), newSkavaEntity.getName(), newSkavaEntity.getPassword(), newSkavaEntity.getEmail()};
         saveRecord(tableName, colNames, colValues);
 
         List<Role> userRoles = newSkavaEntity.getRoles();
@@ -100,6 +102,6 @@ public class UserDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<User> i
     public int deleteAllUsers() {
         deleteAllPersistentEntities(UserRolesTable.USER_ROLES_DATABASE_TABLE);
         return deleteAllPersistentEntities(UserTable.USER_DATABASE_TABLE);
-
     }
+
 }

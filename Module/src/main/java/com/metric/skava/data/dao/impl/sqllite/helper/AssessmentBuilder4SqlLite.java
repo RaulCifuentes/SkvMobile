@@ -23,7 +23,7 @@ import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.table.AssessmentTable;
 import com.metric.skava.rockmass.model.FractureType;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Created by metricboy on 3/18/14.
@@ -79,8 +79,8 @@ public class AssessmentBuilder4SqlLite {
         }
 
         Long dateAsLongRep = CursorUtils.getLong(AssessmentTable.DATE_COLUMN, cursor);
-        Date date = DateDataFormat.getDateFromFormattedLong(dateAsLongRep);
-        babyAssessment.setDate(date);
+        Calendar date = DateDataFormat.getDateTimeFromFormattedLong(dateAsLongRep);
+        babyAssessment.setDateTime(date);
 
         java.lang.String sectionID = CursorUtils.getString(AssessmentTable.EXCAVATION_SECTION_CODE_COLUMN, cursor);
         if (sectionID != null) {
@@ -127,7 +127,7 @@ public class AssessmentBuilder4SqlLite {
         java.lang.String rockSampleIdentification = CursorUtils.getString(AssessmentTable.ROCK_SAMPLE_IDENTIFICATION_COLUMN, cursor);
         babyAssessment.setRockSampleIdentification(rockSampleIdentification);
 
-        Boolean sentToCloud = CursorUtils.getInt(AssessmentTable.SENT_TO_CLOUD_COLUMN, cursor) == 1;
+        Integer sentToCloud = CursorUtils.getInt(AssessmentTable.SENT_TO_CLOUD_COLUMN, cursor);
         babyAssessment.setSentToCloud(sentToCloud);
 
         return babyAssessment;

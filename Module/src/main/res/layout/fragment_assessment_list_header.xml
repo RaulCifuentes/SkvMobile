@@ -8,13 +8,24 @@
     android:background="@color/DeepSkyBlue">
 
     <TextView
-        android:id="@+id/first_column_text_view"
+        android:id="@+id/zero_column_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
         android:layout_weight="2"
         android:text="Code"
+        android:textColor="@color/White"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/first_column_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_weight="2"
+        android:text="Chainage"
         android:textColor="@color/White"
         android:textStyle="bold" />
 
@@ -60,7 +71,7 @@
         android:textColor="@color/White"
         android:text="Face"
         android:layout_height="wrap_content"
-        android:layout_weight="3" />
+        android:layout_weight="2" />
 
     <TextView
         android:id="@+id/sixth_column_text_view"

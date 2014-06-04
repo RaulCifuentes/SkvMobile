@@ -8,6 +8,7 @@ import com.dropbox.sync.android.DbxTable;
  */
 public class TunnelFaceDropboxTable extends DropboxBaseTable implements DropboxTable {
 
+    public static final String FACES_DROPBOX_TABLE = "Faces";
 
     public TunnelFaceDropboxTable(DbxDatastore datastore) {
         super(datastore);
@@ -15,7 +16,7 @@ public class TunnelFaceDropboxTable extends DropboxBaseTable implements DropboxT
 
     @Override
     public DbxTable getBaseDropboxTable() {
-        return mDatastore.getTable("Faces");
+        return mDatastore.getTable(FACES_DROPBOX_TABLE);
     }
 
     @Override

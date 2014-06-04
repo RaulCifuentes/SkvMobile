@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.metric.skava.R;
 import com.metric.skava.app.model.Assessment;
 
+import java.text.DateFormat;
 import java.util.List;
 
 /**
@@ -49,7 +50,7 @@ public class AssessmentListViewAdapter extends ArrayAdapter<Assessment> {
 
             if (actualAssessment.getInternalCode() != null) {
                 text = (TextView) assessmentViewItem.findViewById(R.id.third_column_text_view);
-                text.setText(actualAssessment.getDate().toString());
+                text.setText(DateFormat.getDateTimeInstance().format(actualAssessment.getDateTime()));
             }
         }
 

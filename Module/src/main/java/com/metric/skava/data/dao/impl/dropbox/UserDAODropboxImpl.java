@@ -72,6 +72,7 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
         String codigo = String.valueOf(currentDbxRecord.getLong("UserId"));
         String nombre = currentDbxRecord.getString("UserName");
         String email = readString(currentDbxRecord, "UserMail");
+        String password = readString(currentDbxRecord, "Password");
         List<Role> roleList = new ArrayList<Role>();
         DbxList roles = currentDbxRecord.getList("Roles");
         for (int i = 0; i < roles.size(); i++) {
@@ -79,7 +80,7 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
             roleList.add(mRolDAO.getRoleByCode(roleCode));
         }
 
-        User newUser = new User(codigo, nombre, email, null);
+        User newUser = new User(codigo, nombre, email, password, null);
         newUser.grantRoles(roleList);
         return newUser;
     }

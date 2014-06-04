@@ -8,11 +8,13 @@ import java.util.List;
 public class User extends SkavaEntity {
 
     private String email;
+    private String password;
     private List<Role> roles;
 
-    public User(String id, String name, String email, Role role) {
+    public User(String id, String name, String email, String password, Role role) {
         super(id, name);
         this.email = email;
+        this.password = password;
         this.roles = new ArrayList<Role>();
         if (role != null){
             roles.add(role);
@@ -37,6 +39,14 @@ public class User extends SkavaEntity {
 
     public boolean hasRole(Role role) {
         return this.roles.contains(role);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {

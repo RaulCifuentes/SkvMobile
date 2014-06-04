@@ -100,8 +100,11 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
         mListView = (ListView) view.findViewById(android.R.id.list);
 
         View listHeaderView = inflater.inflate(R.layout.fragment_assessment_list_header, null, false);
+
+        TextView zeroTextView = (TextView) listHeaderView.findViewById(R.id.zero_column_text_view);
+        zeroTextView.setText("Code");
         TextView firstTextView = (TextView) listHeaderView.findViewById(R.id.first_column_text_view);
-        firstTextView.setText("Code");
+        firstTextView.setText("Chainage");
         TextView secondTextView = (TextView) listHeaderView.findViewById(R.id.second_column_text_view);
         secondTextView.setText("Date");
         TextView thirdTextView = (TextView) listHeaderView.findViewById(R.id.third_column_text_view);

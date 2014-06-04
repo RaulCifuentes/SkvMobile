@@ -10,7 +10,9 @@ import com.metric.skava.calculator.barton.logic.QBartonCalculator;
 import com.metric.skava.calculator.barton.logic.QBartonInput;
 import com.metric.skava.calculator.barton.logic.QBartonOutput;
 
-public class Q_Calculation implements Parcelable {
+import java.util.Observable;
+
+public class Q_Calculation extends Observable implements Parcelable {
 
     private Long _id;
 	private RQD rqd;
@@ -32,20 +34,32 @@ public class Q_Calculation implements Parcelable {
 		this.sRF = sRF;
     }
 
+    private void triggerObservers(Object data) {
+        //This was an idea to listen for changes and update the color of the tab
+//        setChanged();
+//        notifyObservers(data);
+    }
+
 	public Ja getJa() {
 		return ja;
 	}
 
 	public void setJa(Ja ja) {
-		this.ja = ja;
-	}
+        if (ja != null) {
+            this.ja = ja;
+            triggerObservers(ja);
+        }
+    }
 
 	public Jn getJn() {
 		return jn;
 	}
 
 	public void setJn(Jn jn) {
-		this.jn = jn;
+        if (jn != null) {
+            this.jn = jn;
+            triggerObservers(jn);
+        }
 	}
 
 	public Jr getJr() {
@@ -54,6 +68,7 @@ public class Q_Calculation implements Parcelable {
 
 	public void setJr(Jr jr) {
 		this.jr = jr;
+        triggerObservers(jr);
 	}
 
 	public Jw getJw() {
@@ -62,6 +77,7 @@ public class Q_Calculation implements Parcelable {
 
 	public void setJw(Jw jw) {
 		this.jw = jw;
+        triggerObservers(jw);
 	}
 
 	public RQD getRqd() {
@@ -69,7 +85,10 @@ public class Q_Calculation implements Parcelable {
 	}
 
 	public void setRqd(RQD rqd) {
-		this.rqd = rqd;
+        if (rqd != null) {
+            this.rqd = rqd;
+            triggerObservers(rqd);
+        }
 	}
 
 	public SRF getSrf() {
@@ -77,7 +96,10 @@ public class Q_Calculation implements Parcelable {
 	}
 
 	public void setSrf(SRF sRF) {
-		this.sRF = sRF;
+        if (sRF != null) {
+            this.sRF = sRF;
+            triggerObservers(sRF);
+        }
 	}
 
     public Long get_id() {
