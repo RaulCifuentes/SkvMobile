@@ -21,9 +21,11 @@ public class AssessmentTable extends SkavaTable {
 
     public static final String EXCAVATION_METHOD_CODE_COLUMN = "METHOD_CODE";
 
-    public static final String PK_INITIAL_COLUMN = "PEG_INITIAL";
+    public static final String INITIAL_CHAINAGE_COLUMN = "INITIAL_CHAINAGE";
 
-    public static final String PK_FINAL_COLUMN = "PEG_FINAL";
+    public static final String FINAL_CHAINAGE_COLUMN = "FINAL_CHAINAGE";
+
+    public static final String REFERENCE_CHAINAGE_COLUMN = "REFERENCE_CHAINAGE";
 
     public static final String ADVANCE_COLUMN = "ADVANCE";
 
@@ -54,8 +56,9 @@ public class AssessmentTable extends SkavaTable {
             DATE_COLUMN + " integer null, " +
             EXCAVATION_SECTION_CODE_COLUMN + " text null, " +
             EXCAVATION_METHOD_CODE_COLUMN + " text null, " +
-            PK_INITIAL_COLUMN + " real null, " +
-            PK_FINAL_COLUMN + " real null, " +
+            INITIAL_CHAINAGE_COLUMN + " real null, " +
+            FINAL_CHAINAGE_COLUMN + " real null, " +
+            REFERENCE_CHAINAGE_COLUMN + " real null, " +
             ADVANCE_COLUMN + " real null, " +
             ORIENTATION_COLUMN + " integer null, " +
             SLOPE_COLUMN + " real null, " +
@@ -67,28 +70,28 @@ public class AssessmentTable extends SkavaTable {
             SENT_TO_CLOUD_COLUMN + " integer not null" +
             " );";
 
-    private static String INSERT_SCRIPT = "insert into " + ASSESSMENT_DATABASE_TABLE + "(" +
-            CODE_COLUMN + "," +
-            INTERNAL_CODE_COLUMN + "," +
-            GEOLOGIST_CODE_COLUMN + "," +
-            TUNEL_FACE_CODE_COLUMN + "," +
-            DATE_COLUMN + "," +
-            EXCAVATION_SECTION_CODE_COLUMN + "," +
-            EXCAVATION_METHOD_CODE_COLUMN + "," +
-            PK_INITIAL_COLUMN + "," +
-            PK_FINAL_COLUMN + "," +
-            ADVANCE_COLUMN + "," +
-            ORIENTATION_COLUMN + "," +
-            SLOPE_COLUMN + "," +
-            FRACTURE_TYPE_CODE_COLUMN + "," +
-            BLOCKS_SIZE_COLUMN + "," +
-            NUMBER_JOINTS_COLUMN  + "," +
-            OUTCROP_COLUMN + ", " +
-            ROCK_SAMPLE_IDENTIFICATION_COLUMN + ") ";
-
-    public static final String INSERT_ASSESSMENT_TABLE          = INSERT_SCRIPT + " values('SKV_A', 'GLG_A', 'TFC_1', 'SCT_A', 20131015011500, 9999999, 100, 'MTH_D', 210, 5,  'FRC_B', 100, 10, 'China deploys ships to new search areas, as Thailand says its radars may have tracked the missing Malaysia Airlines plane shortly after it lost contact.')";
-    public static final String INSERT_ASSESSMENT_TABLE_SECOND   = INSERT_SCRIPT + " values('SKV_B', 'GLG_A', 'TFC_3', 'SCT_B', 20140229223000, 9999999, 100, 'MTH_B', 125, 30, 'FRC_E', 220, 15, 'Researchers outline compelling evidence for an occasion when the ancient Earth was battered by two asteroids at the same time.')";
-    public static final String INSERT_ASSESSMENT_TABLE_THIRD    = INSERT_SCRIPT + " values('SKV_C', 'GLG_A', 'TFC_5', 'SCT_C', 20131218144500, 9999999, 100, 'MTH_C', 80, 10,  'FRC_F', 80, 17,  'The 2008 crisis with Georgia, which saw Moscow effectively establishing two Russian-speaking protectorates carved out from Georgia-proper, was just a taster. Crimea itself is not the main course; that is Ukraine itself.')";
+//    private static String INSERT_SCRIPT = "insert into " + ASSESSMENT_DATABASE_TABLE + "(" +
+//            CODE_COLUMN + "," +
+//            INTERNAL_CODE_COLUMN + "," +
+//            GEOLOGIST_CODE_COLUMN + "," +
+//            TUNEL_FACE_CODE_COLUMN + "," +
+//            DATE_COLUMN + "," +
+//            EXCAVATION_SECTION_CODE_COLUMN + "," +
+//            EXCAVATION_METHOD_CODE_COLUMN + "," +
+//            INITIAL_CHAINAGE_COLUMN + "," +
+//            FINAL_CHAINAGE_COLUMN + "," +
+//            ADVANCE_COLUMN + "," +
+//            ORIENTATION_COLUMN + "," +
+//            SLOPE_COLUMN + "," +
+//            FRACTURE_TYPE_CODE_COLUMN + "," +
+//            BLOCKS_SIZE_COLUMN + "," +
+//            NUMBER_JOINTS_COLUMN  + "," +
+//            OUTCROP_COLUMN + ", " +
+//            ROCK_SAMPLE_IDENTIFICATION_COLUMN + ") ";
+//
+//    public static final String INSERT_ASSESSMENT_TABLE          = INSERT_SCRIPT + " values('SKV_A', 'GLG_A', 'TFC_1', 'SCT_A', 20131015011500, 9999999, 100, 'MTH_D', 210, 5,  'FRC_B', 100, 10, 'China deploys ships to new search areas, as Thailand says its radars may have tracked the missing Malaysia Airlines plane shortly after it lost contact.')";
+//    public static final String INSERT_ASSESSMENT_TABLE_SECOND   = INSERT_SCRIPT + " values('SKV_B', 'GLG_A', 'TFC_3', 'SCT_B', 20140229223000, 9999999, 100, 'MTH_B', 125, 30, 'FRC_E', 220, 15, 'Researchers outline compelling evidence for an occasion when the ancient Earth was battered by two asteroids at the same time.')";
+//    public static final String INSERT_ASSESSMENT_TABLE_THIRD    = INSERT_SCRIPT + " values('SKV_C', 'GLG_A', 'TFC_5', 'SCT_C', 20131218144500, 9999999, 100, 'MTH_C', 80, 10,  'FRC_F', 80, 17,  'The 2008 crisis with Georgia, which saw Moscow effectively establishing two Russian-speaking protectorates carved out from Georgia-proper, was just a taster. Crimea itself is not the main course; that is Ukraine itself.')";
 
 
 }

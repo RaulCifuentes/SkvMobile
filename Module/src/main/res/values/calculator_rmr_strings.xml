@@ -7,6 +7,13 @@
     <string name="title_section_orientation">Orientation of discontinuities</string>
     <string name="title_section_rmr">RMR</string>
 
+
+    <string name="condition_results_persistence_label">Persistence : </string>
+    <string name="condition_results_aperture_label">Aperture : </string>
+    <string name="condition_results_roughness_label">Roughness : </string>
+    <string name="condition_results_infilling_label">Infilling : </string>
+    <string name="condition_results_weathering_label">Weathering : </string>
+
     <string name="strength_title_label">Strength of intact rock material</string>
 
 </resources>

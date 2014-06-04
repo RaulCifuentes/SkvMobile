@@ -317,7 +317,6 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         separationEditText = (EditText) mRootView.findViewById(R.id.instructions_separation_value);
         separationEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
 
-
         SupportRecommendation currentRecommendation = getCurrentAssessment().getRecomendation();
         // Use either the current recomendation for the assessment, or use the one mapped
         // from the requirements

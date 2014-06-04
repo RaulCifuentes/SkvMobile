@@ -86,9 +86,10 @@ public class SupportRequirementDAODropboxImpl extends DropBoxBaseDAO implements 
                 Double roofDx = readDouble(currentSupportRequirementRecord, "PatternRoof_dx");
                 Double roofDy = readDouble(currentSupportRequirementRecord, "PatternRoof_dy");
                 String shotcreteTypeCode = readString(currentSupportRequirementRecord, "SHOTCRETE_TYPE");
+                String shotcreteCoverageCode = readString(currentSupportRequirementRecord, "SHOTTYPE_COV_CODE");
                 Double thickness = readDouble(currentSupportRequirementRecord, "THICKNESS");
                 String meshTypeCode = readString(currentSupportRequirementRecord, "MESH_TYPE");
-                String coverageCode = readString(currentSupportRequirementRecord, "COVERAGE");
+                String meshCoverageCode = readString(currentSupportRequirementRecord, "COVERAGE");
                 String archTypeCode = readString(currentSupportRequirementRecord, "ARCH_TYPE");
                 Double separation = readDouble(currentSupportRequirementRecord, "SEPARATION");
 
@@ -116,14 +117,19 @@ public class SupportRequirementDAODropboxImpl extends DropBoxBaseDAO implements 
                     shotcreteType = shotcreteTypeDAO.getShotcreteTypeByCode(shotcreteTypeCode);
                 }
 
+                Coverage shotcreteCoverage = null;
+                if (shotcreteCoverageCode != null) {
+                    shotcreteCoverage = coverageDAO.getCoverageByCode(shotcreteCoverageCode);
+                }
+
                 MeshType meshType = null;
                 if (meshTypeCode != null) {
                     meshType = meshTypeDAO.getMeshTypeByCode(meshTypeCode);
                 }
 
-                Coverage coverage = null;
-                if (coverageCode != null) {
-                    coverage = coverageDAO.getCoverageByCode(coverageCode);
+                Coverage meshCoverage = null;
+                if (meshCoverageCode != null) {
+                    meshCoverage = coverageDAO.getCoverageByCode(meshCoverageCode);
                 }
 
                 ArchType archType = null;
@@ -139,9 +145,10 @@ public class SupportRequirementDAODropboxImpl extends DropBoxBaseDAO implements 
                 newSupportRequirement.setRoofPattern(roofPattern);
                 newSupportRequirement.setWallPattern(wallPattern);
                 newSupportRequirement.setShotcreteType(shotcreteType);
+                newSupportRequirement.setShotcreteCoverage(shotcreteCoverage);
                 newSupportRequirement.setThickness(thickness);
                 newSupportRequirement.setMeshType(meshType);
-                newSupportRequirement.setCoverage(coverage);
+                newSupportRequirement.setMeshCoverage(meshCoverage);
                 newSupportRequirement.setArchType(archType);
                 newSupportRequirement.setSeparation(separation);
 

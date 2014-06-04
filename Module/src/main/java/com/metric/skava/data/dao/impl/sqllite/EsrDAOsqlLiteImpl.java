@@ -63,13 +63,27 @@ public class EsrDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<ESR> imp
         return list.get(0);
     }
 
-
     @Override
-    public List<ESR> getAllESRs(ESR.Group group) throws DAOException {
-        Cursor cursor = getRecordsFilteredByColumn(ESRTable.MAPPED_INDEX_DATABASE_TABLE, ESRTable.GROUP_CODE_COLUMN, group.name(), null);
+    public List<ESR> getAllESRs() throws DAOException {
+        Cursor cursor = null;
+        cursor = getAllRecords(ESRTable.MAPPED_INDEX_DATABASE_TABLE);
         List<ESR> list = assemblePersistentEntities(cursor);
         cursor.close();
         return list;
+    }
+
+
+    @Override
+    public List<ESR> getAllESRs(ESR.Group group) throws DAOException {
+        Cursor cursor = null;
+        if (group != null) {
+            cursor = getRecordsFilteredByColumn(ESRTable.MAPPED_INDEX_DATABASE_TABLE, ESRTable.GROUP_CODE_COLUMN, group.name(), null);
+            List<ESR> list = assemblePersistentEntities(cursor);
+            cursor.close();
+            return list;
+        } else {
+            return getAllESRs();
+        }
     }
 
     @Override

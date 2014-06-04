@@ -386,7 +386,7 @@ public class ConditionFragment extends RMRCalculatorBaseFragment {
 
         TextView firstTextView = (TextView) infillingHeaderView.findViewById(R.id.first_column_text_view);
         TextView secondTextView = (TextView) infillingHeaderView.findViewById(R.id.second_column_text_view);
-        secondTextView.setText("Infilling (gouge)");
+        secondTextView.setText("Infilling (Gouge)");
 
         infillingListView.addHeaderView(infillingHeaderView, null, false);
         final int numberOfHeaders = infillingListView.getHeaderViewsCount();

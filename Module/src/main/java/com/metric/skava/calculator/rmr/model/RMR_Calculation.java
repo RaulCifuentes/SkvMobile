@@ -133,7 +133,7 @@ public class RMR_Calculation implements Parcelable {
     }
 
     public RMROutput getRMRResult() {
-        if (rmrResult == null) {
+        if (rmrResult == null && isComplete()) {
             RMRInput input = new RMRInput();
             input.setStrength(getStrengthOfRock().getValue());
             input.setRqd(Double.valueOf(getRqd().getValue()));
@@ -225,4 +225,9 @@ public class RMR_Calculation implements Parcelable {
         orientationDiscontinuities = (OrientationDiscontinuities) in.readValue(RMR_Calculation.class.getClassLoader());
     }
 
+    public boolean isComplete() {
+        boolean partial = (rqd != null) && (strengthOfRock != null) && (orientationDiscontinuities != null) && (spacing != null) && (groundwater != null);
+        boolean detailed = (persistence != null) && (aperture != null) && (roughness != null) && (infilling!= null) && (weathering!= null);
+        return partial && detailed;
+    }
 }

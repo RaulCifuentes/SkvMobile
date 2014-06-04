@@ -20,9 +20,10 @@ public class SupportRequirementTable extends SkavaEntityTable {
     public static final String WALL_PATTERN_DX_COLUMN= "WALL_PATTERN_DX";
     public static final String WALL_PATTERN_DY_COLUMN = "WALL_PATTERN_DY";
     public static final String SHOTCRETE_TYPE_CODE_COLUMN = "SHOTCRETE_TYPE_CODE";
+    public static final String SHOTCRETE_COVERAGE_CODE_COLUMN = "SHOTCRETE_COVERAGE_CODE";
     public static final String THICKNESS_COLUMN = "THICKNESS";
     public static final String MESH_TYPE_CODE_COLUMN = "MESH_TYPE_CODE";
-    public static final String COVERAGE_CODE_COLUMN = "COVERAGE_CODE";
+    public static final String MESH_COVERAGE_CODE_COLUMN = "MESH_COVERAGE_CODE";
     public static final String ARCH_TYPE_CODE_COLUMN = "ARCH_TYPE_CODE";
     public static final String SEPARATION_COLUMN = "SEPARATION";
 
@@ -45,9 +46,10 @@ public class SupportRequirementTable extends SkavaEntityTable {
             WALL_PATTERN_DX_COLUMN + " real null, " +
             WALL_PATTERN_DY_COLUMN + " real  null, " +
             SHOTCRETE_TYPE_CODE_COLUMN + " text null, " +
+            SHOTCRETE_COVERAGE_CODE_COLUMN + " text null, " +
             THICKNESS_COLUMN + " real  null, " +
             MESH_TYPE_CODE_COLUMN + " text null, " +
-            COVERAGE_CODE_COLUMN + " text null, " +
+            MESH_COVERAGE_CODE_COLUMN + " text null, " +
             ARCH_TYPE_CODE_COLUMN + " text null, " +
             SEPARATION_COLUMN + " real  null " +
             " );";

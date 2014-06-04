@@ -21,13 +21,13 @@ public class QCalculationTable extends SkavaEntityTable {
             Q_CALCULATION_DATABASE_TABLE + " (" +
 //            GLOBAL_KEY_ID + " integer primary key autoincrement, " +
             ASSESSMENT_CODE_COLUMN + " text primary key not null, " +
-            RQD_COLUMN + " integer not null, " +
-            Jn_CODE_COLUMN + " text not null, " +
-            Jr_CODE_COLUMN + " text not null, " +
-            Ja_CODE_COLUMN + " text not null, " +
-            Jw_CODE_COLUMN + " text not null, " +
-            SRF_CODE_COLUMN + " text not null, " +
-            Q_COLUMN + " real not null " +
+            RQD_COLUMN + " integer  null, " +
+            Jn_CODE_COLUMN + " text null, " +
+            Jr_CODE_COLUMN + " text null, " +
+            Ja_CODE_COLUMN + " text null, " +
+            Jw_CODE_COLUMN + " text null, " +
+            SRF_CODE_COLUMN + " text null, " +
+            Q_COLUMN + " real null " +
             " );";
 
 

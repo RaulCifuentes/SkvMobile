@@ -187,6 +187,11 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 assessmentFields.set("advance", advance);
             }
 
+            Double referenceChainage = assessment.getReferenceChainage();
+            if (referenceChainage != null) {
+                assessmentFields.set("referenceChainage", referenceChainage);
+            }
+
             Double accumAdvance = assessment.getAccummAdvance();
             if (accumAdvance != null) {
                 assessmentFields.set("accumAdvance", advance);
@@ -381,6 +386,11 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     supportRecommendationFields.set("shotcreteTypeCode", shotcreteType.getCode());
                 }
 
+                Coverage coverage = recomendation.getShotcreteCoverage();
+                if (SkavaUtils.isDefined(coverage)) {
+                    supportRecommendationFields.set("shotcreteCoverageCode", coverage.getCode());
+                }
+
                 Double thickness = recomendation.getThickness();
                 if (thickness != null) {
                     supportRecommendationFields.set("thickness", thickness);
@@ -391,9 +401,9 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     supportRecommendationFields.set("meshTypeCode", meshType.getCode());
                 }
 
-                Coverage coverage = recomendation.getMeshCoverage();
+                coverage = recomendation.getMeshCoverage();
                 if (SkavaUtils.isDefined(coverage)) {
-                    supportRecommendationFields.set("coverageCode", coverage.getCode());
+                    supportRecommendationFields.set("meshCoverageCode", coverage.getCode());
                 }
 
                 ArchType archType = recomendation.getArchType();
@@ -493,9 +503,11 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 }
 
                 //rockQualityCode
-                RockQuality quality = qCalculation.getQResult().getRockQuality();
-                if (quality != null) {
-                    qCalculationFields.set("rockQualityCode", quality.getCode());
+                if (qCalculation.getQResult() != null){
+                    RockQuality quality = qCalculation.getQResult().getRockQuality();
+                    if (quality != null) {
+                        qCalculationFields.set("rockQualityCode", quality.getCode());
+                    }
                 }
 
                 RQD rqd = qCalculation.getRqd();

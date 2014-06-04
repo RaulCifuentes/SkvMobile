@@ -67,6 +67,10 @@ public class GroundwaterFragment extends RMRCalculatorBaseFragment implements Ra
         jointPressListView = (ListView) getView().findViewById(R.id.listview_b);
         generalListView = (ListView) getView().findViewById(R.id.listview_c);
 
+        inflowListView.setVisibility(View.GONE);
+        jointPressListView.setVisibility(View.GONE);
+        generalListView.setVisibility(View.GONE);
+
         if (selectedGroundwater != null) {
             switch (selectedGroundwater.getGroup()) {
                 case INFLOW_LENGHT:

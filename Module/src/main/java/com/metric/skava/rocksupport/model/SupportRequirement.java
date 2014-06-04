@@ -23,9 +23,10 @@ public class SupportRequirement extends SkavaEntity {
     private SupportPattern roofPattern;
     private SupportPattern wallPattern;
     private ShotcreteType shotcreteType;
+    private Coverage shotcreteCoverage;
     private Double thickness;
     private MeshType meshType;
-    private Coverage coverage;
+    private Coverage meshCoverage;
     private ArchType archType;
     private Double separation;
 
@@ -107,6 +108,14 @@ public class SupportRequirement extends SkavaEntity {
         this.shotcreteType = shotcreteType;
     }
 
+    public Coverage getShotcreteCoverage() {
+        return shotcreteCoverage;
+    }
+
+    public void setShotcreteCoverage(Coverage shotcreteCoverage) {
+        this.shotcreteCoverage = shotcreteCoverage;
+    }
+
     public Double getThickness() {
         return thickness;
     }
@@ -123,12 +132,12 @@ public class SupportRequirement extends SkavaEntity {
         this.meshType = meshType;
     }
 
-    public Coverage getCoverage() {
-        return coverage;
+    public Coverage getMeshCoverage() {
+        return meshCoverage;
     }
 
-    public void setCoverage(Coverage coverage) {
-        this.coverage = coverage;
+    public void setMeshCoverage(Coverage meshCoverage) {
+        this.meshCoverage = meshCoverage;
     }
 
     public ArchType getArchType() {

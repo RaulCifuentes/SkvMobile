@@ -205,12 +205,16 @@ public class SyncMainFragment extends SkavaFragment {
 
 
     public void refreshListViews() throws DAOException {
-        localAssessmentListViewAdapter.clear();
-        localAssessmentListViewAdapter.addAll(mLocalAsssessmentDAO.getAllAssessments());
-        localAssessmentListViewAdapter.notifyDataSetChanged();
+        if (localAssessmentListViewAdapter != null){
+            localAssessmentListViewAdapter.clear();
+            localAssessmentListViewAdapter.addAll(mLocalAsssessmentDAO.getAllAssessments());
+            localAssessmentListViewAdapter.notifyDataSetChanged();
+        }
 
-        remoteAssessmentListViewAdapter.clear();
-        remoteAssessmentListViewAdapter.addAll(mRemoteAsssessmentDAO.getAllAssessments());
-        remoteAssessmentListViewAdapter.notifyDataSetChanged();
+        if(remoteAssessmentListViewAdapter != null){
+            remoteAssessmentListViewAdapter.clear();
+            remoteAssessmentListViewAdapter.addAll(mRemoteAsssessmentDAO.getAllAssessments());
+            remoteAssessmentListViewAdapter.notifyDataSetChanged();
+        }
     }
 }

@@ -18,20 +18,22 @@ public class RMRCalculationTable extends SkavaEntityTable {
     public static final String WEATHERING_CODE_COLUMN = "WEATHERING_CODE";
     public static final String GROUNDWATER_CODE_COLUMN = "GROUNDWATER_CODE";
     public static final String ORIENTATION_CODE_COLUMN = "ORIENTATION_CODE";
+    public static final String RMR_COLUMN = "RMR_VALUE";
 
     public static final String CREATE_RMRCALCULATION_TABLE = "create table " +
             RMR_CALCULATION_DATABASE_TABLE + " (" +
 //            GLOBAL_KEY_ID + " integer primary key autoincrement, " +
             ASSESSMENT_CODE_COLUMN + " text primary key not null, " +
-            STRENGTHOFROCK_CODE_COLUMN + " text not null, " +
-            RQD_RMR_CODE_COLUMN + " text not null, " +
-            SPACING_CODE_COLUMN + " text not null, " +
-            PERSISTENCE_CODE_COLUMN + " text not null, " +
-            APERTURE_CODE_COLUMN + " text not null, " +
-            ROUGHNESS_CODE_COLUMN + " text not null, " +
-            INFILLING_CODE_COLUMN + " text not null, " +
-            WEATHERING_CODE_COLUMN + " text not null, " +
-            GROUNDWATER_CODE_COLUMN + " text not null, " +
-            ORIENTATION_CODE_COLUMN + " text not null " +
+            STRENGTHOFROCK_CODE_COLUMN + " text null, " +
+            RQD_RMR_CODE_COLUMN + " text null, " +
+            SPACING_CODE_COLUMN + " text null, " +
+            PERSISTENCE_CODE_COLUMN + " text null, " +
+            APERTURE_CODE_COLUMN + " text null, " +
+            ROUGHNESS_CODE_COLUMN + " text null, " +
+            INFILLING_CODE_COLUMN + " text null, " +
+            WEATHERING_CODE_COLUMN + " text null, " +
+            GROUNDWATER_CODE_COLUMN + " text null, " +
+            ORIENTATION_CODE_COLUMN + " text null, " +
+            RMR_COLUMN + " real null " +
             " );";
 }

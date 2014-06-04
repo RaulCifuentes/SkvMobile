@@ -34,58 +34,63 @@ public class RecomendationProvider {
         LocalSupportRequirementDAO supportRequirementDAO = daoFactory.getLocalSupportRequirementDAO();
         Tunnel tunnel = assessment.getTunnel();
 
-        SupportRequirement supportRequirement;
-        supportRequirement = supportRequirementDAO.findSupportRequirement(tunnel, assessment.getQCalculation().getQResult().getQBarton());
 
         SupportRecommendation recommendation = new SupportRecommendation();
+        if (assessment.getQCalculation().getQResult() != null) {
+            SupportRequirement supportRequirement = supportRequirementDAO.findSupportRequirement(tunnel, assessment.getQCalculation().getQResult().getQBarton());
 
-        if (supportRequirement != null) {
+            if (supportRequirement != null) {
 
-            recommendation.setRequirement(supportRequirement);
+                recommendation.setRequirement(supportRequirement);
 
-            BoltType boltType = supportRequirement.getBoltType();
-            if (boltType != null) {
-                recommendation.setBoltType(boltType);
-            }
-            Double boltDiameter = supportRequirement.getDiameter();
-            if (boltDiameter != null) {
-                recommendation.setBoltDiameter(boltDiameter);
-            }
-            Double boltLength = supportRequirement.getLength();
-            if (boltLength != null) {
-                recommendation.setBoltLength(boltLength);
-            }
-            SupportPattern roofPattern = supportRequirement.getRoofPattern();
-            if (roofPattern != null) {
-                recommendation.setRoofPattern(roofPattern);
-            }
-            SupportPattern wallPattern = supportRequirement.getWallPattern();
-            if (wallPattern != null) {
-                recommendation.setWallPattern(wallPattern);
-            }
-            ShotcreteType shotcreteType = supportRequirement.getShotcreteType();
-            if (shotcreteType != null) {
-                recommendation.setShotcreteType(shotcreteType);
-            }
-            Double thickness = supportRequirement.getThickness();
-            if (thickness != null) {
-                recommendation.setThickness(thickness);
-            }
-            MeshType meshType = supportRequirement.getMeshType();
-            if (meshType != null) {
-                recommendation.setMeshType(meshType);
-            }
-            Coverage coverage = supportRequirement.getCoverage();
-            if (coverage != null) {
-                recommendation.setMeshCoverage(coverage);
-            }
-            ArchType archType = supportRequirement.getArchType();
-            if (meshType != null) {
-                recommendation.setArchType(archType);
-            }
-            Double separation = supportRequirement.getSeparation();
-            if (thickness != null) {
-                recommendation.setSeparation(separation);
+                BoltType boltType = supportRequirement.getBoltType();
+                if (boltType != null) {
+                    recommendation.setBoltType(boltType);
+                }
+                Double boltDiameter = supportRequirement.getDiameter();
+                if (boltDiameter != null) {
+                    recommendation.setBoltDiameter(boltDiameter);
+                }
+                Double boltLength = supportRequirement.getLength();
+                if (boltLength != null) {
+                    recommendation.setBoltLength(boltLength);
+                }
+                SupportPattern roofPattern = supportRequirement.getRoofPattern();
+                if (roofPattern != null) {
+                    recommendation.setRoofPattern(roofPattern);
+                }
+                SupportPattern wallPattern = supportRequirement.getWallPattern();
+                if (wallPattern != null) {
+                    recommendation.setWallPattern(wallPattern);
+                }
+                ShotcreteType shotcreteType = supportRequirement.getShotcreteType();
+                if (shotcreteType != null) {
+                    recommendation.setShotcreteType(shotcreteType);
+                }
+                Coverage shotcreteCoverage = supportRequirement.getShotcreteCoverage();
+                if (shotcreteCoverage != null) {
+                    recommendation.setShotcreteCoverage(shotcreteCoverage);
+                }
+                Double thickness = supportRequirement.getThickness();
+                if (thickness != null) {
+                    recommendation.setThickness(thickness);
+                }
+                MeshType meshType = supportRequirement.getMeshType();
+                if (meshType != null) {
+                    recommendation.setMeshType(meshType);
+                }
+                Coverage meshCoverage = supportRequirement.getMeshCoverage();
+                if (meshCoverage != null) {
+                    recommendation.setMeshCoverage(meshCoverage);
+                }
+                ArchType archType = supportRequirement.getArchType();
+                if (meshType != null) {
+                    recommendation.setArchType(archType);
+                }
+                Double separation = supportRequirement.getSeparation();
+                if (thickness != null) {
+                    recommendation.setSeparation(separation);
+                }
             }
         }
         return recommendation;

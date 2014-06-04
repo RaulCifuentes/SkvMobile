@@ -7,6 +7,7 @@
     <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:stretchColumns="*"
         >
 
         <TableRow
@@ -25,7 +26,6 @@
 
         </TableRow>
 
-
         <TableRow
             android:layout_height="wrap_content"
             android:layout_width="match_parent">
@@ -37,15 +37,13 @@
                 android:id="@+id/textView2"
                 style="@style/ReportLabelContainerBox" />
 
-
-                <TextView
-                    android:layout_weight="2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:id="@+id/report_tipo_perno_value"
-                    android:background="@drawable/text_box" />
-
+            <TextView
+                android:layout_weight="2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:id="@+id/report_tipo_perno_value"
+                android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -57,7 +55,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:id="@+id/report_tipo_shotcrete_value"
                 android:background="@drawable/text_box" />
 
@@ -71,7 +69,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:id="@+id/report_tipo_malla_value"
                 android:background="@drawable/text_box" />
 
@@ -85,7 +83,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:id="@+id/report_tipo_marco_value"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -104,7 +102,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:id="@+id/report_largo_perno_value"
                 android:background="@drawable/text_box" />
 
@@ -118,7 +116,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:id="@+id/report_shotcrete_cobertura_value"
                 android:background="@drawable/text_box" />
 
@@ -132,7 +130,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:id="@+id/report_mesh_cobertura_value"
                 android:background="@drawable/text_box" />
 
@@ -146,7 +144,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:id="@+id/report_separacion_value"
                 android:background="@drawable/text_box" />
 
@@ -167,7 +165,7 @@
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:id="@+id/report_diametro_perno_value"
                 android:background="@drawable/text_box" />
 
@@ -181,7 +179,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:id="@+id/report_espesor_shotcrete_value"
                 android:background="@drawable/text_box" />
 
@@ -195,7 +193,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:id="@+id/report_espesor_shotcrete_value"
                 android:background="@drawable/text_box" />
 
@@ -209,7 +207,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:id="@+id/report_espesor_shotcrete_value"
                 android:background="@drawable/text_box" />
 
@@ -231,7 +229,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:layout_span="3"
                 android:id="@id/report_wall_pattern_dxdy"
                 android:background="@drawable/text_box" />
@@ -239,7 +237,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:id="@id/report_wall_pattern_type"
                 android:background="@drawable/text_box"
                 android:layout_span="4" />
@@ -263,7 +261,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:layout_span="3"
                 android:id="@id/report_roof_pattern_dxdy"
                 android:background="@drawable/text_box" />
@@ -271,7 +269,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:id="@id/report_roof_pattern_type"
                 android:background="@drawable/text_box"
                 android:layout_span="4" />
@@ -294,11 +292,10 @@
                 android:layout_span="7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="-"
                 android:id="@+id/report_observaciones_soporte_value"
                 android:background="@drawable/text_box" />
         </TableRow>
-
 
     </TableLayout>
 

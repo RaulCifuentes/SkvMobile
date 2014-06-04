@@ -179,10 +179,10 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/rockmass_desc_rock_sample_identification"
                         android:inputType="textMultiLine"
-                        android:lines="8"
-                        android:minLines="6"
+                        android:lines="4"
+                        android:minLines="2"
                         android:gravity="top|left"
-                        android:maxLines="10"
+                        android:maxLines="4"
                         android:scrollbars="vertical"
                         android:id="@id/rockmass_desc_rock_sample_identification_value"
                         android:maxLength="@integer/inputlength_large" />

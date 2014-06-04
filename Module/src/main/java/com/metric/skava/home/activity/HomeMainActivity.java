@@ -27,7 +27,6 @@ import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.metric.skava.R;
 import com.metric.skava.about.activity.AboutMainActivity;
-import com.metric.skava.app.exception.SkavaExceptionHandler;
 import com.metric.skava.app.model.Role;
 import com.metric.skava.app.model.User;
 import com.metric.skava.app.navdrawer.AbstractNavDrawerActivity;
@@ -56,7 +55,6 @@ import java.util.List;
 
 public class HomeMainActivity extends AbstractNavDrawerActivity {
 
-
     private static final int NAV_MENU_SKAVA_SECTION_ID = 10;
     private static final int NAV_MENU_LOGIN_ITEM_ID = 20;
     private static final int NAV_MENU_FACE_MAPPING_ITEM_ID = 30;
@@ -78,6 +76,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     private MainFragment mHomeMainFragment;
     private static final String FRAGMENT_HOME_MAIN_TAG = "FRAGMENT_HOME_MAIN_TAG";
     private boolean linkDropboxCompleted;
+    private boolean lackOfAppData;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -96,9 +95,9 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                     .commit();
         }
 
-        Thread.getDefaultUncaughtExceptionHandler();
-        SkavaExceptionHandler handler = new SkavaExceptionHandler(this, getSupportFragmentManager());
-        Thread.setDefaultUncaughtExceptionHandler(handler);
+//        Thread.getDefaultUncaughtExceptionHandler();
+//        SkavaExceptionHandler handler = new SkavaExceptionHandler(this, getSupportFragmentManager());
+//        Thread.setDefaultUncaughtExceptionHandler(handler);
 
     }
 
@@ -225,7 +224,11 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             if (assertAppDataNeverCalled) {
                 assertAppDataAvailable();
             }
-            setupUserDataModel();
+            if (lackOfAppData){
+                //do nothing
+            } else {
+                setupUserDataModel();
+            }
         }
     }
 
@@ -307,15 +310,17 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     }
 
 
-//    private void prepareSyncTraceTable() {
-//        SyncHelper syncHelper = getSyncHelper();
-//        try {
-//            syncHelper.clearSyncLoggingTable();
-//        } catch (DAOException daoe) {
-//            daoe.printStackTrace();
-//            Log.e(SkavaConstants.LOG, daoe.getMessage());
-//        }
-//    }
+    private boolean areAppDataTablesEmpty() {
+        boolean empty = false;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            empty = syncHelper.isESRTableEmpty();
+        } catch (DAOException daoe) {
+            daoe.printStackTrace();
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+        }
+        return empty;
+    }
 
     private Long findOutNumberOfAppDataRecordsToImport() {
         SyncHelper syncHelper = getSyncHelper();
@@ -382,8 +387,11 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         if (!isNetworkAvailable()) {
             alertTitle = "Currently you have no Internet connection";
         }
-        if (lastSyncState == null || !lastSyncState.isSuccess()) {
-            final String textToShow = "Skava Mobile needs to download an initial set of app data. Please connect to Internet and link to Skava Dropbox account!!";
+        //The sync status metadata is not enough to ensure app data is not empty, so
+        // check at least one parameters table as example and check its not empty.
+        // There is also a condition where tables are empty
+        if (areAppDataTablesEmpty() || lastSyncState == null || !lastSyncState.isSuccess()) {
+            final String textToShow = "Skava Mobile needs a minimal set of configuration data that is currently not available in your device. In order to download it ensure Internet is available !!";
             Log.d(SkavaConstants.LOG, textToShow);
             final String finalAlertTitle = alertTitle;
             DialogFragment theDialog = new DialogFragment() {
@@ -398,6 +406,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             };
             // Showing Alert Message
             theDialog.show(getSupportFragmentManager(), "assertAppDataDialog");
+            lackOfAppData = true;
         } else {
             final String textToShow = "Using app data (master parameters) from the last succeeded sync execution on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastSyncState.getLastExecution());
             Log.d(SkavaConstants.LOG, textToShow);

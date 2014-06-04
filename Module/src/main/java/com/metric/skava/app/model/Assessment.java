@@ -35,6 +35,7 @@ public class Assessment implements IdentifiableEntity {
     private Double initialPeg;
     private Double finalPeg;
     private Double currentAdvance;
+    private Double referenceChainage;
     private Double accummAdvance;
 
     private ExcavationMethod method;
@@ -181,6 +182,14 @@ public class Assessment implements IdentifiableEntity {
 
     public void setFinalPeg(Double finalPeg) {
         this.finalPeg = finalPeg;
+    }
+
+    public Double getReferenceChainage() {
+        return referenceChainage;
+    }
+
+    public void setReferenceChainage(Double referenceChainage) {
+        this.referenceChainage = referenceChainage;
     }
 
     public Double getCurrentAdvance() {
