@@ -149,11 +149,17 @@ public class SyncHelper {
         this.daoFactory = skavaContext.getDAOFactory();
     }
 
-    public void clearSyncLoggingTable() throws DAOException {
-        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
-        syncLoggingDAO.deleteAllSyncLogs();
-    }
+//    public void clearSyncLoggingTable() throws DAOException {
+//        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+//        syncLoggingDAO.deleteAllSyncLogs();
+//    }
 
+
+    public boolean isESRTableEmpty() throws DAOException {
+        LocalEsrDAO sqlLiteLocalRoleDAO = daoFactory.getLocalEsrDAO();
+        List<ESR> allESRs = sqlLiteLocalRoleDAO.getAllESRs();
+        return allESRs.isEmpty();
+    }
 
     public Long getUserDataRecordCount() throws DAOException {
         /**Update the excavation methods data*/
@@ -1600,5 +1606,6 @@ public class SyncHelper {
         }
         return Long.valueOf(dowloadedRequirements.size());
     }
+
 
 }

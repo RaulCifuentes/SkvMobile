@@ -246,7 +246,6 @@ public class MappingReportMainActivity extends SkavaFragmentActivity implements 
             //it executes succesfully then
             currentAssessment.setSentToCloud(Assessment.DATA_SENT_TO_DATASTORE);
             //Use the listener Notification
-
             LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
             localAssessmentDAO.updateAssessment(currentAssessment, false);
             return true;

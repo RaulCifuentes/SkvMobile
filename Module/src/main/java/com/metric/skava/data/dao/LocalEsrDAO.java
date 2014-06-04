@@ -10,6 +10,8 @@ import java.util.List;
  */
 public interface LocalEsrDAO {
 
+    public List<ESR> getAllESRs() throws DAOException;
+
     public List<ESR> getAllESRs(ESR.Group group) throws DAOException;
 
     public ESR getESR(String groupCode, String code) throws DAOException;

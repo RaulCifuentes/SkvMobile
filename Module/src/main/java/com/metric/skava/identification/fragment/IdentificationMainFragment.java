@@ -503,8 +503,10 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
                         advanceTextView.setText(numberFormatter.format(advance));
                     }
                     if (selectedFace != null) {
-                        accumAdvance = Math.abs(finalPeg - selectedFace.getReferencePK());
+                        Double refChainage = selectedFace.getReferencePK();
+                        accumAdvance = Math.abs(finalPeg - refChainage);
                         getCurrentAssessment().setAccummAdvance(accumAdvance);
+                        getCurrentAssessment().setReferenceChainage(refChainage);
                         accumAdvanceTextView.setText(numberFormatter.format(accumAdvance));
                     }
                 }

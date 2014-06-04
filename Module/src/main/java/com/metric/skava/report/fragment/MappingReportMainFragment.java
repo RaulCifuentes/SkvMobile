@@ -175,8 +175,10 @@ public class MappingReportMainFragment extends SkavaFragment {
         }
 
         // Call a calculation to be sure the result into account any changes on the selection of RMR list options
-        this.calculateRMR();
         RMR_Calculation rmrCalculation = currentAssessment.getRmrCalculation();
+        if (rmrCalculation.isComplete()){
+            this.calculateRMR();
+        }
 
         StrengthOfRock strengthOfRock = rmrCalculation.getStrengthOfRock();
         if (strengthOfRock != null) {
@@ -233,17 +235,17 @@ public class MappingReportMainFragment extends SkavaFragment {
             ((TextView) rootView.findViewById(R.id.report_rmr_ajuste_value_rating)).setText(numberFormat.format(orientationDiscontinuities.getValue()));
         }
 
+        if (rmrCalculation.getRMRResult() != null){
+            Double rmrValue = rmrCalculation.getRMRResult().getRMR();
+            ((TextView) rootView.findViewById(R.id.report_rmr_rmr_value)).setText(numberFormat.format(rmrValue));
 
-        Double rmrValue = rmrCalculation.getRMRResult().getRMR();
-        ((TextView) rootView.findViewById(R.id.report_rmr_rmr_value)).setText(numberFormat.format(rmrValue));
+            RmrToQualityMapper rmrMapper = RmrToQualityMapper.getInstance(getSkavaContext());
 
-
-        RmrToQualityMapper rmrMapper = RmrToQualityMapper.getInstance(getSkavaContext());
-
-        RockQuality quality = rmrMapper.mapRMRToRockMassQuality(rmrValue);
-        if (quality != null) {
-            ((TextView) rootView.findViewById(R.id.report_rmr_clase_value)).setText(quality.getClassification().toString());
-            ((TextView) rootView.findViewById(R.id.report_rmr_calidad_value)).setText(quality.getName());
+            RockQuality quality = rmrMapper.mapRMRToRockMassQuality(rmrValue);
+            if (quality != null) {
+                ((TextView) rootView.findViewById(R.id.report_rmr_clase_value)).setText(quality.getClassification().toString());
+                ((TextView) rootView.findViewById(R.id.report_rmr_calidad_value)).setText(quality.getName());
+            }
         }
 
         if (currentAssessment.getTunnel() != null) {
@@ -274,9 +276,11 @@ public class MappingReportMainFragment extends SkavaFragment {
             }
         }
 
-        // Call a calculation to be sure the result into account any changes on the selection of Q list options
-        this.calculateQBarton();
         Q_Calculation qCalculation = currentAssessment.getQCalculation();
+        // Call a calculation to be sure the result into account any changes on the selection of Q list options
+        if (qCalculation.isComplete()){
+            this.calculateQBarton();
+        }
 
         RQD rqd = qCalculation.getRqd();
         if (rqd != null) {
@@ -325,14 +329,18 @@ public class MappingReportMainFragment extends SkavaFragment {
             ((TextView) rootView.findViewById(R.id.report_q_srf_rating)).setText(numberFormat.format(srf.getValue()));
         }
 
-        Double qValue = qCalculation.getQResult().getQBarton();
-        ((TextView) rootView.findViewById(R.id.report_q_q_value)).setText(numberFormat.format(qValue));
 
-        QToQualityMapper qMapper = QToQualityMapper.getInstance(getSkavaContext());
-        quality = qMapper.mapQToRockMassQuality(qValue);
-        if (quality != null) {
-            ((TextView) rootView.findViewById(R.id.report_q_calidad_value)).setText(quality.getName());
+        if (qCalculation.getQResult() != null){
+            Double qValue = qCalculation.getQResult().getQBarton();
+            ((TextView) rootView.findViewById(R.id.report_q_q_value)).setText(numberFormat.format(qValue));
+
+            QToQualityMapper qMapper = QToQualityMapper.getInstance(getSkavaContext());
+            RockQuality quality = qMapper.mapQToRockMassQuality(qValue);
+            if (quality != null) {
+                ((TextView) rootView.findViewById(R.id.report_q_calidad_value)).setText(quality.getName());
+            }
         }
+
 
         SupportRecommendation recomendation = currentAssessment.getRecomendation();
         if (recomendation != null) {

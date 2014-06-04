@@ -94,11 +94,14 @@ public class AssessmentBuilder4SqlLite {
             babyAssessment.setMethod(method);
         }
 
-        Double initialPk = CursorUtils.getDouble(AssessmentTable.PK_INITIAL_COLUMN, cursor);
+        Double initialPk = CursorUtils.getDouble(AssessmentTable.INITIAL_CHAINAGE_COLUMN, cursor);
         babyAssessment.setInitialPeg(initialPk);
 
-        Double finalPk = CursorUtils.getDouble(AssessmentTable.PK_FINAL_COLUMN, cursor);
+        Double finalPk = CursorUtils.getDouble(AssessmentTable.FINAL_CHAINAGE_COLUMN, cursor);
         babyAssessment.setFinalPeg(finalPk);
+
+        Double referencePk = CursorUtils.getDouble(AssessmentTable.REFERENCE_CHAINAGE_COLUMN, cursor);
+        babyAssessment.setReferenceChainage(referencePk);
 
         Double advance = CursorUtils.getDouble(AssessmentTable.ADVANCE_COLUMN, cursor);
         babyAssessment.setCurrentAdvance(advance);

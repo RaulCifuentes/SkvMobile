@@ -61,9 +61,10 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
             Double wallPatternXDistance = CursorUtils.getDouble(SupportRequirementTable.WALL_PATTERN_DX_COLUMN, cursor);
             Double wallPatternYDistance = CursorUtils.getDouble(SupportRequirementTable.WALL_PATTERN_DY_COLUMN, cursor);
             String shotcreteTypeCode = CursorUtils.getString(SupportRequirementTable.SHOTCRETE_TYPE_CODE_COLUMN, cursor);
+            String shotcreteCoverageCode = CursorUtils.getString(SupportRequirementTable.SHOTCRETE_COVERAGE_CODE_COLUMN, cursor);
             Double thickness = CursorUtils.getDouble(SupportRequirementTable.THICKNESS_COLUMN, cursor);
             String meshTypeCode = CursorUtils.getString(SupportRequirementTable.MESH_TYPE_CODE_COLUMN, cursor);
-            String coverageCode = CursorUtils.getString(SupportRequirementTable.COVERAGE_CODE_COLUMN, cursor);
+            String meshCoverageCode = CursorUtils.getString(SupportRequirementTable.MESH_COVERAGE_CODE_COLUMN, cursor);
             String archTypeCode = CursorUtils.getString(SupportRequirementTable.ARCH_TYPE_CODE_COLUMN, cursor);
             Double separation = CursorUtils.getDouble(SupportRequirementTable.SEPARATION_COLUMN, cursor);
 
@@ -89,11 +90,11 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
             MeshType meshType = localMeshTypeDAO.getMeshTypeByCode(meshTypeCode);
 
             LocalCoverageDAO localCoverageDAO = daoFactory.getLocalCoverageDAO();
-            Coverage coverage = localCoverageDAO.getCoverageByCode(coverageCode);
+            Coverage shotcreteCoverage = localCoverageDAO.getCoverageByCode(shotcreteCoverageCode);
+            Coverage meshCoverage = localCoverageDAO.getCoverageByCode(meshCoverageCode);
 
             LocalArchTypeDAO localArchTypeDAO = daoFactory.getLocalArchTypeDAO();
             ArchType archType = localArchTypeDAO.getArchTypeByCode(archTypeCode);
-
 
             SupportRequirement newInstance = new SupportRequirement(tunnel, code, name);
             newInstance.setTunnel(tunnel);
@@ -105,9 +106,10 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
             newInstance.setRoofPattern(roofPattern);
             newInstance.setWallPattern(wallPattern);
             newInstance.setShotcreteType(shotcrete);
+            newInstance.setShotcreteCoverage(shotcreteCoverage);
             newInstance.setThickness(thickness);
             newInstance.setMeshType(meshType);
-            newInstance.setCoverage(coverage);
+            newInstance.setMeshCoverage(meshCoverage);
             newInstance.setArchType(archType);
             newInstance.setSeparation(separation);
 
@@ -169,9 +171,10 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
                 SupportRequirementTable.WALL_PATTERN_DX_COLUMN,
                 SupportRequirementTable.WALL_PATTERN_DY_COLUMN,
                 SupportRequirementTable.SHOTCRETE_TYPE_CODE_COLUMN,
+                SupportRequirementTable.SHOTCRETE_COVERAGE_CODE_COLUMN,
                 SupportRequirementTable.THICKNESS_COLUMN,
                 SupportRequirementTable.MESH_TYPE_CODE_COLUMN,
-                SupportRequirementTable.COVERAGE_CODE_COLUMN,
+                SupportRequirementTable.MESH_COVERAGE_CODE_COLUMN,
                 SupportRequirementTable.ARCH_TYPE_CODE_COLUMN,
                 SupportRequirementTable.SEPARATION_COLUMN
         };
@@ -192,9 +195,10 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
                 newSkavaEntity.getWallPattern() != null ? newSkavaEntity.getWallPattern().getDistanceX() : null,
                 newSkavaEntity.getWallPattern() != null ? newSkavaEntity.getWallPattern().getDistanceY() : null,
                 SkavaUtils.isDefined(newSkavaEntity.getShotcreteType()) ? newSkavaEntity.getShotcreteType().getCode() : null,
+                SkavaUtils.isDefined(newSkavaEntity.getShotcreteCoverage()) ? newSkavaEntity.getShotcreteCoverage().getCode() : null,
                 newSkavaEntity.getThickness(),
                 SkavaUtils.isDefined(newSkavaEntity.getMeshType()) ? newSkavaEntity.getMeshType().getCode() : null,
-                SkavaUtils.isDefined(newSkavaEntity.getCoverage()) ? newSkavaEntity.getCoverage().getCode() : null,
+                SkavaUtils.isDefined(newSkavaEntity.getMeshCoverage()) ? newSkavaEntity.getMeshCoverage().getCode() : null,
                 SkavaUtils.isDefined(newSkavaEntity.getArchType()) ? newSkavaEntity.getArchType().getCode() : null,
                 newSkavaEntity.getSeparation()};
         saveRecord(tableName, columns, values);

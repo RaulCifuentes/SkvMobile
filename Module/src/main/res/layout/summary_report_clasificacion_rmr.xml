@@ -67,14 +67,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_ucs_value"
+                android:text="-"
                 android:id="@+id/report_rmr_ucs_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_ucs_rating"
+                android:text="-"
                 android:id="@+id/report_rmr_ucs_rating"
                 android:background="@drawable/text_box" />
 
@@ -95,14 +95,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_espaciado_value"
+                android:text="-"
                 android:id="@+id/report_rmr_espaciado_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_espaciado_rating"
+                android:text="-"
                 android:id="@+id/report_rmr_espaciado_rating"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -122,14 +122,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_persistencia_value"
+                android:text="-"
                 android:id="@+id/report_rmr_persistencia_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_persistencia_rating"
+                android:text="-"
                 android:id="@+id/report_rmr_persistencia_rating"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -149,14 +149,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_abertura_value"
+                android:text="-"
                 android:id="@+id/report_rmr_abertura_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_abertura_rating"
+                android:text="-"
                 android:id="@+id/report_rmr_abertura_rating"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -176,14 +176,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_rugosidad_value"
+                android:text="-"
                 android:id="@+id/report_rmr_rugosidad_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_rugosidad_rating"
+                android:text="-"
                 android:id="@+id/report_rmr_rugosidad_rating"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -203,14 +203,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_relleno_value"
+                android:text="-"
                 android:id="@+id/report_rmr_relleno_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_relleno_rating"
+                android:text="-"
                 android:id="@+id/report_rmr_relleno_rating"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -230,14 +230,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_meteorizacion_value"
+                android:text="-"
                 android:id="@+id/report_rmr_meteorizacion_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_meteorizacion_rating"
+                android:text="-"
                 android:id="@+id/report_rmr_meteorizacion_rating"
                 android:background="@drawable/text_box" />
 
@@ -258,14 +258,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_agua_value"
+                android:text="-"
                 android:id="@+id/report_rmr_agua_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_agua_rating"
+                android:text="-"
                 android:id="@+id/report_rmr_agua_rating"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -285,14 +285,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_ajuste_value"
+                android:text="-"
                 android:id="@+id/report_rmr_ajuste_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_rmr_ajuste_value_rating"
+                android:text="-"
                 android:id="@+id/report_rmr_ajuste_value_rating"
                 android:background="@drawable/text_box" />
 
@@ -326,7 +326,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="report_rmr_rmr_value"
+                        android:text="-"
                         android:id="@+id/report_rmr_rmr_value"
                         android:background="@drawable/text_box"
                         android:layout_weight="1"/>
@@ -343,7 +343,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="report_rmr_clase_value"
+                        android:text="-"
                         android:id="@+id/report_rmr_clase_value"
                         android:background="@drawable/text_box"
                         android:layout_weight="1"/>
@@ -360,7 +360,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="report_rmr_calidad_value"
+                        android:text="-"
                         android:id="@+id/report_rmr_calidad_value"
                         android:background="@drawable/text_box"
                         android:layout_weight="1"/>

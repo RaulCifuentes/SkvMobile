@@ -185,8 +185,9 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                     AssessmentTable.DATE_COLUMN,
                     AssessmentTable.EXCAVATION_SECTION_CODE_COLUMN,
                     AssessmentTable.EXCAVATION_METHOD_CODE_COLUMN,
-                    AssessmentTable.PK_INITIAL_COLUMN,
-                    AssessmentTable.PK_FINAL_COLUMN,
+                    AssessmentTable.INITIAL_CHAINAGE_COLUMN,
+                    AssessmentTable.FINAL_CHAINAGE_COLUMN,
+                    AssessmentTable.REFERENCE_CHAINAGE_COLUMN,
                     AssessmentTable.ADVANCE_COLUMN,
                     AssessmentTable.ORIENTATION_COLUMN,
                     AssessmentTable.SLOPE_COLUMN,
@@ -208,6 +209,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                     SkavaUtils.isUndefined(newSkavaEntity.getMethod()) ? null : newSkavaEntity.getMethod().getCode(),
                     newSkavaEntity.getInitialPeg(),
                     newSkavaEntity.getFinalPeg(),
+                    newSkavaEntity.getReferenceChainage(),
                     newSkavaEntity.getCurrentAdvance(),
                     newSkavaEntity.getOrientation(),
                     newSkavaEntity.getSlope(),
@@ -233,8 +235,9 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 AssessmentTable.DATE_COLUMN,
                 AssessmentTable.EXCAVATION_SECTION_CODE_COLUMN,
                 AssessmentTable.EXCAVATION_METHOD_CODE_COLUMN,
-                AssessmentTable.PK_INITIAL_COLUMN,
-                AssessmentTable.PK_FINAL_COLUMN,
+                AssessmentTable.INITIAL_CHAINAGE_COLUMN,
+                AssessmentTable.FINAL_CHAINAGE_COLUMN,
+                AssessmentTable.REFERENCE_CHAINAGE_COLUMN,
                 AssessmentTable.ADVANCE_COLUMN,
                 AssessmentTable.ORIENTATION_COLUMN,
                 AssessmentTable.SLOPE_COLUMN,
@@ -256,6 +259,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 SkavaUtils.isUndefined(newSkavaEntity.getMethod()) ? null : newSkavaEntity.getMethod().getCode(),
                 newSkavaEntity.getInitialPeg(),
                 newSkavaEntity.getFinalPeg(),
+                newSkavaEntity.getReferenceChainage(),
                 newSkavaEntity.getCurrentAdvance(),
                 newSkavaEntity.getOrientation(),
                 newSkavaEntity.getSlope(),
@@ -283,12 +287,15 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
 
         // Save the related Q Calculation
         Q_Calculation qCalculation = newSkavaEntity.getQCalculation();
-        mLocalQCalculationDAO.saveQCalculation(newSkavaEntity.getCode(), qCalculation);
+//        if (qCalculation.isComplete()){
+            mLocalQCalculationDAO.saveQCalculation(newSkavaEntity.getCode(), qCalculation);
+//        }
 
         // Save the related RMR Calculation
         RMR_Calculation rmrCalculation = newSkavaEntity.getRmrCalculation();
-        mLocalRMRCalculationDAO.saveRMRCalculation(newSkavaEntity.getCode(), rmrCalculation);
-
+//        if (rmrCalculation.isComplete()){
+            mLocalRMRCalculationDAO.saveRMRCalculation(newSkavaEntity.getCode(), rmrCalculation);
+//        }
 
         //Save the related recommendation
         SupportRecommendation recommendation = newSkavaEntity.getRecomendation();

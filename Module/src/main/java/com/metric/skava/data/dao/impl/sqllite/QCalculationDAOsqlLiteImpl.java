@@ -62,11 +62,11 @@ public class QCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Q
 
             RQD rqd = new RQD(rqdValue);
 
-            Jn jn = mLocalJnDAO.getJnByUniqueCode(jnCode);
-            Jr jr = mLocalJrDAO.getJrByUniqueCode(jrCode);
-            Ja ja = mLocalJaDAO.getJaByUniqueCode(jaCode);
-            Jw jw = mLocalJwDAO.getJwByUniqueCode(jwCode);
-            SRF srf = mLocalSrfDAO.getSrfByUniqueCode(srfCode);
+            Jn jn = jnCode != null? mLocalJnDAO.getJnByUniqueCode(jnCode):null;
+            Jr jr = jrCode != null? mLocalJrDAO.getJrByUniqueCode(jrCode):null;
+            Ja ja = jaCode != null? mLocalJaDAO.getJaByUniqueCode(jaCode):null;
+            Jw jw = jwCode != null? mLocalJwDAO.getJwByUniqueCode(jwCode):null;
+            SRF srf = srfCode != null? mLocalSrfDAO.getSrfByUniqueCode(srfCode):null;
 
             Q_Calculation newInstance = new Q_Calculation(rqd, jn, jr, ja, jw, srf);
             list.add(newInstance);
@@ -79,7 +79,6 @@ public class QCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Q
     public Q_Calculation getQCalculation(String assessmentCode) throws DAOException {
         Q_Calculation qCalculation = getPersistentEntityByCandidateKey(QCalculationTable.Q_CALCULATION_DATABASE_TABLE, QCalculationTable.ASSESSMENT_CODE_COLUMN, assessmentCode);
         return qCalculation;
-
     }
 
     @Override
@@ -108,13 +107,13 @@ public class QCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Q
             Object[] qCalculationValues = new Object[]{
 //                    newQCalculation.get_id(),
                     assessmentCode,
-                    newQCalculation.getRqd().getValue(),
-                    newQCalculation.getJn().getCode(),
-                    newQCalculation.getJr().getCode(),
-                    newQCalculation.getJa().getCode(),
-                    newQCalculation.getJw().getCode(),
-                    newQCalculation.getSrf().getCode(),
-                    newQCalculation.getQResult().getQBarton(),
+                    newQCalculation.getRqd() != null ? newQCalculation.getRqd().getValue() : null,
+                    newQCalculation.getJn() != null ? newQCalculation.getJn().getCode() : null,
+                    newQCalculation.getJr() != null ? newQCalculation.getJr().getCode() : null,
+                    newQCalculation.getJa() != null ? newQCalculation.getJa().getCode() : null,
+                    newQCalculation.getJw() != null ? newQCalculation.getJw().getCode() : null,
+                    newQCalculation.getSrf() != null ? newQCalculation.getSrf().getCode() : null,
+                    newQCalculation.getQResult() != null ?  newQCalculation.getQResult().getQBarton() : null
             };
             Long qCalculationId = saveRecord(tableName, qCalculationNames, qCalculationValues);
             newQCalculation.set_id(qCalculationId);

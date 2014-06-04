@@ -75,17 +75,19 @@ public class RMRCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO
             String weatheringCode = CursorUtils.getString(RMRCalculationTable.WEATHERING_CODE_COLUMN, cursor);
             String groundwaterCode = CursorUtils.getString(RMRCalculationTable.GROUNDWATER_CODE_COLUMN, cursor);
             String orientationCode = CursorUtils.getString(RMRCalculationTable.ORIENTATION_CODE_COLUMN, cursor);
+
             //This seems to be persisted only to transfer to Dropbox but not needed in the deserialization/parsing process
-            StrengthOfRock strenght = mLocalStrengthDAO.getStrengthByUniqueCode(strenghtCode);
-            RQD_RMR rqd = RQD_RMR.findRQD_RMRByKey(rqdKey);
-            Spacing spacing = mLocalSpacingDAO.getSpacingByUniqueCode(spacingCode);
-            Groundwater groundwater = mLocalGroundwaterDAO.getGroundwaterByUniqueCode(groundwaterCode);
-            Persistence persistence = mLocalPersistenceDAO.getPersistenceByUniqueCode(persistenceCode);
-            Aperture aperture = mLocalApertureDAO.getApertureByUniqueCode(apertureCode);
-            Roughness roughness = mLocalRoughnessDAO.getRoughnessByUniqueCode(roughnessCode);
-            Infilling infilling = mLocalInfillingDAO.getInfillingByUniqueCode(infillingCode);
-            Weathering weathering = mLocalWeatheringDAO.getWeatheringByUniqueCode(weatheringCode);
-            OrientationDiscontinuities orientation = mLocalOrientationDAO.getOrientationDiscontinuitiesByUniqueCode(orientationCode);
+            StrengthOfRock strenght = strenghtCode != null ? mLocalStrengthDAO.getStrengthByUniqueCode(strenghtCode) : null;
+            RQD_RMR rqd = rqdKey != null ? RQD_RMR.findRQD_RMRByKey(rqdKey) : null;
+            Spacing spacing = spacingCode != null ? mLocalSpacingDAO.getSpacingByUniqueCode(spacingCode) : null;
+            Groundwater groundwater = groundwaterCode != null ? mLocalGroundwaterDAO.getGroundwaterByUniqueCode(groundwaterCode) : null;
+            Persistence persistence = persistenceCode != null ? mLocalPersistenceDAO.getPersistenceByUniqueCode(persistenceCode) : null;
+            Aperture aperture = apertureCode != null ? mLocalApertureDAO.getApertureByUniqueCode(apertureCode) : null;
+            Roughness roughness = roughnessCode != null ? mLocalRoughnessDAO.getRoughnessByUniqueCode(roughnessCode) : null;
+            Infilling infilling = infillingCode != null ? mLocalInfillingDAO.getInfillingByUniqueCode(infillingCode) : null;
+            Weathering weathering = weatheringCode != null ? mLocalWeatheringDAO.getWeatheringByUniqueCode(weatheringCode) : null;
+            OrientationDiscontinuities orientation = orientationCode != null ? mLocalOrientationDAO.getOrientationDiscontinuitiesByUniqueCode(orientationCode) : null;
+
             RMR_Calculation newInstance = new RMR_Calculation(strenght, rqd, spacing, persistence, aperture, roughness, infilling, weathering, groundwater, orientation);
             list.add(newInstance);
         }
@@ -126,21 +128,23 @@ public class RMRCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO
                     RMRCalculationTable.WEATHERING_CODE_COLUMN,
                     RMRCalculationTable.GROUNDWATER_CODE_COLUMN,
                     RMRCalculationTable.ORIENTATION_CODE_COLUMN,
+                    RMRCalculationTable.RMR_COLUMN
             };
 
             Object[] rmrCalculationValues = new Object[]{
 //                    rmrCalculation.get_id(),
                     assessmentCode,
-                    rmrCalculation.getStrengthOfRock().getCode(),
-                    rmrCalculation.getRqd().getKey(),
-                    rmrCalculation.getSpacing().getCode(),
-                    rmrCalculation.getPersistence().getCode(),
-                    rmrCalculation.getAperture().getCode(),
-                    rmrCalculation.getRoughness().getCode(),
-                    rmrCalculation.getInfilling().getCode(),
-                    rmrCalculation.getWeathering().getCode(),
-                    rmrCalculation.getGroundwater().getCode(),
-                    rmrCalculation.getOrientationDiscontinuities().getCode()
+                    rmrCalculation.getStrengthOfRock() != null ? rmrCalculation.getStrengthOfRock().getCode() : null,
+                    rmrCalculation.getRqd() != null ? rmrCalculation.getRqd().getKey() : null,
+                    rmrCalculation.getSpacing() != null ? rmrCalculation.getSpacing().getCode() : null,
+                    rmrCalculation.getPersistence() != null ? rmrCalculation.getPersistence().getCode() : null,
+                    rmrCalculation.getAperture() != null ? rmrCalculation.getAperture().getCode() : null,
+                    rmrCalculation.getRoughness() != null ? rmrCalculation.getRoughness().getCode() : null,
+                    rmrCalculation.getInfilling() != null ? rmrCalculation.getInfilling().getCode() : null,
+                    rmrCalculation.getWeathering() != null ? rmrCalculation.getWeathering().getCode() : null,
+                    rmrCalculation.getGroundwater() != null ? rmrCalculation.getGroundwater().getCode() : null,
+                    rmrCalculation.getOrientationDiscontinuities() != null ? rmrCalculation.getOrientationDiscontinuities().getCode() : null,
+                    rmrCalculation.getRMRResult() != null ? rmrCalculation.getRMRResult().getRMR(): null
             };
             Long rmrCalculationId = saveRecord(tableName, rmrCalculationNames, rmrCalculationValues);
             rmrCalculation.set_id(rmrCalculationId);

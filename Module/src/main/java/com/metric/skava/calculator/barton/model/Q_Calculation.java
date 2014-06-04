@@ -24,7 +24,7 @@ public class Q_Calculation extends Observable implements Parcelable {
 
     private QBartonOutput qResult;
 
-	public Q_Calculation(RQD rqd, Jn jn, Jr jr, Ja ja, Jw jw, SRF sRF) {
+    public Q_Calculation(RQD rqd, Jn jn, Jr jr, Ja ja, Jw jw, SRF sRF) {
 		super();
 		this.rqd = rqd;
 		this.jn = jn;
@@ -111,7 +111,7 @@ public class Q_Calculation extends Observable implements Parcelable {
     }
 
     public QBartonOutput getQResult() {
-        if (qResult == null) {
+        if (qResult == null && isComplete()) {
             QBartonInput input = new QBartonInput();
             input.setRqd(getRqd().getValue());
             input.setJn(getJn().getValue());
@@ -183,4 +183,7 @@ public class Q_Calculation extends Observable implements Parcelable {
 		sRF = (SRF) in.readValue(Q_Calculation.class.getClassLoader());
 	}
 
+    public boolean isComplete() {
+        return (rqd != null) && (jn != null) && (jr != null) && (ja != null) && (jw != null) && (sRF != null);
+    }
 }

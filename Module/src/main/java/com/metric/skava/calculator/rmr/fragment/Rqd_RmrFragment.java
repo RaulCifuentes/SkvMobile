@@ -52,21 +52,6 @@ public class Rqd_RmrFragment extends RMRCalculatorBaseFragment {
         final int numberOfHeaders = listview.getHeaderViewsCount();
         listview.setAdapter(adapter);
 
-        // *** Forget about you own RQD always use the Barton
-        //        RQD_RMR rqdRMR = getRMRCalculationContext().getRqd();
-        //        if (rqdRMR == null) {
-        //        }
-        //Pull RQD from QBartonCalculation
-        RQD rqd = (RQD)getQCalculationContext().getRqd();
-        RQD_RMR rqdRMR = RQD_RMR.findWrapper(rqd);
-
-        if (rqdRMR != null) {
-            int posIndex = adapter.getPosition(rqdRMR);
-            posIndex += numberOfHeaders;
-            listview.setItemChecked(posIndex, true);
-            listview.setSelection(posIndex);
-        }
-
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
@@ -76,6 +61,23 @@ public class Rqd_RmrFragment extends RMRCalculatorBaseFragment {
             }
 
         });
+
+        RQD_RMR rqdRMR = getRMRCalculationContext().getRqd();
+        if (rqdRMR == null) {
+            //Pull RQD from QBartonCalculation
+            RQD rqd = (RQD)getQCalculationContext().getRqd();
+            if (rqd != null){
+                rqdRMR = RQD_RMR.findWrapper(rqd);
+            }
+        }
+
+        if (rqdRMR != null) {
+            getRMRCalculationContext().setRqd(rqdRMR);
+            int posIndex = adapter.getPosition(rqdRMR);
+            posIndex += numberOfHeaders;
+            listview.setItemChecked(posIndex, true);
+            listview.setSelection(posIndex);
+        }
 
 	}
 

@@ -72,14 +72,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_esr_value"
+                android:text="-"
                 android:id="@+id/report_q_esr_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_esr_rating"
+                android:text="-"
                 android:id="@+id/report_q_esr_rating"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -99,14 +99,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_ancho_value"
+                android:text="-"
                 android:id="@+id/report_q_ancho_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_ancho_rating"
+                android:text="-"
                 android:id="@+id/report_q_ancho_rating"
                 android:background="@drawable/text_box" />
 
@@ -126,14 +126,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_a_esr_value"
+                android:text="-"
                 android:id="@+id/report_q_a_esr_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_a_esr_rating"
+                android:text="-"
                 android:id="@+id/report_q_a_esr_rating"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -152,14 +152,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_rqd_value"
+                android:text="-"
                 android:id="@+id/report_q_rqd_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_rqd_rating"
+                android:text="-"
                 android:id="@+id/report_q_rqd_rating"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -178,14 +178,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_jn_value"
+                android:text="-"
                 android:id="@+id/report_q_jn_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_jn_rating"
+                android:text="-"
                 android:id="@+id/report_q_jn_rating"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -204,14 +204,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_jr_value"
+                android:text="-"
                 android:id="@+id/report_q_jr_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_jr_rating"
+                android:text="-"
                 android:id="@+id/report_q_jr_rating"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -230,14 +230,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_ja_value"
+                android:text="-"
                 android:id="@+id/report_q_ja_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_ja_rating"
+                android:text="-"
                 android:id="@+id/report_q_ja_rating"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -256,14 +256,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_jw_value"
+                android:text="-"
                 android:id="@+id/report_q_jw_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_jw_rating"
+                android:text="-"
                 android:id="@+id/report_q_jw_rating"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -282,14 +282,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="report_q_srf_value"
+                android:text="-"
                 android:id="@+id/report_q_srf_value"
                 android:background="@drawable/text_box" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SRF report_q_srf_rating"
+                android:text="-"
                 android:id="@+id/report_q_srf_rating"
                 android:background="@drawable/text_box" />
         </TableRow>
@@ -319,7 +319,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="report_q_q_value"
+                        android:text="-"
                         android:id="@+id/report_q_q_value"
                         android:background="@drawable/text_box" />
 
@@ -334,7 +334,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="report_q_calidad_value"
+                        android:text="-"
                         android:id="@+id/report_q_calidad_value"
                         android:background="@drawable/text_box" />
 
