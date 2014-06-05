@@ -522,8 +522,8 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         switch (id) {
             case NAV_MENU_LOGIN_ITEM_ID:
                 intent = new Intent(this, LoginMainActivity.class);
-                intent.putExtra(LoginMainActivity.EXTRA_USERNAME, "rcifuentes");
-                intent.putExtra(LoginMainActivity.EXTRA_PASSWORD, "pepito");
+                intent.putExtra(LoginMainActivity.EXTRA_USERNAME, "");
+                intent.putExtra(LoginMainActivity.EXTRA_PASSWORD, "");
                 startActivity(intent);
                 break;
             case NAV_MENU_FACE_MAPPING_ITEM_ID:
@@ -566,7 +566,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     public void saveUserDataSyncStatus(boolean success) {
         getSkavaContext().getUserDataSyncMetadata().setSuccess(success);
         getSkavaContext().getUserDataSyncMetadata().setLastExecution(SkavaUtils.getCurrentDate());
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.settings_preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.persistence_bucket_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(getString(R.string.user_data_last_sync_succeed), success);
         editor.putLong(getString(R.string.user_data_last_sync_date), SkavaUtils.getCurrentDate().getTime());
@@ -576,7 +576,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     public void saveAppDataSyncStatus(boolean success) {
         getSkavaContext().getAppDataSyncMetadata().setSuccess(success);
         getSkavaContext().getAppDataSyncMetadata().setLastExecution(SkavaUtils.getCurrentDate());
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.settings_preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.persistence_bucket_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(getString(R.string.app_data_last_sync_succeed), success);
         editor.putLong(getString(R.string.app_data_last_sync_date), SkavaUtils.getCurrentDate().getTime());

@@ -7,7 +7,7 @@
     <string name="action_report_send">Send</string>
     <string name="action_report_save_draft">Save draft</string>
 
-    <string name="report_wall_pattern">Wall Pattern</string>
-    <string name="report_roof_pattern">Roof Pattern</string>
+    <string name="report_wall_pattern">Wall Pattern (m)</string>
+    <string name="report_roof_pattern">Roof Pattern (m)</string>
 
 </resources>

@@ -25,7 +25,7 @@
     <string name="report_recomenda_soporte">Support Recommendation</string>
     <string name="report_tipo_perno">Bolt Type</string>
     <string name="report_largo_perno">Bolt Length (m)</string>
-    <string name="report_diametro_perno">Bolt Diameter (m)</string>
+    <string name="report_diametro_perno">Bolt Diameter (mm)</string>
     <string name="report_tipo_shotcrete">Shotcrete Type</string>
     <string name="report_espesor_shotcrete">Thickness (mm)</string>
     <string name="report_tipo_malla">Mesh Type</string>

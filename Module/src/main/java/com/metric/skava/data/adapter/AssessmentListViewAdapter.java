@@ -48,9 +48,11 @@ public class AssessmentListViewAdapter extends ArrayAdapter<Assessment> {
             text = (TextView) assessmentViewItem.findViewById(R.id.second_column_text_view);
             text.setText(actualAssessment.getCode());
 
-            if (actualAssessment.getInternalCode() != null) {
+            if (actualAssessment.getDateTime() != null) {
                 text = (TextView) assessmentViewItem.findViewById(R.id.third_column_text_view);
-                text.setText(DateFormat.getDateTimeInstance().format(actualAssessment.getDateTime()));
+                DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
+                String dateAsString = formatter.format(actualAssessment.getDateTime().getTime());
+                text.setText(dateAsString);
             }
         }
 

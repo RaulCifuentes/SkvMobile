@@ -77,11 +77,15 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
         //Check if there's a default value included with the Intent
         mUsername = getIntent().getStringExtra(EXTRA_USERNAME);
         mUsernameView = (EditText) findViewById(R.id.username);
-        mUsernameView.setText(mUsername);
+        if (mUsername!=null){
+            mUsernameView.setText(mUsername);
+        }
 
         mPassword = getIntent().getStringExtra(EXTRA_PASSWORD);
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setText(mPassword);
+        if (mPassword != null) {
+            mPasswordView.setText(mPassword);
+        }
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {

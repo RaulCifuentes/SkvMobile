@@ -106,6 +106,9 @@ public class AssessmentBuilder4SqlLite {
         Double advance = CursorUtils.getDouble(AssessmentTable.ADVANCE_COLUMN, cursor);
         babyAssessment.setCurrentAdvance(advance);
 
+        Double accumAvance = CursorUtils.getDouble(AssessmentTable.ACCUM_ADVANCE_COLUMN, cursor);
+        babyAssessment.setAccummAdvance(accumAvance);
+
         Long orientation =  CursorUtils.getLong(AssessmentTable.ORIENTATION_COLUMN, cursor);
         babyAssessment.setOrientation(orientation.shortValue());
 
