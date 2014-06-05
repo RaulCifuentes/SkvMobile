@@ -11,10 +11,12 @@ import android.widget.TextView;
 
 import com.metric.skava.R;
 import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.calculator.barton.model.RQD;
 import com.metric.skava.calculator.rmr.logic.RMRCalculator;
 import com.metric.skava.calculator.rmr.logic.RMRInput;
 import com.metric.skava.calculator.rmr.logic.RMROutput;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
+import com.metric.skava.calculator.rmr.model.RQD_RMR;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -39,12 +41,14 @@ public class RmrResultsFragment extends RMRCalculatorBaseFragment {
         if (rmrCalculation.getStrengthOfRock() != null) {
             input.setStrength(rmrCalculation.getStrengthOfRock().getValue());
         }
-//        if (rmrCalculation.getRqd() == null) {
-//            //Pull RQD from QBartonCalculation
-//            RQD rqd = (RQD) getQCalculationContext().getRqd();
-//            RQD_RMR rqdRMR = RQD_RMR.findWrapper(rqd);
-//            rmrCalculation.setRqd(rqdRMR);
-//        }
+        if (rmrCalculation.getRqd() == null) {
+            //Pull RQD from QBartonCalculation
+            RQD rqd = getQCalculationContext().getRqd();
+            if (rqd != null){
+                RQD_RMR rqdRMR = RQD_RMR.findWrapper(rqd);
+                rmrCalculation.setRqd(rqdRMR);
+            }
+        }
         if (rmrCalculation.getRqd() != null) {
             input.setRqd(Double.valueOf(rmrCalculation.getRqd().getValue()));
         }

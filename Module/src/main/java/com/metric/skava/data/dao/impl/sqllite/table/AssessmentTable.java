@@ -29,6 +29,8 @@ public class AssessmentTable extends SkavaTable {
 
     public static final String ADVANCE_COLUMN = "ADVANCE";
 
+    public static final String ACCUM_ADVANCE_COLUMN = "ACCUM_ADVANCE";
+
     public static final String ORIENTATION_COLUMN = "ORIENTATION";
 
     public static final String SLOPE_COLUMN = "SLOPE";
@@ -60,6 +62,7 @@ public class AssessmentTable extends SkavaTable {
             FINAL_CHAINAGE_COLUMN + " real null, " +
             REFERENCE_CHAINAGE_COLUMN + " real null, " +
             ADVANCE_COLUMN + " real null, " +
+            ACCUM_ADVANCE_COLUMN + " real null, " +
             ORIENTATION_COLUMN + " integer null, " +
             SLOPE_COLUMN + " real null, " +
             FRACTURE_TYPE_CODE_COLUMN + " text null, " +

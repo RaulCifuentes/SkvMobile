@@ -194,7 +194,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
 
             Double accumAdvance = assessment.getAccummAdvance();
             if (accumAdvance != null) {
-                assessmentFields.set("accumAdvance", advance);
+                assessmentFields.set("accumAdvance", accumAdvance);
             }
 
             ExcavationMethod method = assessment.getMethod();
