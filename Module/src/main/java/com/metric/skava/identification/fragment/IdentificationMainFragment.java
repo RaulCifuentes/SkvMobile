@@ -248,7 +248,6 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
             internalCodeEditText.setText(internalCode);
         }
 
-
         // ***************** PROJECT ******************
         projectSpinner = (Spinner) rootView.findViewById(R.id.mapping_gral_info_project_spinner);
         projectSpinner.setAdapter(projectAdapter);
@@ -356,12 +355,7 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
         timeIcon.setTypeface(anotherTypeFace);
         timeIcon.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
 
-//        if (selectedDateTime != null) {
-//            ((TextView) rootView.findViewById(R.id.mapping_gral_info_date_value)).setText(DateFormat.getDateInstance().format(selectedDateTime));
-//        } else {
-//            java.lang.String todayDate = DateFormat.getDateInstance().format(SkavaUtils.getCurrentDate());
-//            ((TextView) rootView.findViewById(R.id.mapping_gral_info_date_value)).setText(todayDate);
-//        }
+
         rootView.findViewById(R.id.mapping_gral_time_button).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -376,9 +370,6 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
 
                                 // Create a new instance of DatePickerDialog and
                                 // return it
-//                                return new TimePickerDialog(getActivity(),
-//                                        IdentificationMainFragment.this,
-//                                        hour, minute, android.text.format.DateFormat.is24HourFormat(getActivity()));
                                 return new TimePickerDialog(getActivity(),
                                         IdentificationMainFragment.this,
                                         hour, minute, false);
@@ -448,32 +439,6 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
 
         });
 
-//        initialPegEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                if (actionId == EditorInfo.IME_ACTION_DONE ||
-//                        actionId == EditorInfo.IME_ACTION_NEXT) {
-//                    finalPegEditText.requestFocus();
-//                    return false;
-//                }
-//                return false;
-//            }
-//        });
-//
-//        initialPegEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (!hasFocus) {
-//                    //do job here owhen Edittext lose focus
-//                    if (initialPeg != null) {
-//                        getCurrentAssessment().setInitialPeg(initialPeg);
-//                        String initialPegFormatted = pegNumberFormat.format(initialPeg);
-//                        TextView initialPegFormattedEditText = (TextView) rootView.findViewById(R.id.mapping_gral_info_initial_pk_value_formatted);
-//                        initialPegFormattedEditText.setText(initialPegFormatted);
-//                    }
-//                }
-//            }
-//        });
-
 
         finalPegEditText = (EditText) rootView.findViewById(R.id.mapping_gral_info_final_pk_value);
         finalPegEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
@@ -534,41 +499,7 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
 
         });
 
-//        finalPegEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                if (actionId == EditorInfo.IME_ACTION_DONE ||
-//                        actionId == EditorInfo.IME_ACTION_NEXT) {
-//                    methodSpinner.requestFocus();
-//                    return false;
-//                }
-//                return false;
-//            }
-//        });
-//
-//        finalPegEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (!hasFocus) {
-//                    //do job here owhen Edittext lose focus
-//                    if (finalPeg != null) {
-//                        getCurrentAssessment().setFinalPeg(finalPeg);
-//                        String finalPegFormatted = pegNumberFormat.format(finalPeg);
-//                        TextView finalPegFormattedEditText = (TextView) rootView.findViewById(R.id.mapping_gral_info_final_pk_value_formatted);
-//                        finalPegFormattedEditText.setText(finalPegFormatted);
-//                    }
-//                    if (finalPeg != null && initialPeg != null) {
-//                        advance = Math.abs(finalPeg - initialPeg);
-//                    }
-//                    if (advance != null && selectedFace != null) {
-//                        getCurrentAssessment().setCurrentAdvance(advance);
-//                        advanceTextView.setText(numberFormatter.format(advance));
-//                        accumAdvance = Math.abs(finalPeg - selectedFace.getReferencePK());
-//                        getCurrentAssessment().setAccummAdvance(accumAdvance);
-//                        accumAdvanceTextView.setText(numberFormatter.format(accumAdvance));
-//                    }
-//                }
-//            }
-//        });
+
 
         advanceTextView = (TextView) rootView.findViewById(R.id.mapping_gral_info_actual_advance_value);
         if (advance != null) {
@@ -751,10 +682,6 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
         }
 
         if (parent == sectionSpinner) {
-//            if (sectionSpinnerLastPosition == -1){
-//                sectionSpinner.setSelection(sectionAdapter.getCount());
-//                return;
-//            }
             if (position != sectionSpinner.getAdapter().getCount() && position != sectionSpinnerLastPosition) {
                 selectedSection = (ExcavationSection) parent.getItemAtPosition(position);
                 getSkavaContext().getAssessment().setSection(selectedSection);
@@ -763,10 +690,6 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
         }
 
         if (parent == methodSpinner) {
-//            if (methodSpinnerLastPosition == -1){
-//                methodSpinner.setSelection(methodAdapter.getCount());
-//                return;
-//            }
             if (position != methodSpinner.getAdapter().getCount() && position != methodSpinnerLastPosition) {
                 selectedMethod = (ExcavationMethod) parent.getItemAtPosition(position);
                 getSkavaContext().getAssessment().setMethod(selectedMethod);

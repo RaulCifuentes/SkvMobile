@@ -1,11 +1,12 @@
 package com.metric.skava.data.dao.impl.dropbox;
 
 import android.content.Context;
+import android.util.Log;
 
-import com.dropbox.sync.android.DbxDatastoreStatus;
-import com.dropbox.sync.android.DbxException;
+import com.bugsense.trace.BugSenseHandler;
 import com.dropbox.sync.android.DbxRecord;
 import com.metric.skava.app.context.SkavaContext;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.calculator.barton.model.RockQuality;
 import com.metric.skava.data.dao.RemoteRockQualityDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -33,10 +34,10 @@ public class RockQualityDAODropboxImpl extends DropBoxBaseDAO implements RemoteR
     @Override
     public List<RockQuality> getAllRockQualities() throws DAOException {
         try {
-            DbxDatastoreStatus status = getDatastore().getSyncStatus();
-            if (status.hasIncoming || status.isDownloading) {
-                getDatastore().sync();
-            }
+//            DbxDatastoreStatus status = getDatastore().getSyncStatus();
+//            if (status.hasIncoming || status.isDownloading) {
+//                getDatastore().sync();
+//            }
             List<RockQuality> listRockQualitys = new ArrayList<RockQuality>();
             List<DbxRecord> qRockQualities = mQ_rockQualityTable.findAll();
             for (DbxRecord currentRockQualityRecord : qRockQualities) {
@@ -61,7 +62,10 @@ public class RockQualityDAODropboxImpl extends DropBoxBaseDAO implements RemoteR
                 listRockQualitys.add(newRockQuality);
             }
             return listRockQualitys;
-        } catch (DbxException e) {
+//        } catch (DbxException e) {
+        } catch (Exception e) {
+            BugSenseHandler.sendException(e);
+            Log.e(SkavaConstants.LOG, e.getMessage());
             throw new DAOException(e);
         }
     }

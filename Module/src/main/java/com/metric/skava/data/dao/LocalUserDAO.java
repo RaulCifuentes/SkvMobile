@@ -10,6 +10,7 @@ import java.util.List;
  */
 public interface LocalUserDAO {
 
+    public Long countUsers() ;
 
     public List<User> getAllUsers() throws DAOException;
 

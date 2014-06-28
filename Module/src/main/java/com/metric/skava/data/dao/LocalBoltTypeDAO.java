@@ -20,5 +20,5 @@ public interface LocalBoltTypeDAO {
 
     public int deleteAllBoltTypes();
 
-
+    public Long countBoltTypes();
 }

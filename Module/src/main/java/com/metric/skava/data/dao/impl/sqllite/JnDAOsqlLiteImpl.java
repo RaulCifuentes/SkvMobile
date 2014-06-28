@@ -127,5 +127,10 @@ public class JnDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Jn> imple
         return deleteAllPersistentEntities(JnTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countJn() {
+        return countRecords(JnTable.MAPPED_INDEX_DATABASE_TABLE);
+    }
+
 
 }

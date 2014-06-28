@@ -36,6 +36,9 @@ import com.metric.skava.report.fragment.MappingReportMainFragment;
 import com.metric.skava.rockmass.activity.RockMassDescriptionMainActivity;
 import com.metric.skava.rockmass.fragment.RockMassDescriptionMainFragment;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 
 /**
  * An activity representing a list of Assessment stages. This activity
@@ -98,7 +101,7 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
             } catch (DAOException e) {
                 e.printStackTrace();
                 Log.d(SkavaConstants.LOG, e.getMessage());
-                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
 
@@ -128,6 +131,8 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
         }
         cameFromReport = intent.getBooleanExtra(REDIRECT_FROM_REPORT, false);
         if (cameFromReport){
+            //I want to go back directly to General Information
+            onItemSelected(AssesmentStageDataProvider.GRAL_INFO);
             //And I want to have the stages items enabled
             onTunelFaceIdentified();
         }
@@ -187,6 +192,7 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
             }
 
             if (id.equalsIgnoreCase(AssesmentStageDataProvider.DISCONTINUITIES)) {
+                saveDraft();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fx = fragmentManager.beginTransaction();
                 Fragment previous = getSupportFragmentManager().findFragmentById(R.id.stage_detail_container);
@@ -211,6 +217,7 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
             }
 
             if (id.equalsIgnoreCase(AssesmentStageDataProvider.Q)) {
+                saveDraft();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fx = fragmentManager.beginTransaction();
                 Fragment previous = getSupportFragmentManager().findFragmentById(R.id.stage_detail_container);
@@ -235,6 +242,7 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
             }
 
             if (id.equalsIgnoreCase(AssesmentStageDataProvider.RMR)) {
+                saveDraft();
                 FragmentTransaction fx = getSupportFragmentManager().beginTransaction();
                 Fragment previous = getSupportFragmentManager().findFragmentById(R.id.stage_detail_container);
                 if (previous != null) {
@@ -258,6 +266,7 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
             }
 
             if (id.equalsIgnoreCase(AssesmentStageDataProvider.PICS)) {
+                saveDraft();
                 FragmentTransaction fx = getSupportFragmentManager().beginTransaction();
                 Fragment previous = getSupportFragmentManager().findFragmentById(R.id.stage_detail_container);
                 if (previous != null) {
@@ -281,6 +290,7 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
             }
 
             if (id.equalsIgnoreCase(AssesmentStageDataProvider.DESC)) {
+                saveDraft();
                 FragmentTransaction fx = getSupportFragmentManager().beginTransaction();
                 Fragment previous = getSupportFragmentManager().findFragmentById(R.id.stage_detail_container);
                 if (previous != null) {
@@ -304,6 +314,7 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
             }
 
             if (id.equalsIgnoreCase(AssesmentStageDataProvider.INSTRUCTIONS)) {
+                saveDraft();
                 FragmentTransaction fx = getSupportFragmentManager().beginTransaction();
                 Fragment previous = getSupportFragmentManager().findFragmentById(R.id.stage_detail_container);
                 if (previous != null) {
@@ -327,6 +338,7 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
             }
 
             if (id.equalsIgnoreCase(AssesmentStageDataProvider.REPORT)) {
+                saveDraft();
                 //To make it full screen size launh it as an activity instead of as a fragment
                 Intent detailIntent = new Intent(this, MappingReportMainActivity.class);
                 detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, id);
@@ -341,8 +353,6 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
 //                        .commit();
 //                return;
             }
-
-
 
 
         } else {
@@ -414,8 +424,16 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
     public void onTunelFaceIdentified() {
         AssessmentStageListFragment assessmentStageListFragment = (AssessmentStageListFragment)
                 getSupportFragmentManager().findFragmentById(R.id.stage_list);
+        if (getCurrentAssessment().getInternalCode() == null && getCurrentAssessment().getFinalPeg() != null){
+            String tunnelName = getCurrentAssessment().getTunnel().getName();
+            String faceName = getCurrentAssessment().getFace().getName();
+            NumberFormat numberFormatter = DecimalFormat.getNumberInstance();
+            String finalPegAsString = numberFormatter.format(getCurrentAssessment().getFinalPeg());
+            getCurrentAssessment().setInternalCode(tunnelName + "-" + faceName + "-" + finalPegAsString );
+        }
         assessmentStageListFragment.enableAllStages(true);
     }
+
 
     @Override
     public void onTunelFaceNotIdentified() {
@@ -425,18 +443,24 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
     }
 
 
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == DatastoreHelper.REQUEST_LINK_TO_DROPBOX) {
-//            if (resultCode == RESULT_OK) {
-//                //showPreviousAssessmentsDTOs();
-//                //just to see if comes here
-//                Toast.makeText(this, "AssessmentStageListActivity :: onActivityResult", Toast.LENGTH_LONG).show();
-//            } else {
-//                Toast.makeText(this, "Link to Dropbox failed.", Toast.LENGTH_LONG).show();
-//            }
-//        } else {
-//            super.onActivityResult(requestCode, resultCode, data);
-//        }
-//    }
+    public void onPreExecuteImportAppData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
+    }
+
+    public void onPreExecuteImportUserData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
+    }
+
+    public void onPostExecuteImportAppData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    }
+
+    public void onPostExecuteImportUserData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    }
+    public void showProgressBar(final boolean show, String text, boolean longTime) {
+
+    }
+
 
 }

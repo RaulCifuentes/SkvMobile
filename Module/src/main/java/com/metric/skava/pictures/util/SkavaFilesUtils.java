@@ -27,6 +27,23 @@ public class SkavaFilesUtils {
         this.mContext = ctx;
     }
 
+    public File getNewFileFromUri(Uri uri) {
+        File file = new File(uri.getPath());
+        if (!file.exists()) {
+            try {
+                boolean success = file.createNewFile();
+                if (success) {
+                    return file;
+                }
+            } catch (IOException e) {
+                Log.e(SkavaConstants.LOG, e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return file;
+    }
+
+
     public File getExistingFileFromUri(Uri uri) {
         File file = new File(uri.getPath());
         if (file.exists()) {
@@ -59,15 +76,35 @@ public class SkavaFilesUtils {
     }
 
 
-    public boolean deleteFileFromUri(Uri deletionTarget){
+    public boolean deleteFileFromUri(Uri deletionTarget) {
         File deleteFile = getExistingFileFromUri(deletionTarget);
         return deleteFile.delete();
     }
 
-    public boolean copyFileFromUriToUri(Uri sourceUri, Uri targetUri) {
-        File srcFile = getExistingFileFromUri(sourceUri);
-        File targetFile = getExistingFileFromUri(targetUri);
-        boolean success = copyFile(srcFile, targetFile);
+    public boolean copyFileFromUriToUri(Uri sourceUri, Uri targetUri, boolean createFileIfNeeded) {
+        boolean success = false;
+        try {
+            File srcFile = null;
+            File targetFile = null;
+            try {
+                srcFile = getExistingFileFromUri(sourceUri);
+            } catch (Exception e) {
+                if (createFileIfNeeded){
+                    srcFile = getNewFileFromUri(sourceUri);
+                }
+            }
+            try {
+                targetFile = getExistingFileFromUri(targetUri);
+            } catch (Exception e) {
+                if (createFileIfNeeded){
+                    targetFile = getNewFileFromUri(targetUri);
+                }
+            }
+            success = copyFile(srcFile, targetFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(SkavaConstants.LOG, e.getMessage());
+        }
         return success;
     }
 

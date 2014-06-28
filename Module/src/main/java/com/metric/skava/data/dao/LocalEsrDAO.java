@@ -26,4 +26,5 @@ public interface LocalEsrDAO {
 
     public int deleteAllESRs();
 
+    public Long countESRs();
 }

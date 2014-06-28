@@ -1,13 +1,14 @@
 package com.metric.skava.data.dao.impl.dropbox;
 
 import android.content.Context;
+import android.util.Log;
 
-import com.dropbox.sync.android.DbxDatastoreStatus;
-import com.dropbox.sync.android.DbxException;
+import com.bugsense.trace.BugSenseHandler;
 import com.dropbox.sync.android.DbxRecord;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.Client;
 import com.metric.skava.app.model.ExcavationProject;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.data.dao.LocalClientDAO;
 import com.metric.skava.data.dao.RemoteExcavationProjectDAO;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -32,10 +33,6 @@ public class ExcavationProjectDAODropboxImpl extends DropBoxBaseDAO implements R
     @Override
     public List<ExcavationProject> getAllExcavationProjects() throws DAOException {
         try {
-            DbxDatastoreStatus status = getDatastore().getSyncStatus();
-            if (status.hasIncoming || status.isDownloading) {
-                getDatastore().sync();
-            }
             List<ExcavationProject> listProjects = new ArrayList<ExcavationProject>();
             List<DbxRecord> recordList = mProjectsTable.findAll();
             for (DbxRecord currentDbxRecord : recordList) {
@@ -51,7 +48,9 @@ public class ExcavationProjectDAODropboxImpl extends DropBoxBaseDAO implements R
                 listProjects.add(newProject);
             }
             return listProjects;
-        } catch (DbxException e) {
+        } catch (Exception e) {
+            BugSenseHandler.sendException(e);
+            Log.e(SkavaConstants.LOG, e.getMessage());
             throw new DAOException(e);
         }
     }
@@ -59,10 +58,6 @@ public class ExcavationProjectDAODropboxImpl extends DropBoxBaseDAO implements R
     @Override
     public ExcavationProject getExcavationProjectByCode(String code) throws DAOException {
         try {
-            DbxDatastoreStatus status = getDatastore().getSyncStatus();
-            if (status.hasIncoming || status.isDownloading) {
-                getDatastore().sync();
-            }
             DbxRecord projectRecord = mProjectsTable.findRecordByCode(code);
             String codigo = projectRecord.getString("ProjectId");
             String nombre = projectRecord.getString("Name");
@@ -73,7 +68,9 @@ public class ExcavationProjectDAODropboxImpl extends DropBoxBaseDAO implements R
             ExcavationProject newProject = new ExcavationProject(codigo, nombre, internalCode);
             newProject.setClient(client);
             return newProject;
-        } catch (DbxException e) {
+        } catch (Exception e) {
+            BugSenseHandler.sendException(e);
+            Log.e(SkavaConstants.LOG, e.getMessage());
             throw new DAOException(e);
         }
     }

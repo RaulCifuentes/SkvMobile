@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.dropbox.sync.android.DbxDatastore;
 import com.metric.skava.R;
 import com.metric.skava.app.activity.SkavaFragmentActivity;
 import com.metric.skava.app.model.Assessment;
@@ -14,20 +15,36 @@ import com.metric.skava.app.model.Role;
 import com.metric.skava.app.model.User;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.assessment.data.AssesmentStageDataProvider;
+import com.metric.skava.assessment.dialog.adapter.AssessmentListAdapter;
 import com.metric.skava.assessment.fragment.AssessmentListFragment;
+import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.LocalRoleDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.report.activity.MappingReportMainActivity;
 import com.metric.skava.report.activity.ReviewReportMainActivity;
 import com.metric.skava.report.fragment.MappingReportMainFragment;
 
+import java.util.List;
+
 public class AssessmentsListActivity extends SkavaFragmentActivity implements AssessmentListFragment.OnFragmentInteractionListener {
+
+
+    private LocalAssessmentDAO localAssessmentDAO;
+    private AssessmentListAdapter mAssessmentAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.assessments_list_activity);
-
+        try {
+            localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
+            mAssessmentAdapter = new AssessmentListAdapter(this);
+            updateAssessmentList();
+        } catch (DAOException e) {
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new AssessmentListFragment())
@@ -40,7 +57,7 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
     public boolean onCreateOptionsMenu(Menu menu) {
         User loggedUser = getSkavaContext().getLoggedUser();
         LocalRoleDAO localRoleDAO;
-        Role adminRole = null, geologistRole = null, analystRole = null;
+       Role adminRole = null, geologistRole = null, analystRole = null;
         try {
             localRoleDAO = getDAOFactory().getLocalRoleDAO();
             adminRole = localRoleDAO.getRoleByCode(SkavaConstants.ROLE_ADMIN_NAME);
@@ -48,7 +65,7 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
             analystRole = localRoleDAO.getRoleByCode(SkavaConstants.ROLE_ANALYST_NAME);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
         if (loggedUser != null) {
             if (loggedUser.hasRole(adminRole)) {
@@ -87,7 +104,18 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
 
 
     @Override
-    public void onFragmentInteraction(Assessment selectedAssessment) {
+    public void onDatastoreStatusChange(DbxDatastore store) {
+        super.onDatastoreStatusChange(store);
+        this.updateAssessmentList();
+    }
+
+    @Override
+    public AssessmentListAdapter getAssessmentListAdapter() {
+        return mAssessmentAdapter;
+    }
+
+    @Override
+    public void onAssessmentListRowClicked(Assessment selectedAssessment) {
         // Lanzar activity que muestra el reporte
         getSkavaContext().setAssessment(selectedAssessment);
         Intent detailIntent;
@@ -106,4 +134,40 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
         }
         startActivity(detailIntent);
     }
+
+    public void updateAssessmentList() {
+        List<Assessment> updatedList = null;
+        try {
+            updatedList = localAssessmentDAO.getAssessmentsByUser(getSkavaContext().getLoggedUser());
+        } catch (DAOException daoe) {
+            daoe.printStackTrace();
+            Toast.makeText(this, daoe.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+        }
+        if (mAssessmentAdapter != null) {
+            mAssessmentAdapter.setAssessmentList(updatedList);
+            mAssessmentAdapter.notifyDataSetChanged();
+        }
+    }
+
+
+    public void onPreExecuteImportAppData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
+    }
+
+    public void onPreExecuteImportUserData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
+    }
+
+    public void onPostExecuteImportAppData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    }
+
+    public void onPostExecuteImportUserData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    }
+    public void showProgressBar(final boolean show, String text, boolean longTime) {
+
+    }
+
 }

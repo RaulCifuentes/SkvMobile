@@ -122,5 +122,10 @@ public class JrDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Jr> imple
         return deleteAllPersistentEntities(JrTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countJr() {
+        return countRecords(JrTable.MAPPED_INDEX_DATABASE_TABLE);
+    }
+
 
 }

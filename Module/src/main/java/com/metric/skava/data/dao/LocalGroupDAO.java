@@ -20,5 +20,5 @@ public interface LocalGroupDAO {
 
     public int deleteAllGroups();
 
-
+    public Long countGroups();
 }

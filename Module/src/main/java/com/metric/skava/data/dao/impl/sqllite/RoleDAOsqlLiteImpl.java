@@ -83,4 +83,9 @@ public class RoleDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Role> implements Lo
     public int deleteAllRoles() {
         return deleteAllPersistentEntities(RoleTable.ROLE_DATABASE_TABLE);
     }
+
+    @Override
+    public Long countRoles() {
+        return countRecords(RoleTable.ROLE_DATABASE_TABLE);
+    }
 }

@@ -99,4 +99,9 @@ public class ExcavationProjectDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEnti
     public int deleteAllExcavationProjects() {
         return deleteAllPersistentEntities(ExcavationProjectTable.PROJECT_DATABASE_TABLE);
     }
+
+    @Override
+    public Long countProjects() {
+        return countRecords(ExcavationProjectTable.PROJECT_DATABASE_TABLE);
+    }
 }

@@ -136,5 +136,10 @@ public class ApertureDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Ape
         return deleteAllPersistentEntities(ApertureTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countApertures() {
+        return countRecords(ApertureTable.MAPPED_INDEX_DATABASE_TABLE);
+    }
+
 
 }

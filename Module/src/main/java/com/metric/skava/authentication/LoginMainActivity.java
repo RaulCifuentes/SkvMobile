@@ -26,13 +26,10 @@ import com.metric.skava.R;
 import com.metric.skava.app.SkavaApplication;
 import com.metric.skava.app.activity.SkavaActivity;
 import com.metric.skava.app.model.User;
-import com.metric.skava.app.util.SkavaBasicAuthenticator;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalUserDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -231,16 +228,18 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
             try {
                 userDAO = daoFactory.getLocalUserDAO();
                 mUser = userDAO.getUserByUsername(params[0]);
-                matched = SkavaBasicAuthenticator.verifyHashedPassword(mUser.getPassword(), mPassword);
+                //TODO turn the login match
+                matched = true;
+//                matched = SkavaBasicAuthenticator.verifyHashedPassword(mUser.getPassword(), mPassword);
             } catch (DAOException e) {
                 e.printStackTrace();
                 return false;
-            } catch (InvalidKeySpecException e) {
-                e.printStackTrace();
-                return false;
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-                return false;
+//            } catch (InvalidKeySpecException e) {
+//                e.printStackTrace();
+//                return false;
+//            } catch (NoSuchAlgorithmException e) {
+//                e.printStackTrace();
+//                return false;
             }
             return matched;
         }

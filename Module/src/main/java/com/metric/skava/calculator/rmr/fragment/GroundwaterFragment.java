@@ -117,7 +117,7 @@ public class GroundwaterFragment extends RMRCalculatorBaseFragment implements Ra
             listGroundwater = getDAOFactory().getLocalGroundwaterDAO().getAllGroundwaters(Groundwater.Group.INFLOW_LENGHT);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             throw new SkavaSystemException(e);
         }
 
@@ -155,7 +155,7 @@ public class GroundwaterFragment extends RMRCalculatorBaseFragment implements Ra
             listGroundwater = getDAOFactory().getLocalGroundwaterDAO().getAllGroundwaters(Groundwater.Group.JOINT_PRESS_PRINCIPAL);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             throw new SkavaSystemException(e);
         }
 
@@ -193,7 +193,7 @@ public class GroundwaterFragment extends RMRCalculatorBaseFragment implements Ra
             listGroundwater = getDAOFactory().getLocalGroundwaterDAO().getAllGroundwaters(Groundwater.Group.GENERAL_CONDITIONS);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             throw new SkavaSystemException(e);
         }
 

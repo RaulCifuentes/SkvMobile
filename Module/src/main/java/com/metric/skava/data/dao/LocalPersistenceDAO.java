@@ -21,6 +21,7 @@ public interface LocalPersistenceDAO {
 
     public boolean deletePersistence( String groupCode, String code);
 
-
     public int deleteAllPersistences();
+
+    public Long countPersistences();
 }

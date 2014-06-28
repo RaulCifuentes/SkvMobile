@@ -135,5 +135,10 @@ public class InfillingDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<In
         return deleteAllPersistentEntities(InfillingTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countInfillings() {
+        return countRecords(InfillingTable.MAPPED_INDEX_DATABASE_TABLE);
+    }
+
 
 }

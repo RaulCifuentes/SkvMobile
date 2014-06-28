@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.metric.skava.R;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.pictures.fragment.PicturesMainFragment;
+import com.metric.skava.pictures.model.SkavaPicture;
 import com.metric.skava.pictures.util.SkavaPictureFilesUtils;
 
 import java.util.List;
@@ -38,30 +39,37 @@ public class PictureGridViewAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        int currentNumberOfPictures = 0;
-        if (!mAssessment.getPictureUriList().isEmpty()) {
-            currentNumberOfPictures = mAssessment.getPictureUriList().size();
+        int mapReduceNumberOfPictures = 0;
+        if (!mAssessment.getPicturesList().isEmpty()) {
+            int realNumberOfPictures = mAssessment.getPicturesList().size();
+            mapReduceNumberOfPictures = (realNumberOfPictures / 2);
         }
-        return currentNumberOfPictures < 4 ? 4 : currentNumberOfPictures;
+        return mapReduceNumberOfPictures < 4 ? 4 : mapReduceNumberOfPictures;
     }
 
-    public Bitmap getItem(int position) {
-        Bitmap thumnailBitmap;
-        List<Uri> pictureList = mAssessment.getPictureUriList();
-        if (pictureList.isEmpty() || position >= pictureList.size()) {
+    public Bitmap getItem(int fictionalPosition) {
+        Bitmap thumnailBitmap = null;
+        List<SkavaPicture> pictureList = mAssessment.getPicturesList();
+        int resolvedPosition = fictionalPosition * 2;
+        if (pictureList.isEmpty() || resolvedPosition >= pictureList.size()) {
             thumnailBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.skava_shadow);
         } else {
-            Uri picture = pictureList.get(position);
-            if (picture == null){
+            //try first an edited picture
+            SkavaPicture picture = pictureList.get(resolvedPosition + 1);
+            if (picture == null || picture.getPictureLocation() == null){
+                picture = pictureList.get(resolvedPosition);
+            }
+            if (picture == null || picture.getPictureLocation() == null) {
                 thumnailBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.skava_shadow);
             } else {
-            Resources resources = mContext.getResources();
-            Float maxSize = resources.getDimension(R.dimen.max_image_thumbnail_size);
-            Float prefThumbnailWidth =  resources.getDimension(R.dimen.prefered_image_thumbnail_width);
-            Float prefThumbnailHeight = resources.getDimension(R.dimen.prefered_image_thumbnail_height);
-            //TODO probar con el ScaledBitmap y con el SampledBitmap
+                Uri pictureLocation = picture.getPictureLocation();
+                Resources resources = mContext.getResources();
+                Float maxSize = resources.getDimension(R.dimen.max_image_thumbnail_size);
+                Float prefThumbnailWidth = resources.getDimension(R.dimen.prefered_image_thumbnail_width);
+                Float prefThumbnailHeight = resources.getDimension(R.dimen.prefered_image_thumbnail_height);
+                //TODO probar con el ScaledBitmap y con el SampledBitmap
 //            thumnailBitmap = mPictureFilesUtils.getScaledBitmapFromUri(picture, prefThumbnailWidth.intValue(), prefThumbnailHeight.intValue());
-            thumnailBitmap = mPictureFilesUtils.getSampledBitmapFromFile(picture, prefThumbnailWidth.intValue(), prefThumbnailHeight.intValue());
+                thumnailBitmap = mPictureFilesUtils.getSampledBitmapFromFile(pictureLocation, prefThumbnailWidth.intValue(), prefThumbnailHeight.intValue());
             }
         }
         return thumnailBitmap;
@@ -83,7 +91,7 @@ public class PictureGridViewAdapter extends BaseAdapter {
         ImageView picture = (ImageView) pictureView.findViewById(R.id.picture);
         TextView label = (TextView) pictureView.findViewById(R.id.text);
         picture.setImageBitmap(getItem(position));
-        String picLabel = "Label";
+        String picLabel;
         switch (position) {
             case 0:
                 picLabel = PicturesMainFragment.FACE_PICTURE_NAME;

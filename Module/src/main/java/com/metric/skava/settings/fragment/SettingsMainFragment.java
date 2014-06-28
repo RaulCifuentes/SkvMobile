@@ -21,11 +21,8 @@ import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class SettingsMainFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    public static final String UPDATE_APP_DATA_AUTO_PREFERENCE = "UPDATE_APP_DATA_AUTO";
-    public static final String UPDATE_USER_DATA_AUTO_PREFERENCE = "UPDATE_USER_DATA_AUTO";
     public static final String UNLINK_DROPBOX_PREFERENCE = "UNLINK_DROPBOX";
     public static final String TARGET_ENVIRONMENT_PREFERENCE = "TARGET_ENVIRONMENT";
-
 
     @Override
     public void onCreate(Bundle paramBundle) {
@@ -53,21 +50,9 @@ public class SettingsMainFragment extends PreferenceFragment implements SharedPr
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(key, newValue);
             editor.commit();
-            ((SkavaApplication)getActivity().getApplication()).setWantImportAppData(true);
-            ((SkavaApplication)getActivity().getApplication()).setWantImportUserData(true);
+            ((SkavaApplication)getActivity().getApplication()).setNeedImportAppData(true);
+            ((SkavaApplication)getActivity().getApplication()).setNeedImportUserData(true);
             restartApp();
-        }
-        if (key.equals(UPDATE_APP_DATA_AUTO_PREFERENCE)) {
-            Boolean newValue = sharedPreferences.getBoolean(key, false);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(key, newValue);
-            editor.commit();
-        }
-        if (key.equals(UPDATE_USER_DATA_AUTO_PREFERENCE)) {
-            Boolean newValue = sharedPreferences.getBoolean(key, false);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(key, newValue);
-            editor.commit();
         }
         if (key.equals(UNLINK_DROPBOX_PREFERENCE)) {
             Boolean newValue = sharedPreferences.getBoolean(key, false);

@@ -53,6 +53,10 @@ public class UserDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<User> i
         return entity;
     }
 
+    public Long countUsers() {
+        return countRecords(UserTable.USER_DATABASE_TABLE);
+    }
+
     @Override
     public List<User> getAllUsers() throws DAOException {
         List<User> list = getAllPersistentEntities(UserTable.USER_DATABASE_TABLE);

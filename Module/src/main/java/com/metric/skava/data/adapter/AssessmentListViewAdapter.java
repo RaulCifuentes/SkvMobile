@@ -25,7 +25,6 @@ public class AssessmentListViewAdapter extends ArrayAdapter<Assessment> {
         super(context, resource, textViewResourceId, objects);
         resourceId = resource;
         mContext = context;
-
     }
 
     @Override

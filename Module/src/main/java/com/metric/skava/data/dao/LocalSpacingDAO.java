@@ -23,5 +23,5 @@ public interface LocalSpacingDAO {
 
     public int deleteAllSpacings();
 
-
+    public Long countSpacings();
 }

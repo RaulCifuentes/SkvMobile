@@ -71,5 +71,10 @@ public class CoverageDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Coverage> imple
         return deleteAllPersistentEntities(CoverageTable.COVERAGE_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countCoverages() {
+        return countRecords(CoverageTable.COVERAGE_DATABASE_TABLE);
+    }
+
 
 }

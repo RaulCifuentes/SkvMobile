@@ -173,11 +173,11 @@
 //
 //            SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
 //            if (syncHelper.downloadGlobalData()) {
-//                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.GLOBAL, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS);
+//                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncTask.Domain.GLOBAL, SyncTask.Source.DROPBOX, SyncTask.Status.SUCCESS);
 //                syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
 //            }
 //            if (syncHelper.downloadUserRelatedData()) {
-//                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Source.DROPBOX, SyncLogEntry.Status.SUCCESS);
+//                SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncTask.Domain.NON_USER_SPECIFIC, SyncTask.Source.DROPBOX, SyncTask.Status.SUCCESS);
 //                syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
 //            }
 ////            }
@@ -202,7 +202,7 @@
 //        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
 //        SQLiteDatabase dbConn = ((SyncLoggingDAOsqlLiteImpl) syncLoggingDAO).getDBConnection();
 //        SkavaDBHelper.insertDefaultData(dbConn);
-//        SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.GLOBAL, SyncLogEntry.Source.DEFAULT, SyncLogEntry.Status.SUCCESS);
+//        SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncTask.Domain.GLOBAL, SyncTask.Source.DEFAULT, SyncTask.Status.SUCCESS);
 //        syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
 //    }
 //
@@ -211,7 +211,7 @@
 //        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
 //        SQLiteDatabase dbConn = ((SyncLoggingDAOsqlLiteImpl) syncLoggingDAO).getDBConnection();
 //        SkavaDBHelper.insertDefaultData(dbConn);
-//        SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncLogEntry.Domain.NON_USER_SPECIFIC, SyncLogEntry.Source.DEFAULT, SyncLogEntry.Status.SUCCESS);
+//        SyncLogEntry newSyncLogEntry = new SyncLogEntry(new Date(), SyncTask.Domain.NON_USER_SPECIFIC, SyncTask.Source.DEFAULT, SyncTask.Status.SUCCESS);
 //        syncLoggingDAO.saveSyncLogEntry(newSyncLogEntry);
 //    }
 //
@@ -231,11 +231,11 @@
 //                Log.e(SkavaConstants.LOG, daoe.getMessage());
 //            }
 //        } else {
-//            if (lastGlobalData.getSource().equals(SyncLogEntry.Source.DROPBOX)) {
+//            if (lastGlobalData.getSource().equals(SyncTask.Source.DROPBOX)) {
 //                Log.d(SkavaConstants.LOG, "Using global data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()));
 //                Toast.makeText(this, "Using global data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()), Toast.LENGTH_LONG).show();
 //            }
-//            if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DEFAULT)) {
+//            if (lastNonSpecificData.getSource().equals(SyncTask.Source.DEFAULT)) {
 //                Log.d(SkavaConstants.LOG, "Operating on previous emergency data created on  " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()));
 //                Toast.makeText(this, "Operating on previous emergency data created on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastGlobalData.getSyncDate()), Toast.LENGTH_LONG).show();
 //            }
@@ -251,11 +251,11 @@
 //                Log.e(SkavaConstants.LOG, daoe.getMessage());
 //            }
 //        } else {
-//            if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DROPBOX)) {
+//            if (lastNonSpecificData.getSource().equals(SyncTask.Source.DROPBOX)) {
 //                Log.d(SkavaConstants.LOG, "Using non specific data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()));
 //                Toast.makeText(this, "Using non specific data from the last succeeded sync data on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()), Toast.LENGTH_LONG).show();
 //            }
-//            if (lastNonSpecificData.getSource().equals(SyncLogEntry.Source.DEFAULT)) {
+//            if (lastNonSpecificData.getSource().equals(SyncTask.Source.DEFAULT)) {
 //                Log.d(SkavaConstants.LOG, "Operating on previous emergency data created on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()));
 //                Toast.makeText(this, "Operating on previous emergency datacreated on " + DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, lastNonSpecificData.getSyncDate()), Toast.LENGTH_LONG).show();
 //            }

@@ -3,7 +3,6 @@ package com.metric.skava.assessment.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,17 +11,11 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.metric.skava.R;
 import com.metric.skava.app.fragment.SkavaFragment;
 import com.metric.skava.app.model.Assessment;
-import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.assessment.dialog.adapter.AssessmentListAdapter;
-import com.metric.skava.data.dao.LocalAssessmentDAO;
-import com.metric.skava.data.dao.exception.DAOException;
-
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -44,9 +37,7 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
 
     private Context mContext;
 
-    private LocalAssessmentDAO localAssessmentDAO;
 
-    private AssessmentListAdapter mAssessmentAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -79,14 +70,7 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
         }
 
         mContext = getActivity();
-        try {
-            localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
-        } catch (DAOException e) {
-            Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
-        }
-        mAssessmentAdapter = new AssessmentListAdapter(getActivity());
-        updateAssessmentList();
+
 
     }
 
@@ -109,15 +93,12 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
         secondTextView.setText("Date");
         TextView thirdTextView = (TextView) listHeaderView.findViewById(R.id.third_column_text_view);
         thirdTextView.setText("Project");
-        TextView fourthTextView = (TextView) listHeaderView.findViewById(R.id.fourth_column_text_view);
-        fourthTextView.setText("Tunnel");
-        TextView fifthTextView = (TextView) listHeaderView.findViewById(R.id.fifth_column_text_view);
-        fifthTextView.setText("Face");
         TextView sixthTextView = (TextView) listHeaderView.findViewById(R.id.sixth_column_text_view);
         sixthTextView.setText("Status");
         mListView.addHeaderView(listHeaderView, null, false);
 
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAssessmentAdapter);
+        AssessmentListAdapter adapter = mListener.getAssessmentListAdapter();
+        ((AdapterView<ListAdapter>) mListView).setAdapter(adapter);
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
 
@@ -147,36 +128,8 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(mAssessmentAdapter.getItem(position-1));
-        }
-    }
-
-//    /**
-//     * The default content for this Fragment has a TextView that is shown when
-//     * the list is empty. If you would like to change the text, call this method
-//     * to supply the text it should use.
-//     */
-//    public void setEmptyText(CharSequence emptyText) {
-//        View emptyView = mListView.getEmptyView();
-//
-//        if (emptyText instanceof TextView) {
-//            ((TextView) emptyView).setText(emptyText);
-//        }
-//    }
-
-
-    public void updateAssessmentList() {
-        List<Assessment> updatedList = null;
-        try {
-            updatedList = localAssessmentDAO.getAssessmentsByUser(getSkavaContext().getLoggedUser());
-        } catch (DAOException daoe) {
-            daoe.printStackTrace();
-            Toast.makeText(getActivity(), daoe.getMessage(), Toast.LENGTH_LONG).show();
-            Log.e(SkavaConstants.LOG, daoe.getMessage());
-        }
-        if (mAssessmentAdapter != null) {
-            mAssessmentAdapter.setAssessmentList(updatedList);
-            mAssessmentAdapter.notifyDataSetChanged();
+            AssessmentListAdapter adapter = mListener.getAssessmentListAdapter();
+            mListener.onAssessmentListRowClicked(adapter.getItem(position - 1));
         }
     }
 
@@ -191,7 +144,8 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
     * >Communicating with Other Fragments</a> for more information.
     */
     public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(Assessment selectedAssessment);
+        public void onAssessmentListRowClicked(Assessment selectedAssessment);
+        public AssessmentListAdapter getAssessmentListAdapter();
     }
 
 }

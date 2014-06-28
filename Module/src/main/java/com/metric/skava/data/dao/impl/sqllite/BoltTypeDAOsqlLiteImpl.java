@@ -73,5 +73,10 @@ public class BoltTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<BoltType> imple
         return deleteAllPersistentEntities(BoltTypeTable.BOLT_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countBoltTypes() {
+        return countRecords(BoltTypeTable.BOLT_DATABASE_TABLE);
+    }
+
 
 }

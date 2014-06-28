@@ -20,7 +20,5 @@ public interface LocalSupportPatternTypeDAO {
 
     public int deleteAllSupportPatternTypes();
 
-
-
-
+    public Long countSupportPatternTypes();
 }

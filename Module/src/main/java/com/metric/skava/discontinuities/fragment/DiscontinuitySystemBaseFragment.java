@@ -37,6 +37,7 @@ import com.metric.skava.discontinuities.model.DiscontinuityShape;
 import com.metric.skava.discontinuities.model.DiscontinuityType;
 import com.metric.skava.discontinuities.model.DiscontinuityWater;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +89,6 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
     private Spinner discInfillingSpinner;
     private MappedIndexSpinnerArrayAdapter<Infilling> discInfillingAdapter;
 
-
     private DiscontinuityFamily mDiscontinuityFamilyInstance;
 
     private int mDiscontinuityFamilyNumber;
@@ -97,44 +97,48 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
     private int jrGroupSpinnerLastPosition;
     private int jaGroupSpinnerLastPosition;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         daoFactory = getDAOFactory();
         if (savedInstanceState != null) {
-            mDiscontinuityFamilyNumber = savedInstanceState.getInt(ARG_BASKET_ID, 0);
+            mDiscontinuityFamilyNumber = savedInstanceState.getInt(ARG_BASKET_ID, -1);
         }
         if (getArguments() != null) {
-            mDiscontinuityFamilyNumber = getArguments().getInt(ARG_BASKET_ID, 0);
+            mDiscontinuityFamilyNumber = getArguments().getInt(ARG_BASKET_ID, -1);
         }
 
         jaGroupSpinnerLastPosition = -1;
         jrGroupSpinnerLastPosition = -1;
 
-        ///Look like execution will never enter on these cases as assessment always include a
-        //six nulls DiscontinuityFamily list
-        if (getCurrentAssessment().getDiscontinuitySystem().isEmpty()) {
-            mDiscontinuityFamilyInstance = new DiscontinuityFamily();
-            mDiscontinuityFamilyInstance.setNumber(mDiscontinuityFamilyNumber - 1);
-            getCurrentAssessment().getDiscontinuitySystem().add(mDiscontinuityFamilyInstance);
-        } else {
-            if (getCurrentAssessment().getDiscontinuitySystem().size() < mDiscontinuityFamilyNumber) {
+        if (mDiscontinuityFamilyNumber != -1) {
+            ///Look like execution will never enter on these cases as assessment always include a
+            //six nulls DiscontinuityFamily list
+            if (getCurrentAssessment().getDiscontinuitySystem().isEmpty()) {
                 mDiscontinuityFamilyInstance = new DiscontinuityFamily();
                 mDiscontinuityFamilyInstance.setNumber(mDiscontinuityFamilyNumber - 1);
-                //add as many as necessary
-                for (int i = getCurrentAssessment().getDiscontinuitySystem().size(); i < mDiscontinuityFamilyNumber; i++) {
-                    getCurrentAssessment().getDiscontinuitySystem().add(null);
-                }
-                getCurrentAssessment().getDiscontinuitySystem().add(mDiscontinuityFamilyNumber - 1, mDiscontinuityFamilyInstance);
+                getCurrentAssessment().getDiscontinuitySystem().add(mDiscontinuityFamilyInstance);
             } else {
-                //This is the case where actually goes into
-                mDiscontinuityFamilyInstance = getCurrentAssessment().getDiscontinuitySystem().get(mDiscontinuityFamilyNumber - 1);
-                if (mDiscontinuityFamilyInstance == null) {
+                if (getCurrentAssessment().getDiscontinuitySystem().size() < mDiscontinuityFamilyNumber) {
                     mDiscontinuityFamilyInstance = new DiscontinuityFamily();
                     mDiscontinuityFamilyInstance.setNumber(mDiscontinuityFamilyNumber - 1);
-                    getCurrentAssessment().getDiscontinuitySystem().set(mDiscontinuityFamilyNumber - 1, mDiscontinuityFamilyInstance);
+                    //add as many as necessary
+                    for (int i = getCurrentAssessment().getDiscontinuitySystem().size(); i < mDiscontinuityFamilyNumber; i++) {
+                        getCurrentAssessment().getDiscontinuitySystem().add(null);
+                    }
+                    getCurrentAssessment().getDiscontinuitySystem().add(mDiscontinuityFamilyNumber - 1, mDiscontinuityFamilyInstance);
                 } else {
-                    System.out.println("mDiscontinuityFamilyNumber:: " + mDiscontinuityFamilyNumber + " tiene el mDiscontinuityFamilyInstance :: " + mDiscontinuityFamilyInstance);
+                    //This is the case where actually goes into
+                    mDiscontinuityFamilyInstance = getCurrentAssessment().getDiscontinuitySystem().get(mDiscontinuityFamilyNumber - 1);
+                    if (mDiscontinuityFamilyInstance == null) {
+                        mDiscontinuityFamilyInstance = new DiscontinuityFamily();
+                        mDiscontinuityFamilyInstance.setNumber(mDiscontinuityFamilyNumber - 1);
+                        getCurrentAssessment().getDiscontinuitySystem().set(mDiscontinuityFamilyNumber - 1, mDiscontinuityFamilyInstance);
+                    } else {
+                        //The family has already been initialized ...
+                        //System.out.println("mDiscontinuityFamilyNumber:: " + mDiscontinuityFamilyNumber + " tiene el mDiscontinuityFamilyInstance :: " + mDiscontinuityFamilyInstance);
+                    }
                 }
             }
         }
@@ -145,7 +149,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             discTypeList = daoFactory.getLocalDiscontinuityTypeDAO().getAllDiscontinuityTypes();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
         discTypeList.add(new DiscontinuityType("HINT", "Select type ..."));
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -159,7 +163,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             discRelevanceList = daoFactory.getLocalDiscontinuityRelevanceDAO().getAllDiscontinuityRelevances();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
         discRelevanceList.add(new DiscontinuityRelevance("HINT", "Select relevance ..."));
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -173,7 +177,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             discSpacingsList = daoFactory.getLocalSpacingDAO().getAllSpacings();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
         discSpacingsList.add(new Spacing(null, "HINT", "Select spacing ...", "Select spacing ...", 0d));
         discSpacingsAdapter = new MappedIndexSpinnerArrayAdapter<Spacing>(
@@ -188,7 +192,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             discPersistencesList = daoFactory.getLocalPersistenceDAO().getAllPersistences();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
         discPersistencesList.add(new Persistence(null, "HINT", "Select persistence ...", "Select persistence ...", 0d));
         discPersistenceAdapter = new MappedIndexSpinnerArrayAdapter<Persistence>(
@@ -202,7 +206,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             discAperturesList = daoFactory.getLocalApertureDAO().getAllApertures();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
         discAperturesList.add(new Aperture(null, "HINT", "Select aperture ...", "Select aperture ...", 0d));
         discApertureAdapter = new MappedIndexSpinnerArrayAdapter<Aperture>(
@@ -216,7 +220,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             discShapeList = daoFactory.getLocalDiscontinuityShapeDAO().getAllDiscontinuityShapes();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
         discShapeList.add(new DiscontinuityShape("HINT", "Select shape ..."));
         discShapeAdapter = new SkavaEntityAdapter<DiscontinuityShape>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, discShapeList);
@@ -229,7 +233,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             discRoughnessList = daoFactory.getLocalRoughnessDAO().getAllRoughnesses();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
         discRoughnessList.add(new Roughness(null, "HINT", "Select roughness ...", "Select roughness ...", 0d));
         discRoughnessAdapter = new MappedIndexSpinnerArrayAdapter<Roughness>(
@@ -244,7 +248,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             discInfillingList = daoFactory.getLocalInfillingDAO().getAllInfillings();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
         discInfillingList.add(new Infilling(null, "HINT", "Select an infilling ...", "Select an infilling ...", 0d));
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -277,7 +281,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             discWeatheringList = daoFactory.getLocalWeatheringDAO().getAllWeatherings();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
         discWeatheringList.add(new Weathering(null, "HINT", "Select weathering ...", "Select weathering ...", 0d));
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -289,7 +293,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             discWaterList = daoFactory.getLocalDiscontinuityWaterDAO().getAllDiscontinuityWaters();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
         discWaterList.add(new DiscontinuityWater("HINT", "Select water ..."));
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -351,7 +355,8 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         });
         Short dipDir = mDiscontinuityFamilyInstance.getDipDirDegrees();
         if (dipDir != null) {
-            dipDirEditText.setText(dipDir);
+            String dipDirAsString = NumberFormat.getInstance().format(dipDir);
+            dipDirEditText.setText(dipDirAsString);
         }
 
         final EditText dipEditText = (EditText) rootView.findViewById(R.id.discontinuity_system_dip_value);
@@ -376,9 +381,9 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
         });
         Short dipDegrees = mDiscontinuityFamilyInstance.getDipDegrees();
         if (dipDegrees != null) {
-            dipEditText.setText(dipDegrees);
+            String dipDegreesAsString = NumberFormat.getInstance().format(dipDegrees);
+            dipEditText.setText(dipDegreesAsString);
         }
-
 
         discSpacingSpinner = (Spinner) rootView.findViewById(R.id.discontinuity_system_spacing_spinner);
         discSpacingSpinner.setAdapter(discSpacingsAdapter);
@@ -573,7 +578,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
                 Jr.Group selectedJrGroup = (Jr.Group) parent.getItemAtPosition(position);
                 discJrAdapter = prepareJrAdapter(selectedJrGroup);
                 discJrSpinner.setAdapter(discJrAdapter);
-                if(selectedJr != null){
+                if (selectedJr != null) {
                     if (discJrAdapter.getPosition(selectedJr) != -1) {
                         discJrSpinner.setSelection(discJrAdapter.getPosition(selectedJr));
                     } else {
@@ -590,7 +595,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
                 Ja.Group selectedJaGroup = (Ja.Group) parent.getItemAtPosition(position);
                 discJaAdapter = prepareJaAdapter(selectedJaGroup);
                 discJaSpinner.setAdapter(discJaAdapter);
-                if(selectedJa != null){
+                if (selectedJa != null) {
                     if (discJaAdapter.getPosition(selectedJa) != -1) {
                         discJaSpinner.setSelection(discJaAdapter.getPosition(selectedJa));
                     } else {
@@ -631,7 +636,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             discJaList = daoFactory.getLocalJaDAO().getAllJas(selectedJaGroup);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
         discJaList.add(new Ja(null, null, "HINT", "Select Ja ...", "Select Ja ...", 1d));
         discJaAdapter = new MappedIndexSpinnerArrayAdapter<Ja>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, discJaList);
@@ -646,7 +651,7 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             discJrList = daoFactory.getLocalJrDAO().getAllJrs(selectedJrGroup);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
         discJrList.add(new Jr(null, null, "HINT", "Select Jr ...", "Select Jr ...", 1d));
         discJrAdapter = new MappedIndexSpinnerArrayAdapter<Jr>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, discJrList);

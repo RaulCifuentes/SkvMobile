@@ -20,15 +20,14 @@ android {
 //    lintOptions {
 //        checkReleaseBuilds false
 //    }
-
 }
+
 
 dependencies {
     compile 'com.android.support:support-v4:19.0.0'
     compile 'com.google.android.gms:play-services:4.1.32'
     compile 'com.google.code.gson:gson:2.2.4'
     compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-    compile files('libs/dropbox-sync-sdk-android.jar')
     compile files("$buildDir/native-libs/native-libs.jar")
 }
 

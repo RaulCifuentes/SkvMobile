@@ -74,4 +74,9 @@ public class ClientDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Client> implement
     public int deleteAllClients() {
         return deleteAllPersistentEntities(ClientTable.CLIENT_DATABASE_TABLE);
     }
+
+    @Override
+    public Long countClients() {
+        return countRecords(ClientTable.CLIENT_DATABASE_TABLE);
+    }
 }

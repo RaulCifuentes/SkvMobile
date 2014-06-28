@@ -8,58 +8,14 @@ import java.util.Date;
  */
 public class SyncLogEntry implements Serializable {
 
-    public enum Domain {
-        PICTURES,
-        ROLES,
-        EXCAVATIONMETHODS,
-        EXCAVATIONSECTIONS,
-        DISCONTINUITYTYPES,
-        DISCONTINUITYRELEVANCES,
-        INDEXES,
-        GROUPS,
-        SPACINGS,
-        PERSISTENCES,
-        APERTURES,
-        DISCONTINUITYSHAPES,
-        ROUGHNESSES,
-        INFILLINGS,
-        WEATHERINGS,
-        DISCONTINUITYWATERS,
-        STRENGTHS,
-        GROUDWATERS,
-        ORIENTATION,
-        JN,
-        JR,
-        JA,
-        JW,
-        SRF,
-        FRACTURETYPES,
-        BOLTTYPES,
-        SHOTCRETETYPES,
-        MESHTYPES,
-        COVERAGES,
-        ARCHTYPES,
-        ESRS,
-        SUPPORTPATTERNTYPES,
-        CLIENTS,
-        EXCAVATIONPROJECTS,
-        TUNNELS,
-        SUPPORTREQUIREMENTS,
-        TUNNELFACES, USERS, ROCKQUALITIES
-    }
-
-    public enum Status {SUCCESS, FAIL}
-
-    public enum Source {DROPBOX_LOCAL_DATASTORE, DROPBOX_REMOTE_DATASTORE, DEFAULT}
-
     private Date syncDate;
-    private Status status;
-    private Source source;
-    private Domain domain;
+    private SyncTask.Status status;
+    private SyncTask.Source source;
+    private SyncTask.Domain domain;
     private Long numRecordsSynced;
     private String message;
 
-    public SyncLogEntry(Date syncDate, Domain domain, Source source, Status status, Long numRecordsSynced) {
+    public SyncLogEntry(Date syncDate, SyncTask.Domain domain, SyncTask.Source source, SyncTask.Status status, Long numRecordsSynced) {
         this.syncDate = syncDate;
         this.source = source;
         this.status = status;
@@ -67,12 +23,20 @@ public class SyncLogEntry implements Serializable {
         this.numRecordsSynced = numRecordsSynced;
     }
 
-    public Source getSource() {
+    public SyncTask.Source getSource() {
         return source;
     }
 
-    public void setSource(Source source) {
+    public void setSource(SyncTask.Source source) {
         this.source = source;
+    }
+
+    public SyncTask.Domain getDomain() {
+        return domain;
+    }
+
+    public void setDomain(SyncTask.Domain domain) {
+        this.domain = domain;
     }
 
     public Date getSyncDate() {
@@ -83,20 +47,12 @@ public class SyncLogEntry implements Serializable {
         this.syncDate = syncDate;
     }
 
-    public Status getStatus() {
+    public SyncTask.Status getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(SyncTask.Status status) {
         this.status = status;
-    }
-
-    public Domain getDomain() {
-        return domain;
-    }
-
-    public void setDomain(Domain domain) {
-        this.domain = domain;
     }
 
     public Long getNumRecordsSynced() {

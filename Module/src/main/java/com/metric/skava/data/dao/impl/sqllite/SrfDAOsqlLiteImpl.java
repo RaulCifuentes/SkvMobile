@@ -130,6 +130,10 @@ public class SrfDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<SRF> imp
         return deleteAllPersistentEntities(SRFTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countSRF() {
+        return countRecords(SRFTable.MAPPED_INDEX_DATABASE_TABLE);
+    }
 
 
 }

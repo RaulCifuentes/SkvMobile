@@ -70,5 +70,10 @@ public class ExcavationMethodDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Excavat
         return deleteAllPersistentEntities(ExcavationMethodTable.METHOD_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countExcavationMethods() {
+        return countRecords(ExcavationMethodTable.METHOD_DATABASE_TABLE);
+    }
+
 
 }

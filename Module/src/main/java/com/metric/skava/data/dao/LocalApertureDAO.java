@@ -20,6 +20,7 @@ public interface LocalApertureDAO {
 
     public boolean deleteAperture(String indexCode, String groupCode, String code);
 
-
     public int deleteAllApertures();
+
+    public Long countApertures();
 }

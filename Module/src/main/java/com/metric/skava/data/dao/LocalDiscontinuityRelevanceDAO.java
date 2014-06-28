@@ -20,5 +20,6 @@ public interface LocalDiscontinuityRelevanceDAO {
 
     public int deleteAllDiscontinuityRelevances();
 
+    public Long countDiscontinuityRelevances();
 }
 

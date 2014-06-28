@@ -9,6 +9,7 @@ import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.settings.fragment.SettingsMainFragment;
 import com.metric.skava.sync.helper.SyncHelper;
+import com.metric.skava.sync.model.SyncQueue;
 import com.metric.skava.sync.model.SyncStatus;
 
 import java.util.Date;
@@ -20,21 +21,11 @@ public class SkavaApplication extends MetricApplication {
     SharedPreferences mSharedPreferences;
 
     boolean wantUnlinkDropboxAccount;
-    boolean wantImportAppData;
-    boolean wantImportUserData;
+    boolean needImportAppData;
+    boolean needImportUserData;
 
     public SkavaContext getSkavaContext() {
         return mSkavaContext;
-    }
-
-    public boolean isReloadAppDataPrefered() {
-        Boolean updateAppDataModelAutomatically   = mSharedPreferences.getBoolean(SettingsMainFragment.UPDATE_APP_DATA_AUTO_PREFERENCE, false);
-        return wantImportAppData || updateAppDataModelAutomatically;
-    }
-
-    public boolean isReloadUserDataPrefered() {
-        Boolean updateUserDataModelAutomatically = mSharedPreferences.getBoolean(SettingsMainFragment.UPDATE_USER_DATA_AUTO_PREFERENCE, false);
-        return wantImportUserData || updateUserDataModelAutomatically;
     }
 
     public boolean isUnlinkPrefered() {
@@ -46,12 +37,20 @@ public class SkavaApplication extends MetricApplication {
         this.wantUnlinkDropboxAccount = wantUnlinkDropboxAccount;
     }
 
-    public void setWantImportAppData(boolean wantImportAppData) {
-        this.wantImportAppData = wantImportAppData;
+    public void setNeedImportAppData(boolean wantImportAppData) {
+        this.needImportAppData = wantImportAppData;
     }
 
-    public void setWantImportUserData(boolean wantImportUserData) {
-        this.wantImportUserData = wantImportUserData;
+    public void setNeedImportUserData(boolean wantImportUserData) {
+        this.needImportUserData = wantImportUserData;
+    }
+
+    public boolean isImportAppDataNeeded() {
+        return needImportAppData ;
+    }
+
+    public boolean isImportUserDataNeeded() {
+        return needImportUserData;
     }
 
     @Override
@@ -90,9 +89,8 @@ public class SkavaApplication extends MetricApplication {
         String targetEnvironment  = mSharedPreferences.getString(SettingsMainFragment.TARGET_ENVIRONMENT_PREFERENCE, "");
         mSkavaContext.setTargetEnvironment(targetEnvironment);
 
-
+        mSkavaContext.setMiddlemanInbox(new SyncQueue());
     }
-
 
     @Override
     public void onTerminate() {

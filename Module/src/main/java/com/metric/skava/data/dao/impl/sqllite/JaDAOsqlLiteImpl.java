@@ -128,5 +128,10 @@ public class JaDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Ja> imple
         return deleteAllPersistentEntities(JaTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countJa() {
+        return countRecords(JaTable.MAPPED_INDEX_DATABASE_TABLE);
+    }
+
 
 }

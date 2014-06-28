@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.metric.skava.BuildConfig;
 import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.calculator.rmr.logic.RMRCalculator;
 import com.metric.skava.calculator.rmr.logic.RMRInput;
 import com.metric.skava.calculator.rmr.logic.RMROutput;
@@ -230,4 +231,20 @@ public class RMR_Calculation implements Parcelable {
         boolean detailed = (persistence != null) && (aperture != null) && (roughness != null) && (infilling!= null) && (weathering!= null);
         return partial && detailed;
     }
+
+    public boolean hasSelectedAnything() {
+        return  (getRqd() != null) ||
+                SkavaUtils.isDefined(getStrengthOfRock()) ||
+                SkavaUtils.isDefined(getRqd()) ||
+                SkavaUtils.isDefined(getSpacing()) ||
+                SkavaUtils.isDefined(getPersistence()) ||
+                SkavaUtils.isDefined(getAperture()) ||
+                SkavaUtils.isDefined(getRoughness()) ||
+                SkavaUtils.isDefined(getInfilling()) ||
+                SkavaUtils.isDefined(getWeathering()) ||
+                SkavaUtils.isDefined(getGroundwater()) ||
+                SkavaUtils.isDefined(getOrientationDiscontinuities()
+                ) ;
+    }
+
 }

@@ -131,5 +131,10 @@ public class PersistenceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<
         return deleteAllPersistentEntities(PersistenceTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countPersistences() {
+        return countRecords(PersistenceTable.MAPPED_INDEX_DATABASE_TABLE);
+    }
+
 
 }

@@ -118,7 +118,7 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
             listOrientations = getDAOFactory().getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.TUNNELS_MINES);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             throw new SkavaSystemException(e);
         }
 
@@ -160,7 +160,7 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
             listOrientations = getDAOFactory().getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.SLOPES);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             throw new SkavaSystemException(e);
         }
 
@@ -202,7 +202,7 @@ public class OrientationFragment extends RMRCalculatorBaseFragment implements Ra
             listOrientations = getDAOFactory().getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.FOUNDATIONS);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             throw new SkavaSystemException(e);
         }
 

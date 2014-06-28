@@ -20,5 +20,6 @@ public interface LocalFractureTypeDAO {
 
     public int deleteAllFractureTypes();
 
+    public Long countFractureTypes();
 }
 

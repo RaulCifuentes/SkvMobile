@@ -1,9 +1,9 @@
 package com.metric.skava.data.dao.impl.dropbox;
 
 import android.content.Context;
+import android.util.Log;
 
-import com.dropbox.sync.android.DbxDatastoreStatus;
-import com.dropbox.sync.android.DbxException;
+import com.bugsense.trace.BugSenseHandler;
 import com.dropbox.sync.android.DbxList;
 import com.dropbox.sync.android.DbxRecord;
 import com.metric.skava.app.context.SkavaContext;
@@ -11,6 +11,7 @@ import com.metric.skava.app.model.Permission;
 import com.metric.skava.app.model.Role;
 import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.data.dao.LocalPermissionDAO;
 import com.metric.skava.data.dao.LocalRoleDAO;
 import com.metric.skava.data.dao.LocalTunnelFaceDAO;
@@ -44,10 +45,10 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
     @Override
     public List<User> getAllUsers() throws DAOException {
         try {
-            DbxDatastoreStatus status = getDatastore().getSyncStatus();
-            if (status.hasIncoming) {
-                getDatastore().sync();
-            }
+//            DbxDatastoreStatus status = getDatastore().getSyncStatus();
+//            if (status.hasIncoming) {
+//                getDatastore().sync();
+//            }
             List<User> listUsers = new ArrayList<User>();
             List<DbxRecord> recordList = mUsersTable.findAll();
             for (DbxRecord currentDbxRecord : recordList) {
@@ -63,7 +64,11 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
                 listUsers.add(newUser);
             }
             return listUsers;
-        } catch (DbxException e) {
+//        } catch (DbxException e) {
+            //Just to keep the try
+        } catch (Exception e) {
+            BugSenseHandler.sendException(e);
+            Log.e(SkavaConstants.LOG, e.getMessage());
             throw new DAOException(e);
         }
     }
@@ -88,10 +93,10 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
     @Override
     public User getUserByEmail(String email) throws DAOException {
         try {
-            DbxDatastoreStatus status = getDatastore().getSyncStatus();
-            if (status.hasIncoming) {
-                getDatastore().sync();
-            }
+//            DbxDatastoreStatus status = getDatastore().getSyncStatus();
+//            if (status.hasIncoming) {
+//                getDatastore().sync();
+//            }
             DbxRecord userRecord = mUsersTable.findRecordByCandidateKey("UserMail", email);
             User newUser = mapUserFromDbxRecord(userRecord);
 
@@ -104,7 +109,11 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
             }
 
             return newUser;
-        } catch (DbxException e) {
+//        } catch (DbxException e) {
+            //Just to keep the try
+        } catch (Exception e) {
+            BugSenseHandler.sendException(e);
+            Log.e(SkavaConstants.LOG, e.getMessage());
             throw new DAOException(e);
         }
     }
@@ -113,10 +122,10 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
     @Override
     public User getUserByCode(String code) throws DAOException {
         try {
-            DbxDatastoreStatus status = getDatastore().getSyncStatus();
-            if (status.hasIncoming) {
-                getDatastore().sync();
-            }
+//            DbxDatastoreStatus status = getDatastore().getSyncStatus();
+//            if (status.hasIncoming) {
+//                getDatastore().sync();
+//            }
             DbxRecord userRecord = mUsersTable.findRecordByCode(code);
             User newUser = mapUserFromDbxRecord(userRecord);
 
@@ -129,7 +138,11 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
             }
 
             return newUser;
-        } catch (DbxException e) {
+//        } catch (DbxException e) {
+            //Just to keep the try
+        } catch (Exception e) {
+            BugSenseHandler.sendException(e);
+            Log.e(SkavaConstants.LOG, e.getMessage());
             throw new DAOException(e);
         }
     }

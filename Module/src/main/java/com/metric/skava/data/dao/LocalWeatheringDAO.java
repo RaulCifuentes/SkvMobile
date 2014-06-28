@@ -21,6 +21,7 @@ public interface LocalWeatheringDAO {
 
     public boolean deleteWeathering(String groupCode, String code);
 
-
     public int deleteAllWeatherings();
+
+    public Long countWeatherings();
 }

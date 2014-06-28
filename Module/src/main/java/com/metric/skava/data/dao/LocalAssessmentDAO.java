@@ -20,7 +20,7 @@ public interface LocalAssessmentDAO {
 
     public List<Assessment> getAssessmentsByTunnelFace(TunnelFace face) throws DAOException;
 
-    public List<Assessment> getAllAssessments() throws DAOException;
+    public List<Assessment> getAllAssessments(String orderedBy) throws DAOException;
 
     public void saveAssessment(Assessment assessment) throws DAOException;
 

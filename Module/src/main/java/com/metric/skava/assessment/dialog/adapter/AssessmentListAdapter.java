@@ -11,8 +11,6 @@ import android.widget.TextView;
 import com.metric.skava.R;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.ExcavationProject;
-import com.metric.skava.app.model.Tunnel;
-import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.util.PegNumberFormat;
 import com.metric.skava.app.util.SkavaUtils;
 
@@ -80,11 +78,18 @@ public class AssessmentListAdapter extends BaseAdapter {
         Assessment currentItem = getItem(position);
 
         if (currentItem != null) {
-            if (currentItem.getCode() != null){
-                TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_code);
-//                text.setText(currentItem.getCode());
-                text.setText(currentItem.getCode().substring(0,8));
+
+            ExcavationProject project = currentItem.getProject();
+            if (SkavaUtils.isDefined(project)){
+                TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_project);
+                text.setText(project.getName());
             }
+
+            if (currentItem.getPseudoCode() != null){
+                TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_code);
+                text.setText(currentItem.getPseudoCode());
+            }
+
             Double initChainage = currentItem.getInitialPeg();
             Double finalChainage = currentItem.getFinalPeg();
             if (initChainage != null && finalChainage != null){
@@ -94,41 +99,32 @@ public class AssessmentListAdapter extends BaseAdapter {
                 String finalText = pegNumberFormat.format(finalChainage);
                 text.setText(initialText + " - " + finalText );
             }
+
             Date date = currentItem.getDateTime().getTime();
             if (date != null) {
                 TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_date);
                 text.setText(DateFormat.getDateTimeInstance().format(date));
             }
-            ExcavationProject project = currentItem.getProject();
-            if (SkavaUtils.isDefined(project)){
-                TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_project);
-                text.setText(project.getName());
-            }
-            Tunnel tunnel = currentItem.getTunnel();
-            if (SkavaUtils.isDefined(tunnel)){
-                TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_tunnel);
-                text.setText(tunnel.getName());
-            }
-            TunnelFace face = currentItem.getFace();
-            if (SkavaUtils.isDefined(face)){
-                TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_face);
-                text.setText(face.getName());
-            }
+
             ImageView imageView = (ImageView) assessmentViewItem.findViewById(R.id.assessment_sent);
+
             switch (currentItem.getSentToCloud()){
                 case DATA_SENT_TO_CLOUD:
-                    imageView.setImageResource(R.drawable.single_cloud_icon);
+                    if (SkavaUtils.hasPictures(currentItem.getPicturesList())){
+                        imageView.setImageResource(R.drawable.cloud_striped);
+                    } else {
+                        imageView.setImageResource(R.drawable.cloud_checked);
+                    }
                     break;
                 case PICS_SENT_TO_CLOUD:
-                    imageView.setImageResource(R.drawable.cloud_icon);
+                    imageView.setImageResource(R.drawable.cloud_checked);
                     break;
                 case DATA_SENT_TO_DATASTORE:
                 case PICS_SENT_TO_DATASTORE:
-//                    imageView.setImageResource(R.drawable.cloud_upload);
-                    imageView.setImageResource(R.drawable.cloud_icon);
+                    imageView.setImageResource(R.drawable.cloud_sync);
                     break;
                 default:
-                    imageView.setImageResource(R.drawable.tablet_icon);
+                    imageView.setImageResource(R.drawable.tablet);
             }
         }
 

@@ -74,4 +74,9 @@ public class IndexDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Index>
     public int deleteAllIndexes() {
         return deleteAllPersistentEntities(MappedIndexTable.INDEX_DATABASE_TABLE);
     }
+
+    @Override
+    public Long countIndexes() {
+        return countRecords(MappedIndexTable.INDEX_DATABASE_TABLE);
+    }
 }

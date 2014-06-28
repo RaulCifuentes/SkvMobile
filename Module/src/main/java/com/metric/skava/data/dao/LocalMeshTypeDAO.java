@@ -20,5 +20,5 @@ public interface LocalMeshTypeDAO {
 
     public int deleteAllMeshTypes();
 
-
+    public Long countMeshTypes();
 }

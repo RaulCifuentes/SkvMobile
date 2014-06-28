@@ -1,6 +1,5 @@
 package com.metric.skava.app.util;
 
-import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 
@@ -12,6 +11,7 @@ import com.metric.skava.calculator.rmr.model.RMR_Calculation;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
+import com.metric.skava.pictures.model.SkavaPicture;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -76,64 +76,26 @@ public class SkavaUtils {
         Calendar currentDateTime = SkavaUtils.getCurrentDateTime();
         initialAssessment.setDateTime(currentDateTime);
 
+
         //Q Barton (Default values for each one of the components of thr Q process)
-
-//        RQD rqd = RQDMapper.getInstance().mapJvToRQD(4);
-//
-//        List<SRF> listSRF = daoFactory.getLocalSrfDAO().getAllSrfs(SRF.Group.a);
-//        SRF sRF = listSRF.get(0);
-//
-//        List<Jw> listJw = daoFactory.getLocalJwDAO().getAllJws();
-//        Jw jw = listJw.get(0);
-//
-//        List<Ja> listJa = daoFactory.getLocalJaDAO().getAllJas(Ja.Group.a);
-//        Ja ja = listJa.get(0);
-//
-//        List<Jn> listJn = daoFactory.getLocalJnDAO().getAllJns();
-//        Jn jn = listJn.get(0);
-//
-//        List<Jr> listJr = daoFactory.getLocalJrDAO().getAllJrs(Jr.Group.a);
-//        Jr jr =  listJr.get(0);
-//
-//        Q_Calculation mQCalculation = new Q_Calculation(rqd, jn, jr, ja, jw, sRF);
-//
-
         Q_Calculation mQCalculation = new Q_Calculation(null, null, null, null, null, null);
         initialAssessment.setQCalculation(mQCalculation);
-//
-//        StrengthOfRock strenght = daoFactory.getLocalStrengthDAO().getAllStrengths(StrengthOfRock.Group.POINT_LOAD_KEY).get(0);
-//
-//        Spacing spacing =  daoFactory.getLocalSpacingDAO().getAllSpacings().get(0);
-//
-//        Persistence persistence = daoFactory.getLocalPersistenceDAO().getAllPersistences().get(0);
-//
-//        Aperture aperture = daoFactory.getLocalApertureDAO().getAllApertures().get(0);
-//
-//        Roughness roughness = daoFactory.getLocalRoughnessDAO().getAllRoughnesses().get(0);
-//
-//        Infilling infilling = daoFactory.getLocalInfillingDAO().getAllInfillings().get(0);
-//
-//        Weathering weathering = daoFactory.getLocalWeatheringDAO().getAllWeatherings().get(0);
-//
-//        Groundwater groundwater = daoFactory.getLocalGroundwaterDAO().getAllGroundwaters(Groundwater.Group.INFLOW_LENGHT).get(0);
-//
-//        OrientationDiscontinuities orientation = daoFactory.getLocalOrientationDiscontinuitiesDAO().getAllOrientationDiscontinuities(OrientationDiscontinuities.Group.TUNNELS_MINES).get(0);
-//
-//        RMR_Calculation mRMRCalculation = new RMR_Calculation(strenght, null, spacing, persistence, aperture, roughness, infilling, weathering, groundwater, orientation);
-//
+
         RMR_Calculation mRMRCalculation = new RMR_Calculation(null, null, null, null, null, null, null, null, null, null);
         initialAssessment.setRmrCalculation(mRMRCalculation);
 
-
-
         //Default 4 picture placeholders
-        ArrayList<Uri> pictureUriList = new ArrayList<Uri>(5);
-        pictureUriList.add(null);
-        pictureUriList.add(null);
-        pictureUriList.add(null);
-        pictureUriList.add(null);
+        ArrayList<SkavaPicture> pictureList = new ArrayList<SkavaPicture>(5);
+        pictureList.add(null); //0
+        pictureList.add(null);
+        pictureList.add(null);
+        pictureList.add(null);
+        pictureList.add(null);
+        pictureList.add(null);
+        pictureList.add(null);
+        pictureList.add(null); //7
 
-        initialAssessment.setPictureUriList(pictureUriList);
+        initialAssessment.setPicturesList(pictureList);
 
         //Discontinuity System
         int dfItems = 7;
@@ -180,9 +142,9 @@ public class SkavaUtils {
         return ret;
     }
 
-    public static boolean hasPictures(List<Uri> pictureList) {
-        for (Uri uri : pictureList) {
-            if (uri != null) {
+    public static boolean hasPictures(List<SkavaPicture> pictureList) {
+        for (SkavaPicture picture : pictureList) {
+            if (picture != null) {
                 return true;
             };
         }

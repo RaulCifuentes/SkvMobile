@@ -40,6 +40,7 @@ import com.metric.skava.data.dao.impl.dropbox.SrfDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.StrengthDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.SupportPatternTypeDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.SupportRequirementDAODropboxImpl;
+import com.metric.skava.data.dao.impl.dropbox.SyncAcknowledgeDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.TunnelDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.TunnelFaceDAODropboxImpl;
 import com.metric.skava.data.dao.impl.dropbox.UserDAODropboxImpl;
@@ -531,6 +532,15 @@ public class DAOFactory {
                 remoteAssessmentDAO = new AssessmentDAODropboxImpl(mContext, mSkavaContext);
         }
         return remoteAssessmentDAO;
+    }
+
+    public RemoteSyncAcknowlegeDAO getRemoteSyncAcknowledgeDAO(Flavour daoFlavour) throws DAOException {
+        RemoteSyncAcknowlegeDAO remoteSyncAcknowlegeDAO = null;
+        switch (daoFlavour) {
+            case DROPBOX:
+                remoteSyncAcknowlegeDAO = new SyncAcknowledgeDAODropboxImpl(mContext, mSkavaContext);
+        }
+        return remoteSyncAcknowlegeDAO;
     }
 
     public LocalJnDAO getLocalJnDAO() throws DAOException {

@@ -72,5 +72,10 @@ public class MeshTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<MeshType> imple
         return deleteAllPersistentEntities(MeshTypeTable.MESH_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countMeshTypes() {
+        return countRecords(MeshTypeTable.MESH_DATABASE_TABLE);
+    }
+
 
 }

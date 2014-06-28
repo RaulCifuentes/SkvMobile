@@ -6,7 +6,7 @@
         android:title="@string/new_assessment_action"
         android:showAsAction="ifRoom|withText" />
 
-    <item android:id="@+id/action_admin_assessment"
-        android:title="@string/admin_assessment_action"
-        android:showAsAction="ifRoom|withText" />
+    <!--<item android:id="@+id/action_admin_assessment"-->
+        <!--android:title="@string/admin_assessment_action"-->
+        <!--android:showAsAction="ifRoom|withText" />-->
 </menu>

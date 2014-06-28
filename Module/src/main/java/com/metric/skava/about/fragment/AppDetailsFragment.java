@@ -31,7 +31,8 @@ public class AppDetailsFragment extends SkavaFragment {
 
         SyncStatus metadata = getSkavaContext().getAppDataSyncMetadata();
         textView = (TextView) view.findViewById(R.id.textView01);
-        textView.setText("Last App Data Sync :: " + (metadata.isSuccess()?"Succeed" :"Failed") +  " on " + metadata.getLastExecution());
+//        String dateAsString = DateDisplayFormat.getFormattedDate(DateDisplayFormat.DATE_TIME, metadata.getLastExecution());
+        textView.setText("Last App Data Sync :: " + (metadata.isSuccess() ? "Succeed" : "Failed") + " on " + metadata.getLastExecution());
 
         metadata = getSkavaContext().getUserDataSyncMetadata();
         TextView textView2 = (TextView) view.findViewById(R.id.textView02);
@@ -58,13 +59,13 @@ public class AppDetailsFragment extends SkavaFragment {
 
         textView4.setText("Target environment:: " + target);
 
-        boolean reloadAppData = skavaApplication.isReloadAppDataPrefered();
+//        boolean reloadAppData = skavaApplication.isReloadAppDataPrefered();
         TextView textView5 = (TextView) view.findViewById(R.id.textView06);
-        textView5.setText("Dropbox reload app data :: " + reloadAppData);
+//        textView5.setText("Dropbox reload app data :: " + reloadAppData);
 
-        boolean reloadUserData = skavaApplication.isReloadUserDataPrefered();
+//        boolean reloadUserData = skavaApplication.isReloadUserDataPrefered();
         TextView textView6 = (TextView) view.findViewById(R.id.textView07);
-        textView6.setText("Dropbox reload user data :: " + reloadUserData);
+//        textView6.setText("Dropbox reload user data :: " + reloadUserData);
 
 
     }

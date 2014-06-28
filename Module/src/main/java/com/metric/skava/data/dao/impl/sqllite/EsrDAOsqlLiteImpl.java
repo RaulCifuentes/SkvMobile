@@ -143,5 +143,10 @@ public class EsrDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<ESR> imp
         return deleteAllPersistentEntities(ESRTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countESRs() {
+        return countRecords(ESRTable.MAPPED_INDEX_DATABASE_TABLE);
+    }
+
 
 }

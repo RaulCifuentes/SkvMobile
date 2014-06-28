@@ -48,7 +48,6 @@ public abstract class AbstractNavDrawerActivity extends SkavaFragmentActivity {
 	}
 
     protected void setupTheDrawer() {
-
         navConf = getNavDrawerConfiguration();
 
         setContentView(navConf.getMainLayout());

@@ -121,4 +121,9 @@ public class JwDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Jw> imple
         return deleteAllPersistentEntities(JwTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countJw() {
+        return countRecords(JwTable.MAPPED_INDEX_DATABASE_TABLE);
+    }
+
 }

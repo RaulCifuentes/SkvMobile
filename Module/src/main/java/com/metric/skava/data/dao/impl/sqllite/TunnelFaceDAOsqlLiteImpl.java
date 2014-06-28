@@ -139,5 +139,10 @@ public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<T
         return deleteAllPersistentEntities(TunnelFaceTable.FACE_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countFaces() {
+        return countRecords(TunnelFaceTable.FACE_DATABASE_TABLE);
+    }
+
 
 }

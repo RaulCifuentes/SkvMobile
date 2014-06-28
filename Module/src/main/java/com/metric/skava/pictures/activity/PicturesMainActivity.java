@@ -7,12 +7,14 @@ import android.view.Menu;
 
 import com.metric.skava.R;
 import com.metric.skava.app.activity.SkavaFragmentActivity;
+import com.metric.skava.home.fragment.MainFragment;
 import com.metric.skava.pictures.fragment.PicturesMainFragment;
 
 public class PicturesMainActivity extends SkavaFragmentActivity {
 
 //    private Fragment fragment;
     private String FRAGMENT_TAG = "FRAGMENT_TAG";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,13 @@ public class PicturesMainActivity extends SkavaFragmentActivity {
 
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mMainContainedFragment = (MainFragment)
+                getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return super.onCreateOptionsMenu(menu);
     }
@@ -39,6 +48,26 @@ public class PicturesMainActivity extends SkavaFragmentActivity {
         int oldRequestCode = requestCode;
         Fragment targetFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
         targetFragment.onActivityResult(PicturesMainFragment.TAKE_PHOTO_LEFT_REQUEST_CODE, resultCode, data);
-
     }
+
+    public void onPreExecuteImportAppData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
+    }
+
+    public void onPreExecuteImportUserData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
+    }
+
+    public void onPostExecuteImportAppData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    }
+
+    public void onPostExecuteImportUserData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    }
+
+    protected void showProgressBar(final boolean show, String text, boolean longTime) {
+        //do nothing
+    }
+
 }

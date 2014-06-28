@@ -76,4 +76,9 @@ public class FractureTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<FractureTyp
         return deleteAllPersistentEntities(FractureTypeTable.FRACTURE_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countFractureTypes() {
+        return countRecords(FractureTypeTable.FRACTURE_DATABASE_TABLE);
+    }
+
 }

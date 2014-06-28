@@ -146,5 +146,10 @@ public class RoughnessDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Ro
         return deleteAllPersistentEntities(RoughnessTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countRoughnesses() {
+        return countRecords(RoughnessTable.MAPPED_INDEX_DATABASE_TABLE);
+    }
+
 
 }

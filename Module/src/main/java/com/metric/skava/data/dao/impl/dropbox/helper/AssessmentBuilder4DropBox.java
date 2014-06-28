@@ -1,8 +1,12 @@
 package com.metric.skava.data.dao.impl.dropbox.helper;
 
+import android.util.Log;
+
 import com.dropbox.sync.android.DbxRecord;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.Assessment;
+import com.metric.skava.app.model.TunnelFace;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalExcavationMethodDAO;
 import com.metric.skava.data.dao.LocalExcavationProjectDAO;
@@ -45,25 +49,33 @@ public class AssessmentBuilder4DropBox {
 
     public Assessment buildAssessmentFromRecord(DbxRecord assessmentRecord) throws DAOException {
 
-        String internalCode = assessmentRecord.getString("skavaInternalCode");
+        Assessment babyAssessment = null;
+        if (assessmentRecord.hasField("code")){
+            String assessmentCode = assessmentRecord.getString("code");
+            babyAssessment = new Assessment(assessmentCode);
+        }
 
-        Assessment babyAssessment = new Assessment(internalCode);
-        babyAssessment.setInternalCode(internalCode);
+        if (assessmentRecord.hasField("skavaInternalCode")){
+            String internalCode = assessmentRecord.getString("skavaInternalCode");
+            babyAssessment.setInternalCode(internalCode);
+        }
 
-        String assessmentCode = assessmentRecord.getString("code");
-        babyAssessment.setCode(assessmentCode);
+        if (assessmentRecord.hasField("date")){
+            Date date = assessmentRecord.getDate("date");
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            babyAssessment.setDateTime(calendar);
+        }
 
-//        java.lang.String faceID = assessmentRecord.getString("faceCode");
-//        try {
-//            TunnelFace tunnelFace = localTunnelFaceDAO.getTunnelFaceByCode(faceID);
-//            babyAssessment.setFace(tunnelFace);
-//        } catch (DAOException e) {
-//            Log.e(SkavaConstants.LOG, e.getMessage());
-//        }
-        Date date = assessmentRecord.getDate("date");
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        babyAssessment.setDateTime(calendar);
+        if (assessmentRecord.hasField("faceCode")){
+            java.lang.String faceID = assessmentRecord.getString("faceCode");
+            try {
+                TunnelFace tunnelFace = localTunnelFaceDAO.getTunnelFaceByCode(faceID);
+                babyAssessment.setFace(tunnelFace);
+            } catch (DAOException e) {
+                Log.e(SkavaConstants.LOG, e.getMessage());
+            }
+        }
 
         return babyAssessment;
     }

@@ -6,13 +6,12 @@ import android.util.Log;
 
 import com.metric.skava.BuildConfig;
 import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.calculator.barton.logic.QBartonCalculator;
 import com.metric.skava.calculator.barton.logic.QBartonInput;
 import com.metric.skava.calculator.barton.logic.QBartonOutput;
 
-import java.util.Observable;
-
-public class Q_Calculation extends Observable implements Parcelable {
+public class Q_Calculation implements Parcelable {
 
     private Long _id;
 	private RQD rqd;
@@ -34,11 +33,6 @@ public class Q_Calculation extends Observable implements Parcelable {
 		this.sRF = sRF;
     }
 
-    private void triggerObservers(Object data) {
-        //This was an idea to listen for changes and update the color of the tab
-//        setChanged();
-//        notifyObservers(data);
-    }
 
 	public Ja getJa() {
 		return ja;
@@ -47,7 +41,6 @@ public class Q_Calculation extends Observable implements Parcelable {
 	public void setJa(Ja ja) {
         if (ja != null) {
             this.ja = ja;
-            triggerObservers(ja);
         }
     }
 
@@ -58,7 +51,6 @@ public class Q_Calculation extends Observable implements Parcelable {
 	public void setJn(Jn jn) {
         if (jn != null) {
             this.jn = jn;
-            triggerObservers(jn);
         }
 	}
 
@@ -68,7 +60,6 @@ public class Q_Calculation extends Observable implements Parcelable {
 
 	public void setJr(Jr jr) {
 		this.jr = jr;
-        triggerObservers(jr);
 	}
 
 	public Jw getJw() {
@@ -77,7 +68,6 @@ public class Q_Calculation extends Observable implements Parcelable {
 
 	public void setJw(Jw jw) {
 		this.jw = jw;
-        triggerObservers(jw);
 	}
 
 	public RQD getRqd() {
@@ -87,7 +77,6 @@ public class Q_Calculation extends Observable implements Parcelable {
 	public void setRqd(RQD rqd) {
         if (rqd != null) {
             this.rqd = rqd;
-            triggerObservers(rqd);
         }
 	}
 
@@ -98,7 +87,6 @@ public class Q_Calculation extends Observable implements Parcelable {
 	public void setSrf(SRF sRF) {
         if (sRF != null) {
             this.sRF = sRF;
-            triggerObservers(sRF);
         }
 	}
 
@@ -185,5 +173,14 @@ public class Q_Calculation extends Observable implements Parcelable {
 
     public boolean isComplete() {
         return (rqd != null) && (jn != null) && (jr != null) && (ja != null) && (jw != null) && (sRF != null);
+    }
+
+    public boolean hasSelectedAnything() {
+        return  (getRqd() != null) ||
+                SkavaUtils.isDefined(getJn()) ||
+                SkavaUtils.isDefined(getJr()) ||
+                SkavaUtils.isDefined(getJa()) ||
+                SkavaUtils.isDefined(getJw()) ||
+                SkavaUtils.isDefined(getSrf()) ;
     }
 }

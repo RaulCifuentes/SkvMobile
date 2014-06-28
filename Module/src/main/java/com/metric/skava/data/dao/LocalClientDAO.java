@@ -21,4 +21,5 @@ public interface LocalClientDAO {
 
     public int deleteAllClients() throws DAOException;
 
+    public Long countClients();
 }

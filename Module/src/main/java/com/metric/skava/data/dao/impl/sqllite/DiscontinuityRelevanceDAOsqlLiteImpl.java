@@ -70,5 +70,10 @@ public class DiscontinuityRelevanceDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<D
         return deleteAllPersistentEntities(DiscontinuityRelevanceTable.RELEVANCES_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countDiscontinuityRelevances() {
+        return countRecords(DiscontinuityRelevanceTable.RELEVANCES_DATABASE_TABLE);
+    }
+
 
 }

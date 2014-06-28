@@ -21,4 +21,5 @@ public interface LocalRoleDAO {
 
     public int deleteAllRoles() throws DAOException;
 
+    public Long countRoles();
 }

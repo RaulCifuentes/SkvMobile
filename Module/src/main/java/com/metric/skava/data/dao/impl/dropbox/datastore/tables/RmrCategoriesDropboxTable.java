@@ -9,13 +9,15 @@ import com.dropbox.sync.android.DbxTable;
 public class RmrCategoriesDropboxTable extends DropboxBaseTable implements DropboxTable {
 
 
+    public static final String RMR_CATEGORIES_TABLE = "RmrCategories";
+
     public RmrCategoriesDropboxTable(DbxDatastore datastore) {
         super(datastore);
     }
 
     @Override
     public DbxTable getBaseDropboxTable() {
-        return mDatastore.getTable("RmrCategories");
+        return mDatastore.getTable(RMR_CATEGORIES_TABLE);
     }
 
     @Override

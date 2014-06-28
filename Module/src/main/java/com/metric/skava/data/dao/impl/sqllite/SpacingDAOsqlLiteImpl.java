@@ -9,6 +9,7 @@ import com.metric.skava.data.dao.LocalSpacingDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.helper.MappedIndexInstanceBuilder4SqlLite;
 import com.metric.skava.data.dao.impl.sqllite.table.SpacingTable;
+import com.metric.skava.data.dao.impl.sqllite.table.StrengthTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,6 +125,11 @@ public class SpacingDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Spac
     @Override
     public int deleteAllSpacings() {
         return deleteAllPersistentEntities(SpacingTable.MAPPED_INDEX_DATABASE_TABLE);
+    }
+
+    @Override
+    public Long countSpacings() {
+        return countRecords(StrengthTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
 

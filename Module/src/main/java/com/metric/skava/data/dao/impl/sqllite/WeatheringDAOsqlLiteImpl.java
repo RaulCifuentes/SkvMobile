@@ -136,5 +136,10 @@ public class WeatheringDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<W
         return deleteAllPersistentEntities(WeatheringTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countWeatherings() {
+        return countRecords(WeatheringTable.MAPPED_INDEX_DATABASE_TABLE);
+    }
+
 
 }

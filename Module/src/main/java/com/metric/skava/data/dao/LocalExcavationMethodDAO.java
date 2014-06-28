@@ -20,5 +20,5 @@ public interface LocalExcavationMethodDAO {
 
     public int deleteAllExcavationMethods();
 
-
+    public Long countExcavationMethods();
 }

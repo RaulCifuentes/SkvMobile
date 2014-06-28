@@ -28,6 +28,7 @@ import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.pictures.activity.PictureDetailActivity;
 import com.metric.skava.pictures.adapter.PictureGridViewAdapter;
+import com.metric.skava.pictures.model.SkavaPicture;
 import com.metric.skava.pictures.util.SkavaPictureFilesUtils;
 
 /**
@@ -69,7 +70,7 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
         super.onCreate(savedInstanceState);
         this.mPictureFilesUtils = new SkavaPictureFilesUtils(getActivity());
         mAssessment = ((SkavaApplication) getActivity().getApplication()).getSkavaContext().getAssessment();
-        uriGenerated = new Uri[5];
+        uriGenerated = new Uri[9];
     }
 
     @Override
@@ -89,28 +90,35 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
-    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View v, int fictionalPosition, long id) {
 
         //Check its not an empty picture
-        if (mAssessment.getPictureUriList().isEmpty()) {
+        if (mAssessment.getPicturesList().isEmpty()) {
             // do nothing
         } else {
-            if (mAssessment.getPictureUriList().get(position) == null) {
-                //do nothing
-            } else {
-                final Intent i = new Intent(getActivity(), PictureDetailActivity.class);
-                i.putExtra(PictureDetailActivity.ARG_SELECTED_IMAGE, (int) position);
-                if (SkavaUtils.hasJellyBean()) {
-                    // makeThumbnailScaleUpAnimation() looks kind of ugly here as the loading spinner may
-                    // show plus the thumbnail image in GridView is cropped. so using
-                    // makeScaleUpAnimation() instead.
-                    ActivityOptions options =
-                            ActivityOptions.makeScaleUpAnimation(v, 0, 0, v.getWidth(), v.getHeight());
-                    getActivity().startActivity(i, options.toBundle());
-                } else {
-                    startActivity(i);
+            int resolvedPosition = fictionalPosition * 2;
+            //check first the edited version of picture
+            resolvedPosition+=1;
+            if (mAssessment.getPicturesList().get(resolvedPosition) == null) {
+                //mm.. so it has no edited, perhaps it has original
+                resolvedPosition-=1;
+                if (mAssessment.getPicturesList().get(resolvedPosition) == null){
+                    return;
                 }
             }
+            final Intent i = new Intent(getActivity(), PictureDetailActivity.class);
+            i.putExtra(PictureDetailActivity.ARG_SELECTED_IMAGE, (int) resolvedPosition);
+            if (SkavaUtils.hasJellyBean()) {
+                // makeThumbnailScaleUpAnimation() looks kind of ugly here as the loading spinner may
+                // show plus the thumbnail image in GridView is cropped. so using
+                // makeScaleUpAnimation() instead.
+                ActivityOptions options =
+                        ActivityOptions.makeScaleUpAnimation(v, 0, 0, v.getWidth(), v.getHeight());
+                getActivity().startActivity(i, options.toBundle());
+            } else {
+                startActivity(i);
+            }
+
         }
 
     }
@@ -140,7 +148,7 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
                 uriGenerated[0] = targetUri;
             } catch (SkavaSystemException e) {
                 Log.e(SkavaConstants.LOG, e.getMessage());
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
             photoIntent.putExtra(MediaStore.EXTRA_OUTPUT, targetUri);
             startActivityForResult(photoIntent, TAKE_PHOTO_FACE_REQUEST_CODE);
@@ -153,10 +161,10 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
             Uri targetUri = null;
             try {
                 targetUri = mPictureFilesUtils.getOutputUri(suggestedName);
-                uriGenerated[1] = targetUri;
+                uriGenerated[2] = targetUri;
             } catch (SkavaSystemException e) {
                 Log.e(SkavaConstants.LOG, e.getMessage());
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
             photoIntent.putExtra(MediaStore.EXTRA_OUTPUT, targetUri);
             startActivityForResult(photoIntent, TAKE_PHOTO_LEFT_REQUEST_CODE);
@@ -169,10 +177,10 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
             Uri targetUri = null;
             try {
                 targetUri = mPictureFilesUtils.getOutputUri(suggestedName);
-                uriGenerated[2] = targetUri;
+                uriGenerated[4] = targetUri;
             } catch (SkavaSystemException e) {
                 Log.e(SkavaConstants.LOG, e.getMessage());
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
             photoIntent.putExtra(MediaStore.EXTRA_OUTPUT, targetUri);
             startActivityForResult(photoIntent, TAKE_PHOTO_RIGHT_REQUEST_CODE);
@@ -185,10 +193,10 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
             Uri targetUri = null;
             try {
                 targetUri = mPictureFilesUtils.getOutputUri(suggestedName);
-                uriGenerated[3] = targetUri;
+                uriGenerated[6] = targetUri;
             } catch (SkavaSystemException e) {
                 Log.e(SkavaConstants.LOG, e.getMessage());
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
             photoIntent.putExtra(MediaStore.EXTRA_OUTPUT, targetUri);
             startActivityForResult(photoIntent, TAKE_PHOTO_ROOF_REQUEST_CODE);
@@ -201,10 +209,10 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
             Uri targetUri = null;
             try {
                 targetUri = mPictureFilesUtils.getOutputUri(suggestedName);
-                uriGenerated[4] = targetUri;
+                uriGenerated[8] = targetUri;
             } catch (SkavaSystemException e) {
                 Log.e(SkavaConstants.LOG, e.getMessage());
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
             photoIntent.putExtra(MediaStore.EXTRA_OUTPUT, targetUri);
             startActivityForResult(photoIntent, TAKE_PHOTO_EXTRA_REQUEST_CODE);
@@ -229,7 +237,8 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
                     } else {
                         pictureURI = uriGenerated[0];
                     }
-                    mAssessment.getPictureUriList().set(0, pictureURI);
+                    SkavaPicture picture = new SkavaPicture(SkavaPicture.PictureTag.FACE, pictureURI, true);
+                    mAssessment.getPicturesList().set(0, picture);
                     mAdapter.notifyDataSetChanged();
                     break;
 
@@ -240,9 +249,10 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
                             Bitmap thumbnail = data.getParcelableExtra("data");
                         }
                     } else {
-                        pictureURI = uriGenerated[1];
+                        pictureURI = uriGenerated[2];
                     }
-                    mAssessment.getPictureUriList().set(1, pictureURI);
+                    picture = new SkavaPicture(SkavaPicture.PictureTag.LEFT, pictureURI, true);
+                    mAssessment.getPicturesList().set(2, picture);
                     mAdapter.notifyDataSetChanged();
                     break;
 
@@ -253,9 +263,10 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
                             Bitmap thumbnail = data.getParcelableExtra("data");
                         }
                     } else {
-                        pictureURI = uriGenerated[2];
+                        pictureURI = uriGenerated[4];
                     }
-                    mAssessment.getPictureUriList().set(2, pictureURI);
+                    picture = new SkavaPicture(SkavaPicture.PictureTag.RIGHT, pictureURI, true);
+                    mAssessment.getPicturesList().set(4, picture);
                     mAdapter.notifyDataSetChanged();
                     break;
 
@@ -266,9 +277,10 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
                             Bitmap thumbnail = data.getParcelableExtra("data");
                         }
                     } else {
-                        pictureURI = uriGenerated[3];
+                        pictureURI = uriGenerated[6];
                     }
-                    mAssessment.getPictureUriList().set(3, pictureURI);
+                    picture = new SkavaPicture(SkavaPicture.PictureTag.ROOF, pictureURI, true);
+                    mAssessment.getPicturesList().set(6, picture);
                     mAdapter.notifyDataSetChanged();
                     break;
 
@@ -279,10 +291,11 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
                             Bitmap thumbnail = data.getParcelableExtra("data");
                         }
                     } else {
-                        pictureURI = uriGenerated[4];
+                        pictureURI = uriGenerated[8];
                     }
-                    int currentNumberOfPictures = mAssessment.getPictureUriList().size();
-                    mAssessment.getPictureUriList().add(currentNumberOfPictures, pictureURI);
+                    int currentNumberOfPictures = mAssessment.getPicturesList().size();
+                    picture = new SkavaPicture(SkavaPicture.PictureTag.EXTRA, pictureURI, true);
+                    mAssessment.getPicturesList().add(currentNumberOfPictures, picture);
                     mAdapter.notifyDataSetChanged();
                     break;
             }

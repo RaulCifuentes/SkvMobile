@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Pictures Uploader</string>
+    <string name="action_unlink">Unlink from Dropbox</string>
+    <string name="uploader_service_permission_label">Triggers an uploading process</string>
+    <string name="uploader_service_permission_description">Using this service allow the Skava App to upload pictures to Dropbox</string>
+
+</resources>

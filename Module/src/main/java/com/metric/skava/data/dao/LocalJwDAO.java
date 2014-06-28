@@ -22,4 +22,5 @@ public interface LocalJwDAO {
 
     public int deleteAllJws();
 
+    public Long countJw();
 }

@@ -39,8 +39,16 @@ public abstract class SqlLiteBaseDAO {
         return db;
     }
 
+    public Long countRecords(String tableName){
+        return Long.valueOf(getAllRecords(tableName).getCount());
+    }
+
     protected Cursor getAllRecords(String tableName) {
         return getRecordsFilteredByColumn(tableName, null, null, null);
+    }
+
+    protected Cursor getAllRecords(String tableName, String orderBy) {
+        return getRecordsFilteredByColumn(tableName, null, null, orderBy);
     }
 
     protected Cursor getRecordsFilteredByColumn(String tableName, String columnName, Object columnValue, String orderBy) {

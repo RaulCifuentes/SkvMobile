@@ -2,12 +2,13 @@ package com.metric.skava.data.dao.impl.dropbox;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
-import com.dropbox.sync.android.DbxDatastoreStatus;
-import com.dropbox.sync.android.DbxException;
+import com.bugsense.trace.BugSenseHandler;
 import com.dropbox.sync.android.DbxRecord;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.Client;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.data.dao.RemoteClientDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.datastore.tables.ClientDropboxTable;
@@ -33,10 +34,10 @@ public class ClientDAODropboxImpl extends DropBoxBaseDAO implements RemoteClient
     @Override
     public List<Client> getAllClients() throws DAOException {
         try {
-            DbxDatastoreStatus status = getDatastore().getSyncStatus();
-            if (status.hasIncoming || status.isDownloading) {
-                getDatastore().sync();
-            }
+//            DbxDatastoreStatus status = getDatastore().getSyncStatus();
+//            if (status.hasIncoming || status.isDownloading) {
+//                getDatastore().sync();
+//            }
             List<Client> listProjects = new ArrayList<Client>();
             List<DbxRecord> recordList = mClientsTable.findAll();
             for (DbxRecord currentDbxRecord : recordList) {
@@ -51,7 +52,10 @@ public class ClientDAODropboxImpl extends DropBoxBaseDAO implements RemoteClient
                 listProjects.add(newClient);
             }
             return listProjects;
-        } catch (DbxException e) {
+//        } catch (DbxException e) {
+        } catch (Exception e) {
+            BugSenseHandler.sendException(e);
+            Log.e(SkavaConstants.LOG, e.getMessage());
             throw new DAOException(e);
         }
     }

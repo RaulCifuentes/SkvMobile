@@ -30,5 +30,7 @@ public interface LocalTunnelDAO {
 
     public int deleteAllTunnels() throws DAOException;
 
+    public Long countTunnels();
+
 }
 

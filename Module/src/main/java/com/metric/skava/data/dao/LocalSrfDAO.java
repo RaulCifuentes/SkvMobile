@@ -23,4 +23,5 @@ public interface LocalSrfDAO {
 
     public int deleteAllSrfs();
 
+    public Long countSRF();
 }

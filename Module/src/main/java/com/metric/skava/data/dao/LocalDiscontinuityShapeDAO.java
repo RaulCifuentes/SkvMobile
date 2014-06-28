@@ -20,5 +20,6 @@ public interface LocalDiscontinuityShapeDAO {
 
     public int deleteAllDiscontinuityShapes();
 
+    public Long countDiscontinuityShapes();
 }
 

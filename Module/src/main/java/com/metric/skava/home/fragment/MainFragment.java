@@ -2,7 +2,6 @@ package com.metric.skava.home.fragment;
 
 import android.app.ActionBar;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.metric.skava.R;
+import com.metric.skava.app.fragment.SkavaFragment;
 
-public class MainFragment extends Fragment {
+public class MainFragment extends SkavaFragment {
 
     private ActionBar mActionBar;
     private View mSyncingStatusView;

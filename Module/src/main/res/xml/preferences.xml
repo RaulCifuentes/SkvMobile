@@ -3,16 +3,16 @@
 
     <PreferenceCategory android:title="Skava Preferences">
 
-    <CheckBoxPreference android:key="UPDATE_USER_DATA_AUTO"
-        android:title="@string/settings_importUserDataOnStart_title"
-        android:summary="@string/settings_importUserDataOnStart_desc"
-        android:defaultValue="true"/>
+    <!--<CheckBoxPreference android:key="UPDATE_USER_DATA_AUTO"-->
+        <!--android:title="@string/settings_importUserDataOnStart_title"-->
+        <!--android:summary="@string/settings_importUserDataOnStart_desc"-->
+        <!--android:defaultValue="true"/>-->
 
-    <CheckBoxPreference android:key="UPDATE_APP_DATA_AUTO"
-        android:title="@string/settings_importAppDataOnStart_title"
-        android:summary="@string/settings_importAppDataOnStart_desc"
-        android:defaultValue="false"
-        />
+    <!--<CheckBoxPreference android:key="UPDATE_APP_DATA_AUTO"-->
+        <!--android:title="@string/settings_importAppDataOnStart_title"-->
+        <!--android:summary="@string/settings_importAppDataOnStart_desc"-->
+        <!--android:defaultValue="false"-->
+        <!--/>-->
 
     <ListPreference
         android:key="TARGET_ENVIRONMENT"
