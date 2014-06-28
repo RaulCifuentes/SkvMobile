@@ -20,5 +20,6 @@ public interface LocalDiscontinuityTypeDAO {
 
     public int deleteAllDiscontinuityTypes();
 
+    public Long countDiscontinuityTypes();
 }
 

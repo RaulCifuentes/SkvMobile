@@ -8,6 +8,7 @@ import com.dropbox.sync.android.DbxTable;
  */
 public class ParametersDropboxTable extends DropboxBaseTable implements DropboxTable {
 
+    public static final String PARAMETERS_DROPBOX_TABLE = "Parameters";
 
     public ParametersDropboxTable(DbxDatastore datastore) {
         super(datastore);
@@ -15,7 +16,7 @@ public class ParametersDropboxTable extends DropboxBaseTable implements DropboxT
 
     @Override
     public DbxTable getBaseDropboxTable() {
-        return mDatastore.getTable("Parameters");
+        return mDatastore.getTable(PARAMETERS_DROPBOX_TABLE);
     }
 
     @Override

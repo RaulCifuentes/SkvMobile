@@ -28,5 +28,6 @@ public interface LocalTunnelFaceDAO {
 
     public int deleteAllTunnelFaces() throws DAOException;
 
+    public Long countFaces();
 }
 

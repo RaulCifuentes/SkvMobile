@@ -25,5 +25,5 @@ public interface LocalSupportRequirementDAO {
 
     public int deleteAllSupportRequirements();
 
-
+    public Long countRequirements();
 }

@@ -1,13 +1,16 @@
 package com.metric.skava.data.dao.impl.dropbox;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.dropbox.sync.android.DbxDatastoreStatus;
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxRecord;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.ExcavationProject;
 import com.metric.skava.app.model.Tunnel;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.data.dao.LocalExcavationFactorDAO;
 import com.metric.skava.data.dao.LocalExcavationProjectDAO;
 import com.metric.skava.data.dao.RemoteTunnelDAO;
@@ -41,10 +44,10 @@ public class TunnelDAODropboxImpl extends DropBoxBaseDAO implements RemoteTunnel
     @Override
     public List<Tunnel> getAllTunnels() throws DAOException {
         try {
-            DbxDatastoreStatus status = getDatastore().getSyncStatus();
-            if (status.hasIncoming || status.isDownloading) {
-                getDatastore().sync();
-            }
+//            DbxDatastoreStatus status = getDatastore().getSyncStatus();
+//            if (status.hasIncoming || status.isDownloading) {
+//                getDatastore().sync();
+//            }
             List<Tunnel> listTunnels = new ArrayList<Tunnel>();
             List<DbxRecord> tunnelList = mTunnelsTable.findAll();
             for (DbxRecord currentTunnelRecord : tunnelList) {
@@ -60,7 +63,10 @@ public class TunnelDAODropboxImpl extends DropBoxBaseDAO implements RemoteTunnel
                 listTunnels.add(newTunnel);
             }
             return listTunnels;
-        } catch (DbxException e) {
+//        } catch (DbxException e) {
+        } catch (Exception e) {
+            BugSenseHandler.sendException(e);
+            Log.e(SkavaConstants.LOG, e.getMessage());
             throw new DAOException(e);
         }
     }
@@ -86,6 +92,8 @@ public class TunnelDAODropboxImpl extends DropBoxBaseDAO implements RemoteTunnel
             Tunnel tunnel = new Tunnel(project, codigo, nombre, excavationFactors);
             return tunnel;
         } catch (DbxException e) {
+            BugSenseHandler.sendException(e);
+            Log.e(SkavaConstants.LOG, e.getMessage());
             throw new DAOException(e);
         }
     }

@@ -45,9 +45,9 @@ public class DiscontinuityFamilyDAOsqlLiteImpl extends SqlLiteBasePersistentEnti
     @Override
     protected List<DiscontinuityFamily> assemblePersistentEntities(Cursor cursor) throws DAOException {
         //Discontinuity System
-        int dfItems = 7;
-        List<DiscontinuityFamily> list = new ArrayList<DiscontinuityFamily>(dfItems);
-        for(int i=0; i < dfItems; i++){
+        List<DiscontinuityFamily> list = new ArrayList<DiscontinuityFamily>();
+        //add as many families as the cursor retrieve, the others will remain null
+        for(int i=0; i < cursor.getCount(); i++){
             DiscontinuityFamily df = new DiscontinuityFamily();
             list.add(df);
         }
@@ -131,6 +131,13 @@ public class DiscontinuityFamilyDAOsqlLiteImpl extends SqlLiteBasePersistentEnti
             }
 
             list.set(newDiscontinuityFamily.getNumber(), newDiscontinuityFamily);
+
+            //complete the set of 7 discontinuites, with empty ones if there no definition
+            for(int j=list.size(); j < 7; j++){
+                DiscontinuityFamily df = new DiscontinuityFamily();
+                df.setNumber(j);
+                list.add(df);
+            }
         }
         return list;
     }
@@ -139,7 +146,7 @@ public class DiscontinuityFamilyDAOsqlLiteImpl extends SqlLiteBasePersistentEnti
     @Override
     public List<DiscontinuityFamily> getDiscontinuityFamilies(String assessmentCode) throws DAOException {
         List<DiscontinuityFamily> discontinuitySystem;
-        Cursor cursor = getRecordsFilteredByColumn(DiscontinuityFamilyTable.DISCONTINUITY_FAMILY_DATABASE_TABLE, DiscontinuityFamilyTable.ASSESSMENT_CODE_COLUMN, assessmentCode, null);
+        Cursor cursor = getRecordsFilteredByColumn(DiscontinuityFamilyTable.DISCONTINUITY_FAMILY_DATABASE_TABLE, DiscontinuityFamilyTable.ASSESSMENT_CODE_COLUMN, assessmentCode, DiscontinuityFamilyTable.NUMBER_COLUMN);
         discontinuitySystem = assemblePersistentEntities(cursor);
         return discontinuitySystem;
 

@@ -70,5 +70,10 @@ public class DiscontinuityWaterDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Disco
         return deleteAllPersistentEntities(DiscontinuityWaterTable.WATER_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countDiscontinuityWaters() {
+        return countRecords(DiscontinuityWaterTable.WATER_DATABASE_TABLE);
+    }
+
 
 }

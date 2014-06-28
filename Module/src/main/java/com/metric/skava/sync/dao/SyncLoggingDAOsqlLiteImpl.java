@@ -10,6 +10,7 @@ import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.SqlLiteBasePersistentEntityDAO;
 import com.metric.skava.data.dao.impl.sqllite.table.SyncLoggingTable;
 import com.metric.skava.sync.model.SyncLogEntry;
+import com.metric.skava.sync.model.SyncTask;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,9 +36,9 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
             String statusAsString = CursorUtils.getString(SyncLoggingTable.STATUS_COLUMN, cursor);
             Long numRecords = CursorUtils.getLong(SyncLoggingTable.NUMRECORDS_COLUMN, cursor);
 
-            SyncLogEntry.Domain domain = SyncLogEntry.Domain.valueOf(domainAsString);
-            SyncLogEntry.Status status = SyncLogEntry.Status.valueOf(statusAsString);
-            SyncLogEntry.Source source = SyncLogEntry.Source.valueOf(sourceAsString);
+            SyncTask.Domain domain = SyncTask.Domain.valueOf(domainAsString);
+            SyncTask.Status status = SyncTask.Status.valueOf(statusAsString);
+            SyncTask.Source source = SyncTask.Source.valueOf(sourceAsString);
 
             Date date = DateDataFormat.getDateFromFormattedLong(dateAsLong);
             SyncLogEntry newInstance = new SyncLogEntry(date, domain, source , status, numRecords);
@@ -48,7 +49,7 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
 
 
     @Override
-    public SyncLogEntry getLastSyncByState(SyncLogEntry.Domain domain, SyncLogEntry.Status state) throws DAOException {
+    public SyncLogEntry getLastSyncByState(SyncTask.Domain domain, SyncTask.Status state) throws DAOException {
         String[] columns = new String[]{SyncLoggingTable.DOMAIN_COLUMN, SyncLoggingTable.STATUS_COLUMN};
         String[] values =  new String[]{domain.name(), state.name()};
         Cursor cursor = getRecordsFilteredByColumns(SyncLoggingTable.SYNC_LOGGING_TABLE, columns, values, SyncLoggingTable.DATE_COLUMN);

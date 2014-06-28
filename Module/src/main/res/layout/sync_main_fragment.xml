@@ -5,6 +5,35 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
+    <!-- Login progress -->
+    <LinearLayout
+        android:id="@+id/syncing_status"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/syncing_status_progress_circle"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/syncing_status_message"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/syncing_progress" />
+    </LinearLayout>
+
+
     <GridLayout
         android:id="@+id/grid_top"
         android:orientation="horizontal"

@@ -20,5 +20,5 @@ public interface LocalShotcreteTypeDAO {
 
     public int deleteAllShotcreteTypes();
 
-
+    public Long countShotcreteTypes();
 }

@@ -74,4 +74,9 @@ public class GroupDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Group>
     public int deleteAllGroups() {
         return deleteAllPersistentEntities(MappedIndexGroupsTable.GROUPS_DATABASE_TABLE);
     }
+
+    @Override
+    public Long countGroups() {
+        return countRecords(MappedIndexGroupsTable.GROUPS_DATABASE_TABLE);
+    }
 }

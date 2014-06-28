@@ -175,5 +175,10 @@ import java.util.List;
          return deleteAllPersistentEntities(TunnelTable.TUNNEL_DATABASE_TABLE);
      }
 
+    @Override
+    public Long countTunnels() {
+        return countRecords(TunnelTable.TUNNEL_DATABASE_TABLE);
+    }
 
- }
+
+}

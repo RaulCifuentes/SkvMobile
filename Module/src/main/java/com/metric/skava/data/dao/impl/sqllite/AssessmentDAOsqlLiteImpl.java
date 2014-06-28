@@ -25,6 +25,7 @@ import com.metric.skava.data.dao.impl.sqllite.table.AssessmentTable;
 import com.metric.skava.data.dao.impl.sqllite.table.ExternalResourcesTable;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
 import com.metric.skava.instructions.model.SupportRecommendation;
+import com.metric.skava.pictures.model.SkavaPicture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +56,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
     }
 
     @Override
-    public List<Assessment> getAllAssessments() throws DAOException {
-        Cursor cursor = getAllRecords(AssessmentTable.ASSESSMENT_DATABASE_TABLE);
+    public List<Assessment> getAllAssessments(String orderBy) throws DAOException {
+        Cursor cursor = getAllRecords(AssessmentTable.ASSESSMENT_DATABASE_TABLE, orderBy);
         List<Assessment> list = assemblePersistentEntities(cursor);
         cursor.close();
         return list;
@@ -132,40 +133,66 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             SupportRecommendation recomendation = mLocalSupportRecommendationDAO.getSupportRecommendation(assessmentCode);
             reconstructedAssessment.setRecomendation(recomendation);
 
-            List<Uri> resourceList = getResourcesByAssessmentCode(assessmentCode);
-            reconstructedAssessment.setPictureUriList(resourceList);
+            List<SkavaPicture> resourceList = getPicturesByAssessmentCode(assessmentCode);
+            reconstructedAssessment.setPicturesList(resourceList);
 
             list.add(reconstructedAssessment);
         }
         return list;
     }
 
-    private List<Uri> getResourcesByAssessmentCode(String code) {
+    private List<SkavaPicture> getPicturesByAssessmentCode(String code) {
         Cursor cursor = getRecordsFilteredByColumn(ExternalResourcesTable.EXTERNAL_RESOURCES_DATABASE_TABLE, ExternalResourcesTable.ASSESSMENT_CODE_COLUMN, code, ExternalResourcesTable.RESOURCE_ORDINAL);
-        List<Uri> list = assembleResourceList(cursor);
+        List<SkavaPicture> list = assemblePicturesList(cursor);
         return list;
     }
 
 
-    private List<Uri> assembleResourceList(Cursor cursor) {
-        List<Uri> result = new ArrayList<Uri>(5);
+    private List<SkavaPicture> assemblePicturesList(Cursor cursor) {
+        List<SkavaPicture> result = new ArrayList<SkavaPicture>(5);
+        result.add(null); //0
         result.add(null);
+        result.add(null); //2
         result.add(null);
+        result.add(null); //4
         result.add(null);
+        result.add(null); //6
         result.add(null);
         while (cursor.moveToNext()) {
-            Integer resourceIndex = CursorUtils.getInt(ExternalResourcesTable.RESOURCE_ORDINAL, cursor);
             String uriString = CursorUtils.getString(ExternalResourcesTable.RESOURCE_URL_COLUMN, cursor);
-            Uri uri = Uri.parse(uriString);
-            if (resourceIndex < 3) {
-                result.set(resourceIndex, uri);
+            String pictureTagAsString = CursorUtils.getString(ExternalResourcesTable.RESOURCE_TAG_COLUMN, cursor);
+            SkavaPicture.PictureTag pictureTag = SkavaPicture.PictureTag.valueOf(pictureTagAsString);
+            Integer index = CursorUtils.getInt(ExternalResourcesTable.RESOURCE_ORDINAL, cursor);
+            Uri pictureLocation = Uri.parse(uriString);
+            SkavaPicture picture = new SkavaPicture(pictureTag, pictureLocation, index==0);
+            int resourceIndex = 0;
+            switch (pictureTag){
+                case FACE:
+                    resourceIndex = 0;
+                    break;
+                case ROOF:
+                    resourceIndex = 2;
+                    break;
+                case LEFT:
+                    resourceIndex = 4;
+                    break;
+                case RIGHT:
+                    resourceIndex = 6;
+                    break;
+                case EXTRA:
+                    resourceIndex = 8;
+                    break;
+            }
+            resourceIndex += index;
+            if (resourceIndex < 8) {
+                result.set(resourceIndex, picture);
             } else {
-                result.add(resourceIndex, uri);
+//                result.add(resourceIndex, picture);
+                result.add(picture);
             }
         }
         return result;
     }
-
 
 
     @Override
@@ -291,39 +318,36 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
 
         // Save the related Q Calculation
         Q_Calculation qCalculation = newSkavaEntity.getQCalculation();
-//        if (qCalculation.isComplete()){
-            mLocalQCalculationDAO.saveQCalculation(newSkavaEntity.getCode(), qCalculation);
-//        }
+        mLocalQCalculationDAO.saveQCalculation(newSkavaEntity.getCode(), qCalculation);
 
         // Save the related RMR Calculation
         RMR_Calculation rmrCalculation = newSkavaEntity.getRmrCalculation();
-//        if (rmrCalculation.isComplete()){
-            mLocalRMRCalculationDAO.saveRMRCalculation(newSkavaEntity.getCode(), rmrCalculation);
-//        }
+        mLocalRMRCalculationDAO.saveRMRCalculation(newSkavaEntity.getCode(), rmrCalculation);
 
         //Save the related recommendation
         SupportRecommendation recommendation = newSkavaEntity.getRecomendation();
         mLocalSupportRecommendationDAO.saveSupportRecommendation(newSkavaEntity.getCode(), recommendation);
 
-
         //Save the related pictures urls
-        List<Uri> pictureList = newSkavaEntity.getPictureUriList();
+        List<SkavaPicture> pictureList = newSkavaEntity.getPicturesList();
         for (Integer index = 0; index < pictureList.size(); index++) {
-            Uri uri = pictureList.get(index);
-            if (null == uri) {
+            SkavaPicture currPicture = pictureList.get(index);
+            if (null == currPicture || currPicture.getPictureLocation() == null) {
                 continue;
             }
             String[] resourcesNames = new String[]{
                     ExternalResourcesTable.ASSESSMENT_CODE_COLUMN,
                     ExternalResourcesTable.RESOURCE_TYPE_COLUMN,
+                    ExternalResourcesTable.RESOURCE_TAG_COLUMN,
                     ExternalResourcesTable.RESOURCE_ORDINAL,
                     ExternalResourcesTable.RESOURCE_URL_COLUMN
             };
             Object[] resourcesValues = new Object[]{
                     newSkavaEntity.getCode(),
-                    "PICTURE",
-                    index,
-                    uri.getPath()
+                    ExternalResourcesTable.PICTURE_RESOURCE_TYPE,
+                    currPicture.getPictureTag(),
+                    currPicture.isOriginal()? 0:1,
+                    currPicture.getPictureLocation().getPath()
             };
             saveRecord(ExternalResourcesTable.EXTERNAL_RESOURCES_DATABASE_TABLE, resourcesNames, resourcesValues);
         }

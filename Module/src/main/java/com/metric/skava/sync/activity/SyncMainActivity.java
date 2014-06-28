@@ -7,11 +7,10 @@ import com.metric.skava.R;
 import com.metric.skava.app.activity.SkavaFragmentActivity;
 import com.metric.skava.sync.fragment.SyncMainFragment;
 
-public class SyncMainActivity extends SkavaFragmentActivity {
+public class SyncMainActivity extends SkavaFragmentActivity  {
 
     public String FRAGMENT_TAG = "SYNC_FRAGMENT_TAG";
-
-    private SyncMainFragment syncFragment;
+    private SyncMainFragment mMainContainedFragment;
 
 
     @Override
@@ -28,7 +27,8 @@ public class SyncMainActivity extends SkavaFragmentActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        syncFragment = (SyncMainFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+        mMainContainedFragment = (SyncMainFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+
     }
 
     @Override
@@ -38,5 +38,25 @@ public class SyncMainActivity extends SkavaFragmentActivity {
         return true;
     }
 
+
+    public void onPreExecuteImportAppData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
+    }
+
+    public void onPreExecuteImportUserData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
+    }
+
+    public void onPostExecuteImportAppData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    }
+
+    public void onPostExecuteImportUserData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    }
+
+    public void showProgressBar(final boolean show, String text, boolean longTime) {
+
+    }
 
 }

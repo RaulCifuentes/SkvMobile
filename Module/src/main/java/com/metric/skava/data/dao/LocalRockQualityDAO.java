@@ -20,5 +20,5 @@ public interface LocalRockQualityDAO {
 
     public int deleteAllRockQualities();
 
-
+    public Long countRockQualities();
 }

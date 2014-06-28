@@ -327,7 +327,7 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
                 supportRecomendation = provider.recomend(getCurrentAssessment());
             } catch (DAOException e) {
                 Log.e(SkavaConstants.LOG, e.getMessage());
-                Toast.makeText(getSkavaActivity(), e.getMessage(), Toast.LENGTH_LONG);
+                Toast.makeText(getSkavaActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
             getCurrentAssessment().setRecomendation(supportRecomendation);
         }

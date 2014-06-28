@@ -23,5 +23,5 @@ public interface LocalStrengthDAO {
 
     public int deleteAllStrengths();
 
-
+    public Long countStrengths();
 }

@@ -72,4 +72,9 @@ public class ExcavationSectionDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Excava
     public int deleteAllExcavationSections() {
         return deleteAllPersistentEntities(ExcavationSectionTable.SECTION_DATABASE_TABLE);
     }
+
+    @Override
+    public Long countExcavationSections() {
+        return countRecords(ExcavationSectionTable.SECTION_DATABASE_TABLE);
+    }
 }

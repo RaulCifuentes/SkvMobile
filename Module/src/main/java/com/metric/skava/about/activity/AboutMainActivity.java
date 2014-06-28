@@ -24,9 +24,9 @@ public class AboutMainActivity extends SkavaFragmentActivity {
     }
 
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.about_main, menu);
         return true;
@@ -47,6 +47,22 @@ public class AboutMainActivity extends SkavaFragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void onPreExecuteImportAppData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
+    }
 
+    public void onPreExecuteImportUserData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
+    }
 
+    public void onPostExecuteImportAppData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    }
+
+    public void onPostExecuteImportUserData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    }
+    public void showProgressBar(final boolean show, String text, boolean longTime) {
+
+    }
 }

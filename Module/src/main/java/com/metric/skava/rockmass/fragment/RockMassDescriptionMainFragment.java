@@ -59,7 +59,7 @@ public class RockMassDescriptionMainFragment extends SkavaFragment implements Ad
             fractureTypeList = daoFactory.getLocalFractureTypeDAO().getAllFractureTypes();
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
         fractureTypeList.add(new FractureType("HINT", "Select a type ..."));
         fractureTypeAdapter = new SkavaEntityAdapter<FractureType>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, fractureTypeList);

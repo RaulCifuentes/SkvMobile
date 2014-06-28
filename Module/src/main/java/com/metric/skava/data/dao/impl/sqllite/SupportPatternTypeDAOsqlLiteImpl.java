@@ -85,4 +85,9 @@ public class SupportPatternTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
         return deleteAllPersistentEntities(SupportPatternTypeTable.PATTERN_TYPE_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countSupportPatternTypes() {
+        return countRecords(SupportPatternTypeTable.PATTERN_TYPE_DATABASE_TABLE);
+    }
+
 }

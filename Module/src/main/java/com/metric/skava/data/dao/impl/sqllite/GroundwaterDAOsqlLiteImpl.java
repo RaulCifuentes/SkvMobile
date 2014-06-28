@@ -145,5 +145,10 @@ public class GroundwaterDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<
         return deleteAllPersistentEntities(GroundwaterTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countGroudwaters() {
+        return countRecords(GroundwaterTable.MAPPED_INDEX_DATABASE_TABLE);
+    }
+
 
 }

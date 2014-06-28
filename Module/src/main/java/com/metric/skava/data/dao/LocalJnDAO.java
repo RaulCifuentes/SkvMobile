@@ -23,4 +23,5 @@ public interface LocalJnDAO {
 
     public int deleteAllJns();
 
+    public Long countJn();
 }

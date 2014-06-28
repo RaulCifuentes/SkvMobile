@@ -23,4 +23,5 @@ public interface LocalJaDAO {
 
     public int deleteAllJas();
 
+    public Long countJa();
 }

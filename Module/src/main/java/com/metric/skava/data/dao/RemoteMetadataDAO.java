@@ -7,10 +7,9 @@ import com.metric.skava.data.dao.exception.DAOException;
  */
 public interface RemoteMetadataDAO {
 
+    public Long getAllAppDataRecordsCount() throws DAOException;
 
-    public Long getAppDataRecordsCount() throws DAOException;
+    public Long getAllUserDataRecordsCount() throws DAOException;
 
-    public Long getUserDataRecordsCount() throws DAOException;
-
-
+    public Long getRecordsCount(String[] dropboxTables) throws DAOException;
 }

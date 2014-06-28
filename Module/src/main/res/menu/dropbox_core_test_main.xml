@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.metric.skava.test.activity.DropboxCoreTestMainActivity" >
+    
+    <item android:id="@+id/action_test_dropbox_core"
+        android:title="@string/test_dropbox_core"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+</menu>

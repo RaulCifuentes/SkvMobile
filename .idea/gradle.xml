@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/Module" />
+            <option value="$PROJECT_DIR$/UploaderModule" />
           </set>
         </option>
       </GradleProjectSettings>

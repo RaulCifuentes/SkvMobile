@@ -22,5 +22,5 @@ public interface LocalGroundwaterDAO {
 
     public int deleteAllGroundwaters();
 
-
+    public Long countGroudwaters();
 }

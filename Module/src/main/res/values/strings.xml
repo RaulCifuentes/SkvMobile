@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
     <string name="action_settings">Settings</string>
 
-    <!--<string name="barton_indicator">Barton</string>-->
-    <!--<string name="bienowski_indicator">Bieniaswki</string>-->
-    <!--<string name="desc_list_item_icon">Item Icon Description</string>-->
+    <!-- <string name="barton_indicator">Barton</string> -->
+    <!-- <string name="bienowski_indicator">Bieniaswki</string> -->
+    <!-- <string name="desc_list_item_icon">Item Icon Description</string> -->
 
     <string name="hello_blank_fragment">Hello Skava. </string>
     <string name="hello_world">hello_world</string>
-
-
     <string name="title_activity_full_screen_picture_main">FullScreenPictureMainActivity</string>
     <string name="title_activity_settings_main">SettingsMainActivity</string>
 
@@ -67,23 +64,15 @@
     <string name="non_geologist_alert">El usuario %1$s aparece como el geologo del assessment pero no tiene el rol GEOLOGIST asociado</string>
     <string name="null_parameter">Calling %1$s with parameter %2$s  null</string>
     <string name="label">Skava label</string>
-
     <string name="signup_title">Create new account</string>
     <string name="title_activity_test_authentication_main">TestAuthenticationMainActivity</string>
     <string name="title_activity_save_assessment">SaveAssessmentActivity</string>
-
-
     <string name="rockmass_desc_rock_sample_identification">Rock Sample Identification</string>
-
     <string name="syncing_user_data_progress">Syncing user data from internet</string>
     <string name="syncing_app_data_progress">Syncing app data from internet</string>
     <string name="syncing_progress">Syncing data from internet</string>
-
     <string name="connecting_dropbox">Linking to Dropbox</string>
-
-
-
-
-
+    <string name="title_activity_dropbox_core_test_main">DropboxCoreTestMainActivity</string>
+    <string name="test_dropbox_core">Test dropbox core</string>
 
 </resources>

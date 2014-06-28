@@ -72,5 +72,10 @@ public class DiscontinuityTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Discon
         return deleteAllPersistentEntities(DiscontinuityTypeTable.DISCONTINUITY_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countDiscontinuityTypes() {
+        return countRecords(DiscontinuityTypeTable.DISCONTINUITY_DATABASE_TABLE);
+    }
+
 
 }

@@ -20,6 +20,6 @@ public interface LocalExcavationSectionDAO {
 
     public int deleteAllExcavationSections();
 
-
+    public Long countExcavationSections();
 }
 

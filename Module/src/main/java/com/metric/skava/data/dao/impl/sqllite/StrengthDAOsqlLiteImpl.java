@@ -124,5 +124,10 @@ public class StrengthDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<Str
         return deleteAllPersistentEntities(StrengthTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countStrengths() {
+        return countRecords(StrengthTable.MAPPED_INDEX_DATABASE_TABLE);
+    }
+
 
 }

@@ -9,6 +9,7 @@ import com.metric.skava.data.dao.exception.DAOException;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -80,21 +81,73 @@ public abstract class DropboxBaseTable implements DropboxTable {
         return resultRecord;
     }
 
+    public DbxRecord findRecordByCandidateKey(String[] candidateKeyColumns, Object[] keyValues) throws DAOException {
+        DbxRecord resultRecord = null;
+        try {
+            DbxFields criteria = new DbxFields();
+            if (candidateKeyColumns.length == keyValues.length) {
+                for (int i = 0; i < candidateKeyColumns.length; i++) {
+                    if (keyValues[i] instanceof String){
+                        criteria.set(candidateKeyColumns[i], (String)keyValues[i]);
+                    }
+                    if (keyValues[i] instanceof Boolean){
+                        criteria.set(candidateKeyColumns[i], (Boolean)keyValues[i]);
+                    }
+                    if (keyValues[i] instanceof Long){
+                        criteria.set(candidateKeyColumns[i], (Long)keyValues[i]);
+                    }
+                    if (keyValues[i] instanceof Double){
+                        criteria.set(candidateKeyColumns[i], (Double)keyValues[i]);
+                    }
+                    if (keyValues[i] instanceof Date){
+                        criteria.set(candidateKeyColumns[i], (Date)keyValues[i]);
+                    }
+                }
 
-    public List<DbxRecord> findRecordsByCriteria(String[] names, String[] values) throws DAOException {
+            DbxTable.QueryResult results = getBaseDropboxTable().query(criteria);
+            if (results.hasResults()) {
+                if (results.count() == 1) {
+                    resultRecord = results.iterator().next();
+                } else {
+                    throw new DAOException("Multiple record instances for same code: " + candidateKeyColumns + "with values " + keyValues);
+                }
+            }
+            }
+        } catch (DbxException e) {
+            throw new DAOException(e);
+        }
+        return resultRecord;
+    }
+
+
+    public List<DbxRecord> findRecordsByCriteria(String[] names, Object[] values) throws DAOException {
         List<DbxRecord> resultSet;
         try {
             DbxFields criteria = new DbxFields();
             if (names.length == values.length) {
                 for (int i = 0; i < names.length; i++) {
-                    criteria.set(names[i], values[i]);
+                    if (values[i] instanceof String){
+                        criteria.set(names[i], (String)values[i]);
+                    }
+                    if (values[i] instanceof Boolean){
+                        criteria.set(names[i], (Boolean)values[i]);
+                    }
+                    if (values[i] instanceof Long){
+                        criteria.set(names[i], (Long)values[i]);
+                    }
+                    if (values[i] instanceof Double){
+                        criteria.set(names[i], (Double)values[i]);
+                    }
+                    if (values[i] instanceof Date){
+                        criteria.set(names[i], (Date)values[i]);
+                    }
                 }
                 resultSet = getBaseDropboxTable().query(criteria).asList();
                 if (shouldSortByOrdinalColumn()) {
                     Collections.sort(resultSet, new Comparator<DbxRecord>() {
                         @Override
                         public int compare(DbxRecord lhs, DbxRecord rhs) {
-                            return ((Long)lhs.getLong("ParameterOrder")).compareTo((Long)rhs.getLong("ParameterOrder"));
+                            return ((Long) lhs.getLong("ParameterOrder")).compareTo((Long) rhs.getLong("ParameterOrder"));
                         }
                     });
                 }
@@ -125,4 +178,5 @@ public abstract class DropboxBaseTable implements DropboxTable {
     public void delete(DbxRecord dbxRecord) {
         dbxRecord.deleteRecord();
     }
+
 }

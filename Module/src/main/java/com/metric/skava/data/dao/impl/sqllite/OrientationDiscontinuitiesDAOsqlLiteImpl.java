@@ -142,5 +142,10 @@ public class OrientationDiscontinuitiesDAOsqlLiteImpl extends SqlLiteBaseIdentif
         return deleteAllPersistentEntities(OrientationTable.MAPPED_INDEX_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countOrientation() {
+        return countRecords(OrientationTable.MAPPED_INDEX_DATABASE_TABLE);
+    }
+
 
 }

@@ -25,8 +25,12 @@ public class SkavaConstants {
     public static final String QA_KEY = "QA";
     public static final String PROD_KEY = "PROD";
 
+    //Use the same value of the action on the UploaderModule in order to Intent by action
+    // and avoid the need of include a library on buildPath
+    public static final String CUSTOM_ACTION = "com.metric.skava.uploader.UPLOAD_SERVICE_ACTION";
 
 //    SKAVAAPP DATASTORE ONLY
+
 //    public static final String DROBOX_APP_KEY = "wv7jc0wirvu2c8y";
 //    public static final String DROBOX_APP_SECRET = "qebhcnh6lxqu7di";
 
@@ -34,6 +38,12 @@ public class SkavaConstants {
 //    public static final String DROBOX_APP_KEY = "wipi7ui8mgii76j";
 //    public static final String DROBOX_APP_SECRET = "rzqlw9qn9i24ttv";
 //
+    //FABIAN TEST
+//    public static final String DROBOX_APP_KEY = "zt0gfu84ayugdhp";
+//    public static final String DROBOX_APP_SECRET = "d31ifw9hsvgfo39";
+//    public static final String DROPBOX_DS_DEV_NAME = "test";
+
+    //SKAVA_DEV
     public static final String DROBOX_APP_KEY = "1ij9s1t1ab2evpu";
     public static final String DROBOX_APP_SECRET = "sxr158c6hlqajex";
 
@@ -48,4 +58,8 @@ public class SkavaConstants {
 
     public static final int REQUEST_LINK_TO_DROPBOX = 510;
 
+    public static final String EXTRA_INTERNAL_CODE = "EXTRA_INTERNAL_CODE";
+    public static final String EXTRA_ASSESSMENT_CODE = "EXTRA_ASSESSMENT_CODE";
+    public static final String EXTRA_PICTURES = "EXTRA_PICTURES";
+    public static final String EXTRA_ENVIRONMENT_NAME = "EXTRA_ENVIRONMENT_NAME";
 }

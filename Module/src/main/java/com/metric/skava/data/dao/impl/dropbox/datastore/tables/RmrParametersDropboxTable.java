@@ -8,6 +8,9 @@ import com.dropbox.sync.android.DbxTable;
  */
 public class RmrParametersDropboxTable extends DropboxBaseTable implements DropboxTable {
 
+    //This is the counterintuitive name that Skava Web App is using for all index parameters
+    //An index parameters is any including a code, name, a key and a score associated
+    public static final String RMR_PARAMETERS_TABLE = "RmrParameters";
 
     public RmrParametersDropboxTable(DbxDatastore datastore) {
         super(datastore);
@@ -15,7 +18,7 @@ public class RmrParametersDropboxTable extends DropboxBaseTable implements Dropb
 
     @Override
     public DbxTable getBaseDropboxTable() {
-        return mDatastore.getTable("RmrParameters");
+        return mDatastore.getTable(RMR_PARAMETERS_TABLE);
     }
 
     @Override

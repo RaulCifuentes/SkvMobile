@@ -6,6 +6,7 @@ import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.User;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.sync.helper.SyncHelper;
+import com.metric.skava.sync.model.SyncQueue;
 import com.metric.skava.sync.model.SyncStatus;
 
 /**
@@ -22,6 +23,8 @@ public class SkavaContext {
     private DAOFactory daoFactory;
     private SyncHelper syncHelper;
     private String targetEnvironment;
+    private SyncQueue middlemanInbox;
+
 
     public String getTargetEnvironment() {
         return targetEnvironment;
@@ -94,4 +97,13 @@ public class SkavaContext {
     public DbxDatastore getDatastore() {
         return mDatastore;
     }
+
+    public SyncQueue getMiddlemanInbox() {
+        return middlemanInbox;
+    }
+
+    public void setMiddlemanInbox(SyncQueue middlemanInbox) {
+        this.middlemanInbox = middlemanInbox;
+    }
+
 }

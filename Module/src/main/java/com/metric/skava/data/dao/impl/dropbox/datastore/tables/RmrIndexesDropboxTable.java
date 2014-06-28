@@ -9,13 +9,15 @@ import com.dropbox.sync.android.DbxTable;
 public class RmrIndexesDropboxTable extends DropboxBaseTable implements DropboxTable {
 
 
+    public static final String RMR_INDEXES_TABLE = "RmrIndexes";
+
     public RmrIndexesDropboxTable(DbxDatastore datastore) {
         super(datastore);
     }
 
     @Override
     public DbxTable getBaseDropboxTable() {
-        return mDatastore.getTable("RmrIndexes");
+        return mDatastore.getTable(RMR_INDEXES_TABLE);
     }
 
     @Override

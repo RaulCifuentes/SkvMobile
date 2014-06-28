@@ -1,12 +1,12 @@
 package com.metric.skava.app.model;
 
-import android.net.Uri;
-
 import com.metric.skava.app.data.IdentifiableEntity;
+import com.metric.skava.app.util.PegNumberFormat;
 import com.metric.skava.calculator.barton.model.Q_Calculation;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
 import com.metric.skava.instructions.model.SupportRecommendation;
+import com.metric.skava.pictures.model.SkavaPicture;
 import com.metric.skava.rockmass.model.FractureType;
 
 import java.util.Calendar;
@@ -19,6 +19,7 @@ public class Assessment implements IdentifiableEntity {
 
     public static final int DATA_SENT_TO_CLOUD = 10;
     public static final int PICS_SENT_TO_CLOUD = 20;
+
     public static final int DATA_SENT_TO_DATASTORE = 30;
     public static final int PICS_SENT_TO_DATASTORE = 40;
 
@@ -50,7 +51,7 @@ public class Assessment implements IdentifiableEntity {
 
     private SupportRecommendation recomendation;
     private List<DiscontinuityFamily> discontinuitySystem;
-    private List<Uri> pictureUriList;
+    private List<SkavaPicture> pictureList;
     private Q_Calculation qCalculation;
     private RMR_Calculation rmrCalculation;
 
@@ -136,12 +137,12 @@ public class Assessment implements IdentifiableEntity {
         this.method = method;
     }
 
-    public List<Uri> getPictureUriList() {
-        return pictureUriList;
+    public List<SkavaPicture> getPicturesList() {
+        return pictureList;
     }
 
-    public void setPictureUriList(List<Uri> pictureUriList) {
-        this.pictureUriList = pictureUriList;
+    public void setPicturesList(List<SkavaPicture> pictureUriList) {
+        this.pictureList = pictureUriList;
     }
 
     public Q_Calculation getQCalculation() {
@@ -300,4 +301,16 @@ public class Assessment implements IdentifiableEntity {
     }
 
 
+    public String getPseudoCode() {
+        String pseudoCode = null;
+        if (getTunnel() != null && getFace() != null){
+            pseudoCode = getTunnel().getName()+ "-" + getFace().getName() ;
+        }
+        if (getFinalPeg() != null) {
+            PegNumberFormat numberFormatter = new PegNumberFormat();
+            String finalPegAsString = numberFormatter.format(finalPeg);
+            pseudoCode = pseudoCode + "-" + finalPegAsString;
+        }
+        return pseudoCode;
+    }
 }

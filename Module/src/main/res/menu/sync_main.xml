@@ -4,23 +4,39 @@
 
     <item android:id="@+id/action_clear_local_assessments"
         android:title="Clear local mappings"
-        android:showAsAction="ifRoom" />
+        android:showAsAction="never" />
 
     <item android:id="@+id/action_clear_remote_assessments"
         android:title="Clear remote mappings"
-        android:showAsAction="ifRoom" />
+        android:showAsAction="never" />
+
+    <item android:id="@+id/action_import_app_data"
+        android:title="Import app tables"
+        android:showAsAction="never" />
+
+    <item android:id="@+id/action_clear_app_data"
+        android:title="Clear app tables"
+        android:showAsAction="never" />
+
+    <item android:id="@+id/action_import_user_data"
+        android:title="Import user tables"
+        android:showAsAction="never" />
+
+    <item android:id="@+id/action_clear_user_data"
+        android:title="Clear user tables"
+        android:showAsAction="never" />
+
+    <item android:id="@+id/action_clear_remote_sync_acknowledge"
+        android:title="Clear remote sync acks"
+        android:showAsAction="never" />
+
+    <item android:id="@+id/action_clear_sync_data"
+        android:title="Clear sync status data"
+        android:showAsAction="never" />
 
     <item android:id="@+id/action_unlink_dropbox_account"
         android:title="Unlink Dropbox account"
-        android:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_import_app_data"
-        android:title="Import app data"
-        android:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_import_app_data"
-        android:title="Import user data"
-        android:showAsAction="ifRoom" />
+        android:showAsAction="never" />
 
 
 </menu>

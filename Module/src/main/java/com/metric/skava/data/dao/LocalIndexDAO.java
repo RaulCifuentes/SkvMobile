@@ -20,5 +20,5 @@ public interface LocalIndexDAO {
 
     public int deleteAllIndexes();
 
-
+    public Long countIndexes();
 }

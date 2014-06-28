@@ -1,11 +1,12 @@
 package com.metric.skava.data.dao.impl.dropbox;
 
 import android.content.Context;
+import android.util.Log;
 
-import com.dropbox.sync.android.DbxDatastoreStatus;
-import com.dropbox.sync.android.DbxException;
+import com.bugsense.trace.BugSenseHandler;
 import com.dropbox.sync.android.DbxRecord;
 import com.metric.skava.app.context.SkavaContext;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.calculator.model.Group;
 import com.metric.skava.calculator.model.Index;
 import com.metric.skava.data.dao.LocalIndexDAO;
@@ -36,10 +37,10 @@ public class GroupDAODropboxImpl extends DropBoxBaseDAO implements RemoteGroupDA
     @Override
     public List<Group> getAllGroups() throws DAOException {
         try {
-            DbxDatastoreStatus status = getDatastore().getSyncStatus();
-            if (status.hasIncoming || status.isDownloading) {
-                getDatastore().sync();
-            }
+//            DbxDatastoreStatus status = getDatastore().getSyncStatus();
+//            if (status.hasIncoming || status.isDownloading) {
+//                getDatastore().sync();
+//            }
             List<Group> listGroups = new ArrayList<Group>();
             List<DbxRecord> groupList = mGroupsTable.findAll();
             for (DbxRecord currentGroupRecord : groupList) {
@@ -61,7 +62,10 @@ public class GroupDAODropboxImpl extends DropBoxBaseDAO implements RemoteGroupDA
                 }
             });
             return listGroups;
-        } catch (DbxException e) {
+//        } catch (DbxException e) {
+        } catch (Exception e) {
+            BugSenseHandler.sendException(e);
+            Log.e(SkavaConstants.LOG, e.getMessage());
             throw new DAOException(e);
         }
     }

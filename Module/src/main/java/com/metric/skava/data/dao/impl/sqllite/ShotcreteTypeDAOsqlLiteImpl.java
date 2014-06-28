@@ -72,5 +72,10 @@ public class ShotcreteTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<ShotcreteT
         return deleteAllPersistentEntities(ShotcreteTypeTable.SHOTCRETE_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countShotcreteTypes() {
+        return countRecords(ShotcreteTypeTable.SHOTCRETE_DATABASE_TABLE);
+    }
+
 
 }

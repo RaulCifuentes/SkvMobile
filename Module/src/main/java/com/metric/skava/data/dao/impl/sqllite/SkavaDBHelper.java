@@ -67,7 +67,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "mySkavaDatabase.db";
 
-    public static final int DATABASE_VERSION = 50;
+    public static final int DATABASE_VERSION = 52;
 
     public SkavaDBHelper(Context context, String name,
                          SQLiteDatabase.CursorFactory factory, int version) {
@@ -166,8 +166,6 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
         db.execSQL(GroundwaterTable.CREATE_GROUNDWATER_TABLE);
 
         db.execSQL(StrengthTable.CREATE_STRENGTH_TABLE);
-
-//        db.execSQL(ConditionTable.CREATE_CONDITION_TABLE);
 
         db.execSQL(SpacingTable.CREATE_SPACING_TABLE);
 
@@ -293,6 +291,9 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
         // ******************** Pictures ********************
         db.execSQL("DROP TABLE IF EXISTS " + ExternalResourcesTable.EXTERNAL_RESOURCES_DATABASE_TABLE);
+
+        //Just to clear garbage
+        db.execSQL("DROP TABLE IF EXISTS " + "SUPPORTS");
 
         // Create a new one.
         onCreate(db);

@@ -153,4 +153,23 @@ public class SpeechMainActivity extends SkavaFragmentActivity {
         }
     }
 
+    public void onPreExecuteImportAppData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
+    }
+
+    public void onPreExecuteImportUserData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
+    }
+
+    public void onPostExecuteImportAppData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    }
+
+    public void onPostExecuteImportUserData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    }
+
+    public void showProgressBar(final boolean show, String text, boolean longTime) {
+
+    }
 }

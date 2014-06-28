@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.metric.skava.BuildConfig;
 import com.metric.skava.R;
+import com.metric.skava.app.activity.SkavaFragmentActivity;
 import com.metric.skava.app.fragment.SkavaFragment;
 import com.metric.skava.app.util.SkavaConstants;
 
@@ -166,40 +167,47 @@ public class DiscontinuitiesMainFragment extends SkavaFragment implements TabHos
         Log.d(SkavaConstants.LOG, "onTabChanged(): tabId	=" + tabId);
         if (TAB_FAMILY_1.equals(tabId)) {
             // updateTab(tabId, R.id.tab_1);
+            ((SkavaFragmentActivity) getActivity()).saveDraft();
             mCurrentTab = 0;
             return;
         }
         if (TAB_FAMILY_2.equals(tabId)) {
             // updateTab(tabId, R.id.tab_2);
+            ((SkavaFragmentActivity) getActivity()).saveDraft();
             mCurrentTab = 1;
             return;
         }
         if (TAB_FAMILY_3.equals(tabId)) {
             // updateTab(tabId, R.id.tab_1);
             //save the data entered in the previous tab and so on
+            ((SkavaFragmentActivity) getActivity()).saveDraft();
             mCurrentTab = 2;
             return;
         }
         if (TAB_FAMILY_4.equals(tabId)) {
             // updateTab(tabId, R.id.tab_1);
             //save the data entered in the previous tab and so on
+            ((SkavaFragmentActivity) getActivity()).saveDraft();
             mCurrentTab = 3;
             return;
         }
         if (TAB_FAMILY_5.equals(tabId)) {
             // updateTab(tabId, R.id.tab_2);
             //save the data entered in the previous tab and so on
+            ((SkavaFragmentActivity) getActivity()).saveDraft();
             mCurrentTab = 4;
             return;
         }
         if (TAB_FAMILY_6.equals(tabId)) {
             // updateTab(tabId, R.id.tab_1);
             //save the data entered in the previous tab and so on
+            ((SkavaFragmentActivity) getActivity()).saveDraft();
             mCurrentTab = 5;
             return;
         }
         if (TAB_FAMILY_7.equals(tabId)) {
             // updateTab(tabId, R.id.tab_1);
+            ((SkavaFragmentActivity) getActivity()).saveDraft();
             mCurrentTab = 6;
             return;
         }

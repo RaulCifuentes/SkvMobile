@@ -22,4 +22,6 @@ public interface LocalRoughnessDAO {
     public boolean deleteRoughness(String groupCode, String code);
 
     public int deleteAllRoughnesses();
+
+    public Long countRoughnesses();
 }

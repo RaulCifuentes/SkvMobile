@@ -109,6 +109,17 @@ import com.metric.skava.data.dao.RemoteTunnelFaceDAO;
 import com.metric.skava.data.dao.RemoteUserDAO;
 import com.metric.skava.data.dao.RemoteWeatheringDAO;
 import com.metric.skava.data.dao.exception.DAOException;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.ClientDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.ExcavationProjectDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.ParametersDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.RmrCategoriesDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.RmrIndexesDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.RmrParametersDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.RoleDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.SupportRequirementDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.TunnelDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.TunnelFaceDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.UserDropboxTable;
 import com.metric.skava.discontinuities.model.DiscontinuityRelevance;
 import com.metric.skava.discontinuities.model.DiscontinuityShape;
 import com.metric.skava.discontinuities.model.DiscontinuityType;
@@ -125,7 +136,9 @@ import com.metric.skava.rocksupport.model.SupportRequirement;
 import com.metric.skava.sync.dao.SyncLoggingDAO;
 import com.metric.skava.sync.exception.SyncDataFailedException;
 import com.metric.skava.sync.model.SyncLogEntry;
+import com.metric.skava.sync.model.SyncTask;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -149,46 +162,252 @@ public class SyncHelper {
         this.daoFactory = skavaContext.getDAOFactory();
     }
 
-//    public void clearSyncLoggingTable() throws DAOException {
-//        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
-//        syncLoggingDAO.deleteAllSyncLogs();
-//    }
 
+    public boolean areAppDataTablesEmpty() throws DAOException {
 
-    public boolean isESRTableEmpty() throws DAOException {
-        LocalEsrDAO sqlLiteLocalRoleDAO = daoFactory.getLocalEsrDAO();
-        List<ESR> allESRs = sqlLiteLocalRoleDAO.getAllESRs();
-        return allESRs.isEmpty();
+        LocalApertureDAO sqlLiteAperturesDAO = daoFactory.getLocalApertureDAO();
+        LocalArchTypeDAO sqlLiteArchTypesDAO = daoFactory.getLocalArchTypeDAO();
+        LocalBoltTypeDAO sqlLiteBoltTypesDAO = daoFactory.getLocalBoltTypeDAO();
+        LocalCoverageDAO sqlLiteCoveragesDAO = daoFactory.getLocalCoverageDAO();
+        LocalDiscontinuityTypeDAO sqlLiteDiscontinuityTypesDAO = daoFactory.getLocalDiscontinuityTypeDAO();
+        LocalDiscontinuityRelevanceDAO sqlLiteDiscontinuityRelevancesDAO = daoFactory.getLocalDiscontinuityRelevanceDAO();
+        LocalDiscontinuityShapeDAO sqlLiteDiscontinuityShapesDAO = daoFactory.getLocalDiscontinuityShapeDAO();
+        LocalDiscontinuityWaterDAO sqlLiteDiscontinuityWatersDAO = daoFactory.getLocalDiscontinuityWaterDAO();
+        LocalEsrDAO sqlLiteESRsDAO = daoFactory.getLocalEsrDAO();
+        LocalFractureTypeDAO sqlLiteFractureTypesDAO = daoFactory.getLocalFractureTypeDAO();
+        LocalGroundwaterDAO sqlLiteGroudwatersDAO = daoFactory.getLocalGroundwaterDAO();
+        LocalGroupDAO sqlLiteGroupsDAO = daoFactory.getLocalGroupDAO();
+        LocalIndexDAO sqlLiteIndexesDAO = daoFactory.getLocalIndexDAO();
+        LocalInfillingDAO sqlLiteInfillingsDAO = daoFactory.getLocalInfillingDAO();
+        LocalJaDAO sqlLiteJaDAO = daoFactory.getLocalJaDAO();
+        LocalJnDAO sqlLiteJnDAO = daoFactory.getLocalJnDAO();
+        LocalJrDAO sqlLiteJrDAO = daoFactory.getLocalJrDAO();
+        LocalJwDAO sqlLiteJwDAO = daoFactory.getLocalJwDAO();
+        LocalMeshTypeDAO sqlLiteMeshTypesDAO = daoFactory.getLocalMeshTypeDAO();
+        LocalExcavationMethodDAO sqlLiteExcavationMethodsDAO = daoFactory.getLocalExcavationMethodDAO();
+        LocalOrientationDiscontinuitiesDAO sqlLiteOrientationDAO = daoFactory.getLocalOrientationDiscontinuitiesDAO();
+        LocalSupportPatternTypeDAO sqlLiteSupportPatternTypesDAO = daoFactory.getLocalSupportPatternTypeDAO();
+        LocalPersistenceDAO sqlLitePersistencesDAO = daoFactory.getLocalPersistenceDAO();
+        LocalRockQualityDAO sqlLiteRockQualitiesDAO = daoFactory.getLocalRockQualityDAO();
+        LocalRoughnessDAO sqlLiteRoughnessesDAO = daoFactory.getLocalRoughnessDAO();
+        LocalSrfDAO sqlLiteSRFDAO = daoFactory.getLocalSrfDAO();
+        LocalExcavationSectionDAO sqlLiteExcavationSectionsDAO = daoFactory.getLocalExcavationSectionDAO();
+        LocalShotcreteTypeDAO sqlLiteShotcreteTypesDAO = daoFactory.getLocalShotcreteTypeDAO();
+        LocalSpacingDAO sqlLiteSpacingsDAO = daoFactory.getLocalSpacingDAO();
+        LocalStrengthDAO sqlLiteStrengthsDAO = daoFactory.getLocalStrengthDAO();
+        LocalWeatheringDAO sqlLiteWeatheringsDAO = daoFactory.getLocalWeatheringDAO();
+
+        boolean aperturesEmpty = sqlLiteAperturesDAO.countApertures() == 0;
+        boolean archTypesEmpty = sqlLiteArchTypesDAO.countArchTypes() == 0;
+        boolean boltTypesEmpty = sqlLiteBoltTypesDAO.countBoltTypes() == 0;
+        boolean coveragesEmpty = sqlLiteCoveragesDAO.countCoverages() == 0;
+        boolean discontinuityTypesEmpty = sqlLiteDiscontinuityTypesDAO.countDiscontinuityTypes() == 0;
+        boolean discontinuityRelevancesEmpty = sqlLiteDiscontinuityRelevancesDAO.countDiscontinuityRelevances() == 0;
+        boolean discontinuityShapesEmpty = sqlLiteDiscontinuityShapesDAO.countDiscontinuityShapes() == 0;
+        boolean discontinuityWatersEmpty = sqlLiteDiscontinuityWatersDAO.countDiscontinuityWaters() == 0;
+        boolean esrEmpty = sqlLiteESRsDAO.countESRs() == 0;
+        boolean fractureTypesEmpty = sqlLiteFractureTypesDAO.countFractureTypes() == 0;
+        boolean groudwatersEmpty = sqlLiteGroudwatersDAO.countGroudwaters() == 0;
+        boolean groupsEmpty = sqlLiteGroupsDAO.countGroups() == 0;
+        boolean indexesEmpty = sqlLiteIndexesDAO.countIndexes() == 0;
+        boolean infillingsEmpty = sqlLiteInfillingsDAO.countInfillings() == 0;
+        boolean jaEmpty = sqlLiteJaDAO.countJa() == 0;
+        boolean jnEmpty = sqlLiteJnDAO.countJn() == 0;
+        boolean jrEmpty = sqlLiteJrDAO.countJr() == 0;
+        boolean jwEmpty = sqlLiteJwDAO.countJw() == 0;
+        boolean meshTypesEmpty = sqlLiteMeshTypesDAO.countMeshTypes() == 0;
+        boolean excavationMethodsEmpty = sqlLiteExcavationMethodsDAO.countExcavationMethods() == 0;
+        boolean orientationEmpty = sqlLiteOrientationDAO.countOrientation() == 0;
+        boolean supportPatternTypesEmpty = sqlLiteSupportPatternTypesDAO.countSupportPatternTypes() == 0;
+        boolean persistencesEmpty = sqlLitePersistencesDAO.countPersistences() == 0;
+        boolean rockQualitiesEmpty = sqlLiteRockQualitiesDAO.countRockQualities() == 0;
+        boolean roughnessesEmpty = sqlLiteRoughnessesDAO.countRoughnesses() == 0;
+        boolean srfEmpty = sqlLiteSRFDAO.countSRF() == 0;
+        boolean excavationSectionsEmpty = sqlLiteExcavationSectionsDAO.countExcavationSections() == 0;
+        boolean shotcreteTypesEmpty = sqlLiteShotcreteTypesDAO.countShotcreteTypes() == 0;
+        boolean spacingsEmpty = sqlLiteSpacingsDAO.countSpacings() == 0;
+        boolean strengthsEmpty = sqlLiteStrengthsDAO.countStrengths() == 0;
+        boolean weatheringsEmpty = sqlLiteWeatheringsDAO.countWeatherings() == 0;
+
+        return (aperturesEmpty ||
+                archTypesEmpty ||
+                boltTypesEmpty ||
+                coveragesEmpty ||
+                discontinuityTypesEmpty ||
+                discontinuityRelevancesEmpty ||
+                discontinuityShapesEmpty ||
+                discontinuityWatersEmpty ||
+                esrEmpty ||
+                fractureTypesEmpty ||
+                groudwatersEmpty ||
+                groupsEmpty ||
+                indexesEmpty ||
+                infillingsEmpty ||
+                jaEmpty ||
+                jnEmpty ||
+                jrEmpty ||
+                jwEmpty ||
+                meshTypesEmpty ||
+                excavationMethodsEmpty ||
+                orientationEmpty ||
+                supportPatternTypesEmpty ||
+                persistencesEmpty ||
+                rockQualitiesEmpty ||
+                roughnessesEmpty ||
+                srfEmpty ||
+                excavationSectionsEmpty ||
+                shotcreteTypesEmpty ||
+                spacingsEmpty ||
+                strengthsEmpty ||
+                weatheringsEmpty );
     }
 
-    public Long getUserDataRecordCount() throws DAOException {
+    public Long getAllAppDataRecordCount() throws DAOException {
         /**Update the excavation methods data*/
         RemoteMetadataDAO dropBoxMetadataDAO = daoFactory.getRemoteMetadataDAO(DAOFactory.Flavour.DROPBOX);
         //Read from DropBox
-        Long totalRecords = dropBoxMetadataDAO.getUserDataRecordsCount();
+        Long totalRecords = dropBoxMetadataDAO.getAllAppDataRecordsCount();
         return totalRecords;
     }
 
-    public Long getAppDataRecordCount() throws DAOException {
+
+    public boolean areUserDataTablesEmpty() throws DAOException {
+
+        LocalRoleDAO sqlLiteRolesDAO = daoFactory.getLocalRoleDAO();
+        LocalClientDAO sqlLiteClientsDAO = daoFactory.getLocalClientDAO();
+        LocalExcavationProjectDAO sqlLiteProjectsDAO = daoFactory.getLocalExcavationProjectDAO();
+        LocalSupportRequirementDAO sqlLiteSupportRequirementsDAO = daoFactory.getLocalSupportRequirementDAO();
+        LocalTunnelDAO sqlLiteTunnelsDAO = daoFactory.getLocalTunnelDAO();
+        LocalTunnelFaceDAO sqlLiteFacesDAO = daoFactory.getLocalTunnelFaceDAO();
+        LocalUserDAO sqlLiteUsersDAO = daoFactory.getLocalUserDAO();
+
+        boolean rolesEmpty = sqlLiteRolesDAO.countRoles() == 0;
+        boolean clientsEmpty = sqlLiteClientsDAO.countClients() == 0;
+        boolean projectsEmpty = sqlLiteProjectsDAO.countProjects() == 0;
+        boolean supportRequirementsEmpty = sqlLiteSupportRequirementsDAO.countRequirements() == 0;
+        boolean tunnelsEmpty = sqlLiteTunnelsDAO.countTunnels() == 0;
+        boolean facesEmpty = sqlLiteFacesDAO.countFaces() == 0;
+        boolean usersEmpty = sqlLiteUsersDAO.countUsers() == 0;
+
+        return usersEmpty || facesEmpty || tunnelsEmpty || supportRequirementsEmpty || projectsEmpty || clientsEmpty || rolesEmpty;
+    }
+
+    public Long getAllUserDataRecordCount() throws DAOException {
         /**Update the excavation methods data*/
         RemoteMetadataDAO dropBoxMetadataDAO = daoFactory.getRemoteMetadataDAO(DAOFactory.Flavour.DROPBOX);
         //Read from DropBox
-        Long totalRecords = dropBoxMetadataDAO.getAppDataRecordsCount();
+        Long totalRecords = dropBoxMetadataDAO.getAllUserDataRecordsCount();
         return totalRecords;
     }
+
+
+    public Long findOutNumberOfRecordsToImport(SyncTask.Domain[] domains) throws DAOException {
+        /**Update the excavation methods data*/
+        RemoteMetadataDAO dropBoxMetadataDAO = daoFactory.getRemoteMetadataDAO(DAOFactory.Flavour.DROPBOX);
+        //Read from DropBox
+        List<String> dropboxTables = new ArrayList<String>();
+        for (SyncTask.Domain currentDomain : domains) {
+            switch (currentDomain) {
+                case ALL_APP_DATA_TABLES:
+                    return dropBoxMetadataDAO.getAllAppDataRecordsCount();
+                case ALL_USER_DATA_TABLES:
+                    return dropBoxMetadataDAO.getAllUserDataRecordsCount();
+                case ROLES:
+                    dropboxTables.add(RoleDropboxTable.ROLES_DROPBOX_TABLE);
+                    break;
+                case CLIENTS:
+                    dropboxTables.add(ClientDropboxTable.CLIENTS_DROPBOX_TABLE);
+                    break;
+                case EXCAVATION_PROJECTS:
+                    dropboxTables.add(ExcavationProjectDropboxTable.PROJECTS_DROPBOX_TABLE);
+                    break;
+                case TUNNELS:
+                    dropboxTables.add(TunnelDropboxTable.TUNNELS_DROPBOX_TABLE);
+                    break;
+                case SUPPORT_REQUIREMENTS:
+                    dropboxTables.add(SupportRequirementDropboxTable.SUPPORT_REQUIREMENTS_DROPBOX_TABLE);
+                    break;
+                case TUNNEL_FACES:
+                    dropboxTables.add(TunnelFaceDropboxTable.FACES_DROPBOX_TABLE);
+                    break;
+                case USERS:
+                    dropboxTables.add(UserDropboxTable.USERS_DROPBOX_TABLE);
+                    break;
+                default:
+                    dropboxTables.add(ParametersDropboxTable.PARAMETERS_DROPBOX_TABLE);
+                    dropboxTables.add(RmrParametersDropboxTable.RMR_PARAMETERS_TABLE);
+                    dropboxTables.add(RmrIndexesDropboxTable.RMR_INDEXES_TABLE);
+                    dropboxTables.add(RmrCategoriesDropboxTable.RMR_CATEGORIES_TABLE);
+                    break;
+            }
+        }
+        Long totalRecords = dropBoxMetadataDAO.getRecordsCount(dropboxTables.toArray(new String[]{}));
+        return totalRecords;
+    }
+
+    public Long clearAllUserData() throws DAOException {
+        Long numRecordsDeleted = 0L;
+        numRecordsDeleted+=clearRoles();
+        numRecordsDeleted+=clearClients();
+        numRecordsDeleted+=clearProjects();
+        numRecordsDeleted+=clearTunnels();
+        numRecordsDeleted+=clearSupportRequirements();
+        numRecordsDeleted+=clearFaces();
+        numRecordsDeleted+=clearUsers();
+        return numRecordsDeleted;
+    }
+
+    public Long clearAllAppData() throws DAOException {
+        Long numRecordsDeleted = 0L;
+        numRecordsDeleted+=clearApertures();
+        numRecordsDeleted+=clearArchTypes();
+        numRecordsDeleted+=clearBoltTypes();
+        numRecordsDeleted+=clearCoverages();
+        numRecordsDeleted+=clearDiscontinuityTypes();
+        numRecordsDeleted+=clearDiscontinuityRelevances();
+        numRecordsDeleted+=clearDiscontinuityShapes();
+        numRecordsDeleted+=clearDiscontinuityWaters();
+        numRecordsDeleted+=clearESRs();
+        numRecordsDeleted+=clearFractureTypes();
+        numRecordsDeleted+=clearGroudwaters();
+        numRecordsDeleted+=clearGroups();
+        numRecordsDeleted+=clearIndexes();
+        numRecordsDeleted+=clearInfillings();
+        numRecordsDeleted+=clearJa();
+        numRecordsDeleted+=clearJn();
+        numRecordsDeleted+=clearJr();
+        numRecordsDeleted+=clearJw();
+        numRecordsDeleted+=clearMeshTypes();
+        numRecordsDeleted+=clearExcavationMethods();
+        numRecordsDeleted+=clearOrientation();
+        numRecordsDeleted+=clearSupportPatternTypes();
+        numRecordsDeleted+=clearPersistences();
+        numRecordsDeleted+=clearRockQualities();
+        numRecordsDeleted+=clearRoughnesses();
+        numRecordsDeleted+=clearSRF();
+        numRecordsDeleted+=clearExcavationSections();
+        numRecordsDeleted+=clearShotcreteTypes();
+        numRecordsDeleted+=clearSpacings();
+        numRecordsDeleted+=clearStrengths();
+        numRecordsDeleted+=clearWeatherings();
+        return numRecordsDeleted;
+    }
+
+
+
 
     public Long downloadRoles() throws DAOException, SyncDataFailedException {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ROLES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.ROLES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearRoles();
             numRecords = syncRoles();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -200,14 +419,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.EXCAVATIONMETHODS, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.EXCAVATION_METHODS, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearExcavationMethods();
             numRecords = syncExcavationMethods();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -219,14 +438,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.EXCAVATIONSECTIONS, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.EXCAVATION_SECTIONS, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearExcavationSections();
             numRecords = syncExcavationSections();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -238,14 +457,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.DISCONTINUITYTYPES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.DISCONTINUITY_TYPES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearDiscontinuityTypes();
             numRecords = syncDiscontinuityTypes();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -258,14 +477,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.DISCONTINUITYRELEVANCES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.DISCONTINUITY_RELEVANCES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearDiscontinuityRelevances();
             numRecords = syncDiscontinuityRelevances();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -278,14 +497,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.INDEXES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.INDEXES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearIndexes();
             numRecords = syncIndexes();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -298,14 +517,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.GROUPS, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.GROUPS, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearGroups();
             numRecords = syncGroups();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -318,14 +537,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.SPACINGS, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.SPACINGS, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearSpacings();
             numRecords = syncSpacings();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -338,14 +557,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.PERSISTENCES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.PERSISTENCES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearPersistences();
             numRecords = syncPersistences();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -358,14 +577,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.APERTURES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.APERTURES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearApertures();
             numRecords = syncApertures();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -378,14 +597,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.DISCONTINUITYSHAPES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.DISCONTINUITY_SHAPES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearDiscontinuityShapes();
             numRecords = syncDiscontinuityShapes();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -397,14 +616,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ROUGHNESSES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.ROUGHNESSES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearRoughnesses();
             numRecords = syncRoughnesses();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -416,14 +635,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.INFILLINGS, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.INFILLINGS, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearInfillings();
             numRecords = syncInfillings();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -435,14 +654,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.WEATHERINGS, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.WEATHERINGS, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearWeatherings();
             numRecords = syncWeatherings();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -454,14 +673,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.DISCONTINUITYWATERS, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.DISCONTINUITY_WATERS, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearDiscontinuityWaters();
             numRecords = syncDiscontinuityWaters();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -473,14 +692,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.STRENGTHS, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.STRENGTHS, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearStrengths();
             numRecords = syncStrengths();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -493,14 +712,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.GROUDWATERS, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.GROUDWATERS, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearGroudwaters();
             numRecords = syncGroundwaters();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -512,14 +731,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ORIENTATION, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.ORIENTATION, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearOrientation();
             numRecords = syncOrientation();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -531,14 +750,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.JN, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.JN, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearJn();
             numRecords = syncJn();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -550,14 +769,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.JR, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.JR, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearJr();
             numRecords = syncJr();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -569,14 +788,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.JA, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.JA, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearJa();
             numRecords = syncJa();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -588,14 +807,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.JW, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.JW, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearJw();
             numRecords = syncJw();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -608,14 +827,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.SRF, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.SRF, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearSRF();
             numRecords = syncSRF();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -628,14 +847,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.FRACTURETYPES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.FRACTURE_TYPES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearFractureTypes();
             numRecords = syncFractureTypes();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -647,14 +866,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.BOLTTYPES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.BOLT_TYPES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearBoltTypes();
             numRecords = syncBoltTypes();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -667,14 +886,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.SHOTCRETETYPES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.SHOTCRETE_TYPES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearShotcreteTypes();
             numRecords = syncShotcreteTypes();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -686,14 +905,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.MESHTYPES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.MESHTYPES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearMeshTypes();
             numRecords = syncMeshTypes();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -705,14 +924,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.COVERAGES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.COVERAGES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearCoverages();
             numRecords = syncCoverages();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -724,14 +943,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ARCHTYPES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.ARCHTYPES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearArchTypes();
             numRecords = syncArchTypes();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -743,14 +962,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ESRS, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.ESRS, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearESRs();
             numRecords = syncESRs();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -763,14 +982,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.SUPPORTPATTERNTYPES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.SUPPORT_PATTERN_TYPES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearSupportPatternTypes();
             numRecords = syncSupportPatternTypes();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -782,14 +1001,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.ROCKQUALITIES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.ROCK_QUALITIES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearRockQualities();
             numRecords = syncRockQualities();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -802,14 +1021,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.CLIENTS, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.CLIENTS, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearClients();
             numRecords = syncClients();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -822,14 +1041,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.EXCAVATIONPROJECTS, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.EXCAVATION_PROJECTS, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearProjects();
             numRecords = syncProjects();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -842,14 +1061,14 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.TUNNELS, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.TUNNELS, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             clearTunnels();
             numRecords = syncTunnels();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -861,15 +1080,15 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.SUPPORTREQUIREMENTS, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.SUPPORT_REQUIREMENTS, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             //Support Requirements depends on Tunnel
             clearSupportRequirements();
             numRecords = syncSupportRequirements();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -881,15 +1100,15 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.TUNNELFACES, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.TUNNEL_FACES, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             //Support Requirements depends on Tunnel
             clearFaces();
             numRecords = syncFaces();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -901,8 +1120,8 @@ public class SyncHelper {
         Long numRecords = 0L;
         SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
         DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
-        SyncLogEntry.Source source = status.isConnected ? SyncLogEntry.Source.DROPBOX_REMOTE_DATASTORE : SyncLogEntry.Source.DROPBOX_LOCAL_DATASTORE;
-        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncLogEntry.Domain.USERS, source, SyncLogEntry.Status.SUCCESS, numRecords);
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.USERS, source, SyncTask.Status.SUCCESS, numRecords);
         try {
             //HEADS UP: on this strategy users shuold be loaded last coz the assembling will look up some roles and faces DAOs
             //This is not exactly th best option as it will load the entire dataset and not just what this user can see
@@ -911,7 +1130,7 @@ public class SyncHelper {
             numRecords = syncUsers();
             syncLogEntry.setNumRecordsSynced(numRecords);
         } catch (Exception e) {
-            syncLogEntry.setStatus(SyncLogEntry.Status.FAIL);
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
             syncLogEntry.setMessage(e.getMessage());
             throw new SyncDataFailedException(syncLogEntry, e.getMessage());
         }
@@ -925,9 +1144,9 @@ public class SyncHelper {
         syncFacesCascade(user);
     }
 
-    private void clearExcavationSections() throws DAOException {
+    private int clearExcavationSections() throws DAOException {
         LocalExcavationSectionDAO sqlLiteLocalSectionDAO = daoFactory.getLocalExcavationSectionDAO();
-        sqlLiteLocalSectionDAO.deleteAllExcavationSections();
+        return sqlLiteLocalSectionDAO.deleteAllExcavationSections();
     }
 
     private Long syncExcavationSections() throws DAOException {
@@ -942,9 +1161,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedSections.size());
     }
 
-    private void clearExcavationMethods() throws DAOException {
+    private int clearExcavationMethods() throws DAOException {
         LocalExcavationMethodDAO sqlLiteMethodDAO = daoFactory.getLocalExcavationMethodDAO();
-        sqlLiteMethodDAO.deleteAllExcavationMethods();
+        return sqlLiteMethodDAO.deleteAllExcavationMethods();
     }
 
     private Long syncExcavationMethods() throws DAOException {
@@ -960,9 +1179,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedMethods.size());
     }
 
-    private void clearRoles() throws DAOException {
+    private int clearRoles() throws DAOException {
         LocalRoleDAO sqlLiteLocalRoleDAO = daoFactory.getLocalRoleDAO();
-        sqlLiteLocalRoleDAO.deleteAllRoles();
+        return sqlLiteLocalRoleDAO.deleteAllRoles();
     }
 
 
@@ -978,12 +1197,12 @@ public class SyncHelper {
         return Long.valueOf(downloadedMethods.size());
     }
 
-    private void clearUsers() throws DAOException {
-        LocalUserDAO userDAO = daoFactory.getLocalUserDAO();
-        userDAO.deleteAllUsers();
-
+    private int clearUsers() throws DAOException {
         LocalPermissionDAO permissionsDAO = daoFactory.getLocalPermissionDAO();
         permissionsDAO.deleteAllPermissions();
+        LocalUserDAO userDAO = daoFactory.getLocalUserDAO();
+        int deletedRecords = userDAO.deleteAllUsers();
+        return deletedRecords;
     }
 
     private Long syncUsers() throws DAOException {
@@ -999,11 +1218,14 @@ public class SyncHelper {
     }
 
 
-    private void clearTunnels() throws DAOException {
+    private int clearTunnels() throws DAOException {
         LocalTunnelDAO sqlLiteLocalTunnelDAO = daoFactory.getLocalTunnelDAO();
-        sqlLiteLocalTunnelDAO.deleteAllTunnels();
-        //As the tunnel was deleted, delete on cascade
+        //Deleted the helper table wich associates tunnels with ESR and Span. This table was
+        //created originally to define SupportRequirements but currently is not used
         clearExcavationFactors();
+        return sqlLiteLocalTunnelDAO.deleteAllTunnels();
+
+
     }
 
     private Long syncTunnels() throws DAOException {
@@ -1019,9 +1241,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedTunnels.size());
     }
 
-    private void clearProjects() throws DAOException {
+    private int clearProjects() throws DAOException {
         LocalExcavationProjectDAO sqlLiteProjectDAO = daoFactory.getLocalExcavationProjectDAO();
-        sqlLiteProjectDAO.deleteAllExcavationProjects();
+        return sqlLiteProjectDAO.deleteAllExcavationProjects();
     }
 
     private Long syncProjects() throws DAOException {
@@ -1037,9 +1259,9 @@ public class SyncHelper {
     }
 
 
-    private void clearFaces() throws DAOException {
+    private int clearFaces() throws DAOException {
         LocalTunnelFaceDAO sqlLiteFaceDAO = daoFactory.getLocalTunnelFaceDAO();
-        sqlLiteFaceDAO.deleteAllTunnelFaces();
+        return sqlLiteFaceDAO.deleteAllTunnelFaces();
     }
 
     private Long syncFaces() throws DAOException {
@@ -1066,9 +1288,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedFaces.size());
     }
 
-    private void clearClients() throws DAOException {
+    private int clearClients() throws DAOException {
         LocalClientDAO sqlLiteLocalClientDAO = daoFactory.getLocalClientDAO();
-        sqlLiteLocalClientDAO.deleteAllClients();
+        return sqlLiteLocalClientDAO.deleteAllClients();
     }
 
     private Long syncClients() throws DAOException {
@@ -1083,9 +1305,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedClients.size());
     }
 
-    private void clearDiscontinuityTypes() throws DAOException {
+    private int clearDiscontinuityTypes() throws DAOException {
         LocalDiscontinuityTypeDAO sqlLiteDiscontinuityTypeDAO = daoFactory.getLocalDiscontinuityTypeDAO();
-        sqlLiteDiscontinuityTypeDAO.deleteAllDiscontinuityTypes();
+        return sqlLiteDiscontinuityTypeDAO.deleteAllDiscontinuityTypes();
     }
 
     private Long syncDiscontinuityTypes() throws DAOException {
@@ -1101,9 +1323,9 @@ public class SyncHelper {
     }
 
 
-    private void clearDiscontinuityRelevances() throws DAOException {
+    private int clearDiscontinuityRelevances() throws DAOException {
         LocalDiscontinuityRelevanceDAO sqlLiteDiscontinuityRelevanceDAO = daoFactory.getLocalDiscontinuityRelevanceDAO();
-        sqlLiteDiscontinuityRelevanceDAO.deleteAllDiscontinuityRelevances();
+        return sqlLiteDiscontinuityRelevanceDAO.deleteAllDiscontinuityRelevances();
     }
 
     private Long syncDiscontinuityRelevances() throws DAOException {
@@ -1119,9 +1341,9 @@ public class SyncHelper {
     }
 
 
-    private void clearIndexes() throws DAOException {
+    private int clearIndexes() throws DAOException {
         LocalIndexDAO sqlLiteIndexDAO = daoFactory.getLocalIndexDAO();
-        sqlLiteIndexDAO.deleteAllIndexes();
+        return sqlLiteIndexDAO.deleteAllIndexes();
     }
 
     private Long syncIndexes() throws DAOException {
@@ -1136,9 +1358,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedIndexes.size());
     }
 
-    private void clearGroups() throws DAOException {
+    private int clearGroups() throws DAOException {
         LocalGroupDAO sqlLiteStrengthDAO = daoFactory.getLocalGroupDAO();
-        sqlLiteStrengthDAO.deleteAllGroups();
+        return sqlLiteStrengthDAO.deleteAllGroups();
     }
 
     private Long syncGroups() throws DAOException {
@@ -1153,9 +1375,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedGroups.size());
     }
 
-    private void clearJn() throws DAOException {
+    private int clearJn() throws DAOException {
         LocalJnDAO sqlLiteJnDAO = daoFactory.getLocalJnDAO();
-        sqlLiteJnDAO.deleteAllJns();
+        return sqlLiteJnDAO.deleteAllJns();
     }
 
     private Long syncJn() throws DAOException {
@@ -1170,9 +1392,9 @@ public class SyncHelper {
         return Long.valueOf(dowloadedJns.size());
     }
 
-    private void clearJr() throws DAOException {
+    private int clearJr() throws DAOException {
         LocalJrDAO sqlLiteJrDAO = daoFactory.getLocalJrDAO();
-        sqlLiteJrDAO.deleteAllJrs();
+        return sqlLiteJrDAO.deleteAllJrs();
     }
 
     private Long syncJr() throws DAOException {
@@ -1187,9 +1409,9 @@ public class SyncHelper {
         return Long.valueOf(dowloadedJrs.size());
     }
 
-    private void clearJa() throws DAOException {
+    private int clearJa() throws DAOException {
         LocalJaDAO sqlLiteJaDAO = daoFactory.getLocalJaDAO();
-        sqlLiteJaDAO.deleteAllJas();
+        return sqlLiteJaDAO.deleteAllJas();
     }
 
     private Long syncJa() throws DAOException {
@@ -1204,9 +1426,9 @@ public class SyncHelper {
         return Long.valueOf(dowloadedJas.size());
     }
 
-    private void clearJw() throws DAOException {
+    private int clearJw() throws DAOException {
         LocalJwDAO sqlLiteJwDAO = daoFactory.getLocalJwDAO();
-        sqlLiteJwDAO.deleteAllJws();
+        return sqlLiteJwDAO.deleteAllJws();
     }
 
     private Long syncJw() throws DAOException {
@@ -1221,9 +1443,9 @@ public class SyncHelper {
         return Long.valueOf(dowloadedJws.size());
     }
 
-    private void clearSRF() throws DAOException {
+    private int clearSRF() throws DAOException {
         LocalSrfDAO sqlLiteSrfDAO = daoFactory.getLocalSrfDAO();
-        sqlLiteSrfDAO.deleteAllSrfs();
+        return sqlLiteSrfDAO.deleteAllSrfs();
     }
 
     private Long syncSRF() throws DAOException {
@@ -1238,9 +1460,9 @@ public class SyncHelper {
         return Long.valueOf(dowloadedSrfs.size());
     }
 
-    private void clearStrengths() throws DAOException {
+    private int clearStrengths() throws DAOException {
         LocalStrengthDAO sqlLiteStrengthDAO = daoFactory.getLocalStrengthDAO();
-        sqlLiteStrengthDAO.deleteAllStrengths();
+        return sqlLiteStrengthDAO.deleteAllStrengths();
     }
 
     private Long syncStrengths() throws DAOException {
@@ -1255,9 +1477,9 @@ public class SyncHelper {
         return Long.valueOf(dowloadedStrengths.size());
     }
 
-    private void clearGroudwaters() throws DAOException {
+    private int clearGroudwaters() throws DAOException {
         LocalGroundwaterDAO sqlLiteGroudwaterDAO = daoFactory.getLocalGroundwaterDAO();
-        sqlLiteGroudwaterDAO.deleteAllGroundwaters();
+        return sqlLiteGroudwaterDAO.deleteAllGroundwaters();
     }
 
     private Long syncGroundwaters() throws DAOException {
@@ -1272,9 +1494,9 @@ public class SyncHelper {
         return Long.valueOf(dowloadedGroundwaters.size());
     }
 
-    private void clearOrientation() throws DAOException {
+    private int clearOrientation() throws DAOException {
         LocalOrientationDiscontinuitiesDAO sqlLiteGroudwaterDAO = daoFactory.getLocalOrientationDiscontinuitiesDAO();
-        sqlLiteGroudwaterDAO.deleteAllOrientationDiscontinuities();
+        return sqlLiteGroudwaterDAO.deleteAllOrientationDiscontinuities();
     }
 
     private Long syncOrientation() throws DAOException {
@@ -1290,10 +1512,9 @@ public class SyncHelper {
     }
 
 
-    private void clearSpacings() throws DAOException {
+    private int clearSpacings() throws DAOException {
         LocalSpacingDAO sqlLiteSpacingDAO = daoFactory.getLocalSpacingDAO();
-        sqlLiteSpacingDAO.deleteAllSpacings();
-
+        return sqlLiteSpacingDAO.deleteAllSpacings();
     }
 
     private Long syncSpacings() throws DAOException {
@@ -1308,9 +1529,9 @@ public class SyncHelper {
         return Long.valueOf(dowloadedSpacings.size());
     }
 
-    private void clearPersistences() throws DAOException {
+    private int clearPersistences() throws DAOException {
         LocalPersistenceDAO sqlLitePersistenceDAO = daoFactory.getLocalPersistenceDAO();
-        sqlLitePersistenceDAO.deleteAllPersistences();
+        return sqlLitePersistenceDAO.deleteAllPersistences();
     }
 
     private Long syncPersistences() throws DAOException {
@@ -1325,9 +1546,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedPersistences.size());
     }
 
-    private void clearApertures() throws DAOException {
+    private int clearApertures() throws DAOException {
         LocalApertureDAO sqlLiteApertureDAO = daoFactory.getLocalApertureDAO();
-        sqlLiteApertureDAO.deleteAllApertures();
+        return sqlLiteApertureDAO.deleteAllApertures();
     }
 
     private Long syncApertures() throws DAOException {
@@ -1343,9 +1564,9 @@ public class SyncHelper {
     }
 
 
-    private void clearDiscontinuityShapes() throws DAOException {
+    private int clearDiscontinuityShapes() throws DAOException {
         LocalDiscontinuityShapeDAO sqlLiteDiscontinuityShapeDAO = daoFactory.getLocalDiscontinuityShapeDAO();
-        sqlLiteDiscontinuityShapeDAO.deleteAllDiscontinuityShapes();
+        return sqlLiteDiscontinuityShapeDAO.deleteAllDiscontinuityShapes();
     }
 
     private Long syncDiscontinuityShapes() throws DAOException {
@@ -1360,9 +1581,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedDiscontinuityShapes.size());
     }
 
-    private void clearRoughnesses() throws DAOException {
+    private int clearRoughnesses() throws DAOException {
         LocalRoughnessDAO sqlLiteRoughnessDAO = daoFactory.getLocalRoughnessDAO();
-        sqlLiteRoughnessDAO.deleteAllRoughnesses();
+        return sqlLiteRoughnessDAO.deleteAllRoughnesses();
     }
 
 
@@ -1378,9 +1599,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedRoughnesses.size());
     }
 
-    private void clearInfillings() throws DAOException {
+    private int clearInfillings() throws DAOException {
         LocalInfillingDAO sqlLiteInfillingDAO = daoFactory.getLocalInfillingDAO();
-        sqlLiteInfillingDAO.deleteAllInfillings();
+        return sqlLiteInfillingDAO.deleteAllInfillings();
     }
 
     private Long syncInfillings() throws DAOException {
@@ -1395,9 +1616,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedInfillings.size());
     }
 
-    private void clearWeatherings() throws DAOException {
+    private int clearWeatherings() throws DAOException {
         LocalWeatheringDAO sqlLiteWeatheringDAO = daoFactory.getLocalWeatheringDAO();
-        sqlLiteWeatheringDAO.deleteAllWeatherings();
+        return sqlLiteWeatheringDAO.deleteAllWeatherings();
     }
 
     private Long syncWeatherings() throws DAOException {
@@ -1412,9 +1633,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedWeatherings.size());
     }
 
-    private void clearDiscontinuityWaters() throws DAOException {
+    private int clearDiscontinuityWaters() throws DAOException {
         LocalDiscontinuityWaterDAO sqlLiteDiscontinuityWaterDAO = daoFactory.getLocalDiscontinuityWaterDAO();
-        sqlLiteDiscontinuityWaterDAO.deleteAllDiscontinuityWaters();
+        return sqlLiteDiscontinuityWaterDAO.deleteAllDiscontinuityWaters();
     }
 
     private Long syncDiscontinuityWaters() throws DAOException {
@@ -1429,9 +1650,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedDiscontinuityWaters.size());
     }
 
-    private void clearFractureTypes() throws DAOException {
+    private int clearFractureTypes() throws DAOException {
         LocalFractureTypeDAO sqlLiteFractureDAO = daoFactory.getLocalFractureTypeDAO();
-        sqlLiteFractureDAO.deleteAllFractureTypes();
+        return sqlLiteFractureDAO.deleteAllFractureTypes();
     }
 
     private Long syncFractureTypes() throws DAOException {
@@ -1446,9 +1667,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedFractureTypes.size());
     }
 
-    private void clearBoltTypes() {
+    private int clearBoltTypes() {
         LocalBoltTypeDAO sqlLiteBoltTypesDAO = daoFactory.getLocalBoltTypeDAO();
-        sqlLiteBoltTypesDAO.deleteAllBoltTypes();
+        return sqlLiteBoltTypesDAO.deleteAllBoltTypes();
     }
 
     private Long syncBoltTypes() throws DAOException {
@@ -1463,9 +1684,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedBoltTypes.size());
     }
 
-    private void clearShotcreteTypes() {
+    private int clearShotcreteTypes() {
         LocalShotcreteTypeDAO sqlLiteShotcreteDAO = daoFactory.getLocalShotcreteTypeDAO();
-        sqlLiteShotcreteDAO.deleteAllShotcreteTypes();
+        return sqlLiteShotcreteDAO.deleteAllShotcreteTypes();
     }
 
     private Long syncShotcreteTypes() throws DAOException {
@@ -1481,9 +1702,9 @@ public class SyncHelper {
     }
 
 
-    private void clearMeshTypes() {
+    private int clearMeshTypes() {
         LocalMeshTypeDAO sqlLiteMeshTypeDAO = daoFactory.getLocalMeshTypeDAO();
-        sqlLiteMeshTypeDAO.deleteAllMeshTypes();
+        return sqlLiteMeshTypeDAO.deleteAllMeshTypes();
     }
 
     private Long syncMeshTypes() throws DAOException {
@@ -1499,9 +1720,9 @@ public class SyncHelper {
     }
 
 
-    private void clearCoverages() {
+    private int clearCoverages() {
         LocalCoverageDAO sqlLiteCoverageDAO = daoFactory.getLocalCoverageDAO();
-        sqlLiteCoverageDAO.deleteAllCoverages();
+        return sqlLiteCoverageDAO.deleteAllCoverages();
     }
 
     private Long syncCoverages() throws DAOException {
@@ -1516,9 +1737,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedCoverages.size());
     }
 
-    private void clearArchTypes() {
+    private int clearArchTypes() {
         LocalArchTypeDAO sqlLiteArchDAO = daoFactory.getLocalArchTypeDAO();
-        sqlLiteArchDAO.deleteAllArchTypes();
+        return sqlLiteArchDAO.deleteAllArchTypes();
     }
 
     private Long syncArchTypes() throws DAOException {
@@ -1533,9 +1754,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedArchTypes.size());
     }
 
-    private void clearSupportPatternTypes() {
+    private int clearSupportPatternTypes() {
         LocalSupportPatternTypeDAO sqlLitePatternDAO = daoFactory.getLocalSupportPatternTypeDAO();
-        sqlLitePatternDAO.deleteAllSupportPatternTypes();
+        return sqlLitePatternDAO.deleteAllSupportPatternTypes();
     }
 
     private Long syncSupportPatternTypes() throws DAOException {
@@ -1550,9 +1771,9 @@ public class SyncHelper {
         return Long.valueOf(downloadedSupportPatternTypes.size());
     }
 
-    private void clearESRs() throws DAOException {
+    private int clearESRs() throws DAOException {
         LocalEsrDAO sqlLiteESRDAO = daoFactory.getLocalEsrDAO();
-        sqlLiteESRDAO.deleteAllESRs();
+        return sqlLiteESRDAO.deleteAllESRs();
     }
 
     private Long syncESRs() throws DAOException {
@@ -1567,9 +1788,9 @@ public class SyncHelper {
         return Long.valueOf(dowloadedESRs.size());
     }
 
-    private void clearRockQualities() throws DAOException {
+    private int clearRockQualities() throws DAOException {
         LocalRockQualityDAO sqlLiteRockQualityDAO = daoFactory.getLocalRockQualityDAO();
-        sqlLiteRockQualityDAO.deleteAllRockQualities();
+        return sqlLiteRockQualityDAO.deleteAllRockQualities();
     }
 
     private Long syncRockQualities() throws DAOException {
@@ -1584,15 +1805,15 @@ public class SyncHelper {
         return Long.valueOf(dowloadedRockQualitys.size());
     }
 
-    private void clearExcavationFactors() throws DAOException {
+    private int clearExcavationFactors() throws DAOException {
         LocalExcavationFactorDAO factorsDAO = daoFactory.getLocalExcavationFactorsDAO();
-        factorsDAO.deleteAllExcavationFactors();
+        return factorsDAO.deleteAllExcavationFactors();
     }
 
 
-    private void clearSupportRequirements() {
+    private int clearSupportRequirements() {
         LocalSupportRequirementDAO sqlLiteSupportRequirementsDAO = daoFactory.getLocalSupportRequirementDAO();
-        sqlLiteSupportRequirementsDAO.deleteAllSupportRequirements();
+        return sqlLiteSupportRequirementsDAO.deleteAllSupportRequirements();
     }
 
     private Long syncSupportRequirements() throws DAOException {
@@ -1606,6 +1827,7 @@ public class SyncHelper {
         }
         return Long.valueOf(dowloadedRequirements.size());
     }
+
 
 
 }

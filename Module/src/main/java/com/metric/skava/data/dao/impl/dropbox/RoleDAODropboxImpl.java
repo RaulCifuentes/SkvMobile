@@ -1,12 +1,13 @@
 package com.metric.skava.data.dao.impl.dropbox;
 
 import android.content.Context;
+import android.util.Log;
 
-import com.dropbox.sync.android.DbxDatastoreStatus;
-import com.dropbox.sync.android.DbxException;
+import com.bugsense.trace.BugSenseHandler;
 import com.dropbox.sync.android.DbxRecord;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.Role;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.data.dao.RemoteRoleDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.datastore.tables.RoleDropboxTable;
@@ -31,10 +32,10 @@ public class RoleDAODropboxImpl extends DropBoxBaseDAO implements RemoteRoleDAO 
     @Override
     public List<Role> getAllRoles() throws DAOException {
         try {
-            DbxDatastoreStatus status = getDatastore().getSyncStatus();
-            if (status.hasIncoming || status.isDownloading) {
-                getDatastore().sync();
-            }
+//            DbxDatastoreStatus status = getDatastore().getSyncStatus();
+//            if (status.hasIncoming || status.isDownloading) {
+//                getDatastore().sync();
+//            }
             List<Role> listRoles = new ArrayList<Role>();
             List<DbxRecord> recordList = mRolesTable.findAll();
             for (DbxRecord currentDbxRecord : recordList) {
@@ -44,7 +45,10 @@ public class RoleDAODropboxImpl extends DropBoxBaseDAO implements RemoteRoleDAO 
                 listRoles.add(newRole);
             }
             return listRoles;
-        } catch (DbxException e) {
+//        } catch (DbxException e) {
+        } catch (Exception e) {
+            BugSenseHandler.sendException(e);
+            Log.e(SkavaConstants.LOG, e.getMessage());
             throw new DAOException(e);
         }
     }

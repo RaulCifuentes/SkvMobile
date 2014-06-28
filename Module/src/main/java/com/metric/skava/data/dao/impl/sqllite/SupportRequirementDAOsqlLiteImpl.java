@@ -220,5 +220,10 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
         return deleteAllPersistentEntities(SupportRequirementTable.SUPPORT_REQUIREMENT_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countRequirements() {
+        return countRecords(SupportRequirementTable.SUPPORT_REQUIREMENT_DATABASE_TABLE);
+    }
+
 
 }

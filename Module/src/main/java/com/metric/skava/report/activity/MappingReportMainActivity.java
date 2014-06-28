@@ -11,9 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.dropbox.sync.android.DbxDatastore;
-import com.dropbox.sync.android.DbxException;
-import com.dropbox.sync.android.DbxRecord;
+import com.bugsense.trace.BugSenseHandler;
 import com.metric.skava.R;
 import com.metric.skava.app.activity.SkavaFragmentActivity;
 import com.metric.skava.app.exception.SkavaSystemException;
@@ -23,22 +21,18 @@ import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.assessment.activity.AssessmentStageListActivity;
 import com.metric.skava.assessment.activity.AssessmentsListActivity;
 import com.metric.skava.data.dao.DAOFactory;
-import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.RemoteAssessmentDAO;
 import com.metric.skava.data.dao.exception.DAOException;
-import com.metric.skava.data.dao.impl.dropbox.datastore.tables.AssessmentDropboxTable;
 import com.metric.skava.report.fragment.MappingReportMainFragment;
 
-import java.util.Map;
-import java.util.Set;
 
-
-public class MappingReportMainActivity extends SkavaFragmentActivity implements DbxDatastore.SyncStatusListener {
+public class MappingReportMainActivity extends SkavaFragmentActivity {
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.mapping_report_main_activity);
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
@@ -56,60 +50,6 @@ public class MappingReportMainActivity extends SkavaFragmentActivity implements 
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getSkavaContext().getDatastore().addSyncStatusListener(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        getSkavaContext().getDatastore().removeSyncStatusListener(this);
-    }
-
-    @Override
-    public void onDatastoreStatusChange(DbxDatastore store) {
-
-        if (store.getSyncStatus().hasOutgoing) {
-            try {
-                Map<String, Set<DbxRecord>> changes = getSkavaContext().getDatastore().sync();
-                for (String tablename : changes.keySet()) {
-                    if (tablename.equals(AssessmentDropboxTable.ASSESSMENT_TABLE)){
-                        Set<DbxRecord> recordsChanged = changes.get(tablename);
-                        for (DbxRecord dbxRecord : recordsChanged) {
-                            String assessmentCode = dbxRecord.getString("assessmentCode");
-                            try {
-                                LocalAssessmentDAO assessmentDAO = getDAOFactory().getLocalAssessmentDAO();
-                                Assessment uploadedAssessment = assessmentDAO.getAssessment(assessmentCode);
-                                uploadedAssessment.setSentToCloud(Assessment.DATA_SENT_TO_CLOUD);
-                                assessmentDAO.updateAssessment(uploadedAssessment, false);
-                            } catch (DAOException e) {
-                                e.printStackTrace();
-                                Log.e(SkavaConstants.LOG, e.getMessage());
-                            }
-                        }    
-                    }                    
-                }                
-                // Handle the updated data
-            } catch (DbxException e) {
-                // Handle exception
-                NotificationCompat.Builder mBuilder;
-                mBuilder = new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.cloud_icon)
-                        .setContentTitle("Skava Mobile notifies")
-                        .setContentText("Picture uploading failed :( ");
-                // Sets an ID for the notification
-                int mNotificationId = 001;
-                // Gets an instance of the NotificationManager service
-                NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                // Builds the notification and issues it.
-                mNotifyMgr.notify(mNotificationId, mBuilder.build());
-            }
-        }
-
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -120,17 +60,21 @@ public class MappingReportMainActivity extends SkavaFragmentActivity implements 
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        switch (getCurrentAssessment().getSentToCloud()){
+        switch (getCurrentAssessment().getSentToCloud()) {
             case Assessment.DATA_SENT_TO_CLOUD:
             case Assessment.PICS_SENT_TO_CLOUD:
             case Assessment.DATA_SENT_TO_DATASTORE:
             case Assessment.PICS_SENT_TO_DATASTORE:
                 // show no buttons as we dont want edit, re save nor resend
+                menu.findItem(R.id.action_mapping_report_draft).setVisible(false);
+                menu.findItem(R.id.action_mapping_report_send).setVisible(false);
                 break;
             default:
+                //i.e It has never been sent, just saved locally
+                //Save as draft available as this is still editable
                 menu.findItem(R.id.action_mapping_report_draft).setVisible(true);
                 if (getSkavaContext().getDatastore() != null) {
-                    menu.findItem(R.id.action_mapping_report_draft).setVisible(true);
+                    menu.findItem(R.id.action_mapping_report_send).setVisible(true);
                 } else {
                     menu.findItem(R.id.action_mapping_report_send).setVisible(false);
                 }
@@ -148,23 +92,21 @@ public class MappingReportMainActivity extends SkavaFragmentActivity implements 
             boolean successOnSaving = saveDraft();
             if (successOnSaving) {
                 Log.i(SkavaConstants.LOG, "Geological mapping draft succesfully saved.");
-                Toast.makeText(this, "", Toast.LENGTH_LONG);
+                Toast.makeText(this, "", Toast.LENGTH_LONG).show();
                 backToAssessmentList();
             } else {
                 Log.e(SkavaConstants.LOG, "Failed when saving geological mapping draft.");
-                Toast.makeText(this, "Failed when saving geological mapping " + getCurrentAssessment().getInternalCode() + " :: " + getCurrentAssessment().getCode(), Toast.LENGTH_LONG);
+                Toast.makeText(this, "Failed when saving geological mapping " + getCurrentAssessment().getInternalCode() + " :: " + getCurrentAssessment().getCode(), Toast.LENGTH_LONG).show();
             }
             return true;
         }
         if (id == R.id.action_mapping_report_send) {
             boolean successOnSend = sendAsCompleted();
             if (successOnSend) {
-                Log.i(SkavaConstants.LOG, "Geological mapping succesfully send.");
-                Toast.makeText(this, "Geological mapping succesfully save on D ", Toast.LENGTH_LONG);
+                Log.d(SkavaConstants.LOG, "Geological mapping succesfully send :: " + getCurrentAssessment().getInternalCode() + " - " + getCurrentAssessment().getCode());
                 backToAssessmentList();
             } else {
-                Log.e(SkavaConstants.LOG, "Failed when saving geological mapping.");
-                Toast.makeText(this, "Failed when saving geological mapping " + getCurrentAssessment().getInternalCode() + " :: " + getCurrentAssessment().getCode(), Toast.LENGTH_LONG);
+                Log.d(SkavaConstants.LOG, "Failed when saving geological mapping :: " + getCurrentAssessment().getInternalCode() + " - " + getCurrentAssessment().getCode());
             }
             return true;
         }
@@ -174,6 +116,36 @@ public class MappingReportMainActivity extends SkavaFragmentActivity implements 
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    private boolean sendAsCompleted() {
+        try {
+            //First save locally
+            saveDraft();
+            Assessment currentAssessment = getCurrentAssessment();
+            RemoteAssessmentDAO remoteAssessmentDAO = getDAOFactory().getRemoteAssessmentDAO(DAOFactory.Flavour.DROPBOX);
+            remoteAssessmentDAO.saveAssessment(currentAssessment);
+            return true;
+        } catch (DAOException e) {
+            e.printStackTrace();
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            BugSenseHandler.sendException(e);
+            // Handle exception
+            NotificationCompat.Builder mBuilder;
+            mBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.single_cloud_icon)
+                    .setContentTitle("Skava Mobile notifies")
+                    .setContentText("Mapping uploading failed :( ");
+            // Sets an ID for the notification
+            int mNotificationId = 001;
+            // Gets an instance of the NotificationManager service
+            NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            // Builds the notification and issues it.
+            mNotifyMgr.notify(mNotificationId, mBuilder.build());
+            return false;
+        }
+    }
+
 
     private void backToStagesMenu() {
         Intent upIntent = NavUtils.getParentActivityIntent(this);
@@ -219,43 +191,23 @@ public class MappingReportMainActivity extends SkavaFragmentActivity implements 
 
     }
 
-
-    private boolean saveDraft() {
-        boolean success = false;
-        try {
-            Assessment currentAssessment = getCurrentAssessment();
-            LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
-            localAssessmentDAO.saveAssessment(currentAssessment);
-            success = true;
-        } catch (DAOException e) {
-            e.printStackTrace();
-            Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-        return success;
+    public void onPreExecuteImportAppData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
     }
 
-
-    private boolean sendAsCompleted() {
-        try {
-            //First save locally
-            saveDraft();
-            Assessment currentAssessment = getCurrentAssessment();
-            RemoteAssessmentDAO remoteAssessmentDAO = getDAOFactory().getRemoteAssessmentDAO(DAOFactory.Flavour.DROPBOX);
-            remoteAssessmentDAO.saveAssessment(currentAssessment);
-            //it executes succesfully then
-            currentAssessment.setSentToCloud(Assessment.DATA_SENT_TO_DATASTORE);
-            //Use the listener Notification
-            LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
-            localAssessmentDAO.updateAssessment(currentAssessment, false);
-            return true;
-        } catch (DAOException e) {
-            e.printStackTrace();
-            Log.e(SkavaConstants.LOG, e.getMessage());
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-            return false;
-        }
+    public void onPreExecuteImportUserData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
     }
 
+    public void onPostExecuteImportAppData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    }
+
+    public void onPostExecuteImportUserData(){
+//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    }
+    public void showProgressBar(final boolean show, String text, boolean longTime) {
+
+    }
 
 }

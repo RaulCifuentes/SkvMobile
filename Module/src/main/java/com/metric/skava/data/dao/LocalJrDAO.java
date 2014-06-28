@@ -23,4 +23,5 @@ public interface LocalJrDAO {
 
     public int deleteAllJrs();
 
+    public Long countJr();
 }

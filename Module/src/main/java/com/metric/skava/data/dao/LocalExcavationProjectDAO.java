@@ -23,4 +23,5 @@ public interface LocalExcavationProjectDAO {
 
     public int deleteAllExcavationProjects() throws DAOException;
 
+    public Long countProjects();
 }

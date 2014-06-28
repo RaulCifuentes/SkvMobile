@@ -63,6 +63,7 @@ import com.metric.skava.instructions.model.ShotcreteType;
 import com.metric.skava.instructions.model.SupportPattern;
 import com.metric.skava.instructions.model.SupportPatternType;
 import com.metric.skava.instructions.model.SupportRecommendation;
+import com.metric.skava.pictures.model.SkavaPicture;
 import com.metric.skava.pictures.util.SkavaPictureFilesUtils;
 import com.metric.skava.rockmass.model.FractureType;
 import com.metric.skava.rocksupport.model.ESR;
@@ -176,7 +177,7 @@ public class MappingReportMainFragment extends SkavaFragment {
 
         // Call a calculation to be sure the result into account any changes on the selection of RMR list options
         RMR_Calculation rmrCalculation = currentAssessment.getRmrCalculation();
-        if (rmrCalculation.isComplete()){
+        if (rmrCalculation.isComplete()) {
             this.calculateRMR();
         }
 
@@ -235,7 +236,7 @@ public class MappingReportMainFragment extends SkavaFragment {
             ((TextView) rootView.findViewById(R.id.report_rmr_ajuste_value_rating)).setText(numberFormat.format(orientationDiscontinuities.getValue()));
         }
 
-        if (rmrCalculation.getRMRResult() != null){
+        if (rmrCalculation.getRMRResult() != null) {
             Double rmrValue = rmrCalculation.getRMRResult().getRMR();
             ((TextView) rootView.findViewById(R.id.report_rmr_rmr_value)).setText(numberFormat.format(rmrValue));
 
@@ -278,7 +279,7 @@ public class MappingReportMainFragment extends SkavaFragment {
 
         Q_Calculation qCalculation = currentAssessment.getQCalculation();
         // Call a calculation to be sure the result into account any changes on the selection of Q list options
-        if (qCalculation.isComplete()){
+        if (qCalculation.isComplete()) {
             this.calculateQBarton();
         }
 
@@ -330,7 +331,7 @@ public class MappingReportMainFragment extends SkavaFragment {
         }
 
 
-        if (qCalculation.getQResult() != null){
+        if (qCalculation.getQResult() != null) {
             Double qValue = qCalculation.getQResult().getQBarton();
             ((TextView) rootView.findViewById(R.id.report_q_q_value)).setText(numberFormat.format(qValue));
 
@@ -363,7 +364,7 @@ public class MappingReportMainFragment extends SkavaFragment {
             Double boltDiameter = recomendation.getBoltDiameter();
             if (boltDiameter != null) {
                 ((TextView) rootView.findViewById(R.id.report_diametro_perno_value)).setText(numberFormat.format(boltDiameter));
-            }  else {
+            } else {
                 ((TextView) rootView.findViewById(R.id.report_diametro_perno_value)).setText("-");
             }
 
@@ -742,21 +743,32 @@ public class MappingReportMainFragment extends SkavaFragment {
             }
         }
 
-        List<Uri> pictureList = currentAssessment.getPictureUriList();
+        List<SkavaPicture> pictureList = currentAssessment.getPicturesList();
         SkavaPictureFilesUtils pictureFilesUtils = new SkavaPictureFilesUtils(this.getActivity());
+
         if (pictureList != null && !pictureList.isEmpty()) {
             int pictureListSize = pictureList.size();
-
-            Uri faceUri = pictureList.get(0);
-            if (faceUri != null) {
-                Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(faceUri, 800, 600);
-                if (bitmap != null) {
-                    ((ImageView) rootView.findViewById(R.id.summary_report_face_pic)).setImageBitmap(bitmap);
+            //first try with the edited FACE picture
+            SkavaPicture picture = pictureList.get(1);
+            if (picture == null) {
+                picture = pictureList.get(0);
+            }
+            if (picture != null) {
+                Uri faceUri = picture.getPictureLocation();
+                if (faceUri != null) {
+                    Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(faceUri, 800, 600);
+                    if (bitmap != null) {
+                        ((ImageView) rootView.findViewById(R.id.summary_report_face_pic)).setImageBitmap(bitmap);
+                    }
                 }
             }
-
-            if (pictureListSize > 1) {
-                Uri leftUri = pictureList.get(1);
+            //first try with the edited LEFT picture
+            picture = pictureList.get(3);
+            if (picture == null) {
+                picture = pictureList.get(2);
+            }
+            if (picture != null) {
+                Uri leftUri = picture.getPictureLocation();
                 if (leftUri != null) {
                     Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(leftUri, 400, 300);
                     if (bitmap != null) {
@@ -764,8 +776,13 @@ public class MappingReportMainFragment extends SkavaFragment {
                     }
                 }
             }
-            if (pictureListSize > 2) {
-                Uri rightUri = pictureList.get(2);
+            //first try with the edited RIGHT picture
+            picture = pictureList.get(5);
+            if (picture == null) {
+                picture = pictureList.get(4);
+            }
+            if (picture != null) {
+                Uri rightUri = picture.getPictureLocation();
                 if (rightUri != null) {
                     Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(rightUri, 400, 300);
                     if (bitmap != null) {
@@ -773,8 +790,13 @@ public class MappingReportMainFragment extends SkavaFragment {
                     }
                 }
             }
-            if (pictureListSize > 3) {
-                Uri roofUri = pictureList.get(3);
+            //first try with the edited ROOF picture
+            picture = pictureList.get(7);
+            if (picture == null) {
+                picture = pictureList.get(6);
+            }
+            if (picture != null) {
+                Uri roofUri = picture.getPictureLocation();
                 if (roofUri != null) {
                     Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(roofUri, 400, 300);
                     if (bitmap != null) {
@@ -782,7 +804,10 @@ public class MappingReportMainFragment extends SkavaFragment {
                     }
                 }
             }
+
+
         }
+
 
         String outcrop = currentAssessment.getOutcropDescription();
         if (outcrop != null) {

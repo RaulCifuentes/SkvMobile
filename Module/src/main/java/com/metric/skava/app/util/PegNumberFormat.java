@@ -9,10 +9,13 @@ import java.text.DecimalFormatSymbols;
 public class PegNumberFormat extends DecimalFormat {
 
     public PegNumberFormat() {
+
         DecimalFormatSymbols custom = new DecimalFormatSymbols();
         custom.setGroupingSeparator('+');
         custom.setDecimalSeparator(',');
-        this.setMaximumFractionDigits(2);
-        this.setDecimalFormatSymbols(custom);
+        setMinimumFractionDigits(2);
+        setMaximumFractionDigits(2);
+
+        setDecimalFormatSymbols(custom);
     }
 }

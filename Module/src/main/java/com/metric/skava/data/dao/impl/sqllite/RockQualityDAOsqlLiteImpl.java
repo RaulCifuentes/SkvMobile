@@ -79,5 +79,10 @@ public class RockQualityDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<RockQuality>
         return deleteAllPersistentEntities(RockQualityTable.ROCK_QUALITY_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countRockQualities() {
+        return countRecords(RockQualityTable.ROCK_QUALITY_DATABASE_TABLE);
+    }
+
 
 }

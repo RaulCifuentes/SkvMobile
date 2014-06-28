@@ -71,4 +71,9 @@ public class ArchTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<ArchType> imple
         return deleteAllPersistentEntities(ArchTypeTable.ARCH_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countArchTypes() {
+        return countRecords(ArchTypeTable.ARCH_DATABASE_TABLE);
+    }
+
 }

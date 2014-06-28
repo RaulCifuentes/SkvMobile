@@ -20,5 +20,5 @@ public interface LocalCoverageDAO {
 
     public int deleteAllCoverages();
 
-
+    public Long countCoverages();
 }

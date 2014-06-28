@@ -20,5 +20,5 @@ public interface LocalArchTypeDAO {
 
     public int deleteAllArchTypes();
 
-
+    public Long countArchTypes();
 }

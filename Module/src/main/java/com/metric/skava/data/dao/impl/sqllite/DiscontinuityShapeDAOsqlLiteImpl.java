@@ -75,4 +75,9 @@ public class DiscontinuityShapeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Disco
         return deleteAllPersistentEntities(DiscontinuityShapeTable.SHAPE_DATABASE_TABLE);
     }
 
+    @Override
+    public Long countDiscontinuityShapes() {
+        return countRecords(DiscontinuityShapeTable.SHAPE_DATABASE_TABLE);
+    }
+
 }

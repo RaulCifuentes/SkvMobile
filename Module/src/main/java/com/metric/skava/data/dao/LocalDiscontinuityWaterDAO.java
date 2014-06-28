@@ -20,5 +20,6 @@ public interface LocalDiscontinuityWaterDAO {
 
     public int deleteAllDiscontinuityWaters();
 
+    public Long countDiscontinuityWaters();
 }
 

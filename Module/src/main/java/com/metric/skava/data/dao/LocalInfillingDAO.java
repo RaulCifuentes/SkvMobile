@@ -20,6 +20,7 @@ public interface LocalInfillingDAO {
 
     public boolean deleteInfilling(String indexCode, String groupCode, String code);
 
-
     public int deleteAllInfillings();
+
+    public Long countInfillings();
 }
