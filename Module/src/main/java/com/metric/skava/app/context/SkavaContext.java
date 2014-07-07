@@ -1,7 +1,6 @@
 package com.metric.skava.app.context;
 
 import com.dropbox.sync.android.DbxDatastore;
-import com.dropbox.sync.android.DbxFileSystem;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.User;
 import com.metric.skava.data.dao.DAOFactory;
@@ -19,7 +18,7 @@ public class SkavaContext {
     private SyncStatus userDataSyncMetadata;
     private SyncStatus appDataSyncMetadata;
     private DbxDatastore mDatastore;
-    private DbxFileSystem mFileSystem;
+//    private DbxFileSystem mFileSystem;
     private DAOFactory daoFactory;
     private SyncHelper syncHelper;
     private String targetEnvironment;
@@ -82,13 +81,13 @@ public class SkavaContext {
         this.appDataSyncMetadata = appDataSyncMetadata;
     }
 
-    public DbxFileSystem getFileSystem() {
-        return mFileSystem;
-    }
-
-    public void setFileSystem(DbxFileSystem fileSystem) {
-        this.mFileSystem = fileSystem;
-    }
+//    public DbxFileSystem getFileSystem() {
+//        return mFileSystem;
+//    }
+//
+//    public void setFileSystem(DbxFileSystem fileSystem) {
+//        this.mFileSystem = fileSystem;
+//    }
 
     public void setDatastore(DbxDatastore myDatastore) {
         this.mDatastore = myDatastore;

@@ -12,6 +12,8 @@ import android.util.Log;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.data.dao.impl.sqllite.table.ApertureTable;
 import com.metric.skava.data.dao.impl.sqllite.table.ArchTypeTable;
+import com.metric.skava.data.dao.impl.sqllite.table.AssessmentSyncTraceFilesTable;
+import com.metric.skava.data.dao.impl.sqllite.table.AssessmentSyncTraceRecordsTable;
 import com.metric.skava.data.dao.impl.sqllite.table.AssessmentTable;
 import com.metric.skava.data.dao.impl.sqllite.table.BoltTypeTable;
 import com.metric.skava.data.dao.impl.sqllite.table.ClientTable;
@@ -67,7 +69,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "mySkavaDatabase.db";
 
-    public static final int DATABASE_VERSION = 52;
+    public static final int DATABASE_VERSION = 54;
 
     public SkavaDBHelper(Context context, String name,
                          SQLiteDatabase.CursorFactory factory, int version) {
@@ -83,8 +85,9 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         // ******************** SyncLogging ********************
-        //
         db.execSQL(SyncLoggingTable.CREATE_SYNC_LOGGING_TABLE);
+        db.execSQL(AssessmentSyncTraceFilesTable.CREATE_SYNC_TRACE_FILES_TABLE);
+        db.execSQL(AssessmentSyncTraceRecordsTable.CREATE_SYNC_TRACE_RECORDS_TABLE);
 
         // ******************** Clients ********************
         db.execSQL(ClientTable.CREATE_CLIENTS_TABLE);
@@ -218,6 +221,8 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
         // ******************** Clients ********************
         db.execSQL("DROP TABLE IF EXISTS " + SyncLoggingTable.SYNC_LOGGING_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + AssessmentSyncTraceFilesTable.SYNC_TRACE_FILES_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + AssessmentSyncTraceRecordsTable.SYNC_TRACE_RECORDS_TABLE);
 
         // ******************** Clients ********************
         db.execSQL("DROP TABLE IF EXISTS " + ClientTable.CLIENT_DATABASE_TABLE);

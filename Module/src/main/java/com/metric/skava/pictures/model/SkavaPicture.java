@@ -7,11 +7,11 @@ import android.net.Uri;
  */
 public class SkavaPicture {
 
-    public enum PictureTag {FACE, LEFT,RIGHT, ROOF, EXTRA};
+    public enum PictureTag {FACE, LEFT, RIGHT, ROOF, EXTRA, EXPANDED_TUNNEL};
 
-    Uri pictureLocation;
-    PictureTag pictureTag;
-    boolean original;
+    private Uri pictureLocation;
+    private PictureTag pictureTag;
+    private boolean original;
 
     public SkavaPicture(PictureTag pictureTag, Uri pictureLocation, boolean original) {
         this.pictureTag = pictureTag;

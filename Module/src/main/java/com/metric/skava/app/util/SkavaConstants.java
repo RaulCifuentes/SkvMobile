@@ -2,7 +2,6 @@ package com.metric.skava.app.util;
 
 public class SkavaConstants {
 
-
 	public static final String LOG = "com.metric.skava";
 
 	public static final String IMAGE_DIRECTORY_NAME = "SkavaPictures";
@@ -30,7 +29,6 @@ public class SkavaConstants {
     public static final String CUSTOM_ACTION = "com.metric.skava.uploader.UPLOAD_SERVICE_ACTION";
 
 //    SKAVAAPP DATASTORE ONLY
-
 //    public static final String DROBOX_APP_KEY = "wv7jc0wirvu2c8y";
 //    public static final String DROBOX_APP_SECRET = "qebhcnh6lxqu7di";
 
@@ -47,6 +45,8 @@ public class SkavaConstants {
     public static final String DROBOX_APP_KEY = "1ij9s1t1ab2evpu";
     public static final String DROBOX_APP_SECRET = "sxr158c6hlqajex";
 
+    public static final String AVIARY_APP_KEY = "cd9f4966112e789c";
+
     //    SKAVAAPP FULL ACCESS
 //    public static final String DROBOX_APP_KEY = "1xwvqk4tepx9w1r";
 //    public static final String DROBOX_APP_SECRET = "nabmi5njy4lgxct";
@@ -62,4 +62,11 @@ public class SkavaConstants {
     public static final String EXTRA_ASSESSMENT_CODE = "EXTRA_ASSESSMENT_CODE";
     public static final String EXTRA_PICTURES = "EXTRA_PICTURES";
     public static final String EXTRA_ENVIRONMENT_NAME = "EXTRA_ENVIRONMENT_NAME";
+
+    public static final String MOBILE_SOURCE = "MOBILE";
+    public static final String BUGSENSE_API_KEY = "41e76766";
+    public static final String EXTRA_OPERATION = "EXTRA_OPERATION";
+    public static final String EXTRA_OPERATION_INSERT = "INSERT";
+    public static final String EXTRA_OPERATION_DELETE = "DELETE";
+
 }

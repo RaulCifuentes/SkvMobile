@@ -33,11 +33,20 @@ public class UserDataDomain {
     }
 
     public List<Tunnel> getTunnels(ExcavationProject project) {
-        return projectTunnels.get(project);
+        if (projectTunnels.containsKey(project)){
+            return projectTunnels.get(project);
+        } else {
+            return new ArrayList<Tunnel>();
+        }
+
     }
 
     public List<TunnelFace> getFaces(Tunnel tunnel) {
-        return tunnelFaces.get(tunnel);
+        if (tunnelFaces.containsKey(tunnel)){
+            return tunnelFaces.get(tunnel);
+        } else {
+            return new ArrayList<TunnelFace>();
+        }
     }
 
 

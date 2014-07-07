@@ -86,8 +86,12 @@ public class AssessmentListAdapter extends BaseAdapter {
             }
 
             if (currentItem.getPseudoCode() != null){
-                TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_code);
+                TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_pseudo_code);
                 text.setText(currentItem.getPseudoCode());
+            }
+            if (currentItem.getCode() != null){
+                TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_code);
+                text.setText(currentItem.getCode());
             }
 
             Double initChainage = currentItem.getInitialPeg();

@@ -7,6 +7,10 @@ public class FileToSync extends DataToSync {
 
     private String fileName;
 
+    public FileToSync(String assessmentCode) {
+        super(assessmentCode);
+    }
+
     public String getFileName() {
         return fileName;
     }

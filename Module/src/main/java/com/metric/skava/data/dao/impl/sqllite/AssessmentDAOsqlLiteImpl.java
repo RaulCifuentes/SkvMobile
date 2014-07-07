@@ -26,7 +26,9 @@ import com.metric.skava.data.dao.impl.sqllite.table.ExternalResourcesTable;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
 import com.metric.skava.instructions.model.SupportRecommendation;
 import com.metric.skava.pictures.model.SkavaPicture;
+import com.metric.skava.pictures.util.SkavaPictureFilesUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -136,9 +138,26 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             List<SkavaPicture> resourceList = getPicturesByAssessmentCode(assessmentCode);
             reconstructedAssessment.setPicturesList(resourceList);
 
+            Uri expandedView = getExpandedTunnelViewByAssessmentCode(assessmentCode);
+            if (expandedView != null) {
+                reconstructedAssessment.setTunnelExpandedView(expandedView);
+            }
+
             list.add(reconstructedAssessment);
         }
         return list;
+    }
+
+    private Uri getExpandedTunnelViewByAssessmentCode(String code) {
+        String[] columns = new String[] {ExternalResourcesTable.ASSESSMENT_CODE_COLUMN, ExternalResourcesTable.RESOURCE_TAG_COLUMN} ;
+        Object[] values = new Object[] {code, SkavaPicture.PictureTag.EXPANDED_TUNNEL.name()};
+        Cursor cursor = getRecordsFilteredByColumns(ExternalResourcesTable.EXTERNAL_RESOURCES_DATABASE_TABLE, columns, values, null);
+        Uri expandedTunnel = null;
+        while (cursor.moveToNext()) {
+            String uriString = CursorUtils.getString(ExternalResourcesTable.RESOURCE_URL_COLUMN, cursor);
+            expandedTunnel = Uri.parse(uriString);
+        }
+        return expandedTunnel;
     }
 
     private List<SkavaPicture> getPicturesByAssessmentCode(String code) {
@@ -182,6 +201,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 case EXTRA:
                     resourceIndex = 8;
                     break;
+                case EXPANDED_TUNNEL:
+                    continue;
             }
             resourceIndex += index;
             if (resourceIndex < 8) {
@@ -347,7 +368,29 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                     ExternalResourcesTable.PICTURE_RESOURCE_TYPE,
                     currPicture.getPictureTag(),
                     currPicture.isOriginal()? 0:1,
-                    currPicture.getPictureLocation().getPath()
+                    //getPath is not enough, it losses the Uri scheme part ( file:/// in most our cases)
+//                    currPicture.getPictureLocation().getPath()
+                    currPicture.getPictureLocation().toString()
+            };
+            saveRecord(ExternalResourcesTable.EXTERNAL_RESOURCES_DATABASE_TABLE, resourcesNames, resourcesValues);
+        }
+
+        //Save the tunnel expanded view if any
+        Uri expandedView = newSkavaEntity.getTunnelExpandedView();
+        if (expandedView != null) {
+            String[] resourcesNames = new String[]{
+                    ExternalResourcesTable.ASSESSMENT_CODE_COLUMN,
+                    ExternalResourcesTable.RESOURCE_TYPE_COLUMN,
+                    ExternalResourcesTable.RESOURCE_TAG_COLUMN,
+                    ExternalResourcesTable.RESOURCE_ORDINAL,
+                    ExternalResourcesTable.RESOURCE_URL_COLUMN
+            };
+            Object[] resourcesValues = new Object[]{
+                    newSkavaEntity.getCode(),
+                    ExternalResourcesTable.PICTURE_RESOURCE_TYPE,
+                    SkavaPicture.PictureTag.EXPANDED_TUNNEL,
+                    0, //not used in this case
+                    expandedView.toString()
             };
             saveRecord(ExternalResourcesTable.EXTERNAL_RESOURCES_DATABASE_TABLE, resourcesNames, resourcesValues);
         }
@@ -355,14 +398,37 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
     }
 
     @Override
-    public boolean deleteAssessment(String code) {
-        return deleteIdentifiableEntity(AssessmentTable.ASSESSMENT_DATABASE_TABLE, code);
+    public boolean deleteAssessment(String code) throws DAOException {
+        SkavaPictureFilesUtils filesUtils = new SkavaPictureFilesUtils(mContext);
+
+        File skavaPictureStorageDir = filesUtils.getSkavaPicturesFolder();
+        File assessmentPictureFolder = new File(skavaPictureStorageDir, code);
+        filesUtils.deleteRecursively(assessmentPictureFolder);
+
+        boolean deletedQ = mLocalQCalculationDAO.deleteQCalculation(code);
+        boolean deletedRMR = mLocalRMRCalculationDAO.deleteRMRCalculation(code);
+        int discontinuities = mLocalDiscontinuityFamilyDAO.deleteAllDiscontinuityFamilies(code);
+        boolean deletedRecommendations = mLocalSupportRecommendationDAO.deleteSupportRecommendation(code);
+        int picResources = deletePersistentEntitiesFilteredByColumn(ExternalResourcesTable.EXTERNAL_RESOURCES_DATABASE_TABLE, ExternalResourcesTable.ASSESSMENT_CODE_COLUMN, code);
+        boolean deletedAssessment = deleteIdentifiableEntity(AssessmentTable.ASSESSMENT_DATABASE_TABLE, code);
+
+        return deletedAssessment && deletedQ && deletedRMR && deletedRecommendations && (discontinuities != -1) && (picResources != -1);
+
     }
 
 
     @Override
-    public int deleteAllAssessments() {
-        return deleteAllPersistentEntities(AssessmentTable.ASSESSMENT_DATABASE_TABLE);
+    public int deleteAllAssessments() throws DAOException {
+        //iteratem, get the ocode, delete each
+        Cursor cursor = getAllRecords(AssessmentTable.ASSESSMENT_DATABASE_TABLE, null);
+        int i = 0;
+        while (cursor.moveToNext()) {
+            String assessmentCode = CursorUtils.getString(AssessmentTable.CODE_COLUMN, cursor);
+            deleteAssessment(assessmentCode);
+            i++;
+        }
+//        return deleteAllPersistentEntities(AssessmentTable.ASSESSMENT_DATABASE_TABLE);
+        return i;
     }
 
 

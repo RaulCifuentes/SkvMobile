@@ -230,6 +230,14 @@
                 android:value="com.metric.skava.assessment.activity.AssessmentStageListActivity" />
         </activity>
         <activity
+            android:name="com.metric.skava.expandedview.activity.ExpandedTunnelMainActivity"
+            android:label="@string/title_activity_expanded_view"
+            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.metric.skava.assessment.activity.AssessmentStageListActivity" />
+        </activity>
+        <activity
             android:name="com.metric.skava.discontinuities.activity.DiscontinuitiesMainActivity"
             android:label="@string/title_activity_discontinuities_main"
             android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity" >
@@ -287,8 +295,12 @@
             android:name="com.metric.skava.assessment.activity.SaveAssessmentActivity"
             android:label="@string/title_activity_save_assessment" />
         <activity
-            android:name="com.metric.skava.test.activity.DropboxCoreTestMainActivity"
-            android:label="@string/title_activity_dropbox_core_test_main" >
+            android:name="com.metric.skava.expandedview.activity.TestAutocadMainActivity"
+            android:label="@string/title_activity_test_autocad_main"
+            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.metric.skava.assessment.activity.AssessmentStageListActivity" />
         </activity>
     </application>
 

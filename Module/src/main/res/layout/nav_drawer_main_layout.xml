@@ -1,23 +1,37 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/nav_drawer_main_layout_drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/nav_drawer_main_layout_content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/Black">
+            <ImageView
+                android:id="@+id/imageView"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/logo_skava" />
+        </RelativeLayout>
+    </FrameLayout>
 
     <ListView
         android:id="@+id/nav_drawer_main_layout_left_drawer"
         android:layout_width="280dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start"        
-        android:choiceMode="singleChoice"        
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
         android:dividerHeight="1dp"
         android:listSelector="@drawable/apptheme_list_selector_holo_light"
-        android:background="@color/Gray"
-        />
+        android:background="@color/Gray" />
 
     <!--android:background="@color/holo_blue_dark"-->
 

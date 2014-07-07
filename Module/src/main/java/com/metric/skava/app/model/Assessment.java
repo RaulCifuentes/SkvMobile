@@ -1,5 +1,7 @@
 package com.metric.skava.app.model;
 
+import android.net.Uri;
+
 import com.metric.skava.app.data.IdentifiableEntity;
 import com.metric.skava.app.util.PegNumberFormat;
 import com.metric.skava.calculator.barton.model.Q_Calculation;
@@ -55,6 +57,7 @@ public class Assessment implements IdentifiableEntity {
     private Q_Calculation qCalculation;
     private RMR_Calculation rmrCalculation;
 
+    private Uri mTunnelExpandedViews;
 
     public Assessment(String code) {
         this.code = code;
@@ -104,6 +107,14 @@ public class Assessment implements IdentifiableEntity {
         return null;
     }
 
+
+    public Uri getTunnelExpandedView() {
+        return mTunnelExpandedViews;
+    }
+
+    public void setTunnelExpandedView(Uri tunnelExpandedViews) {
+        this.mTunnelExpandedViews = tunnelExpandedViews;
+    }
 
     public TunnelFace getFace() {
         return face;

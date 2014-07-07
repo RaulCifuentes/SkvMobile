@@ -25,6 +25,7 @@
     <string name="title_activity_discontinuities_main">DiscontinuitiesMainActivity</string>
     <string name="title_activity_instructions_main">InstructionsMainActivity</string>
     <string name="title_activity_test_list_view_main">TestListViewMainActivity</string>
+    <string name="title_activity_expanded_view">TunnelExpandedViewMainActivity</string>
     <string name="report_caracterizacion_macizo">Rock Mass Clasification</string>
     <string name="action_ok">Accept</string>
     <string name="parsingPKError">PK debe ser un numero</string>
@@ -74,5 +75,6 @@
     <string name="connecting_dropbox">Linking to Dropbox</string>
     <string name="title_activity_dropbox_core_test_main">DropboxCoreTestMainActivity</string>
     <string name="test_dropbox_core">Test dropbox core</string>
+    <string name="title_activity_test_autocad_main">TestAutocadMainActivity</string>
 
 </resources>

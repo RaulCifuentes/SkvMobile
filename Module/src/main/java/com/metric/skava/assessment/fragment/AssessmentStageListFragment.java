@@ -150,7 +150,6 @@ public class AssessmentStageListFragment extends ListFragment {
         } else {
             getListView().setItemChecked(position, true);
         }
-
         mActivatedPosition = position;
     }
 

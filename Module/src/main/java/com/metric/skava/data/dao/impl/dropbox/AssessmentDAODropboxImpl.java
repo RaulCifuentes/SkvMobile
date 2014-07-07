@@ -6,14 +6,9 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
-import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFields;
-import com.dropbox.sync.android.DbxFile;
-import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxList;
-import com.dropbox.sync.android.DbxPath;
 import com.dropbox.sync.android.DbxRecord;
-import com.dropbox.sync.android.DbxSyncStatus;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.ExcavationMethod;
@@ -66,17 +61,16 @@ import com.metric.skava.instructions.model.ShotcreteType;
 import com.metric.skava.instructions.model.SupportPattern;
 import com.metric.skava.instructions.model.SupportRecommendation;
 import com.metric.skava.pictures.model.SkavaPicture;
-import com.metric.skava.pictures.util.SkavaFilesUtils;
 import com.metric.skava.rockmass.model.FractureType;
 import com.metric.skava.rocksupport.model.ESR;
 import com.metric.skava.rocksupport.model.SupportRequirement;
+import com.metric.skava.sync.dao.SyncLoggingDAO;
+import com.metric.skava.sync.model.AssessmentSyncTrace;
 import com.metric.skava.sync.model.DataToSync;
 import com.metric.skava.sync.model.FileToSync;
 import com.metric.skava.sync.model.RecordToSync;
 import com.metric.skava.sync.model.SyncQueue;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -93,8 +87,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
     private QBartonCalculationDropboxTable mQBartonCalculationDropBoxTable;
     private SupportRecommendationDropboxTable mSupportRecommendationDropboxTable;
     private AssessmentBuilder4DropBox assessmentBuilder;
-    private SkavaFilesUtils mFilesUtils;
-
+    private SyncLoggingDAO mSyncLoggingDAO;
 
     public AssessmentDAODropboxImpl(Context context, SkavaContext skavaContext) throws DAOException {
         super(context, skavaContext);
@@ -104,7 +97,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         this.mQBartonCalculationDropBoxTable = new QBartonCalculationDropboxTable(getDatastore());
         this.mSupportRecommendationDropboxTable = new SupportRecommendationDropboxTable(getDatastore());
         this.assessmentBuilder = new AssessmentBuilder4DropBox(skavaContext);
-        this.mFilesUtils = new SkavaFilesUtils(context);
+        this.mSyncLoggingDAO = getDAOFactory().getSyncLoggingDAO();
     }
 
     @Override
@@ -135,6 +128,8 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         try {
 
             DbxFields assessmentFields = new DbxFields();
+
+            assessmentFields.set("source", SkavaConstants.MOBILE_SOURCE);
 
             String code = assessment.getCode();
             assessmentFields.set("code", code);
@@ -581,6 +576,13 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
 
             }
 
+            Uri tunnelExpanded = assessment.getTunnelExpandedView();
+            if (tunnelExpanded != null) {
+                String tunnelExpandedAsString = tunnelExpanded.getLastPathSegment();
+                assessmentFields.set("tunnelExpanded", tunnelExpandedAsString);
+            }
+
+
             List<SkavaPicture> pictureList = assessment.getPicturesList();
             DbxList uriEncodedList = new DbxList();
             for (SkavaPicture currentPicture : pictureList) {
@@ -602,19 +604,28 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 recordId = alreadyRemoted.getId();
                 alreadyRemoted.setAll(assessmentFields);
             }
-            //Mmm.. Record that Dropbox delivery middle man has this assessment already
-            RecordToSync recordToSync = new RecordToSync();
+            //****** THE ASSESSMENT SAVE WAS JUST CALLED, SO RECORD THIS ON THE SYNC QUEUE
+            RecordToSync recordToSync = new RecordToSync(assessment.getCode());
             recordToSync.setOperation(RecordToSync.Operation.INSERT);
             recordToSync.setSkavaEntityCode(assessment.getCode());
             recordToSync.setRecordID(recordId);
+            recordToSync.setDate(SkavaUtils.getCurrentDate());
+            recordToSync.setStatus(DataToSync.Status.QUEUED);
 
+            //This is just the assessment syncing log table for eventual tracing
+            AssessmentSyncTrace syncTrace = new AssessmentSyncTrace(assessment.getCode());
+            syncTrace.addRecord(recordToSync);
+
+            //This is the on-memory middleman to check if there´s any pending sync request
             SyncQueue middlemanInbox = getSkavaContext().getMiddlemanInbox();
-            middlemanInbox.addRecord(assessment.getCode(), recordToSync);
+            middlemanInbox.addRecord(recordToSync);
 
-            if (SkavaUtils.hasPictures(pictureList)) {
-                // executes the uploading as an async task
-//                new PictureUploader().execute(assessment.getInternalCode(), assessment.getCode(), pictureList);
-
+            //****** Proceed saving the pictures if any of this assessment
+            //Here tunnelExpanded will work similar to pictures so..
+            if (SkavaUtils.hasPictures(pictureList) || tunnelExpanded != null ) {
+                //Invoke a service to do the upload of the Pictures
+                //com.metric.skava.uploader.MyUploaderService
+                //Creates a new Thread and run the service on it
                 String folderName = null;
                 String target = getSkavaContext().getTargetEnvironment();
                 if (target.equalsIgnoreCase(SkavaConstants.DEV_KEY)) {
@@ -626,17 +637,39 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 }
 
                 final ArrayList<String> picturesAsStringList = new ArrayList<String>();
-                for (SkavaPicture skavaPicture : pictureList) {
-                    if (skavaPicture != null && skavaPicture.getPictureLocation() != null) {
-                        //add to the list sent to the upload service
-                        picturesAsStringList.add(skavaPicture.getPictureLocation().toString());
-                        //add a record on the log of the middleman
-                        FileToSync pendingFile = new FileToSync();
-                        pendingFile.setOperation(DataToSync.Operation.INSERT);
-                        pendingFile.setFileName(skavaPicture.getPictureLocation().getLastPathSegment());
-                        SyncQueue whatIWishSync = getSkavaContext().getMiddlemanInbox();
-                        whatIWishSync.addFile(assessment.getCode(), pendingFile);
+                //Here we check specifically for pictures but not tunnel expanded view
+                if (SkavaUtils.hasPictures(pictureList)){
+                    for (SkavaPicture skavaPicture : pictureList) {
+                        if (skavaPicture != null && skavaPicture.getPictureLocation() != null) {
+                            //add the full Uri as String to the list sent to the upload service
+                            picturesAsStringList.add(skavaPicture.getPictureLocation().toString());
+                            //*** The thread will be called soon, so lets RECORD THIS ON THE SYNC QUEUE too
+                            FileToSync pendingFile = new FileToSync(assessment.getCode());
+                            pendingFile.setOperation(DataToSync.Operation.INSERT);
+                            pendingFile.setFileName(skavaPicture.getPictureLocation().getLastPathSegment());
+                            pendingFile.setDate(SkavaUtils.getCurrentDate());
+                            pendingFile.setStatus(DataToSync.Status.QUEUED);
+                            //This is just the assessment syncing log table for eventual tracing
+                            syncTrace.addFile(pendingFile);
+                            //And this is the on-memory middleman to check if there´s any pending sync request
+                            middlemanInbox.addFile(pendingFile);
+                        }
                     }
+                }
+                //And here we check specifically tunnel expanded view
+                if (tunnelExpanded != null) {
+                    //add the full Uri as String to the list sent to the upload service
+                    picturesAsStringList.add(tunnelExpanded.toString());
+                    //*** The thread will be called soon, so lets RECORD THIS ON THE SYNC QUEUE too
+                    FileToSync pendingFile = new FileToSync(assessment.getCode());
+                    pendingFile.setOperation(DataToSync.Operation.INSERT);
+                    pendingFile.setFileName(tunnelExpanded.getLastPathSegment());
+                    pendingFile.setDate(SkavaUtils.getCurrentDate());
+                    pendingFile.setStatus(DataToSync.Status.QUEUED);
+                    //This is just the assessment syncing log table for eventual tracing
+                    syncTrace.addFile(pendingFile);
+                    //And this is the on-memory middleman to check if there´s any pending sync request
+                    middlemanInbox.addFile(pendingFile);
                 }
 
                 final String finalFolderName = folderName;
@@ -644,11 +677,13 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     public void run() {
                         String internalCode = assessment.getInternalCode();
                         String assessmentCode = assessment.getCode();
-                        invokeTheService(finalFolderName, internalCode, assessmentCode, picturesAsStringList );
+                        invokeTheService(DataToSync.Operation.INSERT, finalFolderName, internalCode, assessmentCode, picturesAsStringList);
                     }
                 });
                 myThread.start();
             }
+            //Before leaving save this assessmentSyncTrace for tracing purposes
+            mSyncLoggingDAO.saveAssessmentSyncTrace(syncTrace);
 
         } catch (Exception e) {
             BugSenseHandler.sendException(e);
@@ -659,193 +694,31 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
     }
 
 
-    public void invokeTheService(String folderName, String internalCode, String assessmentCode, ArrayList<String> picturesAsStringList){
-        Intent serviceIntent = new Intent(SkavaConstants.CUSTOM_ACTION);
-        serviceIntent.putExtra(SkavaConstants.EXTRA_ENVIRONMENT_NAME, folderName);
-        serviceIntent.putExtra(SkavaConstants.EXTRA_INTERNAL_CODE, internalCode);
-        serviceIntent.putExtra(SkavaConstants.EXTRA_ASSESSMENT_CODE, assessmentCode);
-        serviceIntent.putStringArrayListExtra(SkavaConstants.EXTRA_PICTURES, picturesAsStringList);
-        mContext.startService(serviceIntent);
+    public void invokeTheService(DataToSync.Operation operation, String folderName, String internalCode, String assessmentCode, ArrayList<String> picturesAsStringList) {
+        Intent serviceIntent;
+        switch (operation) {
+            case INSERT:
+                serviceIntent = new Intent(SkavaConstants.CUSTOM_ACTION);
+                serviceIntent.putExtra(SkavaConstants.EXTRA_OPERATION, operation.name());
+                serviceIntent.putExtra(SkavaConstants.EXTRA_ENVIRONMENT_NAME, folderName);
+                serviceIntent.putExtra(SkavaConstants.EXTRA_INTERNAL_CODE, internalCode);
+                serviceIntent.putExtra(SkavaConstants.EXTRA_ASSESSMENT_CODE, assessmentCode);
+                serviceIntent.putStringArrayListExtra(SkavaConstants.EXTRA_PICTURES, picturesAsStringList);
+                mContext.startService(serviceIntent);
+                break;
+            case DELETE:
+                serviceIntent = new Intent(SkavaConstants.CUSTOM_ACTION);
+                serviceIntent.putExtra(SkavaConstants.EXTRA_OPERATION, operation.name());
+                serviceIntent.putExtra(SkavaConstants.EXTRA_ENVIRONMENT_NAME, folderName);
+                serviceIntent.putExtra(SkavaConstants.EXTRA_INTERNAL_CODE, internalCode);
+                serviceIntent.putExtra(SkavaConstants.EXTRA_ASSESSMENT_CODE, assessmentCode);
+                //picturesAsStringList is expected to be null as the delete will remove all pictures
+                serviceIntent.putStringArrayListExtra(SkavaConstants.EXTRA_PICTURES, picturesAsStringList);
+                mContext.startService(serviceIntent);
+        }
+
     }
 
-//    class PictureUploader extends AsyncTask<Object, Void, Integer> {
-//
-//        SyncLogEntry errorCondition;
-//        String internalCode;
-//        String assessmentCode;
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//        }
-//
-//        @Override
-//        protected Integer doInBackground(Object[] params) {
-//            internalCode = (String) params[0];
-//            assessmentCode = (String) params[1];
-//            List<SkavaPicture> picturesList = (List<SkavaPicture>) params[2];
-//            SyncTask.Source source = null;
-//            try {
-//                DbxSyncStatus status = getSkavaContext().getFileSystem().getSyncStatus();
-//                source = status.isSyncActive ? SyncTask.Source.DROPBOX_REMOTE_FILESYSTEM : SyncTask.Source.DROPBOX_LOCAL_FILESYSTEM;
-//                Integer numPictures = uploadPictures(internalCode, assessmentCode, picturesList);
-//                if (numPictures == -1) {
-//                    errorCondition = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.PICTURES, source, SyncTask.Status.FAIL, 0L);
-//                }
-//                return numPictures;
-//            } catch (DbxException e) {
-//                BugSenseHandler.sendException(e);
-//                Log.e(SkavaConstants.LOG, e.getMessage());
-//                errorCondition = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.PICTURES, source, SyncTask.Status.FAIL, 0L);
-//                errorCondition.setMessage(e.getMessage());
-//                return -1;
-//            } catch (DAOException e) {
-//                Log.e(SkavaConstants.LOG, e.getMessage());
-//                BugSenseHandler.sendException(e);
-//                e.printStackTrace();
-//                errorCondition = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.PICTURES, source, SyncTask.Status.FAIL, 0L);
-//                errorCondition.setMessage(e.getMessage());
-//                return -1;
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Integer result) {
-//            if (result == -1 || errorCondition != null) {
-//                NotificationCompat.Builder mBuilder;
-//                mBuilder = new NotificationCompat.Builder(mContext)
-//                        .setSmallIcon(R.drawable.cloud_icon)
-//                        .setContentTitle("Skava Mobile notifies")
-//                        .setContentText("Picture uploading failed :( ");
-//                // Sets an ID for the notification
-//                int mNotificationId = 001;
-//                // Gets an instance of the NotificationManager service
-//                NotificationManager mNotifyMgr = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
-//                // Builds the notification and issues it.
-//                mNotifyMgr.notify(mNotificationId, mBuilder.build());
-//            } else {
-//                //mostrar que termino exitosamente
-//                NotificationCompat.Builder mBuilder;
-//                mBuilder = new NotificationCompat.Builder(mContext)
-//                        .setSmallIcon(R.drawable.cloud_icon)
-//                        .setContentTitle("Skava Mobile notifies")
-//                        .setContentText("Picture uploading succeed !!");
-//                int mNotificationId = 010;
-//                // Gets an instance of the NotificationManager service
-//                NotificationManager mNotifyMgr = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
-//                mNotifyMgr.notify(mNotificationId, mBuilder.build());
-//                // Update the assessment to inform also the pictures complete
-//                try {
-//                    Assessment localAssessment = getDAOFactory().getLocalAssessmentDAO().getAssessment(assessmentCode);
-//                    localAssessment.setSentToCloud(Assessment.PICS_SENT_TO_CLOUD);
-//                } catch (DAOException e) {
-//                    Log.e(SkavaConstants.LOG, e.getMessage());
-//                    BugSenseHandler.sendException(e);
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//    }
-
-
-    private int uploadPictures(String internalCode, String assessmentCode, List<SkavaPicture> pictures) throws DAOException {
-
-        // Create DbxFileSystem for synchronized file access.
-        DbxFileSystem dbxFs = getSkavaContext().getFileSystem();
-
-        if (dbxFs.isShutDown()) {
-            Log.e(SkavaConstants.LOG, "DbxFileSystem is shutted down");
-            throw new DAOException("DbxFileSystem is shutted down");
-        }
-        //Create a folder named after the datastore's name
-        //The datastore name depends on the target environment, so ...
-        String folderName = null;
-        String target = getSkavaContext().getTargetEnvironment();
-        if (target.equalsIgnoreCase(SkavaConstants.DEV_KEY)) {
-            folderName = SkavaConstants.DROPBOX_DS_DEV_NAME;
-        } else if (target.equalsIgnoreCase(SkavaConstants.QA_KEY)) {
-            folderName = SkavaConstants.DROPBOX_DS_QA_NAME;
-        } else if (target.equalsIgnoreCase(SkavaConstants.PROD_KEY)) {
-            folderName = SkavaConstants.DROPBOX_DS_PROD_NAME;
-        }
-
-        DbxPath skavaFolderPath = new DbxPath(DbxPath.ROOT, folderName);
-
-        try {
-            //JUST TO AVOID THE exception//
-//            if (!dbxFs.exists(skavaFolderPath)) {
-//                dbxFs.createFolder(skavaFolderPath);
-//            }
-            DbxPath projectPath = new DbxPath(skavaFolderPath, internalCode);
-
-            for (SkavaPicture skavaPicture : pictures) {
-                if (skavaPicture != null) {
-                    Uri pictureURI = skavaPicture.getPictureLocation();
-                    DbxPath assessmentPath = new DbxPath(projectPath, assessmentCode);
-                    //JUST TO AVOID THE exception
-//                    if (!dbxFs.exists(assessmentPath)) {
-//                        dbxFs.createFolder(assessmentPath);
-//                    }
-                    //JUST TO AVOID THE exception
-                    String name = pictureURI.getLastPathSegment();
-                    DbxPath filePath = new DbxPath(assessmentPath, name);
-                    DbxFile targetFile = null;
-                    try {
-                        targetFile = dbxFs.create(filePath);
-                    } catch (DbxException.Exists e) {
-                        e.printStackTrace();
-                    } catch (DbxException.AlreadyOpen eao) {
-                        eao.printStackTrace();
-                    } catch (DbxException.InvalidOperation eio) {
-                        eio.printStackTrace();
-                    } catch (DbxException dbxe) {
-                        dbxe.printStackTrace();
-                    }
-                    try {
-                        File tabletFile = mFilesUtils.getExistingFileFromUri(pictureURI);
-                        targetFile.writeFromExistingFile(tabletFile, false);
-                        //******** Record that Dropbox delivery middle man has the pictures files already******
-                        //is uploading, log that into the DeliveredToMiddleman log space
-                        //Here we just put the record into the log space while SyncListener is changes its status
-                        FileToSync pendingFile = new FileToSync();
-                        pendingFile.setOperation(DataToSync.Operation.INSERT);
-                        pendingFile.setFileName(targetFile.getInfo().path.getName());
-
-                        SyncQueue whatIWishSync = getSkavaContext().getMiddlemanInbox();
-                        whatIWishSync.addFile(assessmentCode, pendingFile);
-
-                    } finally {
-                        targetFile.close();
-                    }
-                }
-            }
-            //Put this on the listener and se what happens
-            dbxFs.syncNowAndWait();
-            return pictures.size();
-        } catch (NullPointerException npe) {
-            if (npe != null) {
-                //This looks lika a non-sense but actually happened, seems to be caused by the debugger
-                npe.printStackTrace();
-                Log.e(SkavaConstants.LOG, npe.getMessage());
-                throw new DAOException(npe);
-            }
-        } catch (DbxException dbxe) {
-            if (dbxe != null) {
-                dbxe.printStackTrace();
-                Log.e(SkavaConstants.LOG, dbxe.getMessage());
-                BugSenseHandler.sendException(dbxe);
-                throw new DAOException(dbxe);
-            }
-        } catch (IOException ioe) {
-            if (ioe != null) {
-                ioe.printStackTrace();
-                Log.e(SkavaConstants.LOG, ioe.getMessage());
-                BugSenseHandler.sendException(ioe);
-                throw new DAOException(ioe);
-            }
-        }
-        return -1;
-    }
 
     public void deleteAllAssessments(boolean cascade) throws DAOException {
         List<DbxRecord> recordList = mAssessmentsTable.findAll();
@@ -856,37 +729,71 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             }
         }
 
+        // If for some reason theres still some records on dropbox tables run the following
+        List<DbxRecord> multipleQCalculations = mQBartonCalculationDropBoxTable.findAll();
+        for (DbxRecord currCalculation : multipleQCalculations) {
+            if (currCalculation != null) {
+                currCalculation.deleteRecord();
+            }
+        }
+        List<DbxRecord> multipleRmrCalculations = mRMRCalculationDropBoxTable.findAll();
+        for (DbxRecord currCalculation : multipleRmrCalculations) {
+            if (currCalculation != null) {
+                currCalculation.deleteRecord();
+            }
+        }
+        List<DbxRecord> multipleRecommendations = mSupportRecommendationDropboxTable.findAll();
+        for (DbxRecord currRecommendation : multipleRecommendations) {
+            if (currRecommendation != null) {
+                currRecommendation.deleteRecord();
+            }
+        }
+        List<DbxRecord> records = mDiscontinuitiesFamilyDropBoxTable.findAll();
+        for (DbxRecord dbxRecord : records) {
+            if (dbxRecord != null) {
+                dbxRecord.deleteRecord();
+            }
+        }
+
     }
 
 
     @Override
-    public void deleteAssessment(String code, boolean cascade) throws DAOException {
-        //Should be just one but erronously could be multiple records
-        List<DbxRecord> multipleAssessmentsWithSameCode = mAssessmentsTable.findRecordsByCriteria(new String[]{"code"}, new String[]{code});
+    public void deleteAssessment(String assessmentCode, boolean cascade) throws DAOException {
+        //Should be just one but if for some any reason (during DEV tests for example) there is multiple records for same assessmentCode
+        List<DbxRecord> multipleAssessmentsWithSameCode = mAssessmentsTable.findRecordsByCriteria(new String[]{"code"}, new String[]{assessmentCode});
+
+        //This is just the assessment syncing log table for eventual tracing
+        AssessmentSyncTrace syncTrace = new AssessmentSyncTrace(assessmentCode);
+
+        //This is the on-memory middleman log space (used somewhere to check if there´s any pending sync request)
+        SyncQueue middlemanInbox = getSkavaContext().getMiddlemanInbox();
+
         for (DbxRecord assessmentRecordToDelete : multipleAssessmentsWithSameCode) {
             if (cascade) {
-                List<DbxRecord> multipleQCalculations = mQBartonCalculationDropBoxTable.findRecordsByCriteria(new String[]{"assessmentCode"}, new String[]{code});
+                //Againg should be just one but if for some any reason (during DEV tests for example) there is multiple records for same assessmentCode
+                List<DbxRecord> multipleQCalculations = mQBartonCalculationDropBoxTable.findRecordsByCriteria(new String[]{"assessmentCode"}, new String[]{assessmentCode});
                 for (DbxRecord currCalculation : multipleQCalculations) {
                     if (currCalculation != null) {
                         currCalculation.deleteRecord();
                     }
                 }
-
-                List<DbxRecord> multipleRmrCalculations = mRMRCalculationDropBoxTable.findRecordsByCriteria(new String[]{"assessmentCode"}, new String[]{code});
+                //Againg should be just one but ..
+                List<DbxRecord> multipleRmrCalculations = mRMRCalculationDropBoxTable.findRecordsByCriteria(new String[]{"assessmentCode"}, new String[]{assessmentCode});
                 for (DbxRecord currCalculation : multipleRmrCalculations) {
                     if (currCalculation != null) {
                         currCalculation.deleteRecord();
                     }
                 }
-
-                List<DbxRecord> multipleRecommendations = mSupportRecommendationDropboxTable.findRecordsByCriteria(new String[]{"assessmentCode"}, new String[]{code});
+                //Againg should be just one but ..
+                List<DbxRecord> multipleRecommendations = mSupportRecommendationDropboxTable.findRecordsByCriteria(new String[]{"assessmentCode"}, new String[]{assessmentCode});
                 for (DbxRecord currRecommendation : multipleRecommendations) {
                     if (currRecommendation != null) {
                         currRecommendation.deleteRecord();
                     }
                 }
-
-                List<DbxRecord> records = mDiscontinuitiesFamilyDropBoxTable.findRecordsByCriteria(new String[]{"assesmentCode"}, new String[]{code});
+                //Here the multiplicity is not an error, nor strange, is in fact very usual
+                List<DbxRecord> records = mDiscontinuitiesFamilyDropBoxTable.findRecordsByCriteria(new String[]{"assesmentCode"}, new String[]{assessmentCode});
                 for (DbxRecord dbxRecord : records) {
                     if (dbxRecord != null) {
                         dbxRecord.deleteRecord();
@@ -895,17 +802,22 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             }
 
             //Log the DELETE intention in the middle man records log space
-            RecordToSync recordToSync = new RecordToSync();
+            RecordToSync recordToSync = new RecordToSync(assessmentCode);
             recordToSync.setOperation(RecordToSync.Operation.DELETE);
-            recordToSync.setSkavaEntityCode(code);
+            recordToSync.setSkavaEntityCode(assessmentCode);
             recordToSync.setRecordID(assessmentRecordToDelete.getId());
+            recordToSync.setDate(SkavaUtils.getCurrentDate());
+            recordToSync.setStatus(DataToSync.Status.QUEUED);
 
-            SyncQueue middlemanInbox = getSkavaContext().getMiddlemanInbox();
-            middlemanInbox.addRecord(code, recordToSync);
+            //This is just the assessment syncing log table for eventual tracing
+            syncTrace.addRecord(recordToSync);
+            //This is the on-memory middleman log space (used somewhere to check if there´s any pending sync request)
+            middlemanInbox.addRecord(recordToSync);
+
 
             //Don't forget to request also the deletion of pictures linked to this assessment
             String assessmentInternalCode = readString(assessmentRecordToDelete, "skavaInternalCode");
-            List<String> picturesList = null;
+            ArrayList<String> picturesList = null;
             if (assessmentRecordToDelete.hasField("picturesURIs")) {
                 DbxList dbxPictureLists = assessmentRecordToDelete.getList("picturesURIs");
                 picturesList = new ArrayList<String>();
@@ -915,114 +827,74 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             }
             if (assessmentInternalCode != null && picturesList != null && !picturesList.isEmpty()) {
                 //delete the folder with the pictures of this assessment
-                this.deletePictures(assessmentInternalCode, code, picturesList);
+                this.deletePictures(assessmentInternalCode, assessmentCode, picturesList);
             }
 
             //finally delete the remote assessment record
             assessmentRecordToDelete.deleteRecord();
+
         }
+        //Before leaving save this assessmentSyncTrace for tracing purposes
+        mSyncLoggingDAO.saveAssessmentSyncTrace(syncTrace);
     }
 
 
-    private int deletePictures(String assessmentInternalCode, String assessmentCode, List<String> picturesList) throws DAOException {
+    private void deletePictures(final String assessmentInternalCode, final String assessmentCode, final ArrayList<String> picturesList) throws DAOException {
 
-        // Create DbxFileSystem for synchronized file access.
-        DbxFileSystem dbxFs = getSkavaContext().getFileSystem();
-        try {
-
-            if (dbxFs.isShutDown()) {
-                Log.e(SkavaConstants.LOG, "DbxFileSystem is shutted down");
-                throw new DAOException("DbxFileSystem is shutted down");
-            }
-            if (!dbxFs.hasSynced()) {
-                dbxFs.awaitFirstSync();
-                DbxSyncStatus status = dbxFs.getSyncStatus();
-                long maxCache = dbxFs.getMaxFileCacheSize();
-                long cacheSize = dbxFs.getFileCacheSize();
-            } else {
-                //Find the complete path (ROOT)/(environment)/(internalCode)/(assessment)/ ...
-                String folderName = null;
-                String target = getSkavaContext().getTargetEnvironment();
-                if (target.equalsIgnoreCase(SkavaConstants.DEV_KEY)) {
-                    folderName = SkavaConstants.DROPBOX_DS_DEV_NAME;
-                } else if (target.equalsIgnoreCase(SkavaConstants.QA_KEY)) {
-                    folderName = SkavaConstants.DROPBOX_DS_QA_NAME;
-                } else if (target.equalsIgnoreCase(SkavaConstants.PROD_KEY)) {
-                    folderName = SkavaConstants.DROPBOX_DS_PROD_NAME;
-                }
-
-                Log.d(SkavaConstants.LOG, "getFileCacheSize: " + String.valueOf(dbxFs.getFileCacheSize()));
-                Log.d(SkavaConstants.LOG, "getMaxFileCacheSize: " + String.valueOf(dbxFs.getMaxFileCacheSize()));
-                Log.d(SkavaConstants.LOG, "hasSynced: " + String.valueOf(dbxFs.hasSynced()));
-
-                if (!dbxFs.hasSynced()){
-                    dbxFs.syncNowAndWait();
-                }
-
-                DbxPath skavaFolderPath = null;
-                DbxPath projectPath;
-                DbxPath assessmentPath;
-                try {
-                    skavaFolderPath = new DbxPath(DbxPath.ROOT, folderName);
-                    projectPath = new DbxPath(skavaFolderPath, assessmentInternalCode);
-                    assessmentPath = new DbxPath(projectPath, assessmentCode);
-                    dbxFs.delete(assessmentPath);
-                } catch (DbxPath.InvalidPathException e) {
-                    Log.d(SkavaConstants.LOG, e.getMessage());
-                    e.printStackTrace();
-                } catch (DbxException.NotFound e) {
-                    e.printStackTrace();
-                    Log.d(SkavaConstants.LOG, e.getMessage());
-                }
-
-                //BEGIN COMMENTED OUT JUST TO AVOID that undesirable exception cache file corrupted exception
-//                if (dbxFs.exists(skavaFolderPath)) {
-//                    projectPath = new DbxPath(skavaFolderPath, assessmentInternalCode);
-//                    if (dbxFs.exists(projectPath)) {
-//                        assessmentPath = new DbxPath(projectPath, assessmentCode);
-//                        if (dbxFs.exists(assessmentPath) && dbxFs.isFolder(assessmentPath)) {
-//                            //Request the deletion of the entire assessment folder
-//                            dbxFs.delete(assessmentPath);
-//                        }
-//
-//                    }
-//                }
-                //END COMMENTED OUT JUST TO AVOID that undesirable exception cache file corrupted exception
-
-                //Log that DELETE intention into the DeliveredToMiddleman log space
-                SyncQueue wishSync = getSkavaContext().getMiddlemanInbox();
-                for (String currPicture : picturesList) {
-                    FileToSync pendingFile = new FileToSync();
-                    //record each picture of this asssessment as a DELETE
-                    pendingFile.setOperation(DataToSync.Operation.DELETE);
-                    pendingFile.setFileName(currPicture);
-                    wishSync.addFile(assessmentCode, pendingFile);
-                }
-            }
-
-        } catch (NullPointerException npe) {
-            if (npe != null) {
-                //This looks lika a non-sense but actually happened, seems to be caused by the debugger
-                npe.printStackTrace();
-                Log.e(SkavaConstants.LOG, npe.getMessage());
-                throw new DAOException(npe);
-            }
-        } catch (DbxException dbxe) {
-            if (dbxe != null) {
-                dbxe.printStackTrace();
-                Log.e(SkavaConstants.LOG, dbxe.getMessage());
-                BugSenseHandler.sendException(dbxe);
-                throw new DAOException(dbxe);
-            }
-        } catch (IOException ioe) {
-            if (ioe != null) {
-                ioe.printStackTrace();
-                Log.e(SkavaConstants.LOG, ioe.getMessage());
-                BugSenseHandler.sendException(ioe);
-                throw new DAOException(ioe);
-            }
+        String folderName = null;
+        String target = getSkavaContext().getTargetEnvironment();
+        if (target.equalsIgnoreCase(SkavaConstants.DEV_KEY)) {
+            folderName = SkavaConstants.DROPBOX_DS_DEV_NAME;
+        } else if (target.equalsIgnoreCase(SkavaConstants.QA_KEY)) {
+            folderName = SkavaConstants.DROPBOX_DS_QA_NAME;
+        } else if (target.equalsIgnoreCase(SkavaConstants.PROD_KEY)) {
+            folderName = SkavaConstants.DROPBOX_DS_PROD_NAME;
         }
-        return -1;
+
+
+        //the param picturesList contains just the name of the picture, but the full Uri is needed so
+        ArrayList<String> picturesURIsAsStringList = null;
+//        if (picturesList!= null && !picturesList.isEmpty()){
+//            //pictureList must be full URI not just the name of the picture
+//            picturesURIsAsStringList = new ArrayList<String>();
+//            SkavaPictureFilesUtils filesUtils = new SkavaPictureFilesUtils(mContext);
+//            File skavaPictureStorageDir = filesUtils.getSkavaPicturesFolder();
+//            for (String currPictureName : picturesList) {
+//                String pictureCompleteUri = skavaPictureStorageDir + File.separator + currPictureName;
+//                //Why if this is goinig to delete remotely need to be URi of the local pic file???
+//                //Where and when the local file is deleted??
+//                File Uri.fromFile(pictureCompleteUri);
+//                picturesURIsAsStringList.add(pictureCompleteUri);
+//            }
+//        }
+
+        final String finalFolderName = folderName;
+        final ArrayList<String> finalPicturesURIsAsStringList = picturesURIsAsStringList;
+        Thread myThread = new Thread(new Runnable() {
+            public void run() {
+                invokeTheService(DataToSync.Operation.DELETE, finalFolderName, assessmentInternalCode, assessmentCode, finalPicturesURIsAsStringList);
+            }
+        });
+        myThread.start();
+
+        //This is just the assessment syncing log table for eventual tracing
+        AssessmentSyncTrace syncTrace = new AssessmentSyncTrace(assessmentCode);
+        //This is the on-memory middleman log space (used somewhere to check if there´s any pending sync request)
+        SyncQueue middlemanInbox = getSkavaContext().getMiddlemanInbox();
+
+        for (String currPicture : picturesList) {
+            FileToSync pendingFile = new FileToSync(assessmentCode);
+            //record each picture of this asssessment as a DELETE
+            pendingFile.setOperation(DataToSync.Operation.DELETE);
+            pendingFile.setFileName(currPicture);
+            pendingFile.setDate(SkavaUtils.getCurrentDate());
+            pendingFile.setStatus(DataToSync.Status.QUEUED);
+
+            middlemanInbox.addFile(pendingFile);
+            syncTrace.addFile(pendingFile);
+        }
+        //Before leaving save this assessmentSyncTrace for tracing purposes
+        mSyncLoggingDAO.saveAssessmentSyncTrace(syncTrace);
     }
 
 
