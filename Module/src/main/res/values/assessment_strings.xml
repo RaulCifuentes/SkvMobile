@@ -10,6 +10,7 @@
     <string name="assessment_master_menu_pictures_label">Pictures</string>
     <string name="assessment_master_menu_description_label">Description</string>
     <string name="assessment_master_menu_instructions_label">Support Recommendations</string>
+    <string name="assessment_master_menu_expanded_tunnel_label">Expanded Tunnel</string>
     <string name="assessment_master_menu_summary_label">Summary (Report)</string>
     <string name="assessment_master_menu_save_label">Save</string>
 

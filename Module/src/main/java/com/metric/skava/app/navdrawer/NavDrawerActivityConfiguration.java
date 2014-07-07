@@ -8,6 +8,7 @@ public class NavDrawerActivityConfiguration {
 	private int drawerShadow;
 	private int drawerLayoutId;
 	private int leftDrawerId;
+	private int contentFrameId;
 	private int[] actionMenuItemsToHideWhenDrawerOpen;
 	private NavDrawerItem[] navItems;
 	private int drawerOpenDesc;
@@ -47,7 +48,15 @@ public class NavDrawerActivityConfiguration {
 		this.leftDrawerId = leftDrawerId;
 	}
 
-	public int[] getActionMenuItemsToHideWhenDrawerOpen() {
+    public int getContentFrameId() {
+        return contentFrameId;
+    }
+
+    public void setContentFrameId(int contentFrameId) {
+        this.contentFrameId = contentFrameId;
+    }
+
+    public int[] getActionMenuItemsToHideWhenDrawerOpen() {
 		return actionMenuItemsToHideWhenDrawerOpen;
 	}
 

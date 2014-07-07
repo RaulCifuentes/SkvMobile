@@ -27,12 +27,17 @@ public class SkavaUploaderConstants {
     public static final String EXTRA_ASSESSMENT_CODE = "EXTRA_ASSESSMENT_CODE";
     public static final String EXTRA_PICTURES = "EXTRA_PICTURES";
 
+    public static final String EXTRA_OPERATION = "EXTRA_OPERATION";
+    public static final String EXTRA_OPERATION_DELETE = "DELETE";
+    public static final String EXTRA_OPERATION_INSERT = "INSERT";
+
     public  static final boolean USE_OAUTH1 = false;
 
     //Use the same value of the action on the app Module in order to Intent by action
     // and avoid the need of include a library on buildPath
-    public static final String CUSTOM_ACTION = "com.metric.skava.uploader.UPLOAD_SERVICE_ACTION";
     public static final String INTENT_SERVICE_TAG = "MyUploaderService";
 
+    public static final String BUGSENSE_API_KEY = "41e76766";
+    public static final String REMOTE_FOLDER_SEPARATOR = "/";
 }
 

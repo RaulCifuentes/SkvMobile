@@ -25,6 +25,8 @@ import com.metric.skava.calculator.rmr.fragment.RMRCalculatorMainFragment;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.discontinuities.activity.DiscontinuitiesMainActivity;
 import com.metric.skava.discontinuities.fragment.DiscontinuitiesMainFragment;
+import com.metric.skava.expandedview.activity.ExpandedTunnelMainActivity;
+import com.metric.skava.expandedview.fragment.ExpandedTunnelMainFragment;
 import com.metric.skava.identification.activity.IdentificationMainActivity;
 import com.metric.skava.identification.fragment.IdentificationMainFragment;
 import com.metric.skava.instructions.activity.InstructionsMainActivity;
@@ -72,7 +74,7 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
 
     public static final String REDIRECT_FROM_PICTURES = "PICTURES";
     public static final String REDIRECT_FROM_REPORT = "REPORT";
-
+    public static final String REDIRECT_FROM_EXPANDED = "EXPANDED";
 
     public static final String EXCEPTION_DIALOG_TAG = "EXCEPTION_DIALOG_TAG ";
 
@@ -83,6 +85,7 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
     private boolean mTwoPane;
     private boolean cameFromPictures;
     private boolean cameFromReport;
+    private boolean cameFromExpanded;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -136,6 +139,14 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
             //And I want to have the stages items enabled
             onTunelFaceIdentified();
         }
+        cameFromExpanded = intent.getBooleanExtra(REDIRECT_FROM_EXPANDED, false);
+        if (cameFromExpanded){
+            //I want to go back directly to General Information
+            onItemSelected(AssesmentStageDataProvider.GRAL_INFO);
+            //And I want to have the stages items enabled
+            onTunelFaceIdentified();
+        }
+
     }
 
 
@@ -337,6 +348,34 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
                 return;
             }
 
+            if (id.equalsIgnoreCase(AssesmentStageDataProvider.EXPANDED)) {
+                saveDraft();
+                Intent expandedViewIntent = new Intent(this, ExpandedTunnelMainActivity.class);
+                expandedViewIntent.putExtra(ExpandedTunnelMainFragment.ARG_BASKET_ID, id);
+                startActivity(expandedViewIntent);
+                return;
+//                FragmentTransaction fx = getSupportFragmentManager().beginTransaction();
+//                Fragment previous = getSupportFragmentManager().findFragmentById(R.id.stage_detail_container);
+//                if (previous != null) {
+//                    fx.detach(previous);
+//                }
+//                //use the previous fragment if there is one
+//                Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_EXPANDED_STAGE_TAG);
+//                ExpandedViewMainFragment expandedViewMainFragment;
+//                if (fragment != null) {
+//                    expandedViewMainFragment = (ExpandedViewMainFragment) fragment;
+//                    fx.attach(expandedViewMainFragment);
+//                } else {
+//                    expandedViewMainFragment = new ExpandedViewMainFragment();
+//                    Bundle arguments = new Bundle();
+//                    arguments.putString(ExpandedViewMainFragment.ARG_BASKET_ID, id);
+//                    expandedViewMainFragment.setArguments(arguments);
+//                    fx.add(R.id.stage_detail_container, supportRecomendationFragment, FRAGMENT_EXPANDED_STAGE_TAG);
+//                }
+//                fx.commit();
+//                return;
+            }
+
             if (id.equalsIgnoreCase(AssesmentStageDataProvider.REPORT)) {
                 saveDraft();
                 //To make it full screen size launh it as an activity instead of as a fragment
@@ -353,7 +392,6 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
 //                        .commit();
 //                return;
             }
-
 
         } else {
             // In single-pane mode, simply start the detail activity

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.android.AuthActivity;
@@ -27,7 +28,7 @@ public class CoreMainActivity extends SkavaUploaderActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        BugSenseHandler.initAndStartSession(getApplicationContext(), SkavaUploaderConstants.BUGSENSE_API_KEY);
         mLoggedIn = getSkavaUploaderApplication().isLoggedIn();
 
         // Basic Android widgets

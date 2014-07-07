@@ -3,11 +3,15 @@ package com.metric.skava.app;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.metric.skava.R;
 import com.metric.skava.app.context.SkavaContext;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.data.dao.DAOFactory;
+import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.settings.fragment.SettingsMainFragment;
+import com.metric.skava.sync.dao.SyncLoggingDAO;
 import com.metric.skava.sync.helper.SyncHelper;
 import com.metric.skava.sync.model.SyncQueue;
 import com.metric.skava.sync.model.SyncStatus;
@@ -89,8 +93,21 @@ public class SkavaApplication extends MetricApplication {
         String targetEnvironment  = mSharedPreferences.getString(SettingsMainFragment.TARGET_ENVIRONMENT_PREFERENCE, "");
         mSkavaContext.setTargetEnvironment(targetEnvironment);
 
-        mSkavaContext.setMiddlemanInbox(new SyncQueue());
+
+        //The SyncQueue should be saved/restored from a table so..
+        try {
+            SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+            SyncQueue restoredSyncQueue = syncLoggingDAO.getSyncQueue();
+            mSkavaContext.setMiddlemanInbox(restoredSyncQueue);
+        } catch (DAOException e) {
+            e.printStackTrace();
+            Log.d(SkavaConstants.LOG, e.getMessage());
+        }
+
+
     }
+
+
 
     @Override
     public void onTerminate() {

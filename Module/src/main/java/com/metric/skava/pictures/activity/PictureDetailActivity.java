@@ -83,7 +83,9 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
     }
 
     private Bitmap getBitmapFromUri() {
-        Bitmap bitmapFromUri = mPictureFilesUtils.getBitmapFromUri(mSelectedPicture.getPictureLocation());
+        // HACK: In order to avoid Out Of Memory exceptions, image is resampled.
+//        Bitmap bitmapFromUri = mPictureFilesUtils.getBitmapFromUri(mSelectedPicture.getPictureLocation());
+        Bitmap bitmapFromUri = mPictureFilesUtils.getScaledBitmapFromUri(mSelectedPicture.getPictureLocation(), 1280 , 768);
         return bitmapFromUri;
     }
 
@@ -162,8 +164,10 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
         newIntent.putExtra("app-id", getPackageName());
         String[] tools = new String[]{"BRIGHTNESS", "CROP", "DRAW", "TEXT"};
         newIntent.putExtra(Constants.EXTRA_TOOLS_LIST, tools);
-        newIntent.putExtra(Constants.EXTRA_IN_API_KEY_SECRET, "cd9f4966112e789c" );
+        newIntent.putExtra(Constants.EXTRA_IN_API_KEY_SECRET, SkavaConstants.AVIARY_APP_KEY );
+        //this will remove from the Aviary Editor the feedback button and the Aviary logo
         newIntent.putExtra(Constants.EXTRA_WHITELABEL, "");
+        newIntent.putExtra("ASSESSMENT_CODE", mAssessment.getCode());
         startActivityForResult(newIntent, EDIT_PICTURE_REQUEST_CODE);
         //newIntent.putExtra("EXTRA_OUTPUT", Uri.parse("file:///mnt/sdcard/..."));
     }
@@ -206,35 +210,35 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == EDIT_PICTURE_REQUEST_CODE) {
-                //This is the URI data from Aviary (image editor)
-                Uri fileFromImageEditorURI = data.getData();
-                //Create a URL similar to the original picture to store the edited one
-                String originalPictureName = mSelectedPicture.getPictureLocation().getLastPathSegment();
-                //clone the editedPhoto to store later in a private skava folder
-                String newPictureSuggestedName = originalPictureName.substring(0, originalPictureName.lastIndexOf(mSelectedPicture.getPictureTag().name()));
-                newPictureSuggestedName += mSelectedPicture.getPictureTag().name() + "_EDITED_";
+        if (resultCode == RESULT_OK) if (requestCode == EDIT_PICTURE_REQUEST_CODE) {
+            //This is the URI data from Aviary (image editor)
+            Uri fileFromImageEditorURI = data.getData();
+            //Create a URL similar to the original picture to store the edited one
+            String originalPictureName = mSelectedPicture.getPictureLocation().getLastPathSegment();
+            //clone the editedPhoto to store later in a private skava folder
+            String newPictureSuggestedName = originalPictureName.substring(0, originalPictureName.lastIndexOf(mSelectedPicture.getPictureTag().name()));
+            newPictureSuggestedName += mSelectedPicture.getPictureTag().name() + "_EDITED_";
 
-                Uri originalPicture = mSelectedPicture.getPictureLocation();
-                Uri skavaEditedPicture = mPictureFilesUtils.getOutputUri(newPictureSuggestedName);
-                boolean success = false;
-                try {
-                    success = mPictureFilesUtils.copyFileFromUriToUri(fileFromImageEditorURI, skavaEditedPicture, true);
-                } catch (Exception e) {
-                    BugSenseHandler.sendException(e);
-                    Log.e(SkavaConstants.LOG, e.getMessage());
-                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-                SkavaPicture editedPicture = new SkavaPicture(mSelectedPicture.getPictureTag(), skavaEditedPicture, false);
-                getCurrentAssessment().getPicturesList().set(mSelectedPictureIndex + 1, editedPicture);
-                if (success) {
-                    backToPicturesMenu();
-                } else {
-                    onBackPressed();
-                }
+            String assessmenCode = data.getStringExtra("ASSESSMENT_CODE");
+            Uri originalPicture = mSelectedPicture.getPictureLocation();
+            Uri skavaEditedPicture = mPictureFilesUtils.getOutputUri(assessmenCode, newPictureSuggestedName);
+            boolean success = false;
+            try {
+                success = mPictureFilesUtils.copyFileFromUriToUri(fileFromImageEditorURI, skavaEditedPicture, true);
+            } catch (Exception e) {
+                BugSenseHandler.sendException(e);
+                Log.e(SkavaConstants.LOG, e.getMessage());
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
             }
-        } else {
+            SkavaPicture editedPicture = new SkavaPicture(mSelectedPicture.getPictureTag(), skavaEditedPicture, false);
+            getCurrentAssessment().getPicturesList().set(mSelectedPictureIndex + 1, editedPicture);
+            if (success) {
+                backToPicturesMenu();
+            } else {
+                onBackPressed();
+            }
+        }
+        else {
             Log.d(SkavaConstants.LOG, "onActivityResult >> RequestCode  :" + requestCode + ",  ResultCode: " + resultCode + ", Intent: " + data);
         }
 

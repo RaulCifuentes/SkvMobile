@@ -1,7 +1,9 @@
 package com.metric.skava.sync.dao;
 
 import com.metric.skava.data.dao.exception.DAOException;
+import com.metric.skava.sync.model.AssessmentSyncTrace;
 import com.metric.skava.sync.model.SyncLogEntry;
+import com.metric.skava.sync.model.SyncQueue;
 import com.metric.skava.sync.model.SyncTask;
 
 /**
@@ -16,4 +18,13 @@ public interface SyncLoggingDAO {
 
     public int deleteAllSyncLogs();
 
+    public SyncQueue getSyncQueue();
+
+//    public void saveSyncQueue(SyncQueue newEntity);
+
+    public AssessmentSyncTrace getAssessmentSyncTrace(String assessmentCode);
+
+    public void saveAssessmentSyncTrace(AssessmentSyncTrace syncQueue) throws DAOException;
+
+    public void updateAssessmentSyncTrace(AssessmentSyncTrace assessmentSyncTrace) throws DAOException;
 }

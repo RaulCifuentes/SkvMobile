@@ -8,6 +8,9 @@ public class RecordToSync extends DataToSync {
     private String recordID;
     private String skavaEntityCode;
 
+    public RecordToSync(String assessmentCode) {
+        super(assessmentCode);
+    }
 
     public String getRecordID() {
         return recordID;

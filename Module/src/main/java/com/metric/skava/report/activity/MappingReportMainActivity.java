@@ -1,10 +1,11 @@
 package com.metric.skava.report.activity;
 
-import android.app.NotificationManager;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.view.Menu;
@@ -130,18 +131,19 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
             e.printStackTrace();
             Log.e(SkavaConstants.LOG, e.getMessage());
             BugSenseHandler.sendException(e);
-            // Handle exception
-            NotificationCompat.Builder mBuilder;
-            mBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.single_cloud_icon)
-                    .setContentTitle("Skava Mobile notifies")
-                    .setContentText("Mapping uploading failed :( ");
-            // Sets an ID for the notification
-            int mNotificationId = 001;
-            // Gets an instance of the NotificationManager service
-            NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            // Builds the notification and issues it.
-            mNotifyMgr.notify(mNotificationId, mBuilder.build());
+            // Handle exception or at least show the user an alert
+            DialogFragment theDialog = new DialogFragment() {
+                @Override
+                public Dialog onCreateDialog(Bundle savedInstanceState) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(MappingReportMainActivity.this);
+                    builder.setTitle("Problems on sending ...");
+                    builder.setMessage("There was an error while saving the mapping remotely: " );
+                    // Create the AlertDialog object and return it
+                    return builder.create();
+                }
+            };
+            // Showing Alert Message
+            theDialog.show(getSupportFragmentManager(), "assertAppDataDialog");
             return false;
         }
     }

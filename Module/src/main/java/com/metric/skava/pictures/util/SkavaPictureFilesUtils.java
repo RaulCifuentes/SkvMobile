@@ -17,9 +17,7 @@ import java.text.SimpleDateFormat;
 /**
  * Created by metricboy on 2/24/14.
  */
-//TODO make this a singleton
 public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
-
 
     public SkavaPictureFilesUtils(Context ctx) {
         super(ctx);
@@ -30,15 +28,14 @@ public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
     }
 
 
-    //**
-    // AssessmentCode_TIPO_DATE_TIME.EXT
-//    TIPO: puede ser uno de los siguientes tipos
-//    [WEDGE,ROOF,LEFT,RIGHT,FACE,EXPANDED,EXTRA]
-//    EXT: Extension del archivo
-    public Uri getOutputUri(String suggestedName) throws SkavaSystemException {
-        // To be safe, you should check that the SDCard is mounted
-        // using Environment.getExternalStorageState() before doing this.
+    public Uri getOutputUri(String assessmenCode, String suggestedName) throws SkavaSystemException {
+        File theOutputFile = getOutputFile(assessmenCode, suggestedName);
+        Uri targetUri = Uri.fromFile(theOutputFile);
+        return targetUri;
+    }
 
+
+    public File getSkavaPicturesFolder(){
         File mediaStorageDir = new File(getSkavaPicturesBaseFolder(), SkavaConstants.IMAGE_DIRECTORY_NAME);
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
@@ -46,19 +43,33 @@ public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
         // Create the storage directory if it does not exist
         if (! mediaStorageDir.exists()){
             if (! mediaStorageDir.mkdirs()){
-                Log.e(SkavaConstants.LOG, "Failed to create directory : " +SkavaConstants.IMAGE_DIRECTORY_NAME );
-                throw new SkavaSystemException("Failed to create directory : " +SkavaConstants.IMAGE_DIRECTORY_NAME );
+                Log.e(SkavaConstants.LOG, "Failed to create directory : " + SkavaConstants.IMAGE_DIRECTORY_NAME );
+                throw new SkavaSystemException("Failed to create directory : " + SkavaConstants.IMAGE_DIRECTORY_NAME );
             }
         }
+        return mediaStorageDir;
+    }
+
+    public File getOutputFile(String assessmenCode, String suggestedName) throws SkavaSystemException {
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+        File skavaPicturesFolder = getSkavaPicturesFolder();
+        File assessmentPicturesFolder = new File(skavaPicturesFolder, assessmenCode);
+        // Create the storage directory if it does not exist
+        if (! assessmentPicturesFolder.exists()){
+            if (! assessmentPicturesFolder.mkdirs()){
+                Log.e(SkavaConstants.LOG, "Failed to create directory : " + assessmentPicturesFolder.getPath() );
+                throw new SkavaSystemException("Failed to create directory : " + assessmentPicturesFolder.getPath() );
+            }
+        }
+
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(SkavaUtils.getCurrentDate());
 
-        File mediaFile = new File(mediaStorageDir.getPath() + File.separator + suggestedName + timeStamp + ".jpg");
-        Uri targetUri = Uri.fromFile(mediaFile);
-        return targetUri;
+        File mediaFile = new File(assessmentPicturesFolder.getPath() + File.separator + suggestedName + timeStamp + ".jpg");
+        return mediaFile;
 
     }
-
 
 
 
@@ -68,11 +79,12 @@ public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
             // HACK: In order to avoid Out Of Memory exceptions, image is resampled prior to decoding.
             // Value was chosen taking into account image size and display size.
             
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 2;
+//            BitmapFactory.Options options = new BitmapFactory.Options();
+//            options.inSampleSize = 2;
 
             String path = getExistingFileFromUri(uri).getPath();
-            originalSizeBitmap = BitmapFactory.decodeFile(path, options);
+//            originalSizeBitmap = BitmapFactory.decodeFile(path, options);
+            originalSizeBitmap = BitmapFactory.decodeFile(path);
         } catch (OutOfMemoryError e) {
             throw new SkavaSystemException(e);
         }

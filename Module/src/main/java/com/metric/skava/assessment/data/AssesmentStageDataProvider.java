@@ -23,8 +23,8 @@ public class AssesmentStageDataProvider {
     public static String PICS = "PICS";
     public static String DESC = "DESC";
     public static String INSTRUCTIONS = "INSTRUCTIONS";
+    public static String EXPANDED = "EXPANDED";
     public static String REPORT = "REPORT";
-
 
 
     public static AssesmentStageDataProvider getInstance(Context ctx) {
@@ -45,6 +45,7 @@ public class AssesmentStageDataProvider {
         list.add(new AssessmentStage(PICS, context.getString(R.string.assessment_master_menu_pictures_label)));
         list.add(new AssessmentStage(DESC, context.getString(R.string.assessment_master_menu_description_label)));
         list.add(new AssessmentStage(INSTRUCTIONS, context.getString(R.string.assessment_master_menu_instructions_label)));
+        list.add(new AssessmentStage(EXPANDED, context.getString(R.string.assessment_master_menu_expanded_tunnel_label)));
         list.add(new AssessmentStage(REPORT, context.getString(R.string.assessment_master_menu_summary_label)));
         return list;
     }

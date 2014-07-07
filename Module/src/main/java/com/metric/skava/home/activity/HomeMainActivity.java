@@ -39,6 +39,7 @@ import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.assessment.activity.AssessmentsListActivity;
 import com.metric.skava.authentication.LoginMainActivity;
 import com.metric.skava.data.dao.exception.DAOException;
+import com.metric.skava.expandedview.activity.TestAutocadMainActivity;
 import com.metric.skava.home.fragment.MainFragment;
 import com.metric.skava.settings.activity.SettingsMainActivity;
 import com.metric.skava.sync.activity.SyncMainActivity;
@@ -57,6 +58,8 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     private static final int NAV_MENU_SYNC_ITEM_ID = 50;
     private static final int NAV_MENU_GENERAL_SECTION_ID = 60;
     private static final int NAV_MENU_ABOUT_ITEM_ID = 80;
+    private static final int NAV_MENU_TEST_AUTOCAD_ID = 980;
+
 
     private static final int NAV_MENU_LOGOUT_ITEM_ID = 100;
 
@@ -81,7 +84,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(HomeMainActivity.this, "41e76766");
+        BugSenseHandler.initAndStartSession(HomeMainActivity.this, SkavaConstants.BUGSENSE_API_KEY);
 
         SkavaExceptionHandler handler = new SkavaExceptionHandler(this, getSupportFragmentManager());
         Thread.setDefaultUncaughtExceptionHandler(handler);
@@ -131,7 +134,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 }
             }
             //Every thing is set up correctly? Show the Skava background image
-            mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+//            mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
         }
     }
 
@@ -193,7 +196,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 }
                 linkDropboxCompleted = true;
                 getSkavaContext().setDatastore(mDatastore);
-                getSkavaContext().setFileSystem(mFileSystem);
+//                getSkavaContext().setFileSystem(mFileSystem);
             }
         } catch (DbxException e) {
             BugSenseHandler.sendException(e);
@@ -246,7 +249,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                     }
                     linkDropboxCompleted = true;
                     getSkavaContext().setDatastore(mDatastore);
-                    getSkavaContext().setFileSystem(mFileSystem);
+//                    getSkavaContext().setFileSystem(mFileSystem);
                     ((SkavaApplication)getApplication()).setNeedImportAppData(true);
                     ((SkavaApplication)getApplication()).setNeedImportUserData(true);
                 } catch (DbxException e) {
@@ -325,6 +328,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             }
         }
         menuAsList.add(NavMenuSection.create(NAV_MENU_GENERAL_SECTION_ID, "General"));
+//        menuAsList.add(NavMenuItem.create(NAV_MENU_TEST_AUTOCAD_ID, "Test Autocad", "ic_action_overflow", true, true, this));
         menuAsList.add(NavMenuItem.create(NAV_MENU_SETTINGS_ITEM_ID, getString(R.string.settings_label), "ic_action_overflow", true, true, this));
         menuAsList.add(NavMenuItem.create(NAV_MENU_ABOUT_ITEM_ID, getString(R.string.about_label), "ic_action_overflow", true, true, this));
         if (loggedUser != null) {
@@ -336,6 +340,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         navDrawerConfig.setMainLayout(R.layout.nav_drawer_main_layout);
         navDrawerConfig.setDrawerLayoutId(R.id.nav_drawer_main_layout_drawer_layout);
         navDrawerConfig.setLeftDrawerId(R.id.nav_drawer_main_layout_left_drawer);
+        navDrawerConfig.setContentFrameId(R.id.nav_drawer_main_layout_content_frame);
         navDrawerConfig.setNavItems(menuAsArray);
         navDrawerConfig.setDrawerShadow(R.drawable.drawer_shadow);
         navDrawerConfig.setDrawerOpenDesc(R.string.drawer_open);
@@ -382,6 +387,11 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 getSkavaContext().setAssessment(null);
                 getSkavaContext().setLoggedUser(null);
                 setupTheDrawer();
+                break;
+            case NAV_MENU_TEST_AUTOCAD_ID:
+                intent = new Intent(this, TestAutocadMainActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 
