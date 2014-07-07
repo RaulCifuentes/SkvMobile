@@ -34,6 +34,10 @@
         android:title="Clear sync status data"
         android:showAsAction="never" />
 
+    <item android:id="@+id/action_clear_assessment_traces"
+        android:title="Clear assessment sync traces"
+        android:showAsAction="never" />
+
     <item android:id="@+id/action_unlink_dropbox_account"
         android:title="Unlink Dropbox account"
         android:showAsAction="never" />

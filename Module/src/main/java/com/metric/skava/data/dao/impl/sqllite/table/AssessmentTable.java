@@ -45,7 +45,9 @@ public class AssessmentTable extends SkavaTable {
 
     public static final String ROCK_SAMPLE_IDENTIFICATION_COLUMN = "ROCK_SAMPLE_IDENTIFICATION";
 
-    public static final String SENT_TO_CLOUD_COLUMN = "SENT_TO_CLOUD";
+    public static final String DATA_SENT_STATUS_COLUMN = "DATA_SENT_STATUS";
+
+    public static final String FILES_SENT_STATUS_COLUMN = "FILES_SENT_STATUS";
 
 
     public static final String CREATE_ASSESSMENT_TABLE = "create table " +
@@ -70,7 +72,8 @@ public class AssessmentTable extends SkavaTable {
             NUMBER_JOINTS_COLUMN + " integer null, " +
             OUTCROP_COLUMN + " text null, " +
             ROCK_SAMPLE_IDENTIFICATION_COLUMN + " text null, " +
-            SENT_TO_CLOUD_COLUMN + " integer not null" +
+            DATA_SENT_STATUS_COLUMN + " integer not null, " +
+            FILES_SENT_STATUS_COLUMN + " integer not null " +
             " );";
 
 //    private static String INSERT_SCRIPT = "insert into " + ASSESSMENT_DATABASE_TABLE + "(" +

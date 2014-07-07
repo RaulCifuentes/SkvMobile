@@ -12,10 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.metric.skava.R;
 import com.metric.skava.app.activity.SkavaFragmentActivity;
 
 public abstract class AbstractNavDrawerActivity extends SkavaFragmentActivity {
@@ -67,13 +65,16 @@ public abstract class AbstractNavDrawerActivity extends SkavaFragmentActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
 
+//        ImageView backgroundImage = (ImageView) mContentFrameLayout.findViewById(R.id.imageView);
+//        backgroundImage.setVisibility(View.VISIBLE);
+
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 navConf.getDrawerIcon(), navConf.getDrawerOpenDesc(),
                 navConf.getDrawerCloseDesc()) {
             public void onDrawerClosed(View view) {
                 getActionBar().setTitle(mTitle);
-                ImageView backgroundImage = (ImageView) mContentFrameLayout.findViewById(R.id.imageView);
-                backgroundImage.setVisibility(View.VISIBLE);
+//                ImageView backgroundImage = (ImageView) mContentFrameLayout.findViewById(R.id.imageView);
+//                backgroundImage.setVisibility(View.VISIBLE);
                 // setTitle(mDrawerTitle);
                 ActivityCompat
                         .invalidateOptionsMenu(AbstractNavDrawerActivity.this);
@@ -81,8 +82,8 @@ public abstract class AbstractNavDrawerActivity extends SkavaFragmentActivity {
 
             public void onDrawerOpened(View drawerView) {
                 getActionBar().setTitle(mDrawerTitle);
-                ImageView backgroundImage = (ImageView) mContentFrameLayout.findViewById(R.id.imageView);
-                backgroundImage.setVisibility(View.GONE);
+//                ImageView backgroundImage = (ImageView) mContentFrameLayout.findViewById(R.id.imageView);
+//                backgroundImage.setVisibility(View.GONE);
                 // setTitle(mDrawerTitle);
                 ActivityCompat
                         .invalidateOptionsMenu(AbstractNavDrawerActivity.this);

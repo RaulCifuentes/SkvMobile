@@ -80,28 +80,28 @@ public class AssessmentListAdapter extends BaseAdapter {
         if (currentItem != null) {
 
             ExcavationProject project = currentItem.getProject();
-            if (SkavaUtils.isDefined(project)){
+            if (SkavaUtils.isDefined(project)) {
                 TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_project);
                 text.setText(project.getName());
             }
 
-            if (currentItem.getPseudoCode() != null){
+            if (currentItem.getPseudoCode() != null) {
                 TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_pseudo_code);
                 text.setText(currentItem.getPseudoCode());
             }
-            if (currentItem.getCode() != null){
+            if (currentItem.getCode() != null) {
                 TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_code);
                 text.setText(currentItem.getCode());
             }
 
             Double initChainage = currentItem.getInitialPeg();
             Double finalChainage = currentItem.getFinalPeg();
-            if (initChainage != null && finalChainage != null){
+            if (initChainage != null && finalChainage != null) {
                 TextView text = (TextView) assessmentViewItem.findViewById(R.id.assessment_chainage);
                 PegNumberFormat pegNumberFormat = new PegNumberFormat();
                 String initialText = pegNumberFormat.format(initChainage);
                 String finalText = pegNumberFormat.format(finalChainage);
-                text.setText(initialText + " - " + finalText );
+                text.setText(initialText + " - " + finalText);
             }
 
             Date date = currentItem.getDateTime().getTime();
@@ -112,24 +112,38 @@ public class AssessmentListAdapter extends BaseAdapter {
 
             ImageView imageView = (ImageView) assessmentViewItem.findViewById(R.id.assessment_sent);
 
-            switch (currentItem.getSentToCloud()){
-                case DATA_SENT_TO_CLOUD:
-                    if (SkavaUtils.hasPictures(currentItem.getPicturesList())){
-                        imageView.setImageResource(R.drawable.cloud_striped);
-                    } else {
-                        imageView.setImageResource(R.drawable.cloud_checked);
+            //if it uploaded any picture
+            if (SkavaUtils.hasPictures(currentItem.getPicturesList()) || currentItem.getTunnelExpandedView() != null) {
+                switch (currentItem.getPicsSentStatus()) {
+                    case PICS_SENT_TO_CLOUD: {
+                        switch (currentItem.getDataSentStatus()) {
+                            case DATA_SENT_TO_CLOUD:
+                                imageView.setImageResource(R.drawable.cloud_checked);
+                                break;
+                            case DATA_SENT_TO_DATASTORE:
+                                imageView.setImageResource(R.drawable.cloud_striped);
+                                break;
+                        }
+                        break;
                     }
-                    break;
-                case PICS_SENT_TO_CLOUD:
-                    imageView.setImageResource(R.drawable.cloud_checked);
-                    break;
-                case DATA_SENT_TO_DATASTORE:
-                case PICS_SENT_TO_DATASTORE:
-                    imageView.setImageResource(R.drawable.cloud_sync);
-                    break;
-                default:
-                    imageView.setImageResource(R.drawable.tablet);
+                    case PICS_SENT_TO_DATASTORE:
+                        imageView.setImageResource(R.drawable.cloud_sync);
+                        break;
+                }
+            } else {
+                //the data is enough
+                switch (currentItem.getDataSentStatus()) {
+                    case DATA_SENT_TO_CLOUD:
+                        imageView.setImageResource(R.drawable.cloud_checked);
+                        break;
+                    case DATA_SENT_TO_DATASTORE:
+                        imageView.setImageResource(R.drawable.cloud_striped);
+                        break;
+                    default:
+                        imageView.setImageResource(R.drawable.tablet);
+                }
             }
+
         }
 
         return assessmentViewItem;

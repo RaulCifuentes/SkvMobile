@@ -119,12 +119,10 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
         // Lanzar activity que muestra el reporte
         getSkavaContext().setAssessment(selectedAssessment);
         Intent detailIntent;
-        int sentStatus = selectedAssessment.getSentToCloud();
+        int sentStatus = selectedAssessment.getDataSentStatus();
         switch (sentStatus) {
             case Assessment.DATA_SENT_TO_CLOUD:
-            case Assessment.PICS_SENT_TO_CLOUD:
             case Assessment.DATA_SENT_TO_DATASTORE:
-            case Assessment.PICS_SENT_TO_DATASTORE:
                 detailIntent = new Intent(this, ReviewReportMainActivity.class);
                 detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, AssesmentStageDataProvider.REPORT);
                 break;

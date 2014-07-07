@@ -121,7 +121,7 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
 
     private UserDataDomain mUserDataDomain;
 
-    private boolean identificationCompleted;
+    private boolean identificationCompleted = false;
 
     //********** Callback interface: This is an idea to force the Identification phase before any other stage could be used
     private TunnelFaceIdentificationListener mCallback;
@@ -667,17 +667,19 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
         if (parent == faceSpinner) {
             if (position != faceSpinnerLastPosition) {
                 selectedFace = (TunnelFace) parent.getItemAtPosition(position);
-                getSkavaContext().getAssessment().setFace(selectedFace);
-                mCallback.onTunelFaceIdentified();
-                identificationCompleted = true;
-                projectSpinner.setEnabled(false);
-                tunnelSpinner.setEnabled(false);
-                faceSpinner.setEnabled(false);
+                if (SkavaUtils.isDefined(selectedFace)){
+                    getSkavaContext().getAssessment().setFace(selectedFace);
+                    mCallback.onTunelFaceIdentified();
+                    identificationCompleted = true;
+                    projectSpinner.setEnabled(false);
+                    tunnelSpinner.setEnabled(false);
+                    faceSpinner.setEnabled(false);
+                    //use the orientation from the face as initial value
+                    orientationEditText.setText(selectedFace.getOrientation().toString());
+                    //use the slope from the face as initial value
+                    slopeTextEdit.setText(selectedFace.getSlope().toString());
+                }
                 faceSpinnerLastPosition = position;
-                //use the orientation from the face as initial value
-                orientationEditText.setText(selectedFace.getOrientation().toString());
-                //use the slope from the face as initial value
-                slopeTextEdit.setText(selectedFace.getSlope().toString());
             }
         }
 

@@ -18,6 +18,8 @@ public interface SyncLoggingDAO {
 
     public int deleteAllSyncLogs();
 
+    public int deleteAllAssessmentSyncTraces();
+
     public SyncQueue getSyncQueue();
 
 //    public void saveSyncQueue(SyncQueue newEntity);
