@@ -81,7 +81,10 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
 
     protected boolean assertUserDataNeverCalled = true;
     protected boolean assertAppDataNeverCalled = true;
+    protected boolean enoughDataAvailable = false;
+
     protected SkavaFragment mMainContainedFragment;
+
 
     protected abstract void onPreExecuteImportAppData();
 
@@ -515,8 +518,10 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                 Map<String, Set<DbxRecord>> incomingChanges = getSkavaContext().getDatastore().sync();
                 //avoid to repeat the import process if there's two or more tables of same category (userData or appData)
                 boolean userDataImportExecuted = false, appDataImportExecuted = false;
-                for (String tablename : incomingChanges.keySet()) {
+                SyncLoggingDAO syncLoggingDAO = null;
+                syncLoggingDAO = getDAOFactory().getSyncLoggingDAO();
 
+                for (String tablename : incomingChanges.keySet()) {
                     if (tablename.equals(DataSyncDropboxTable.DATA_SYNC_TABLE)) {
                         //find what is being aknowledged and remove from the middleman box space
                         Set<DbxRecord> dbxRecords = incomingChanges.get(DataSyncDropboxTable.DATA_SYNC_TABLE);
@@ -524,10 +529,8 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                             String acknowledgedAssessmentCode = dbxRecord.getString("assesmentCode");
                             String acknowledgedRecordID = dbxRecord.getString("dropboxId");
                             //find what is the record being acknowledged and update the sync trace from QUEDED to SERVED in the AssessmentSyncTrace table
-                            SyncLoggingDAO syncLoggingDAO = null;
                             AssessmentSyncTrace assessmentSyncTrace = null;
                             try {
-                                syncLoggingDAO = getDAOFactory().getSyncLoggingDAO();
                                 assessmentSyncTrace = syncLoggingDAO.getAssessmentSyncTrace(acknowledgedAssessmentCode);
                                 List<RecordToSync> tracedRecords = assessmentSyncTrace.getRecords();
                                 for (RecordToSync tracedRecord : tracedRecords) {
@@ -566,7 +569,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                                     try {
                                         LocalAssessmentDAO assessmentDAO = getDAOFactory().getLocalAssessmentDAO();
                                         Assessment uploadedAssessment = assessmentDAO.getAssessment(acknowledgedAssessmentCode);
-                                        uploadedAssessment.setSentToCloud(Assessment.DATA_SENT_TO_CLOUD);
+                                        uploadedAssessment.setDataSentStatus(Assessment.DATA_SENT_TO_CLOUD);
                                         assessmentDAO.updateAssessment(uploadedAssessment, false);
 
                                         //mostrar que termino exitosamente
@@ -589,10 +592,8 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                             acknowledgedFileName = dbxRecord.getString("fileName");
 
                             //find what is the record being acknowledged and update the sync trace from QUEDED to SERVED in the AssessmentSyncTrace table
-                            SyncLoggingDAO syncLoggingDAO = null;
                             AssessmentSyncTrace assessmentSyncTrace = null;
                             try {
-                                syncLoggingDAO = getDAOFactory().getSyncLoggingDAO();
                                 assessmentSyncTrace = syncLoggingDAO.getAssessmentSyncTrace(acknowledgedAssessmentCode);
                                 List<FileToSync> tracedFiles = assessmentSyncTrace.getFiles();
                                 for (FileToSync tracedFile : tracedFiles) {
@@ -631,11 +632,10 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                                     try {
                                         LocalAssessmentDAO assessmentDAO = getDAOFactory().getLocalAssessmentDAO();
                                         Assessment uploadedAssessment = assessmentDAO.getAssessment(acknowledgedAssessmentCode);
-                                        uploadedAssessment.setSentToCloud(Assessment.PICS_SENT_TO_CLOUD);
+                                        uploadedAssessment.setPicsSentStatus(Assessment.PICS_SENT_TO_CLOUD);
                                         assessmentDAO.updateAssessment(uploadedAssessment, false);
                                         //mostrar que termino exitosamente
-                                        notifyUploadSucceed(0, R.drawable.cloud_checked,  "Skava Uploader", "Pictures for " + uploadedAssessment.getPseudoCode() + " were uploaded");
-
+                                        notifyUploadSucceed(0, R.drawable.cloud_checked, "Skava Uploader", "Pictures for " + uploadedAssessment.getPseudoCode() + " were uploaded");
                                     } catch (DAOException e) {
                                         e.printStackTrace();
                                         Log.e(SkavaConstants.LOG, e.getMessage());
@@ -644,6 +644,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                             }
                         }
                     }
+
                     //These list of Domains were created in order to sync only the necessary but
                     //the lack of control on the order of execution of the async task don't help so
                     //it seems better to update all user data OR all app data as a unit
@@ -653,27 +654,6 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                     //but sorting the trigger of the AsyncTask does not guarantee the order in execution
                     //so it's better although not optimal to do a full user data import
                     //********** USER RELATED DATA **********/
-//                    if (tablename.equals(RoleDropboxTable.ROLES_DROPBOX_TABLE)) {
-////                        syncTargetUserData.add(SyncTask.Domain.ROLES);
-//                    }
-//                    if (tablename.equals(ClientDropboxTable.CLIENTS_DROPBOX_TABLE)) {
-////                        syncTargetUserData.add(SyncTask.Domain.CLIENTS);
-//                    }
-//                    if (tablename.equals(ExcavationProjectDropboxTable.PROJECTS_DROPBOX_TABLE)) {
-////                        syncTargetUserData.add(SyncTask.Domain.EXCAVATION_PROJECTS);
-//                    }
-//                    if (tablename.equals(TunnelDropboxTable.TUNNELS_DROPBOX_TABLE)) {
-////                        syncTargetUserData.add(SyncTask.Domain.TUNNELS);
-//                    }
-//                    if (tablename.equals(SupportRequirementDropboxTable.SUPPORT_REQUIREMENTS_DROPBOX_TABLE)) {
-////                        syncTargetUserData.add(SyncTask.Domain.SUPPORT_REQUIREMENTS);
-//                    }
-//                    if (tablename.equals(TunnelFaceDropboxTable.FACES_DROPBOX_TABLE)) {
-////                        syncTargetUserData.add(SyncTask.Domain.TUNNEL_FACES);
-//                    }
-//                    if (tablename.equals(UserDropboxTable.USERS_DROPBOX_TABLE)) {
-////                        syncTargetUserData.add(SyncTask.Domain.USERS);
-//                    }
                     if (tablename.equals(RoleDropboxTable.ROLES_DROPBOX_TABLE) ||
                             tablename.equals(ClientDropboxTable.CLIENTS_DROPBOX_TABLE) ||
                             tablename.equals(ExcavationProjectDropboxTable.PROJECTS_DROPBOX_TABLE) ||
@@ -682,6 +662,19 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                             tablename.equals(TunnelFaceDropboxTable.FACES_DROPBOX_TABLE) ||
                             tablename.equals(UserDropboxTable.USERS_DROPBOX_TABLE)) {
                         syncTargetUserData.add(SyncTask.Domain.ALL_USER_DATA_TABLES);
+                        try {
+                            // Finally do the import and avoid run it more than once (as this is inside a for loop)
+                            if (!syncTargetUserData.isEmpty() && !userDataImportExecuted) {
+                                SyncTask.Domain[] syncTarget = syncTargetUserData.toArray(new SyncTask.Domain[]{});
+                                ImportUserDataModelTask dynamicDataTask = new ImportUserDataModelTask();
+                                dynamicDataTask.execute(syncTarget);
+                                userDataImportExecuted = true;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            BugSenseHandler.sendException(e);
+                            Log.e(SkavaConstants.LOG, e.getMessage());
+                        }
                     }
                     //*********** APP DATA ************/
                     if (tablename.equals(ParametersDropboxTable.PARAMETERS_DROPBOX_TABLE)
@@ -690,28 +683,26 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                             || tablename.equals(RmrCategoriesDropboxTable.RMR_CATEGORIES_TABLE)
                             ) {
                         syncTargetAppData.add(SyncTask.Domain.ALL_APP_DATA_TABLES);
-                    }
-                    try {
-                        // Finally do the import
-                        if (!syncTargetUserData.isEmpty() && !userDataImportExecuted) {
-                            SyncTask.Domain[] syncTarget = syncTargetUserData.toArray(new SyncTask.Domain[]{});
-                            ImportUserDataModelTask dynamicDataTask = new ImportUserDataModelTask();
-                            dynamicDataTask.execute(syncTarget);
-                            userDataImportExecuted = true;
+                        try {
+                            // Finally do the import and avoid run it more than once (as this is inside a for loop)
+                            if (!syncTargetAppData.isEmpty() && !appDataImportExecuted) {
+                                SyncTask.Domain[] syncTarget = syncTargetAppData.toArray(new SyncTask.Domain[]{});
+                                ImportAppDataModelTask dynamicDataTask = new ImportAppDataModelTask();
+                                dynamicDataTask.execute(syncTarget);
+                                appDataImportExecuted = true;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            BugSenseHandler.sendException(e);
+                            Log.e(SkavaConstants.LOG, e.getMessage());
                         }
-                        if (!syncTargetAppData.isEmpty() && !appDataImportExecuted) {
-                            SyncTask.Domain[] syncTarget = syncTargetAppData.toArray(new SyncTask.Domain[]{});
-                            ImportAppDataModelTask dynamicDataTask = new ImportAppDataModelTask();
-                            dynamicDataTask.execute(syncTarget);
-                            appDataImportExecuted = true;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        BugSenseHandler.sendException(e);
-                        Log.e(SkavaConstants.LOG, e.getMessage());
                     }
                 }
             } catch (DbxException e) {
+                BugSenseHandler.sendException(e);
+                Log.e(SkavaConstants.LOG, e.getMessage());
+                e.printStackTrace();
+            } catch (DAOException e) {
                 BugSenseHandler.sendException(e);
                 Log.e(SkavaConstants.LOG, e.getMessage());
                 e.printStackTrace();
@@ -720,25 +711,30 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
 
         if (datastoreStatus.hasOutgoing) {
             try {
-                //Looks like the map returned works from remote->local and no the other way around,
-                //so it's not very useful as it always be empty here
+//                //Looks like the map returned works from remote->local and no the other way around,
+//                //so it's not very useful as it always be empty here
                 Map<String, Set<DbxRecord>> outgoingChanges = store.sync();
-                if (!outgoingChanges.isEmpty()) {
-                    //Mmm... what are here??
-                    System.out.println(outgoingChanges);
-                }
-                //As there's no way to know exactly what are the assessment marked to sync, update all of them
+//                //As there's no way to know exactly what are the assessment marked to sync, update all of them
+                //as sent to datastore, that is, delivered to middleman
                 Map<String, List<RecordToSync>> assessmentsDataToSync = getSkavaContext().getMiddlemanInbox().getAllRecords();
-                //iterate over the set of ASSESSMENTS domain
+//                //iterate over the set of ASSESSMENTS domain
                 for (String assessmentIterQueue : assessmentsDataToSync.keySet()) {
                     List<RecordToSync> recordList = assessmentsDataToSync.get(assessmentIterQueue);
                     for (RecordToSync assessmentRecordsToSync : recordList) {
                         if (assessmentRecordsToSync.getOperation().equals(DataToSync.Operation.INSERT)) {
                             try {
                                 LocalAssessmentDAO assessmentDAO = getDAOFactory().getLocalAssessmentDAO();
-                                Assessment uploadedAssessment = assessmentDAO.getAssessment(assessmentIterQueue);
-                                uploadedAssessment.setSentToCloud(Assessment.DATA_SENT_TO_DATASTORE);
-                                assessmentDAO.updateAssessment(uploadedAssessment, false);
+                                Assessment uploadedAssessment = null;
+                                try {
+                                    uploadedAssessment = assessmentDAO.getAssessment(assessmentIterQueue);
+                                    uploadedAssessment.setDataSentStatus(Assessment.DATA_SENT_TO_DATASTORE);
+                                    assessmentDAO.updateAssessment(uploadedAssessment, false);
+                                } catch (DAOException e) {
+                                    //Not found assessment with that code
+                                    //think for instance that local assessments where deleted while syncing was not yet completed
+                                    //so just continue with next one
+                                    continue;
+                                }
                             } catch (DAOException e) {
                                 e.printStackTrace();
                                 BugSenseHandler.sendException(e);
@@ -747,7 +743,6 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                         }
                     }
                 }
-
             } catch (DbxException e) {
                 BugSenseHandler.sendException(e);
                 Log.e(SkavaConstants.LOG, e.getMessage());
@@ -768,7 +763,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
 
     }
 
-    public void notifyUploadSucceed(int idNotification, int icon, String title, String text){
+    public void notifyUploadSucceed(int idNotification, int icon, String title, String text) {
         NotificationCompat.Builder mBuilder;
         mBuilder = new NotificationCompat.Builder(getApplicationContext());
         mBuilder.setSmallIcon(icon).setContentTitle(title).setContentText(text);
@@ -778,7 +773,6 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
         Notification notification = mBuilder.build();
         mNotifyMgr.notify(idNotification, notification);
     }
-
 
 
     protected void assertAppDataAvailable() throws DAOException {
@@ -830,6 +824,9 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                         Log.e(SkavaConstants.LOG, e.getMessage());
                         e.printStackTrace();
                     }
+                } else {
+                    //no call to assert user data, so no import user data
+                    enoughDataAvailable = true;
                 }
             } else {
                 //However if there no Internet let the user know this won happen
@@ -905,6 +902,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
             // The user tables seems to be populated, so ...
             if (isNetworkAvailable()) {
                 //Operate normally, the listener will take care and keep the app data updated
+                enoughDataAvailable = true;
             } else {
                 //However if there no Internet let the user know this won happen
                 final String alertTitle = "Skava App will operate without Internet connection";

@@ -61,11 +61,9 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        switch (getCurrentAssessment().getSentToCloud()) {
+        switch (getCurrentAssessment().getDataSentStatus()) {
             case Assessment.DATA_SENT_TO_CLOUD:
-            case Assessment.PICS_SENT_TO_CLOUD:
             case Assessment.DATA_SENT_TO_DATASTORE:
-            case Assessment.PICS_SENT_TO_DATASTORE:
                 // show no buttons as we dont want edit, re save nor resend
                 menu.findItem(R.id.action_mapping_report_draft).setVisible(false);
                 menu.findItem(R.id.action_mapping_report_send).setVisible(false);

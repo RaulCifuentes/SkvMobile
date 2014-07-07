@@ -70,10 +70,10 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         Cursor cursor = getRecordsFilteredByColumn(AssessmentTable.ASSESSMENT_DATABASE_TABLE, AssessmentTable.CODE_COLUMN, code, null);
         List<Assessment> list = assemblePersistentEntities(cursor);
         if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Code : " + code + "]");
+            throw new DAOException("Assessment not found. [Code : " + code + "]");
         }
         if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Code : " + code + "]");
+            throw new DAOException("Multiple assessment records for same code. [Code : " + code + "]");
         }
         cursor.close();
         return list.get(0);
@@ -245,7 +245,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                     AssessmentTable.NUMBER_JOINTS_COLUMN,
                     AssessmentTable.OUTCROP_COLUMN,
                     AssessmentTable.ROCK_SAMPLE_IDENTIFICATION_COLUMN,
-                    AssessmentTable.SENT_TO_CLOUD_COLUMN
+                    AssessmentTable.DATA_SENT_STATUS_COLUMN,
+                    AssessmentTable.FILES_SENT_STATUS_COLUMN
             };
 
             Object[] values = new Object[]{
@@ -268,7 +269,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                     newSkavaEntity.getNumberOfJoints(),
                     newSkavaEntity.getOutcropDescription(),
                     newSkavaEntity.getRockSampleIdentification(),
-                    newSkavaEntity.getSentToCloud()
+                    newSkavaEntity.getDataSentStatus(),
+                    newSkavaEntity.getPicsSentStatus()
             };
             Long assesmentId = saveRecord(AssessmentTable.ASSESSMENT_DATABASE_TABLE, names, values);
             newSkavaEntity.set_id(assesmentId);
@@ -297,7 +299,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 AssessmentTable.NUMBER_JOINTS_COLUMN,
                 AssessmentTable.OUTCROP_COLUMN,
                 AssessmentTable.ROCK_SAMPLE_IDENTIFICATION_COLUMN,
-                AssessmentTable.SENT_TO_CLOUD_COLUMN
+                AssessmentTable.DATA_SENT_STATUS_COLUMN,
+                AssessmentTable.FILES_SENT_STATUS_COLUMN
         };
 
         Object[] values = new Object[]{
@@ -320,7 +323,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 newSkavaEntity.getNumberOfJoints(),
                 newSkavaEntity.getOutcropDescription(),
                 newSkavaEntity.getRockSampleIdentification(),
-                newSkavaEntity.getSentToCloud()
+                newSkavaEntity.getDataSentStatus(),
+                newSkavaEntity.getPicsSentStatus()
         };
 
         Long assesmentId = saveRecord(tableName, names, values);

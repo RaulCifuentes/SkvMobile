@@ -47,6 +47,7 @@ import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.sqllite.table.AssessmentTable;
 import com.metric.skava.home.activity.HomeMainActivity;
 import com.metric.skava.home.helper.ImportDataHelper;
+import com.metric.skava.sync.dao.SyncLoggingDAO;
 import com.metric.skava.sync.exception.SyncDataFailedException;
 import com.metric.skava.sync.helper.SyncHelper;
 import com.metric.skava.sync.model.SyncLogEntry;
@@ -71,6 +72,8 @@ public class SyncMainFragment extends SkavaFragment {
     private LocalDiscontinuityFamilyDAO mLocalDiscontinuitiesFamilyDAO;
     private LocalRMRCalculationDAO mLocalRMRCalculationDAO;
     private LocalQCalculationDAO mLocalBartonCalculationDAO;
+    private SyncLoggingDAO mSyncLoggingDAO;
+
 
     private RemoteAssessmentDAO mRemoteAsssessmentDAO;
     private RemoteSyncAcknowlegeDAO mRemoteSyncAcknowlegedDAO;
@@ -96,6 +99,7 @@ public class SyncMainFragment extends SkavaFragment {
             mLocalBartonCalculationDAO = getDAOFactory().getLocalQCalculationDAO();
             mRemoteAsssessmentDAO = getDAOFactory().getRemoteAssessmentDAO(DAOFactory.Flavour.DROPBOX);
             mRemoteSyncAcknowlegedDAO = getDAOFactory().getRemoteSyncAcknowledgeDAO(DAOFactory.Flavour.DROPBOX);
+            mSyncLoggingDAO = getDAOFactory().getSyncLoggingDAO();
         } catch (DAOException daoe) {
             daoe.printStackTrace();
             Log.e(SkavaConstants.LOG, daoe.getMessage());
@@ -266,6 +270,18 @@ public class SyncMainFragment extends SkavaFragment {
                     showProgressBar(true, "Success. Preferences are cleared", false);
                 } else {
                     showProgressBar(true, "Failure. Preferences are not cleared", false);
+                }
+                break;
+            case R.id.action_clear_assessment_traces:
+                try {
+                    mSyncLoggingDAO.deleteAllAssessmentSyncTraces();
+                    showAssessmentsListViews(true);
+                    refreshListViews();
+                } catch (DAOException daoe) {
+                    BugSenseHandler.sendException(daoe);
+                    daoe.printStackTrace();
+                    Log.d(SkavaConstants.LOG, daoe.getMessage());
+                    Toast.makeText(getActivity(), daoe.getMessage(), Toast.LENGTH_LONG).show();
                 }
                 break;
         }

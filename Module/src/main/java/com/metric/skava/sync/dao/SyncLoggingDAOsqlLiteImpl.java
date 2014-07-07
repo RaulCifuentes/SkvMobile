@@ -149,6 +149,13 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
         return deleteAllPersistentEntities(SyncLoggingTable.SYNC_LOGGING_TABLE);
     }
 
+    @Override
+    public int deleteAllAssessmentSyncTraces() {
+        int numDeleted = deleteAllPersistentEntities(AssessmentSyncTraceFilesTable.SYNC_TRACE_FILES_TABLE);
+        numDeleted+= deleteAllPersistentEntities(AssessmentSyncTraceRecordsTable.SYNC_TRACE_RECORDS_TABLE);
+        return numDeleted;
+    }
+
 
     @Override
     public AssessmentSyncTrace getAssessmentSyncTrace(String assessmentCode) {

@@ -713,7 +713,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 serviceIntent.putExtra(SkavaConstants.EXTRA_INTERNAL_CODE, internalCode);
                 serviceIntent.putExtra(SkavaConstants.EXTRA_ASSESSMENT_CODE, assessmentCode);
                 //picturesAsStringList is expected to be null as the delete will remove all pictures
-                serviceIntent.putStringArrayListExtra(SkavaConstants.EXTRA_PICTURES, picturesAsStringList);
+                //serviceIntent.putStringArrayListExtra(SkavaConstants.EXTRA_PICTURES, picturesAsStringList);
                 mContext.startService(serviceIntent);
         }
 
@@ -814,7 +814,6 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             //This is the on-memory middleman log space (used somewhere to check if there´s any pending sync request)
             middlemanInbox.addRecord(recordToSync);
 
-
             //Don't forget to request also the deletion of pictures linked to this assessment
             String assessmentInternalCode = readString(assessmentRecordToDelete, "skavaInternalCode");
             ArrayList<String> picturesList = null;
@@ -853,7 +852,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
 
 
         //the param picturesList contains just the name of the picture, but the full Uri is needed so
-        ArrayList<String> picturesURIsAsStringList = null;
+//        ArrayList<String> picturesURIsAsStringList = null;
 //        if (picturesList!= null && !picturesList.isEmpty()){
 //            //pictureList must be full URI not just the name of the picture
 //            picturesURIsAsStringList = new ArrayList<String>();
@@ -869,10 +868,11 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
 //        }
 
         final String finalFolderName = folderName;
-        final ArrayList<String> finalPicturesURIsAsStringList = picturesURIsAsStringList;
+//        final ArrayList<String> finalPicturesURIsAsStringList = picturesURIsAsStringList;
+        //it will delete the folder entirely so null is enough as pictureList param
         Thread myThread = new Thread(new Runnable() {
             public void run() {
-                invokeTheService(DataToSync.Operation.DELETE, finalFolderName, assessmentInternalCode, assessmentCode, finalPicturesURIsAsStringList);
+                invokeTheService(DataToSync.Operation.DELETE, finalFolderName, assessmentInternalCode, assessmentCode, null);
             }
         });
         myThread.start();

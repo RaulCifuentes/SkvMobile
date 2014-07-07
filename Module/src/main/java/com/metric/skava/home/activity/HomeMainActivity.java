@@ -74,6 +74,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 
     private boolean linkDropboxCompleted;
 
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -110,21 +111,26 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        boolean shortestExecFlow = true;
         if (!linkDropboxCompleted) {
+            shortestExecFlow = false;
             setupLinkToDropbox();
         }
         if (linkDropboxCompleted) {
+            shortestExecFlow = false;
             getSkavaContext().getDatastore().addSyncStatusListener(this);
-//            getSkavaContext().getFileSystem().addSyncStatusListener(this);
 
             if (shouldImportAppData()) {
+                shortestExecFlow = false;
                 lackOfAppData = true;
             }
             if (shouldImportUserData()) {
+                shortestExecFlow = false;
                 lackOfUserData = true;
             }
 
             if (assertAppDataNeverCalled) {
+                shortestExecFlow = false;
                 try {
                     assertAppDataAvailable();
                 } catch (DAOException e) {
@@ -134,7 +140,9 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 }
             }
             //Every thing is set up correctly? Show the Skava background image
-//            mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+            if (shortestExecFlow || enoughDataAvailable){
+                mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+            }
         }
     }
 

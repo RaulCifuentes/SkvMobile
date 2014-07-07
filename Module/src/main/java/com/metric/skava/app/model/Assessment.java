@@ -19,13 +19,14 @@ import java.util.List;
  */
 public class Assessment implements IdentifiableEntity {
 
+    public static final int DATA_SENT_TO_DATASTORE = 30;
     public static final int DATA_SENT_TO_CLOUD = 10;
+
+    public static final int PICS_SENT_TO_DATASTORE = 40;
     public static final int PICS_SENT_TO_CLOUD = 20;
 
-    public static final int DATA_SENT_TO_DATASTORE = 30;
-    public static final int PICS_SENT_TO_DATASTORE = 40;
-
-    private int sentToCloud;
+    private int dataSentStatus;
+    private int picsSentStatus;
 
     private Long _id;
     private String code;
@@ -63,12 +64,20 @@ public class Assessment implements IdentifiableEntity {
         this.code = code;
     }
 
-    public int getSentToCloud() {
-        return sentToCloud;
+    public int getDataSentStatus() {
+        return dataSentStatus;
     }
 
-    public void setSentToCloud(int sentToCloud) {
-        this.sentToCloud = sentToCloud;
+    public void setDataSentStatus(int dataSentStatus) {
+        this.dataSentStatus = dataSentStatus;
+    }
+
+    public int getPicsSentStatus() {
+        return picsSentStatus;
+    }
+
+    public void setPicsSentStatus(int picsSentStatus) {
+        this.picsSentStatus = picsSentStatus;
     }
 
     public java.lang.String getCode() {
