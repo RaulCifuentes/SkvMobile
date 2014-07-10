@@ -22,7 +22,7 @@ import java.util.Date;
 public class SkavaApplication extends MetricApplication {
 
     private SkavaContext mSkavaContext;
-    SharedPreferences mSharedPreferences;
+    private SharedPreferences mSharedPreferences;
 
     boolean wantUnlinkDropboxAccount;
     boolean needImportAppData;
@@ -56,6 +56,8 @@ public class SkavaApplication extends MetricApplication {
     public boolean isImportUserDataNeeded() {
         return needImportUserData;
     }
+
+
 
     @Override
     public void onCreate() {
@@ -93,8 +95,7 @@ public class SkavaApplication extends MetricApplication {
         String targetEnvironment  = mSharedPreferences.getString(SettingsMainFragment.TARGET_ENVIRONMENT_PREFERENCE, "");
         mSkavaContext.setTargetEnvironment(targetEnvironment);
 
-
-        //The SyncQueue should be saved/restored from a table so..
+        //The SyncQueue should be saved/restored from somewhere, so use the table of AssesmentSyncTraces ..
         try {
             SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
             SyncQueue restoredSyncQueue = syncLoggingDAO.getSyncQueue();

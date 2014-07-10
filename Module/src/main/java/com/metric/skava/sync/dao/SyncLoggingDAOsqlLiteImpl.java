@@ -173,9 +173,19 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
 
 
     public void updateAssessmentSyncTrace(AssessmentSyncTrace syncTrace) throws DAOException {
-
         saveAssessmentSyncTrace(syncTrace);
     }
+
+    public boolean existsOnSyncTraces(String assessmentCode) throws DAOException{
+        Cursor cursorFiles = getRecordsFilteredByColumn(AssessmentSyncTraceFilesTable.SYNC_TRACE_FILES_TABLE, AssessmentSyncTraceFilesTable.ASSESSMENT_COLUMN, assessmentCode, AssessmentSyncTraceFilesTable.DATE_COLUMN);
+        int files = cursorFiles.getCount();
+
+        Cursor cursorRecords = getRecordsFilteredByColumn(AssessmentSyncTraceRecordsTable.SYNC_TRACE_RECORDS_TABLE, AssessmentSyncTraceRecordsTable.ASSESSMENT_COLUMN, assessmentCode, AssessmentSyncTraceRecordsTable.DATE_COLUMN);
+        int records = cursorRecords.getCount();
+
+        return (files > 0 || records > 0);
+    }
+
 
     public void saveAssessmentSyncTrace(AssessmentSyncTrace syncTrace) throws DAOException {
         List<FileToSync> filesForThisAssessment = syncTrace.getFiles();

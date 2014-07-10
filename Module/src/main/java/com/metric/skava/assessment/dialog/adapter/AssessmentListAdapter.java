@@ -129,6 +129,8 @@ public class AssessmentListAdapter extends BaseAdapter {
                     case PICS_SENT_TO_DATASTORE:
                         imageView.setImageResource(R.drawable.cloud_sync);
                         break;
+                    default:
+                        imageView.setImageResource(R.drawable.tablet);
                 }
             } else {
                 //the data is enough

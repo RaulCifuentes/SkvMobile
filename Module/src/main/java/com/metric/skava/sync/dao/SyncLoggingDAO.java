@@ -29,4 +29,6 @@ public interface SyncLoggingDAO {
     public void saveAssessmentSyncTrace(AssessmentSyncTrace syncQueue) throws DAOException;
 
     public void updateAssessmentSyncTrace(AssessmentSyncTrace assessmentSyncTrace) throws DAOException;
+
+    public boolean existsOnSyncTraces(String acknowledgedAssessmentCode) throws DAOException;
 }

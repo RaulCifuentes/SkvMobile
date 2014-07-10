@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -31,6 +30,9 @@ import com.metric.skava.R;
 import com.metric.skava.app.SkavaApplication;
 import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.fragment.SkavaFragment;
+import com.metric.skava.app.helper.ImportAppAndUserDataModelTask;
+import com.metric.skava.app.helper.ImportAppDataModelTask;
+import com.metric.skava.app.helper.ImportUserDataModelTask;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.navigation.NavigationController;
 import com.metric.skava.app.util.DateDisplayFormat;
@@ -39,28 +41,14 @@ import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.exception.DAOException;
-import com.metric.skava.data.dao.impl.dropbox.datastore.tables.ClientDropboxTable;
 import com.metric.skava.data.dao.impl.dropbox.datastore.tables.DataSyncDropboxTable;
-import com.metric.skava.data.dao.impl.dropbox.datastore.tables.ExcavationProjectDropboxTable;
 import com.metric.skava.data.dao.impl.dropbox.datastore.tables.FilesSyncDropboxTable;
-import com.metric.skava.data.dao.impl.dropbox.datastore.tables.ParametersDropboxTable;
-import com.metric.skava.data.dao.impl.dropbox.datastore.tables.RmrCategoriesDropboxTable;
-import com.metric.skava.data.dao.impl.dropbox.datastore.tables.RmrIndexesDropboxTable;
-import com.metric.skava.data.dao.impl.dropbox.datastore.tables.RmrParametersDropboxTable;
-import com.metric.skava.data.dao.impl.dropbox.datastore.tables.RoleDropboxTable;
-import com.metric.skava.data.dao.impl.dropbox.datastore.tables.SupportRequirementDropboxTable;
-import com.metric.skava.data.dao.impl.dropbox.datastore.tables.TunnelDropboxTable;
-import com.metric.skava.data.dao.impl.dropbox.datastore.tables.TunnelFaceDropboxTable;
-import com.metric.skava.data.dao.impl.dropbox.datastore.tables.UserDropboxTable;
-import com.metric.skava.home.helper.ImportDataHelper;
 import com.metric.skava.sync.dao.SyncLoggingDAO;
-import com.metric.skava.sync.exception.SyncDataFailedException;
 import com.metric.skava.sync.helper.SyncHelper;
 import com.metric.skava.sync.model.AssessmentSyncTrace;
 import com.metric.skava.sync.model.DataToSync;
 import com.metric.skava.sync.model.FileToSync;
 import com.metric.skava.sync.model.RecordToSync;
-import com.metric.skava.sync.model.SyncLogEntry;
 import com.metric.skava.sync.model.SyncQueue;
 import com.metric.skava.sync.model.SyncStatus;
 import com.metric.skava.sync.model.SyncTask;
@@ -86,15 +74,15 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
     protected SkavaFragment mMainContainedFragment;
 
 
-    protected abstract void onPreExecuteImportAppData();
+    public abstract void onPreExecuteImportAppData();
 
-    protected abstract void onPreExecuteImportUserData();
+    public abstract void onPreExecuteImportUserData();
 
-    protected abstract void onPostExecuteImportAppData();
+    public abstract void onPostExecuteImportAppData(boolean success, Long result);
 
-    protected abstract void onPostExecuteImportUserData();
+    public abstract void onPostExecuteImportUserData(boolean success, Long result);
 
-    protected abstract void showProgressBar(final boolean show, String text, boolean longTime);
+    public abstract void showProgressBar(final boolean show, String text, boolean longTime);
 
     public SkavaContext getSkavaContext() {
         SkavaApplication application = (SkavaApplication) (getApplication());
@@ -144,9 +132,6 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
         if (getSkavaContext().getDatastore() != null) {
             getSkavaContext().getDatastore().addSyncStatusListener(this);
         }
-//        if (getSkavaContext().getFileSystem() != null) {
-//            getSkavaContext().getFileSystem().addSyncStatusListener(this);
-//        }
     }
 
     public boolean onOptionsItemSelected(MenuItem menuItem) {
@@ -178,10 +163,6 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
         if (getSkavaContext().getDatastore() != null) {
             getSkavaContext().getDatastore().addSyncStatusListener(this);
         }
-//        if (getSkavaContext().getFileSystem() != null) {
-//            getSkavaContext().getFileSystem().addSyncStatusListener(this);
-//        }
-
     }
 
     public void onPause() {
@@ -189,9 +170,6 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
         if (getSkavaContext().getDatastore() != null) {
             getSkavaContext().getDatastore().removeSyncStatusListener(this);
         }
-//        if (getSkavaContext().getFileSystem() != null) {
-//            getSkavaContext().getFileSystem().removeSyncStatusListener(this);
-//        }
     }
 
 
@@ -201,9 +179,6 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
         if (getSkavaContext().getDatastore() != null) {
             getSkavaContext().getDatastore().removeSyncStatusListener(this);
         }
-//        if (getSkavaContext().getFileSystem() != null) {
-//            getSkavaContext().getFileSystem().removeSyncStatusListener(this);
-//        }
     }
 
     public boolean isNetworkAvailable() {
@@ -249,265 +224,6 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
         return success;
     }
 
-    public class ImportAppDataModelTask extends AsyncTask<SyncTask.Domain, Long, Long> {
-
-        private SyncLogEntry errorCondition;
-        private Long totalRecordsToImport;
-        private ImportDataHelper importHelper;
-
-        @Override
-        protected void onPreExecute() {
-            importHelper = new ImportDataHelper(getSyncHelper());
-            String message = getString(R.string.syncing_app_data_progress);
-            onPreExecuteImportAppData();
-            showProgressBar(true, message, true);
-        }
-
-        @Override
-        protected Long doInBackground(SyncTask.Domain... params) {
-            Long numRecordsCreated = 0L;
-            try {
-                //FIND OUT THE TOTAL NUMBER OF RECORDS
-                totalRecordsToImport = getSyncHelper().findOutNumberOfRecordsToImport(params);
-                if (totalRecordsToImport > 0) {
-                    // **** IMPORT GENERAL DATA FIRST *** //
-                    numRecordsCreated += importHelper.importMethods();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importSections();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importDiscontinuityTypes();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importRelevances();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importIndexes();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importGroups();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importSpacings();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importPersistences();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importApertures();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importShapes();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importRoughnesses();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importInfillings();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importWeatherings();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importWaters();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importStrengths();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importGroundwaters();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importOrientations();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importJns();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importJrs();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importJas();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importJws();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importSRFs();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importFractureTypes();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importBoltTypes();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importShotcreteTypes();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importMeshTypes();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importCoverages();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importArchTypes();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importESRs();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importSupportPatternTypes();
-                    publishProgress(numRecordsCreated);
-                    numRecordsCreated += importHelper.importRockQualities();
-                    publishProgress(numRecordsCreated);
-                }
-            } catch (SyncDataFailedException e) {
-                e.printStackTrace();
-                Log.e(SkavaConstants.LOG, e.getMessage());
-                errorCondition = e.getEntry();
-                if (errorCondition == null) {
-                    errorCondition = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.ALL_APP_DATA_TABLES, SyncTask.Source.DROPBOX_LOCAL_DATASTORE, SyncTask.Status.FAIL, 0L);
-                }
-            } catch (DAOException e) {
-                Log.e(SkavaConstants.LOG, e.getMessage());
-                e.printStackTrace();
-                errorCondition = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.ALL_APP_DATA_TABLES, SyncTask.Source.DROPBOX_LOCAL_DATASTORE, SyncTask.Status.FAIL, 0L);
-            }
-            return numRecordsCreated;
-        }
-
-
-        @Override
-        protected void onProgressUpdate(Long... progress) {
-            //mostrar avance
-            Long value = (Long) progress[0];
-            showProgressBar(true, +value + " of " + totalRecordsToImport + " app data records imported so far.", false);
-        }
-
-        @Override
-        protected void onPostExecute(Long result) {
-            if (errorCondition == null) {
-                //termino exitosamente
-                showProgressBar(true, "Finished. " + result + " records imported.", true);
-                lackOfAppData = false;
-                preventExecution = false;
-                saveAppDataSyncStatus(true);
-                if (assertUserDataNeverCalled) {
-                    try {
-                        assertUserDataAvailable();
-                    } catch (DAOException e) {
-                        BugSenseHandler.sendException(e);
-                        Log.e(SkavaConstants.LOG, e.getMessage());
-                        e.printStackTrace();
-                    }
-                }
-                onPostExecuteImportAppData();
-            } else {
-                lackOfAppData = true;
-                preventExecution = true;
-                saveAppDataSyncStatus(false);
-                showProgressBar(false, "Failed after " + result + " records imported.", true);
-                AlertDialog.Builder messageBox = new AlertDialog.Builder(SkavaFragmentActivity.this);
-                messageBox.setTitle("Bad news with " + errorCondition.getSource().name() + " on " + errorCondition.getSyncDate().toString());
-                messageBox.setMessage("Hey buddy, I was syncing " + errorCondition.getDomain().name() + ", but this issue arose : " + errorCondition.getMessage());
-                messageBox.setCancelable(false);
-                messageBox.setNeutralButton("OK", null);
-                messageBox.show();
-            }
-            // now that app data sync has finished call the eventual user data sync
-//            setupUserDataModel();
-        }
-    }
-
-
-    public class ImportUserDataModelTask extends AsyncTask<SyncTask.Domain, Long, Long> {
-
-        private SyncLogEntry errorCondition;
-        private Long totalRecordsToImport;
-        private ImportDataHelper importHelper;
-
-        @Override
-        protected void onPreExecute() {
-            importHelper = new ImportDataHelper(getSyncHelper());
-            String message = getString(R.string.syncing_user_data_progress);
-            onPreExecuteImportUserData();
-            showProgressBar(true, message, true);
-        }
-
-        @Override
-        protected Long doInBackground(SyncTask.Domain... params) {
-            Long numRecordsCreated = 0L;
-            try {
-                //FIND OUT THE TOTAL NUMBER OF RECORDS
-                totalRecordsToImport = getSyncHelper().findOutNumberOfRecordsToImport(params);
-                if (totalRecordsToImport > 0) {
-                    // **** IMPORT THEN USER RELATED DATA **** //
-                    for (SyncTask.Domain currentDomainToImport : params) {
-                        switch (currentDomainToImport) {
-                            case ROLES:
-                                numRecordsCreated += importHelper.importRoles();
-                                publishProgress(numRecordsCreated);
-                                break;
-                            case CLIENTS:
-                                numRecordsCreated += importHelper.importClients();
-                                publishProgress(numRecordsCreated);
-                                break;
-                            case EXCAVATION_PROJECTS:
-                                numRecordsCreated += importHelper.importProjects();
-                                publishProgress(numRecordsCreated);
-                                break;
-                            case TUNNELS:
-                                numRecordsCreated += importHelper.importTunnels();
-                                publishProgress(numRecordsCreated);
-                                break;
-                            case SUPPORT_REQUIREMENTS:
-                                numRecordsCreated += importHelper.importSupportRequirements();
-                                publishProgress(numRecordsCreated);
-                                break;
-                            case TUNNEL_FACES:
-                                numRecordsCreated += importHelper.importTunnelFaces();
-                                publishProgress(numRecordsCreated);
-                                break;
-                            case USERS:
-                                numRecordsCreated += importHelper.importUsers();
-                                publishProgress(numRecordsCreated);
-                                break;
-                            case ALL_USER_DATA_TABLES:
-                                numRecordsCreated += importHelper.importRoles();
-                                publishProgress(numRecordsCreated);
-                                numRecordsCreated += importHelper.importClients();
-                                publishProgress(numRecordsCreated);
-                                numRecordsCreated += importHelper.importProjects();
-                                publishProgress(numRecordsCreated);
-                                numRecordsCreated += importHelper.importTunnels();
-                                publishProgress(numRecordsCreated);
-                                numRecordsCreated += importHelper.importSupportRequirements();
-                                publishProgress(numRecordsCreated);
-                                numRecordsCreated += importHelper.importTunnelFaces();
-                                publishProgress(numRecordsCreated);
-                                numRecordsCreated += importHelper.importUsers();
-                                publishProgress(numRecordsCreated);
-                                break;
-                        }
-                    }
-                }
-            } catch (SyncDataFailedException e) {
-                e.printStackTrace();
-                Log.e(SkavaConstants.LOG, e.getMessage());
-                errorCondition = e.getEntry();
-            } catch (DAOException e) {
-                e.printStackTrace();
-                Log.e(SkavaConstants.LOG, e.getMessage());
-                errorCondition = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.ALL_APP_DATA_TABLES, SyncTask.Source.DROPBOX_LOCAL_DATASTORE, SyncTask.Status.FAIL, 0L);
-            }
-            return numRecordsCreated;
-        }
-
-
-        @Override
-        protected void onProgressUpdate(Long... progress) {
-            //mostrar avance
-            Long value = (Long) progress[0];
-            showProgressBar(true, +value + " of " + totalRecordsToImport + " user data records imported so far.", false);
-        }
-
-        @Override
-        protected void onPostExecute(Long result) {
-            if (errorCondition == null) {
-                //mostrar que termino exitosamente
-                lackOfUserData = false;
-                preventExecution = false;
-                saveUserDataSyncStatus(true);
-                showProgressBar(false, "Finished. " + result + " records imported.", true);
-            } else {
-                lackOfUserData = true;
-                preventExecution = true;
-                saveUserDataSyncStatus(false);
-                showProgressBar(false, "Failed after " + result + " records imported.", true);
-                AlertDialog.Builder messageBox = new AlertDialog.Builder(SkavaFragmentActivity.this);
-                messageBox.setTitle("Bad news with " + errorCondition.getSource().name() + " on " + errorCondition.getSyncDate().toString());
-                messageBox.setMessage("Hey buddy, I was syncing " + errorCondition.getDomain().name() + ", but this issue arose : " + errorCondition.getMessage());
-                messageBox.setCancelable(false);
-                messageBox.setNeutralButton("OK", null);
-                messageBox.show();
-            }
-            onPostExecuteImportUserData();
-        }
-    }
-
 
     @Override
     public void onDatastoreStatusChange(DbxDatastore store) {
@@ -521,180 +237,197 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                 SyncLoggingDAO syncLoggingDAO = null;
                 syncLoggingDAO = getDAOFactory().getSyncLoggingDAO();
 
-                for (String tablename : incomingChanges.keySet()) {
+                // Heads up:: Because there's no control on order of execution consider these cases:
+                // 1. distinguish where only app data, only user data or (app and user) data needs to be updated -> handle them independently
+                // 2. more than one correlated table from app or more than one correlated table from user data -> update them all as a group
+                Set<String> incomingChangesTables = incomingChanges.keySet();
+                if (SkavaUtils.includesAppOrUserData(incomingChangesTables)){
+                    if (SkavaUtils.includesOnlyUserData(incomingChangesTables)){
+                        try {
+                            SyncTask.Domain[] syncTarget = new SyncTask.Domain[]{SyncTask.Domain.ALL_USER_DATA_TABLES};
+                            ImportUserDataModelTask dynamicDataTask = new ImportUserDataModelTask(getSkavaContext(), this);
+                            dynamicDataTask.execute(syncTarget);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            BugSenseHandler.sendException(e);
+                            Log.e(SkavaConstants.LOG, e.getMessage());
+                        }
+                    }
+
+                    if (SkavaUtils.includesOnlyAppData(incomingChangesTables)){
+                        try {
+                            SyncTask.Domain[] syncTarget = new SyncTask.Domain[]{SyncTask.Domain.ALL_APP_DATA_TABLES};
+                            ImportAppDataModelTask dynamicDataTask = new ImportAppDataModelTask(getSkavaContext(), this);
+                            dynamicDataTask.execute(syncTarget);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            BugSenseHandler.sendException(e);
+                            Log.e(SkavaConstants.LOG, e.getMessage());
+                        }
+                    }
+
+                    if (SkavaUtils.includesAppAndUserData(incomingChangesTables)){
+                        //First app data, when finished start the user data
+                        try {
+                            SyncTask.Domain[] syncTarget = new SyncTask.Domain[]{SyncTask.Domain.ALL_APP_DATA_TABLES, SyncTask.Domain.ALL_USER_DATA_TABLES};
+                            ImportAppAndUserDataModelTask dynamicDataTask = new ImportAppAndUserDataModelTask(getSkavaContext(), this);
+                            dynamicDataTask.execute(syncTarget);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            BugSenseHandler.sendException(e);
+                            Log.e(SkavaConstants.LOG, e.getMessage());
+                        }
+                    }
+
+                }
+
+                for (String tablename : incomingChangesTables) {
+                    if (SkavaUtils.isPartOfAppOrUserData(tablename)){
+                        //skip as this was aready handled
+                        continue;
+                    }
                     if (tablename.equals(DataSyncDropboxTable.DATA_SYNC_TABLE)) {
+
+                        //Basically check if this correspond to a local assessment on this tablet
+                        // If so update the local assessment record with the correspondent sent status
+                        //Dont forget to update the middleman inbox and/or the Assessment log traces
+
                         //find what is being aknowledged and remove from the middleman box space
                         Set<DbxRecord> dbxRecords = incomingChanges.get(DataSyncDropboxTable.DATA_SYNC_TABLE);
                         for (DbxRecord dbxRecord : dbxRecords) {
                             String acknowledgedAssessmentCode = dbxRecord.getString("assesmentCode");
                             String acknowledgedRecordID = dbxRecord.getString("dropboxId");
-                            //find what is the record being acknowledged and update the sync trace from QUEDED to SERVED in the AssessmentSyncTrace table
-                            AssessmentSyncTrace assessmentSyncTrace = null;
-                            try {
-                                assessmentSyncTrace = syncLoggingDAO.getAssessmentSyncTrace(acknowledgedAssessmentCode);
-                                List<RecordToSync> tracedRecords = assessmentSyncTrace.getRecords();
-                                for (RecordToSync tracedRecord : tracedRecords) {
-                                    if (tracedRecord.getRecordID().equalsIgnoreCase(acknowledgedRecordID)) {
-                                        tracedRecord.setStatus(DataToSync.Status.SERVED);
+                            //find out if the record being acknowledged exists on the sync queue of this tablet
+                            boolean exists = syncLoggingDAO.existsOnSyncTraces(acknowledgedAssessmentCode);
+                            if (exists){
+                                //update the sync trace from QUEDED to SERVED in the AssessmentSyncTrace table
+                                AssessmentSyncTrace assessmentSyncTrace = null;
+                                try {
+                                    assessmentSyncTrace = syncLoggingDAO.getAssessmentSyncTrace(acknowledgedAssessmentCode);
+                                    List<RecordToSync> tracedRecords = assessmentSyncTrace.getRecords();
+                                    for (RecordToSync tracedRecord : tracedRecords) {
+                                        if (tracedRecord.getRecordID().equalsIgnoreCase(acknowledgedRecordID)) {
+                                            tracedRecord.setStatus(DataToSync.Status.SERVED);
+                                        }
+                                    }
+                                    syncLoggingDAO.updateAssessmentSyncTrace(assessmentSyncTrace);
+                                } catch (DAOException e) {
+                                    e.printStackTrace();
+                                    Log.e(SkavaConstants.LOG, e.getMessage());
+                                }
+
+                                //find what is the record being acknowledged and remove it from the middleman box space
+                                SyncQueue middlemanInbox = getSkavaContext().getMiddlemanInbox();
+                                List<RecordToSync> pendingRecords = middlemanInbox.getRecords(acknowledgedAssessmentCode);
+                                if (pendingRecords != null) {
+                                    //iterate over all the data records
+                                    //use a array copy for loop to avoid iterator and remove conflict
+                                    List<Integer> foundIndexes = new ArrayList<Integer>();
+                                    for (int i = 0; i < pendingRecords.size(); i++) {
+                                        RecordToSync recordToSync = pendingRecords.get(i);
+                                        //those should be FileToSync instances
+                                        String recordID = recordToSync.getRecordID();
+                                        if (recordID.equalsIgnoreCase(acknowledgedRecordID)) {
+                                            foundIndexes.add(i);
+                                        }
+                                    }
+                                    //Removes from the list of pending those that was reported by ack table
+                                    if (foundIndexes != null && !foundIndexes.isEmpty()) {
+                                        for (Integer foundIndex : foundIndexes) {
+                                            pendingRecords.remove(foundIndex.intValue());
+                                        }
+                                    }
+                                    if (pendingRecords.isEmpty()) {
+                                        try {
+                                            LocalAssessmentDAO assessmentDAO = getDAOFactory().getLocalAssessmentDAO();
+                                            Assessment uploadedAssessment = assessmentDAO.getAssessment(acknowledgedAssessmentCode);
+                                            uploadedAssessment.setDataSentStatus(Assessment.DATA_SENT_TO_CLOUD);
+                                            assessmentDAO.updateAssessment(uploadedAssessment, false);
+
+                                            //mostrar que termino exitosamente
+                                            notifyUploadSucceed(0, R.drawable.cloud_striped, "Skava Mobile", "Mapping data for " + uploadedAssessment.getPseudoCode() + " was uploaded");
+
+                                        } catch (DAOException e) {
+                                            e.printStackTrace();
+                                            Log.e(SkavaConstants.LOG, e.getMessage());
+                                        }
                                     }
                                 }
-                                syncLoggingDAO.updateAssessmentSyncTrace(assessmentSyncTrace);
-                            } catch (DAOException e) {
-                                e.printStackTrace();
-                                Log.e(SkavaConstants.LOG, e.getMessage());
+                            } else {
+                                // Just do nothing. Probably comes from another tablet
                             }
 
-                            //find what is the record being acknowledged and remove it from the middleman box space
-                            SyncQueue middlemanInbox = getSkavaContext().getMiddlemanInbox();
-                            List<RecordToSync> pendingRecords = middlemanInbox.getRecords(acknowledgedAssessmentCode);
-                            if (pendingRecords != null) {
-                                //iterate over all the data records
-                                //use a array copy for loop to avoid iterator and remove conflict
-                                List<Integer> foundIndexes = new ArrayList<Integer>();
-                                for (int i = 0; i < pendingRecords.size(); i++) {
-                                    RecordToSync recordToSync = pendingRecords.get(i);
-                                    //those should be FileToSync instances
-                                    String recordID = recordToSync.getRecordID();
-                                    if (recordID.equalsIgnoreCase(acknowledgedRecordID)) {
-                                        foundIndexes.add(i);
-                                    }
-                                }
-                                //Removes from the list of pending those that was reported by ack table
-                                if (foundIndexes != null && !foundIndexes.isEmpty()) {
-                                    for (Integer foundIndex : foundIndexes) {
-                                        pendingRecords.remove(foundIndex.intValue());
-                                    }
-                                }
-                                if (pendingRecords.isEmpty()) {
-                                    try {
-                                        LocalAssessmentDAO assessmentDAO = getDAOFactory().getLocalAssessmentDAO();
-                                        Assessment uploadedAssessment = assessmentDAO.getAssessment(acknowledgedAssessmentCode);
-                                        uploadedAssessment.setDataSentStatus(Assessment.DATA_SENT_TO_CLOUD);
-                                        assessmentDAO.updateAssessment(uploadedAssessment, false);
-
-                                        //mostrar que termino exitosamente
-                                        notifyUploadSucceed(0, R.drawable.cloud_striped, "Skava Mobile", "Mapping data for " + uploadedAssessment.getPseudoCode() + " was uploaded");
-
-                                    } catch (DAOException e) {
-                                        e.printStackTrace();
-                                        Log.e(SkavaConstants.LOG, e.getMessage());
-                                    }
-                                }
-                            }
                         }
                     }
                     if (tablename.equals(FilesSyncDropboxTable.FILE_SYNC_TABLE)) {
+                        //Basically check if this correspond to a local assessment on this tablet
+                        // If so find the particular file (picture) currently informed and
+                        // update the local the middleman inbox and/or the Assessment log traces with the correspondent sent status
+                        // If the full set of pictures have been informed then update the local assessment
+                        // with the correspondent update status
                         String acknowledgedAssessmentCode = null;
                         String acknowledgedFileName = null;
                         Set<DbxRecord> dbxRecords = incomingChanges.get(FilesSyncDropboxTable.FILE_SYNC_TABLE);
                         for (DbxRecord dbxRecord : dbxRecords) {
                             acknowledgedAssessmentCode = dbxRecord.getString("assessmentCode");
                             acknowledgedFileName = dbxRecord.getString("fileName");
+                            //find out if the record being acknowledged exists on the sync queue of this tablet
+                            boolean exists = syncLoggingDAO.existsOnSyncTraces(acknowledgedAssessmentCode);
+                            if (exists){
+                                //update the sync trace from QUEDED to SERVED in the AssessmentSyncTrace table
+                                AssessmentSyncTrace assessmentSyncTrace = null;
+                                try {
+                                    assessmentSyncTrace = syncLoggingDAO.getAssessmentSyncTrace(acknowledgedAssessmentCode);
+                                    List<FileToSync> tracedFiles = assessmentSyncTrace.getFiles();
+                                    for (FileToSync tracedFile : tracedFiles) {
+                                        if (tracedFile.getFileName().equalsIgnoreCase(acknowledgedFileName)) {
+                                            tracedFile.setStatus(DataToSync.Status.SERVED);
+                                        }
+                                    }
+                                    syncLoggingDAO.updateAssessmentSyncTrace(assessmentSyncTrace);
+                                } catch (DAOException e) {
+                                    e.printStackTrace();
+                                    Log.e(SkavaConstants.LOG, e.getMessage());
+                                }
 
-                            //find what is the record being acknowledged and update the sync trace from QUEDED to SERVED in the AssessmentSyncTrace table
-                            AssessmentSyncTrace assessmentSyncTrace = null;
-                            try {
-                                assessmentSyncTrace = syncLoggingDAO.getAssessmentSyncTrace(acknowledgedAssessmentCode);
-                                List<FileToSync> tracedFiles = assessmentSyncTrace.getFiles();
-                                for (FileToSync tracedFile : tracedFiles) {
-                                    if (tracedFile.getFileName().equalsIgnoreCase(acknowledgedFileName)) {
-                                        tracedFile.setStatus(DataToSync.Status.SERVED);
+                                //find what is the file being acknowledged and remove it from the middleman box space
+                                SyncQueue middlemanInbox = getSkavaContext().getMiddlemanInbox();
+                                List<FileToSync> pendingPictures = middlemanInbox.getFiles(acknowledgedAssessmentCode);
+                                if (pendingPictures != null) {
+                                    //iterate over all the images
+                                    List<Integer> foundIndexes = new ArrayList<Integer>();
+                                    //use a for loop to avoid iterator and remove conflict
+                                    for (int i = 0; i < pendingPictures.size(); i++) {
+                                        FileToSync pictureFileToSync = pendingPictures.get(i);
+                                        //those should be FileToSync instances
+                                        String fileName = pictureFileToSync.getFileName();
+                                        if (fileName.equalsIgnoreCase(acknowledgedFileName)) {
+                                            foundIndexes.add(i);
+                                        }
+                                    }
+                                    //Removes from the list of pending those that was reported by ack table
+                                    if (foundIndexes != null && !foundIndexes.isEmpty()) {
+                                        for (Integer foundIndex : foundIndexes) {
+                                            pendingPictures.remove(foundIndex.intValue());
+                                        }
+                                    }
+                                    if (pendingPictures.isEmpty()) {
+                                        try {
+                                            LocalAssessmentDAO assessmentDAO = getDAOFactory().getLocalAssessmentDAO();
+                                            Assessment uploadedAssessment = assessmentDAO.getAssessment(acknowledgedAssessmentCode);
+                                            uploadedAssessment.setPicsSentStatus(Assessment.PICS_SENT_TO_CLOUD);
+                                            assessmentDAO.updateAssessment(uploadedAssessment, false);
+                                            //mostrar que termino exitosamente
+                                            notifyUploadSucceed(0, R.drawable.cloud_checked, "Skava Uploader", "Pictures for " + uploadedAssessment.getPseudoCode() + " were uploaded");
+                                        } catch (DAOException e) {
+                                            e.printStackTrace();
+                                            Log.e(SkavaConstants.LOG, e.getMessage());
+                                        }
                                     }
                                 }
-                                syncLoggingDAO.updateAssessmentSyncTrace(assessmentSyncTrace);
-                            } catch (DAOException e) {
-                                e.printStackTrace();
-                                Log.e(SkavaConstants.LOG, e.getMessage());
+                            } else {
+                                // Just do nothing. Probably comes from another tablet
                             }
-
-                            //find what is the file being acknowledged and remove it from the middleman box space
-                            SyncQueue middlemanInbox = getSkavaContext().getMiddlemanInbox();
-                            List<FileToSync> pendingPictures = middlemanInbox.getFiles(acknowledgedAssessmentCode);
-                            if (pendingPictures != null) {
-                                //iterate over all the images
-                                List<Integer> foundIndexes = new ArrayList<Integer>();
-                                //use a for loop to avoid iterator and remove conflict
-                                for (int i = 0; i < pendingPictures.size(); i++) {
-                                    FileToSync pictureFileToSync = pendingPictures.get(i);
-                                    //those should be FileToSync instances
-                                    String fileName = pictureFileToSync.getFileName();
-                                    if (fileName.equalsIgnoreCase(acknowledgedFileName)) {
-                                        foundIndexes.add(i);
-                                    }
-                                }
-                                //Removes from the list of pending those that was reported by ack table
-                                if (foundIndexes != null && !foundIndexes.isEmpty()) {
-                                    for (Integer foundIndex : foundIndexes) {
-                                        pendingPictures.remove(foundIndex.intValue());
-                                    }
-                                }
-                                if (pendingPictures.isEmpty()) {
-                                    try {
-                                        LocalAssessmentDAO assessmentDAO = getDAOFactory().getLocalAssessmentDAO();
-                                        Assessment uploadedAssessment = assessmentDAO.getAssessment(acknowledgedAssessmentCode);
-                                        uploadedAssessment.setPicsSentStatus(Assessment.PICS_SENT_TO_CLOUD);
-                                        assessmentDAO.updateAssessment(uploadedAssessment, false);
-                                        //mostrar que termino exitosamente
-                                        notifyUploadSucceed(0, R.drawable.cloud_checked, "Skava Uploader", "Pictures for " + uploadedAssessment.getPseudoCode() + " were uploaded");
-                                    } catch (DAOException e) {
-                                        e.printStackTrace();
-                                        Log.e(SkavaConstants.LOG, e.getMessage());
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    //These list of Domains were created in order to sync only the necessary but
-                    //the lack of control on the order of execution of the async task don't help so
-                    //it seems better to update all user data OR all app data as a unit
-                    List<SyncTask.Domain> syncTargetUserData = new ArrayList<SyncTask.Domain>();
-                    List<SyncTask.Domain> syncTargetAppData = new ArrayList<SyncTask.Domain>();
-                    //If there's multiple tables involved then sort them referenced entities must be synced first
-                    //but sorting the trigger of the AsyncTask does not guarantee the order in execution
-                    //so it's better although not optimal to do a full user data import
-                    //********** USER RELATED DATA **********/
-                    if (tablename.equals(RoleDropboxTable.ROLES_DROPBOX_TABLE) ||
-                            tablename.equals(ClientDropboxTable.CLIENTS_DROPBOX_TABLE) ||
-                            tablename.equals(ExcavationProjectDropboxTable.PROJECTS_DROPBOX_TABLE) ||
-                            tablename.equals(TunnelDropboxTable.TUNNELS_DROPBOX_TABLE) ||
-                            tablename.equals(SupportRequirementDropboxTable.SUPPORT_REQUIREMENTS_DROPBOX_TABLE) ||
-                            tablename.equals(TunnelFaceDropboxTable.FACES_DROPBOX_TABLE) ||
-                            tablename.equals(UserDropboxTable.USERS_DROPBOX_TABLE)) {
-                        syncTargetUserData.add(SyncTask.Domain.ALL_USER_DATA_TABLES);
-                        try {
-                            // Finally do the import and avoid run it more than once (as this is inside a for loop)
-                            if (!syncTargetUserData.isEmpty() && !userDataImportExecuted) {
-                                SyncTask.Domain[] syncTarget = syncTargetUserData.toArray(new SyncTask.Domain[]{});
-                                ImportUserDataModelTask dynamicDataTask = new ImportUserDataModelTask();
-                                dynamicDataTask.execute(syncTarget);
-                                userDataImportExecuted = true;
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            BugSenseHandler.sendException(e);
-                            Log.e(SkavaConstants.LOG, e.getMessage());
-                        }
-                    }
-                    //*********** APP DATA ************/
-                    if (tablename.equals(ParametersDropboxTable.PARAMETERS_DROPBOX_TABLE)
-                            || tablename.equals(RmrParametersDropboxTable.RMR_PARAMETERS_TABLE)
-                            || tablename.equals(RmrIndexesDropboxTable.RMR_INDEXES_TABLE)
-                            || tablename.equals(RmrCategoriesDropboxTable.RMR_CATEGORIES_TABLE)
-                            ) {
-                        syncTargetAppData.add(SyncTask.Domain.ALL_APP_DATA_TABLES);
-                        try {
-                            // Finally do the import and avoid run it more than once (as this is inside a for loop)
-                            if (!syncTargetAppData.isEmpty() && !appDataImportExecuted) {
-                                SyncTask.Domain[] syncTarget = syncTargetAppData.toArray(new SyncTask.Domain[]{});
-                                ImportAppDataModelTask dynamicDataTask = new ImportAppDataModelTask();
-                                dynamicDataTask.execute(syncTarget);
-                                appDataImportExecuted = true;
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            BugSenseHandler.sendException(e);
-                            Log.e(SkavaConstants.LOG, e.getMessage());
                         }
                     }
                 }
@@ -794,7 +527,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (isNetworkAvailable()) {
-                                ImportAppDataModelTask fixedDataTask = new ImportAppDataModelTask();
+                                ImportAppDataModelTask fixedDataTask = new ImportAppDataModelTask(getSkavaContext(), SkavaFragmentActivity.this);
                                 fixedDataTask.execute(SyncTask.Domain.ALL_APP_DATA_TABLES);
                             } else {
                                 //show internet required message
@@ -880,7 +613,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (isNetworkAvailable()) {
-                                ImportUserDataModelTask dynamicDataTask = new ImportUserDataModelTask();
+                                ImportUserDataModelTask dynamicDataTask = new ImportUserDataModelTask(getSkavaContext(), SkavaFragmentActivity.this);
                                 dynamicDataTask.execute(SyncTask.Domain.ALL_USER_DATA_TABLES);
                             } else {
                                 //show internet required message

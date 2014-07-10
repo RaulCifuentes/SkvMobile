@@ -204,7 +204,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 }
                 linkDropboxCompleted = true;
                 getSkavaContext().setDatastore(mDatastore);
-//                getSkavaContext().setFileSystem(mFileSystem);
             }
         } catch (DbxException e) {
             BugSenseHandler.sendException(e);
@@ -257,7 +256,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                     }
                     linkDropboxCompleted = true;
                     getSkavaContext().setDatastore(mDatastore);
-//                    getSkavaContext().setFileSystem(mFileSystem);
                     ((SkavaApplication)getApplication()).setNeedImportAppData(true);
                     ((SkavaApplication)getApplication()).setNeedImportUserData(true);
                 } catch (DbxException e) {
@@ -291,7 +289,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     }
 
 
-    protected void showProgressBar(final boolean show, String text, boolean longTime) {
+    public void showProgressBar(final boolean show, String text, boolean longTime) {
         mHomeMainFragment.getSyncingStatusMessageView().setText(text);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = longTime ? getResources().getInteger(android.R.integer.config_longAnimTime) : getResources().getInteger(android.R.integer.config_shortAnimTime);
@@ -411,12 +409,47 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         mHomeMainFragment.getBackgroudImage().setVisibility(View.GONE);
     }
 
-    public void onPostExecuteImportAppData(){
+    public void onPostExecuteImportAppData(boolean success, Long result){
+        if (success) {
+            //termino exitosamente
+            lackOfAppData = false;
+            preventExecution = false;
+            saveAppDataSyncStatus(true);
+            showProgressBar(true, "Finished. " + result + " records imported.", true);
+            if (assertUserDataNeverCalled) {
+                try {
+                    assertUserDataAvailable();
+                } catch (DAOException e) {
+                    BugSenseHandler.sendException(e);
+                    Log.e(SkavaConstants.LOG, e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            lackOfAppData = true;
+            preventExecution = true;
+            saveAppDataSyncStatus(false);
+            showProgressBar(false, "Failed after " + result + " records imported.", true);
+        }
+
+
         mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
     }
 
-    public void onPostExecuteImportUserData(){
+    public void onPostExecuteImportUserData(boolean success, Long result){
         mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+        if (success) {
+            //mostrar que termino exitosamente
+            lackOfUserData = false;
+            preventExecution = false;
+            saveUserDataSyncStatus(true);
+            showProgressBar(false, "Finished. " + result + " records imported.", true);
+        } else {
+            lackOfUserData = true;
+            preventExecution = true;
+            saveUserDataSyncStatus(false);
+            showProgressBar(false, "Failed after " + result + " records imported.", true);
+        }
         //Now preventExecution flag is available so setup the drawer menu
         setupTheDrawer();
     }

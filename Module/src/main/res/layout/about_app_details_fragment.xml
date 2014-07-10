@@ -142,7 +142,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="@string/hello_world"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
@@ -150,7 +149,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="@string/hello_world"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
