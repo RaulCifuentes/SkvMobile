@@ -675,7 +675,6 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 final String finalFolderName = folderName;
                 Thread myThread = new Thread(new Runnable() {
                     public void run() {
-                        String internalCode = assessment.getInternalCode();
                         String assessmentCode = assessment.getCode();
                         invokeTheService(DataToSync.Operation.INSERT, finalFolderName, internalCode, assessmentCode, picturesAsStringList);
                     }

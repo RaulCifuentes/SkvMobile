@@ -1,6 +1,7 @@
 package com.metric.skava.app.context;
 
 import com.dropbox.sync.android.DbxDatastore;
+import com.metric.skava.app.helper.MyMonitorObject;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.User;
 import com.metric.skava.data.dao.DAOFactory;
@@ -18,12 +19,47 @@ public class SkavaContext {
     private SyncStatus userDataSyncMetadata;
     private SyncStatus appDataSyncMetadata;
     private DbxDatastore mDatastore;
-//    private DbxFileSystem mFileSystem;
     private DAOFactory daoFactory;
     private SyncHelper syncHelper;
     private String targetEnvironment;
     private SyncQueue middlemanInbox;
 
+    private MyMonitorObject myMonitoObject;
+    private boolean wasSignalled = true;
+
+    private boolean importingData = true;
+
+    public SkavaContext() {
+        myMonitoObject = new MyMonitorObject();
+    }
+
+    public boolean isImportingData() {
+        return importingData;
+    }
+
+    public void setImportingData(boolean importingData) {
+        this.importingData = importingData;
+    }
+
+    public void doWait(){
+        synchronized (myMonitoObject){
+            while (!wasSignalled){
+                try {
+                    myMonitoObject.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        wasSignalled = true;
+    }
+
+    public void doNotify(){
+        synchronized (myMonitoObject) {
+            wasSignalled = true;
+            myMonitoObject.notify();
+        }
+    }
 
     public String getTargetEnvironment() {
         return targetEnvironment;
@@ -80,14 +116,6 @@ public class SkavaContext {
     public void setAppDataSyncMetadata(SyncStatus appDataSyncMetadata) {
         this.appDataSyncMetadata = appDataSyncMetadata;
     }
-
-//    public DbxFileSystem getFileSystem() {
-//        return mFileSystem;
-//    }
-//
-//    public void setFileSystem(DbxFileSystem fileSystem) {
-//        this.mFileSystem = fileSystem;
-//    }
 
     public void setDatastore(DbxDatastore myDatastore) {
         this.mDatastore = myDatastore;

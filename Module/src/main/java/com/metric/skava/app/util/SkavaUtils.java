@@ -10,6 +10,17 @@ import com.metric.skava.calculator.barton.model.Q_Calculation;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.ClientDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.ExcavationProjectDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.ParametersDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.RmrCategoriesDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.RmrIndexesDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.RmrParametersDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.RoleDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.SupportRequirementDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.TunnelDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.TunnelFaceDropboxTable;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.UserDropboxTable;
 import com.metric.skava.discontinuities.model.DiscontinuityFamily;
 import com.metric.skava.pictures.model.SkavaPicture;
 
@@ -17,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -100,7 +112,7 @@ public class SkavaUtils {
         //Discontinuity System
         int dfItems = 7;
         ArrayList<DiscontinuityFamily> discontinuitySystem = new ArrayList<DiscontinuityFamily>(dfItems);
-        for(int i=0; i < dfItems; i++){
+        for (int i = 0; i < dfItems; i++) {
 //            DiscontinuityFamily df = new DiscontinuityFamily();
 //            df.setNumber(i);
             discontinuitySystem.add(null);
@@ -146,8 +158,78 @@ public class SkavaUtils {
         for (SkavaPicture picture : pictureList) {
             if (picture != null) {
                 return true;
-            };
+            }
+            ;
         }
         return false;
+    }
+
+    public static boolean includesAppOrUserData(Set<String> incomingChangesTables) {
+        return includesAppData(incomingChangesTables) || includesUserData(incomingChangesTables);
+    }
+
+    public static boolean includesAppAndUserData(Set<String> incomingChangesTables) {
+        return includesAppData(incomingChangesTables) && includesUserData(incomingChangesTables);
+    }
+
+
+    public static boolean includesAppData(Set<String> incomingChangesTables) {
+        boolean app = false;
+        for (String tablename : incomingChangesTables) {
+            if (isPartOfAppData(tablename)) {
+                app = true;
+                break;
+            }
+        }
+        return app;
+    }
+
+    public static boolean includesUserData(Set<String> incomingChangesTables) {
+        boolean user = false;
+        for (String tablename : incomingChangesTables) {
+            if (isPartOfUserData(tablename)) {
+                user = true;
+                break;
+            }
+        }
+        return user;
+    }
+
+    public static boolean includesOnlyAppData(Set<String> incomingChangesTables) {
+        return includesAppData(incomingChangesTables) && !(includesUserData(incomingChangesTables));
+    }
+
+    public static boolean includesOnlyUserData(Set<String> incomingChangesTables) {
+        return includesUserData(incomingChangesTables) && !(includesAppData(incomingChangesTables));
+    }
+
+    public static boolean isPartOfAppOrUserData(String tablename) {
+        return isPartOfAppData(tablename) || isPartOfUserData(tablename);
+    }
+
+    public static boolean isPartOfAppData(String tablename) {
+        boolean app = false;
+        if (tablename.equals(ParametersDropboxTable.PARAMETERS_DROPBOX_TABLE)
+                || tablename.equals(RmrParametersDropboxTable.RMR_PARAMETERS_TABLE)
+                || tablename.equals(RmrIndexesDropboxTable.RMR_INDEXES_TABLE)
+                || tablename.equals(RmrCategoriesDropboxTable.RMR_CATEGORIES_TABLE)
+                ) {
+            app = true;
+        }
+        return app;
+    }
+
+    public static boolean isPartOfUserData(String tablename) {
+        boolean user = false;
+        if (tablename.equals(RoleDropboxTable.ROLES_DROPBOX_TABLE) ||
+                tablename.equals(ClientDropboxTable.CLIENTS_DROPBOX_TABLE) ||
+                tablename.equals(ExcavationProjectDropboxTable.PROJECTS_DROPBOX_TABLE) ||
+                tablename.equals(TunnelDropboxTable.TUNNELS_DROPBOX_TABLE) ||
+                tablename.equals(SupportRequirementDropboxTable.SUPPORT_REQUIREMENTS_DROPBOX_TABLE) ||
+                tablename.equals(TunnelFaceDropboxTable.FACES_DROPBOX_TABLE) ||
+                tablename.equals(UserDropboxTable.USERS_DROPBOX_TABLE)) {
+            user = true;
+        }
+        return user;
     }
 }

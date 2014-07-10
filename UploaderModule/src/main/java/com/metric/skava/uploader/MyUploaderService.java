@@ -7,6 +7,9 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -23,9 +26,12 @@ import com.dropbox.client2.exception.DropboxUnlinkedException;
 import com.metric.skava.uploader.app.SkavaUploaderApplication;
 import com.metric.skava.uploader.app.SkavaUploaderConstants;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 
@@ -122,20 +128,50 @@ public class MyUploaderService extends IntentService {
         boolean success = false;
         try {
             for (File mFile : fileList) {
-                String remoteFilePath = dropboxPath+ SkavaUploaderConstants.REMOTE_FOLDER_SEPARATOR + mFile.getName();
-                long fileLength = mFile.length();
+                //Creates a reduced (centered thumbnail) of each file to upload that small size picture first
+                //ASSESSMENT_CODE_TAG_DATE_TIME, example: 052f4269-a273-4c1f-035ceb7afe62_FACE_2014_07_09_16_04_05.jpg
+                String originalFileName = mFile.getName();
+                //THUMBNAIL
+                int tagStartsAt = originalFileName.indexOf("_");
+                int tagEndsAt = originalFileName.indexOf("_", tagStartsAt);
+                String dateToAppend = originalFileName.substring(tagEndsAt);
+                String codeAndTagToPrepend = originalFileName.substring(0, tagEndsAt);
+                String thumbnailFileName = codeAndTagToPrepend + "_THUMBNAIL_" + dateToAppend;
+                //ASSESSMENT_CODE_TAG_THUMNBNAIL_DATE_TIME, example: 052f4269-a273-4c1f-035ceb7afe62_FACE_2014_07_09_16_04_05.jpg
+                File thumbnailFile = new File(mFile.getParent(), thumbnailFileName);
+                String remoteFilePath = dropboxPath + SkavaUploaderConstants.REMOTE_FOLDER_SEPARATOR + mFile.getName();
+                //begin create a thumbnail
+                Bitmap thumbnailImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(mFile.getPath()), SkavaUploaderConstants.THUMBSIZE_WIDTH, SkavaUploaderConstants.THUMBSIZE_HEIGHT);
+                FileOutputStream fos = null;
+                try {
+                    //create a file from the bitmap
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    thumbnailImage.compress(Bitmap.CompressFormat.PNG, 90 /*ignored for PNG*/, bos);
+                    byte[] bitmapdata = bos.toByteArray();
+                    //write the bytes in file
+                    fos = new FileOutputStream(thumbnailFile);
+                    fos.write(bitmapdata);
+                    fos.flush();
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                //Put a file on the Dropbox repo
+                long fileLength = thumbnailFile.length();
                 Log.d(SkavaUploaderConstants.LOG, "Uploading " + remoteFilePath + " which size is " + fileLength);
-                FileInputStream fis = new FileInputStream(mFile);
+                FileInputStream fis = new FileInputStream(thumbnailFile);
                 if (api.getSession().isLinked()) {
                     api.putFileOverwrite(remoteFilePath, fis, fileLength, null);
                     Log.d(SkavaUploaderConstants.LOG, "Uploading seems to finish successfully");
 //                    notifyUploadSucceed(0, "Skava Uploader", "Upload for " + assessmentCode + " was complete");
-                    success = true;
                 } else {
                     Log.d(SkavaUploaderConstants.LOG, "Dropbox for uploader service is not linked");
+                    success = false;
                     //Notify the user of this is a bad thing
                     notifyDropboxUnlinked(0, "Skava Uploader", "Dropbox for uploader service is not linked");
                 }
+                success = true;
             }
         } catch (DropboxUnlinkedException e) {
             // This session wasn't authenticated properly or user unlinked
@@ -143,20 +179,24 @@ public class MyUploaderService extends IntentService {
             BugSenseHandler.sendException(e);
             Log.e(SkavaUploaderConstants.LOG, e.getMessage());
             e.printStackTrace();
+            success = false;
         } catch (DropboxFileSizeException e) {
             // File size too big to upload via the API
             mErrorMsg = "This file is too big to upload";
+            success = false;
             BugSenseHandler.sendException(e);
             Log.e(SkavaUploaderConstants.LOG, e.getMessage());
             e.printStackTrace();
         } catch (DropboxPartialFileException e) {
             // We canceled the operation
             mErrorMsg = "Upload canceled";
+            success = false;
             BugSenseHandler.sendException(e);
             Log.e(SkavaUploaderConstants.LOG, e.getMessage());
             e.printStackTrace();
         } catch (DropboxServerException e) {
             e.printStackTrace();
+            success = false;
             // Server-side exception.  These are examples of what could happen,
             // but we don't do anything special with them here.
             if (e.error == DropboxServerException._401_UNAUTHORIZED) {
@@ -180,6 +220,7 @@ public class MyUploaderService extends IntentService {
             }
         } catch (DropboxIOException e) {
             // Happens all the time, probably want to retry automatically.
+            success = false;
             e.printStackTrace();
             mErrorMsg = "Network error.  Try again.";
             Log.e(SkavaUploaderConstants.LOG, e.getMessage());
@@ -192,11 +233,13 @@ public class MyUploaderService extends IntentService {
             mErrorMsg = "Dropbox error.  Try again.";
 //            Log.e(SkavaUploaderConstants.LOG, e.getMessage());
         } catch (DropboxException e) {
+            success = false;
             e.printStackTrace();
             BugSenseHandler.sendException(e);
             Log.e(SkavaUploaderConstants.LOG, e.getMessage());
             mErrorMsg = "Unknown error.  Try again.";
         } catch (FileNotFoundException e) {
+            success = false;
             BugSenseHandler.sendException(e);
             Log.e(SkavaUploaderConstants.LOG, e.getMessage());
             e.printStackTrace();

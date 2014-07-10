@@ -76,13 +76,16 @@ public class RMRCalculatorDetailActivity extends SkavaFragmentActivity {
 //        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
     }
 
-    public void onPostExecuteImportAppData(){
-//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    @Override
+    public void onPostExecuteImportAppData(boolean success, Long result) {
+
     }
 
-    public void onPostExecuteImportUserData(){
-//        mMainContainedFragment.getBackgroudImage().setVisibility(View.VISIBLE);
+    @Override
+    public void onPostExecuteImportUserData(boolean success, Long result) {
+
     }
+
     public void showProgressBar(final boolean show, String text, boolean longTime) {
 
     }
