@@ -132,12 +132,12 @@ public class MyUploaderService extends IntentService {
                 //ASSESSMENT_CODE_TAG_DATE_TIME, example: 052f4269-a273-4c1f-035ceb7afe62_FACE_2014_07_09_16_04_05.jpg
                 String originalFileName = mFile.getName();
                 //THUMBNAIL
-                int tagStartsAt = originalFileName.indexOf("_");
-                int tagEndsAt = originalFileName.indexOf("_", tagStartsAt);
-                String dateToAppend = originalFileName.substring(tagEndsAt);
-                String codeAndTagToPrepend = originalFileName.substring(0, tagEndsAt);
-                String thumbnailFileName = codeAndTagToPrepend + "_THUMBNAIL_" + dateToAppend;
-                //ASSESSMENT_CODE_TAG_THUMNBNAIL_DATE_TIME, example: 052f4269-a273-4c1f-035ceb7afe62_FACE_2014_07_09_16_04_05.jpg
+//                int tagStartsAt = originalFileName.indexOf("_");
+//                int tagEndsAt = originalFileName.indexOf("_", tagStartsAt);
+//                String dateToAppend = originalFileName.substring(tagEndsAt);
+//                String codeAndTagToPrepend = originalFileName.substring(0, tagEndsAt);
+//                String thumbnailFileName = codeAndTagToPrepend + "_THUMBNAIL_" + dateToAppend;
+                String thumbnailFileName = originalFileName.replace(".jpg", "_mini.jpg");
                 File thumbnailFile = new File(mFile.getParent(), thumbnailFileName);
                 String remoteFilePath = dropboxPath + SkavaUploaderConstants.REMOTE_FOLDER_SEPARATOR + mFile.getName();
                 //begin create a thumbnail

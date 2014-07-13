@@ -25,6 +25,7 @@ import java.util.Date;
  */
 public class AssessmentBuilder4DropBox {
 
+    private SkavaContext mSkavaContext;
 
     private LocalTunnelDAO localTunnelDAO;
     private LocalExcavationProjectDAO excavationProjectDAO;
@@ -35,8 +36,7 @@ public class AssessmentBuilder4DropBox {
     private LocalFractureTypeDAO fractureTypeDAO;
 
     public AssessmentBuilder4DropBox(SkavaContext skavaContext) throws DAOException {
-
-//        this.mContext = context;
+        this.mSkavaContext = skavaContext;
         DAOFactory daoFactory = skavaContext.getDAOFactory();
         excavationProjectDAO = daoFactory.getLocalExcavationProjectDAO();
         excavationSectionDAO = daoFactory.getLocalExcavationSectionDAO();
@@ -53,6 +53,18 @@ public class AssessmentBuilder4DropBox {
         if (assessmentRecord.hasField("code")){
             String assessmentCode = assessmentRecord.getString("code");
             babyAssessment = new Assessment(assessmentCode);
+        }
+
+        //find out if the datastore where this values comes from are skavadev, skavaprod, or skavaqa
+        String datastoreName = mSkavaContext.getDatastore().getId();
+        if (datastoreName.equalsIgnoreCase(SkavaConstants.DROPBOX_DS_DEV_NAME)){
+            babyAssessment.setEnvironment(SkavaConstants.DEV_KEY);
+        } else if (datastoreName.equalsIgnoreCase(SkavaConstants.DROPBOX_DS_QA_NAME)){
+            babyAssessment.setEnvironment(SkavaConstants.QA_KEY);
+        } else if (datastoreName.equalsIgnoreCase(SkavaConstants.DROPBOX_DS_PROD_NAME)){
+            babyAssessment.setEnvironment(SkavaConstants.PROD_KEY);
+        } else {
+            throw new DAOException("Unknown datastore name : " + datastoreName);
         }
 
         if (assessmentRecord.hasField("skavaInternalCode")){

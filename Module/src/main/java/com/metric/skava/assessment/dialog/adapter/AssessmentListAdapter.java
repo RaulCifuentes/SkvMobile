@@ -115,31 +115,46 @@ public class AssessmentListAdapter extends BaseAdapter {
             //if it uploaded any picture
             if (SkavaUtils.hasPictures(currentItem.getPicturesList()) || currentItem.getTunnelExpandedView() != null) {
                 switch (currentItem.getPicsSentStatus()) {
-                    case PICS_SENT_TO_CLOUD: {
+                    case PICS_SENT_TO_DATASTORE:
                         switch (currentItem.getDataSentStatus()) {
+                            case DATA_SENT_TO_DATASTORE:
+                                imageView.setImageResource(R.drawable.cloud_sync);
+                                break;
+                            case DATA_SENT_TO_CLOUD:
+                                imageView.setImageResource(R.drawable.cloud_striped);
+                                break;
+                            default:
+                                imageView.setImageResource(R.drawable.tablet);
+                                break;
+                        }
+                        break;
+                    case PICS_SENT_TO_CLOUD: {
+                        //it's hard to believe but check if data has not arrived yet
+                        switch (currentItem.getDataSentStatus()) {
+                            case DATA_SENT_TO_DATASTORE:
+                                imageView.setImageResource(R.drawable.cloud_striped);
+                                break;
                             case DATA_SENT_TO_CLOUD:
                                 imageView.setImageResource(R.drawable.cloud_checked);
                                 break;
-                            case DATA_SENT_TO_DATASTORE:
-                                imageView.setImageResource(R.drawable.cloud_striped);
+                            default:
+                                imageView.setImageResource(R.drawable.tablet);
                                 break;
                         }
                         break;
                     }
-                    case PICS_SENT_TO_DATASTORE:
-                        imageView.setImageResource(R.drawable.cloud_sync);
-                        break;
                     default:
                         imageView.setImageResource(R.drawable.tablet);
+                        break;
                 }
             } else {
-                //the data is enough
+                //no pictures on this maping, the data is enough
                 switch (currentItem.getDataSentStatus()) {
                     case DATA_SENT_TO_CLOUD:
                         imageView.setImageResource(R.drawable.cloud_checked);
                         break;
                     case DATA_SENT_TO_DATASTORE:
-                        imageView.setImageResource(R.drawable.cloud_striped);
+                        imageView.setImageResource(R.drawable.cloud_sync);
                         break;
                     default:
                         imageView.setImageResource(R.drawable.tablet);

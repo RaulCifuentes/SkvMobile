@@ -73,7 +73,7 @@ public class SyncMainFragment extends SkavaFragment {
     private LocalRMRCalculationDAO mLocalRMRCalculationDAO;
     private LocalQCalculationDAO mLocalBartonCalculationDAO;
     private SyncLoggingDAO mSyncLoggingDAO;
-
+    private String mEnvironment;
 
     private RemoteAssessmentDAO mRemoteAsssessmentDAO;
     private RemoteSyncAcknowlegeDAO mRemoteSyncAcknowlegedDAO;
@@ -100,6 +100,7 @@ public class SyncMainFragment extends SkavaFragment {
             mRemoteAsssessmentDAO = getDAOFactory().getRemoteAssessmentDAO(DAOFactory.Flavour.DROPBOX);
             mRemoteSyncAcknowlegedDAO = getDAOFactory().getRemoteSyncAcknowledgeDAO(DAOFactory.Flavour.DROPBOX);
             mSyncLoggingDAO = getDAOFactory().getSyncLoggingDAO();
+            mEnvironment = getSkavaActivity().getTargetEnvironment();
         } catch (DAOException daoe) {
             daoe.printStackTrace();
             Log.e(SkavaConstants.LOG, daoe.getMessage());
@@ -142,8 +143,9 @@ public class SyncMainFragment extends SkavaFragment {
         View usersHeaderView = inflater.inflate(R.layout.test_list_header, null, false);
         localAssessmentsListView = (ListView) getView().findViewById(R.id.listview_local_assessments);
         final List<Assessment> listAssessments;
+
         try {
-            listAssessments = mLocalAsssessmentDAO.getAllAssessments(AssessmentTable.DATE_COLUMN);
+            listAssessments = mLocalAsssessmentDAO.getAllAssessments(mEnvironment, AssessmentTable.DATE_COLUMN);
             localAssessmentListViewAdapter = new AssessmentListViewAdapter(getSkavaActivity(),
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listAssessments);
 
@@ -198,7 +200,7 @@ public class SyncMainFragment extends SkavaFragment {
                     mLocalRMRCalculationDAO.deleteAllRMRCalculations();
                     mLocalBartonCalculationDAO.deleteAllQCalculations();
                     mLocalDiscontinuitiesFamilyDAO.deleteAllDiscontinuitiesFamilies();
-                    mLocalAsssessmentDAO.deleteAllAssessments();
+                    mLocalAsssessmentDAO.deleteAllAssessments(mEnvironment);
                     showAssessmentsListViews(true);
                     refreshListViews();
                 } catch (DAOException daoe) {
@@ -316,7 +318,7 @@ public class SyncMainFragment extends SkavaFragment {
     public void refreshListViews() throws DAOException {
         if (localAssessmentListViewAdapter != null) {
             localAssessmentListViewAdapter.clear();
-            localAssessmentListViewAdapter.addAll(mLocalAsssessmentDAO.getAllAssessments(AssessmentTable.DATE_COLUMN));
+            localAssessmentListViewAdapter.addAll(mLocalAsssessmentDAO.getAllAssessments(mEnvironment, AssessmentTable.DATE_COLUMN));
             localAssessmentListViewAdapter.notifyDataSetChanged();
         }
         if (remoteAssessmentListViewAdapter != null) {
@@ -600,8 +602,8 @@ public class SyncMainFragment extends SkavaFragment {
         getSkavaContext().getUserDataSyncMetadata().setLastExecution(SkavaUtils.getCurrentDate());
         SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.persistence_bucket_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(getString(R.string.user_data_last_sync_succeed), success);
-        editor.putLong(getString(R.string.user_data_last_sync_date), SkavaUtils.getCurrentDate().getTime());
+        editor.putBoolean(getString(R.string.user_data_last_sync_succeed_key), success);
+        editor.putLong(getString(R.string.user_data_last_sync_date_key), SkavaUtils.getCurrentDate().getTime());
         editor.commit();
     }
 
@@ -610,8 +612,8 @@ public class SyncMainFragment extends SkavaFragment {
         getSkavaContext().getAppDataSyncMetadata().setLastExecution(SkavaUtils.getCurrentDate());
         SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.persistence_bucket_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(getString(R.string.app_data_last_sync_succeed), success);
-        editor.putLong(getString(R.string.app_data_last_sync_date), SkavaUtils.getCurrentDate().getTime());
+        editor.putBoolean(getString(R.string.app_data_last_sync_succeed_key), success);
+        editor.putLong(getString(R.string.app_data_last_sync_date_key), SkavaUtils.getCurrentDate().getTime());
         editor.commit();
     }
 

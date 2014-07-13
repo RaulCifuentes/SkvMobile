@@ -8,11 +8,13 @@ import java.util.List;
  */
 public class AssessmentSyncTrace {
 
+    private String environment;
     private String assessmentCode;
     private List<FileToSync> files;
     private List<RecordToSync> records;
 
-    public AssessmentSyncTrace(String theAssessmentCode) {
+    public AssessmentSyncTrace(String environment, String theAssessmentCode) {
+        this.environment = environment;
         this.assessmentCode = theAssessmentCode;
         this.records = new ArrayList<RecordToSync>();
         this.files = new ArrayList<FileToSync>();
@@ -25,6 +27,14 @@ public class AssessmentSyncTrace {
 
     public void clearRecords() {
         records.clear();
+    }
+
+    public String getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(String environment) {
+        this.environment = environment;
     }
 
     public String getAssessmentCode() {

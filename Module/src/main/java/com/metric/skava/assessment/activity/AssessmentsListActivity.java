@@ -140,7 +140,7 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
     public void updateAssessmentList() {
         List<Assessment> updatedList = null;
         try {
-            updatedList = localAssessmentDAO.getAssessmentsByUser(getSkavaContext().getLoggedUser());
+            updatedList = localAssessmentDAO.getAssessmentsByUser(getTargetEnvironment(), getSkavaContext().getLoggedUser());
         } catch (Exception daoe) {
             daoe.printStackTrace();
             Log.e(SkavaConstants.LOG, daoe.getMessage());

@@ -52,33 +52,33 @@ public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<T
     }
 
 
-    @Override
-    public List<TunnelFace> getTunnelFacesByTunnel(Tunnel tunnel) throws DAOException {
-        String tunnelCode = null;
-        if (tunnel != null) {
-            tunnelCode = tunnel.getCode();
-        }
-        Cursor cursor = getRecordsFilteredByColumn(TunnelFaceTable.FACE_DATABASE_TABLE, TunnelFaceTable.TUNNEL_CODE_COLUMN, tunnelCode, null);
-        List<TunnelFace> list = assemblePersistentEntities(cursor);
-        cursor.close();
-        return list;
-    }
+//    @Override
+//    public List<TunnelFace> getTunnelFacesByTunnel(Tunnel tunnel) throws DAOException {
+//        String tunnelCode = null;
+//        if (tunnel != null) {
+//            tunnelCode = tunnel.getCode();
+//        }
+//        Cursor cursor = getRecordsFilteredByColumn(TunnelFaceTable.FACE_DATABASE_TABLE, TunnelFaceTable.TUNNEL_CODE_COLUMN, tunnelCode, null);
+//        List<TunnelFace> list = assemblePersistentEntities(cursor);
+//        cursor.close();
+//        return list;
+//    }
 
-    @Override
-    public List<TunnelFace> getTunnelFacesByTunnel(Tunnel tunnel, User user) throws DAOException {
-        if (user == null) {
-            return getTunnelFacesByTunnel(tunnel);
-        } else {
-            List<TunnelFace> listFaces = new ArrayList<TunnelFace>();
-            List<TunnelFace> allFacesOfUser = getTunnelFacesByUser(user);
-            for (TunnelFace currTunnelFace : allFacesOfUser) {
-                if (currTunnelFace.getTunnel().equals(tunnel)) {
-                    listFaces.add(currTunnelFace);
-                }
-            }
-            return listFaces;
-        }
-    }
+//    @Override
+//    public List<TunnelFace> getTunnelFacesByTunnel(String environment, Tunnel tunnel, User user) throws DAOException {
+//        if (user == null) {
+//            return getTunnelFacesByTunnel(tunnel);
+//        } else {
+//            List<TunnelFace> listFaces = new ArrayList<TunnelFace>();
+//            List<TunnelFace> allFacesOfUser = getTunnelFacesByUser(environment, user);
+//            for (TunnelFace currTunnelFace : allFacesOfUser) {
+//                if (currTunnelFace.getTunnel().equals(tunnel)) {
+//                    listFaces.add(currTunnelFace);
+//                }
+//            }
+//            return listFaces;
+//        }
+//    }
 
 
     //ALTERNATIVE TO FACES PER USER
@@ -94,9 +94,11 @@ public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<T
 //    }
 
     @Override
-    public List<TunnelFace> getTunnelFacesByUser(User user) throws DAOException {
+    public List<TunnelFace> getTunnelFacesByUser(String environment, User user) throws DAOException {
         List<TunnelFace> tunnelList = new ArrayList<TunnelFace>();
-        Cursor cursor = getRecordsFilteredByColumns(PermissionTable.PERMISSION_DATABASE_TABLE, new String[]{PermissionTable.USER_CODE_COLUMN, PermissionTable.TARGET_TYPE_CODE_COLUMN}, new String[]{user.getCode(), Permission.IdentifiableEntityType.FACE.name() }, null);
+        String[] names = new String[]{PermissionTable.ENVIRONMENT_COLUMN, PermissionTable.USER_CODE_COLUMN, PermissionTable.TARGET_TYPE_CODE_COLUMN};
+        String[] values = new String[]{environment, user.getCode(), Permission.IdentifiableEntityType.FACE.name()};
+        Cursor cursor = getRecordsFilteredByColumns(PermissionTable.PERMISSION_DATABASE_TABLE, names, values, null);
         while (cursor.moveToNext()) {
             String faceCode = CursorUtils.getString(PermissionTable.TARGET_CODE_COLUMN, cursor);
             TunnelFace tunnelFace = getTunnelFaceByCode(faceCode);
@@ -129,10 +131,10 @@ public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<T
         savePersistentEntity(TunnelFaceTable.FACE_DATABASE_TABLE, newFace);
     }
 
-    @Override
-    public boolean deleteTunnelFace(String code) {
-        return deleteIdentifiableEntity(TunnelFaceTable.FACE_DATABASE_TABLE, code);
-    }
+//    @Override
+//    public boolean deleteTunnelFace(String code) {
+//        return deleteIdentifiableEntity(TunnelFaceTable.FACE_DATABASE_TABLE, code);
+//    }
 
     @Override
     public int deleteAllTunnelFaces() {

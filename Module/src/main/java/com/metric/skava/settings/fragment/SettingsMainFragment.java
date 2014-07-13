@@ -14,7 +14,10 @@ import android.view.View;
 import com.metric.skava.R;
 import com.metric.skava.app.SkavaApplication;
 import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.home.activity.HomeMainActivity;
+
+import java.text.SimpleDateFormat;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
@@ -52,6 +55,7 @@ public class SettingsMainFragment extends PreferenceFragment implements SharedPr
             editor.commit();
             ((SkavaApplication)getActivity().getApplication()).setNeedImportAppData(true);
             ((SkavaApplication)getActivity().getApplication()).setNeedImportUserData(true);
+            ((SkavaApplication)getActivity().getApplication()).saveState();
             restartApp();
         }
         if (key.equals(UNLINK_DROPBOX_PREFERENCE)) {
@@ -62,6 +66,9 @@ public class SettingsMainFragment extends PreferenceFragment implements SharedPr
         }
 
     }
+
+
+
 
     @Override
     public void onResume() {
@@ -78,6 +85,9 @@ public class SettingsMainFragment extends PreferenceFragment implements SharedPr
     }
 
     private void restartApp(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String dateAsString = sdf.format(SkavaUtils.getCurrentDate());
+        Log.d(SkavaConstants.LOG, "********** onRestart ***** " + dateAsString);
         Intent mStartActivity = new Intent(getActivity().getApplicationContext(), HomeMainActivity.class);
         int mPendingIntentId = 123456;
         PendingIntent mPendingIntent = PendingIntent.getActivity(getActivity().getApplicationContext(), mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);

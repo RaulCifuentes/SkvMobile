@@ -36,6 +36,7 @@ import com.metric.skava.app.navdrawer.NavDrawerItem;
 import com.metric.skava.app.navdrawer.NavMenuItem;
 import com.metric.skava.app.navdrawer.NavMenuSection;
 import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.assessment.activity.AssessmentsListActivity;
 import com.metric.skava.authentication.LoginMainActivity;
 import com.metric.skava.data.dao.exception.DAOException;
@@ -44,6 +45,7 @@ import com.metric.skava.home.fragment.MainFragment;
 import com.metric.skava.settings.activity.SettingsMainActivity;
 import com.metric.skava.sync.activity.SyncMainActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -72,12 +74,17 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     private DbxFileSystem mFileSystem;
     private MainFragment mHomeMainFragment;
 
-    private boolean linkDropboxCompleted;
+    //ITS SEEMS to reset each restarts so try with an inherited mmethod reading from the skava context
+//    private boolean linkDropboxCompleted;
 
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String dateAsString = sdf.format(SkavaUtils.getCurrentDate());
+        Log.d(SkavaConstants.LOG, "********** onNewIntent ***** " + dateAsString);
+        this.setupTheData();
         super.setupTheDrawer();
     }
 
@@ -86,7 +93,9 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BugSenseHandler.initAndStartSession(HomeMainActivity.this, SkavaConstants.BUGSENSE_API_KEY);
-
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String dateAsString = sdf.format(SkavaUtils.getCurrentDate());
+        Log.d(SkavaConstants.LOG, "********** onCreate ***** " + dateAsString);
         SkavaExceptionHandler handler = new SkavaExceptionHandler(this, getSupportFragmentManager());
         Thread.setDefaultUncaughtExceptionHandler(handler);
         if (savedInstanceState == null) {
@@ -110,27 +119,39 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String dateAsString = sdf.format(SkavaUtils.getCurrentDate());
+        Log.d(SkavaConstants.LOG, "********** onPostCreate ***** " + dateAsString);
         super.onPostCreate(savedInstanceState);
-        boolean shortestExecFlow = true;
-        if (!linkDropboxCompleted) {
-            shortestExecFlow = false;
-            setupLinkToDropbox();
-        }
-        if (linkDropboxCompleted) {
-            shortestExecFlow = false;
-            getSkavaContext().getDatastore().addSyncStatusListener(this);
+        this.setupTheData();
+//        Already call on the super contructor
+//        this.setupTheDrawer();
+    }
 
+    private void setupTheData() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String dateAsString = sdf.format(SkavaUtils.getCurrentDate());
+        Log.d(SkavaConstants.LOG, "********** onSetupTheData ***** " + dateAsString);
+//        if (!isLinkDropboxCompleted) {
+        if (!isLinkDropboxCompleted()) {
+            Log.d(SkavaConstants.LOG, "********** linkDropboxCompleted IS FALSE ***** " + dateAsString);
+            setupLinkToDropbox();
+        } else {
+            Log.d(SkavaConstants.LOG, "********** linkDropboxCompleted IS TRUE ***** " + dateAsString);
+            getSkavaContext().getDatastore().addSyncStatusListener(this);
             if (shouldImportAppData()) {
-                shortestExecFlow = false;
+                dateAsString = sdf.format(SkavaUtils.getCurrentDate());
+                Log.d(SkavaConstants.LOG, "********** shouldImportAppData() TRUE ***** " + dateAsString);
                 lackOfAppData = true;
             }
             if (shouldImportUserData()) {
-                shortestExecFlow = false;
+                dateAsString = sdf.format(SkavaUtils.getCurrentDate());
+                Log.d(SkavaConstants.LOG, "********** shouldImportUserData() TRUE ***** " + dateAsString);
                 lackOfUserData = true;
             }
-
             if (assertAppDataNeverCalled) {
-                shortestExecFlow = false;
+                dateAsString = sdf.format(SkavaUtils.getCurrentDate());
+                Log.d(SkavaConstants.LOG, "********** assertAppDataNeverCalled TRUE ***** " + dateAsString);
                 try {
                     assertAppDataAvailable();
                 } catch (DAOException e) {
@@ -140,7 +161,9 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 }
             }
             //Every thing is set up correctly? Show the Skava background image
-            if (shortestExecFlow || enoughDataAvailable){
+            if (enoughDataAvailable) {
+                dateAsString = sdf.format(SkavaUtils.getCurrentDate());
+                Log.d(SkavaConstants.LOG, "********** enoughDataAvailable IS TRUE ***** " + dateAsString);
                 mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
             }
         }
@@ -202,7 +225,8 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 if (mFileSystem == null) {
                     mFileSystem = DbxFileSystem.forAccount(mAccount);
                 }
-                linkDropboxCompleted = true;
+//                linkDropboxCompleted = true;
+                setLinkDropboxCompleted(true);
                 getSkavaContext().setDatastore(mDatastore);
             }
         } catch (DbxException e) {
@@ -254,7 +278,8 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                     if (mFileSystem == null) {
                         mFileSystem = DbxFileSystem.forAccount(mAccount);
                     }
-                    linkDropboxCompleted = true;
+//                    linkDropboxCompleted = true;
+                    setLinkDropboxCompleted(true);
                     getSkavaContext().setDatastore(mDatastore);
                     ((SkavaApplication)getApplication()).setNeedImportAppData(true);
                     ((SkavaApplication)getApplication()).setNeedImportUserData(true);
@@ -386,7 +411,8 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             case NAV_MENU_LOGOUT_ITEM_ID:
                 if (shouldUnlinkOnLogout()) {
                     if (mDbxAcctMgr != null && mDbxAcctMgr.hasLinkedAccount()) {
-                        linkDropboxCompleted = false;
+                        setLinkDropboxCompleted(false);
+//                        linkDropboxCompleted = false;
                         mDbxAcctMgr.unlink();
                     }
                 }
@@ -413,6 +439,10 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         if (success) {
             //termino exitosamente
             lackOfAppData = false;
+            if (shouldImportAppData()) {
+                ((SkavaApplication) getApplication()).setNeedImportAppData(false);
+                ((SkavaApplication) getApplication()).saveState();
+            }
             preventExecution = false;
             saveAppDataSyncStatus(true);
             showProgressBar(true, "Finished. " + result + " records imported.", true);
@@ -441,6 +471,10 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         if (success) {
             //mostrar que termino exitosamente
             lackOfUserData = false;
+            if (shouldImportAppData()) {
+                ((SkavaApplication) getApplication()).setNeedImportUserData(false);
+                ((SkavaApplication) getApplication()).saveState();
+            }
             preventExecution = false;
             saveUserDataSyncStatus(true);
             showProgressBar(false, "Finished. " + result + " records imported.", true);

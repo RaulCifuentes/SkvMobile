@@ -1,7 +1,6 @@
 package com.metric.skava.data.dao;
 
 import com.metric.skava.app.model.ExcavationProject;
-import com.metric.skava.app.model.User;
 import com.metric.skava.data.dao.exception.DAOException;
 
 import java.util.List;
@@ -15,11 +14,11 @@ public interface LocalExcavationProjectDAO {
 
     public List<ExcavationProject> getAllExcavationProjects() throws DAOException;
 
-    public List<ExcavationProject> getExcavationProjectsByUser(User user) throws DAOException;
+//    public List<ExcavationProject> getExcavationProjectsByUser(Sting envrironment, User user) throws DAOException;
 
     public void saveExcavationProject(ExcavationProject newEntity) throws DAOException;
 
-    public boolean deleteExcavationProject(String code);
+//    public boolean deleteExcavationProject(String code);
 
     public int deleteAllExcavationProjects() throws DAOException;
 

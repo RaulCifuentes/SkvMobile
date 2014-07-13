@@ -171,9 +171,11 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
         geologist = getSkavaContext().getLoggedUser();
         getCurrentAssessment().setGeologist(geologist);
 
+        String environment = getSkavaActivity().getTargetEnvironment();
+
         try {
             UserDataHelper dataDomainHelper = new UserDataHelper(getSkavaContext());
-            mUserDataDomain = dataDomainHelper.buildUserDataDomain(geologist);
+            mUserDataDomain = dataDomainHelper.buildUserDataDomain(environment, geologist);
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();

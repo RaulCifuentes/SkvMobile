@@ -43,6 +43,8 @@ public class PermissionDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Per
     protected List<Permission> assemblePersistentEntities(Cursor cursor) throws DAOException {
         List<Permission> list = new ArrayList<Permission>();
         while (cursor.moveToNext()) {
+
+            String environment = CursorUtils.getString(PermissionTable.ENVIRONMENT_COLUMN, cursor);
             String userCode = CursorUtils.getString(PermissionTable.USER_CODE_COLUMN, cursor);
             String actionCode = CursorUtils.getString(PermissionTable.ACTION_COLUMN, cursor);
             String targetTypeAsString = CursorUtils.getString(PermissionTable.TARGET_TYPE_CODE_COLUMN, cursor);
@@ -67,7 +69,7 @@ public class PermissionDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Per
                     targetEntity = localTunnelFaceDAO.getTunnelFaceByCode(targetCode);
                     break;
             }
-            Permission newInstance = new Permission(grantedUser, actionType, targetType, targetEntity);
+            Permission newInstance = new Permission(environment, grantedUser, actionType, targetType, targetEntity);
             list.add(newInstance);
         }
         return list;
@@ -75,40 +77,40 @@ public class PermissionDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Per
 
     @Override
     protected void savePersistentEntity(String tableName, Permission newPermission) throws DAOException {
-        String[] columns = new String[]{PermissionTable.USER_CODE_COLUMN, PermissionTable.ACTION_COLUMN, PermissionTable.TARGET_TYPE_CODE_COLUMN, PermissionTable.TARGET_CODE_COLUMN};
-        String[] values = new String[]{newPermission.getWho().getCode(), newPermission.getWhat().name(), newPermission.getWhere().name(), newPermission.getWhereExactly().getCode()};
+        String[] columns = new String[]{PermissionTable.ENVIRONMENT_COLUMN, PermissionTable.USER_CODE_COLUMN, PermissionTable.ACTION_COLUMN, PermissionTable.TARGET_TYPE_CODE_COLUMN, PermissionTable.TARGET_CODE_COLUMN};
+        String[] values = new String[]{newPermission.getEnvironment(), newPermission.getWho().getCode(), newPermission.getWhat().name(), newPermission.getWhere().name(), newPermission.getWhereExactly().getCode()};
         saveRecord(tableName, columns, values);
     }
 
-    @Override
-    public List<Permission> getAllPermissions() throws DAOException {
-        List<Permission> list = getAllPersistentEntities(PermissionTable.PERMISSION_DATABASE_TABLE);
-        return list;
-    }
-
-    @Override
-    public List<Permission> getPermissionsByUser(User user) throws DAOException {
-        List<Permission> permissionList;
-        Cursor cursor = getRecordsFilteredByColumn(PermissionTable.PERMISSION_DATABASE_TABLE, PermissionTable.USER_CODE_COLUMN, user.getCode(), null);
-        permissionList = assemblePersistentEntities(cursor);
-        return permissionList;
-    }
-
-    @Override
-    public List<User> getUsersByPermissionTarget(Permission.Action what, IdentifiableEntity where) throws DAOException {
-        return null;
-    }
-
+//    @Override
+//    public List<Permission> getAllPermissions() throws DAOException {
+//        List<Permission> list = getAllPersistentEntities(PermissionTable.PERMISSION_DATABASE_TABLE);
+//        return list;
+//    }
+//
+//    @Override
+//    public List<Permission> getPermissionsByUser(User user) throws DAOException {
+//        List<Permission> permissionList;
+//        Cursor cursor = getRecordsFilteredByColumn(PermissionTable.PERMISSION_DATABASE_TABLE, PermissionTable.USER_CODE_COLUMN, user.getCode(), null);
+//        permissionList = assemblePersistentEntities(cursor);
+//        return permissionList;
+//    }
+//
+//    @Override
+//    public List<User> getUsersByPermissionTarget(Permission.Action what, IdentifiableEntity where) throws DAOException {
+//        return null;
+//    }
+//
     @Override
     public void savePermission(Permission newPermission) throws DAOException {
         savePersistentEntity(PermissionTable.PERMISSION_DATABASE_TABLE, newPermission);
     }
-
-    @Override
-    public boolean deletePermissionsByUser(User user) {
-        int numDeleted = deletePersistentEntitiesFilteredByColumn(PermissionTable.PERMISSION_DATABASE_TABLE, PermissionTable.USER_CODE_COLUMN, user.getCode());
-        return numDeleted != -1;
-    }
+//
+//    @Override
+//    public boolean deletePermissionsByUser(User user) {
+//        int numDeleted = deletePersistentEntitiesFilteredByColumn(PermissionTable.PERMISSION_DATABASE_TABLE, PermissionTable.USER_CODE_COLUMN, user.getCode());
+//        return numDeleted != -1;
+//    }
 
     @Override
     public int deleteAllPermissions() {

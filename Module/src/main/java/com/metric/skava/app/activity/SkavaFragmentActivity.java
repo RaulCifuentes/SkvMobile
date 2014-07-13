@@ -41,6 +41,7 @@ import com.metric.skava.app.util.SkavaUtils;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.exception.DAOException;
+import com.metric.skava.data.dao.impl.dropbox.datastore.tables.AssessmentDropboxTable;
 import com.metric.skava.data.dao.impl.dropbox.datastore.tables.DataSyncDropboxTable;
 import com.metric.skava.data.dao.impl.dropbox.datastore.tables.FilesSyncDropboxTable;
 import com.metric.skava.sync.dao.SyncLoggingDAO;
@@ -111,6 +112,14 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
 
     public boolean shouldUnlinkOnLogout() {
         return ((SkavaApplication) getApplication()).isUnlinkPrefered();
+    }
+
+    public boolean isLinkDropboxCompleted() {
+        return getSkavaContext().isLinkDropboxCompleted();
+    }
+
+    public void setLinkDropboxCompleted(boolean linkDropboxCompleted) {
+        this.getSkavaContext().setLinkDropboxCompleted(linkDropboxCompleted);
     }
 
     public String getTargetEnvironment() {
@@ -193,8 +202,8 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
         getSkavaContext().getUserDataSyncMetadata().setLastExecution(SkavaUtils.getCurrentDate());
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.persistence_bucket_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(getString(R.string.user_data_last_sync_succeed), success);
-        editor.putLong(getString(R.string.user_data_last_sync_date), SkavaUtils.getCurrentDate().getTime());
+        editor.putBoolean(getString(R.string.user_data_last_sync_succeed_key), success);
+        editor.putLong(getString(R.string.user_data_last_sync_date_key), SkavaUtils.getCurrentDate().getTime());
         editor.commit();
     }
 
@@ -203,8 +212,8 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
         getSkavaContext().getAppDataSyncMetadata().setLastExecution(SkavaUtils.getCurrentDate());
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.persistence_bucket_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(getString(R.string.app_data_last_sync_succeed), success);
-        editor.putLong(getString(R.string.app_data_last_sync_date), SkavaUtils.getCurrentDate().getTime());
+        editor.putBoolean(getString(R.string.app_data_last_sync_succeed_key), success);
+        editor.putLong(getString(R.string.app_data_last_sync_date_key), SkavaUtils.getCurrentDate().getTime());
         editor.commit();
     }
 
@@ -241,56 +250,168 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                 // 1. distinguish where only app data, only user data or (app and user) data needs to be updated -> handle them independently
                 // 2. more than one correlated table from app or more than one correlated table from user data -> update them all as a group
                 Set<String> incomingChangesTables = incomingChanges.keySet();
+
+                //Any user or app data related chenges that deserve an import (repopulate tables)
                 if (SkavaUtils.includesAppOrUserData(incomingChangesTables)){
-                    if (SkavaUtils.includesOnlyUserData(incomingChangesTables)){
-                        try {
-                            SyncTask.Domain[] syncTarget = new SyncTask.Domain[]{SyncTask.Domain.ALL_USER_DATA_TABLES};
-                            ImportUserDataModelTask dynamicDataTask = new ImportUserDataModelTask(getSkavaContext(), this);
-                            dynamicDataTask.execute(syncTarget);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            BugSenseHandler.sendException(e);
-                            Log.e(SkavaConstants.LOG, e.getMessage());
-                        }
-                    }
-
-                    if (SkavaUtils.includesOnlyAppData(incomingChangesTables)){
-                        try {
-                            SyncTask.Domain[] syncTarget = new SyncTask.Domain[]{SyncTask.Domain.ALL_APP_DATA_TABLES};
-                            ImportAppDataModelTask dynamicDataTask = new ImportAppDataModelTask(getSkavaContext(), this);
-                            dynamicDataTask.execute(syncTarget);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            BugSenseHandler.sendException(e);
-                            Log.e(SkavaConstants.LOG, e.getMessage());
-                        }
-                    }
-
+                    //Are both kind of imports required ??
                     if (SkavaUtils.includesAppAndUserData(incomingChangesTables)){
-                        //First app data, when finished start the user data
-                        try {
-                            SyncTask.Domain[] syncTarget = new SyncTask.Domain[]{SyncTask.Domain.ALL_APP_DATA_TABLES, SyncTask.Domain.ALL_USER_DATA_TABLES};
-                            ImportAppAndUserDataModelTask dynamicDataTask = new ImportAppAndUserDataModelTask(getSkavaContext(), this);
-                            dynamicDataTask.execute(syncTarget);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            BugSenseHandler.sendException(e);
-                            Log.e(SkavaConstants.LOG, e.getMessage());
-                        }
+                        final String alertTitle = "Skava app and user data tables were updated on web admin console";
+                        final String textToShow = "There's new data currently not available in your device. When should I try to sync those ? ";
+                        Log.d(SkavaConstants.LOG, textToShow);
+                        DialogFragment theDialog = new DialogFragment() {
+                            @Override
+                            public Dialog onCreateDialog(Bundle savedInstanceState) {
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                builder.setTitle(alertTitle);
+                                builder.setMessage(textToShow);
+                                builder.setPositiveButton("Download now", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (isNetworkAvailable()) {
+                                            //First app data, when finished start the user data
+                                            try {
+                                                SyncTask.Domain[] syncTarget = new SyncTask.Domain[]{SyncTask.Domain.ALL_APP_DATA_TABLES, SyncTask.Domain.ALL_USER_DATA_TABLES};
+                                                ImportAppAndUserDataModelTask dynamicDataTask = new ImportAppAndUserDataModelTask(getSkavaContext(), SkavaFragmentActivity.this);
+                                                dynamicDataTask.execute(syncTarget);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                                BugSenseHandler.sendException(e);
+                                                Log.e(SkavaConstants.LOG, e.getMessage());
+                                            }
+                                        } else {
+                                            //show internet required message
+                                            String alertTitle = "Currently you have no Internet connection";
+                                            builder.setTitle(alertTitle);
+                                            builder.setMessage("In order to download and import the Skava App data, an Internet connection is required");
+                                            preventExecution = true;
+                                        }
+                                    }
+                                });
+                                builder.setNegativeButton("Postpone to the next app start", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ((SkavaApplication)getApplication()).setNeedImportUserData(true);
+                                    }
+                                });
+//                                builder.setCancelable(true);
+                                // Create the AlertDialog object and return it
+                                return builder.create();
+                            }
+                        };
+                        // Showing Alert Message
+                        theDialog.show(getSupportFragmentManager(), "assertUserDataDialog");
                     }
 
+                    //Or is it only user data what was changed?
+                    if (SkavaUtils.includesOnlyUserData(incomingChangesTables)){
+                        final String alertTitle = "Skava user data tables were updated on web admin console";
+                        final String textToShow = "There's new data currently not available in your device. When should I try to sync those ? ";
+                        Log.d(SkavaConstants.LOG, textToShow);
+                        DialogFragment theDialog = new DialogFragment() {
+                            @Override
+                            public Dialog onCreateDialog(Bundle savedInstanceState) {
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                builder.setTitle(alertTitle);
+                                builder.setMessage(textToShow);
+                                builder.setPositiveButton("Download now", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (isNetworkAvailable()) {
+                                            try {
+                                                SyncTask.Domain[] syncTarget = new SyncTask.Domain[]{SyncTask.Domain.ALL_USER_DATA_TABLES};
+                                                ImportUserDataModelTask dynamicDataTask = new ImportUserDataModelTask(getSkavaContext(), SkavaFragmentActivity.this);
+                                                dynamicDataTask.execute(syncTarget);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                                BugSenseHandler.sendException(e);
+                                                Log.e(SkavaConstants.LOG, e.getMessage());
+                                            }
+                                        } else {
+                                            //show internet required message
+                                            String alertTitle = "Currently you have no Internet connection";
+                                            builder.setTitle(alertTitle);
+                                            builder.setMessage("In order to download and import the Skava App data, an Internet connection is required");
+                                            preventExecution = true;
+                                        }
+                                    }
+                                });
+                                builder.setNegativeButton("Postpone to the next app start", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ((SkavaApplication)getApplication()).setNeedImportUserData(true);
+                                    }
+                                });
+//                                builder.setCancelable(true);
+                                // Create the AlertDialog object and return it
+                                return builder.create();
+                            }
+                        };
+                        // Showing Alert Message
+                        theDialog.show(getSupportFragmentManager(), "assertUserDataDialog");
+                    }
+
+                    //Or was it only app data what was changed?
+                    if (SkavaUtils.includesOnlyAppData(incomingChangesTables)){
+                        final String alertTitle = "Skava app data tables were updated on web admin console";
+                        final String textToShow = "There's new data currently not available in your device. When should I try to sync those ? ";
+                        Log.d(SkavaConstants.LOG, textToShow);
+                        DialogFragment theDialog = new DialogFragment() {
+                            @Override
+                            public Dialog onCreateDialog(Bundle savedInstanceState) {
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                builder.setTitle(alertTitle);
+                                builder.setMessage(textToShow);
+                                builder.setPositiveButton("Download now", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (isNetworkAvailable()) {
+                                            try {
+                                                SyncTask.Domain[] syncTarget = new SyncTask.Domain[]{SyncTask.Domain.ALL_APP_DATA_TABLES};
+                                                ImportAppDataModelTask dynamicDataTask = new ImportAppDataModelTask(getSkavaContext(), SkavaFragmentActivity.this);
+                                                dynamicDataTask.execute(syncTarget);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                                BugSenseHandler.sendException(e);
+                                                Log.e(SkavaConstants.LOG, e.getMessage());
+                                            }
+                                        } else {
+                                            //show internet required message
+                                            String alertTitle = "Currently you have no Internet connection";
+                                            builder.setTitle(alertTitle);
+                                            builder.setMessage("In order to download and import the Skava App data, an Internet connection is required");
+                                            preventExecution = true;
+                                        }
+                                    }
+                                });
+                                builder.setNegativeButton("Postpone to the next app start", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ((SkavaApplication) getApplication()).setNeedImportAppData(true);
+                                    }
+                                });
+//                                builder.setCancelable(true);
+                                // Create the AlertDialog object and return it
+                                return builder.create();
+                            }
+                        };
+                        // Showing Alert Message
+                        theDialog.show(getSupportFragmentManager(), "assertAppDataDialog");
+                    }
                 }
 
                 for (String tablename : incomingChangesTables) {
+                    if (tablename.equalsIgnoreCase(":info")){
+                        //skip as this seems to be metadata from Dropbox
+                        continue;
+                    }
                     if (SkavaUtils.isPartOfAppOrUserData(tablename)){
                         //skip as this was aready handled
                         continue;
                     }
                     if (tablename.equals(DataSyncDropboxTable.DATA_SYNC_TABLE)) {
-
                         //Basically check if this correspond to a local assessment on this tablet
-                        // If so update the local assessment record with the correspondent sent status
-                        //Dont forget to update the middleman inbox and/or the Assessment log traces
+                        //If so update the local assessment record with the correspondent sent status
+                        //Don't forget to update the middleman inbox and/or the Assessment log traces
 
                         //find what is being aknowledged and remove from the middleman box space
                         Set<DbxRecord> dbxRecords = incomingChanges.get(DataSyncDropboxTable.DATA_SYNC_TABLE);
@@ -302,8 +423,9 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                             if (exists){
                                 //update the sync trace from QUEDED to SERVED in the AssessmentSyncTrace table
                                 AssessmentSyncTrace assessmentSyncTrace = null;
+                                String environment = getTargetEnvironment();
                                 try {
-                                    assessmentSyncTrace = syncLoggingDAO.getAssessmentSyncTrace(acknowledgedAssessmentCode);
+                                    assessmentSyncTrace = syncLoggingDAO.getAssessmentSyncTrace(environment, acknowledgedAssessmentCode, DataToSync.Operation.INSERT);
                                     List<RecordToSync> tracedRecords = assessmentSyncTrace.getRecords();
                                     for (RecordToSync tracedRecord : tracedRecords) {
                                         if (tracedRecord.getRecordID().equalsIgnoreCase(acknowledgedRecordID)) {
@@ -325,10 +447,11 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                                     List<Integer> foundIndexes = new ArrayList<Integer>();
                                     for (int i = 0; i < pendingRecords.size(); i++) {
                                         RecordToSync recordToSync = pendingRecords.get(i);
-                                        //those should be FileToSync instances
-                                        String recordID = recordToSync.getRecordID();
-                                        if (recordID.equalsIgnoreCase(acknowledgedRecordID)) {
-                                            foundIndexes.add(i);
+                                        if (recordToSync.getOperation().equals(DataToSync.Operation.INSERT)){
+                                            String recordID = recordToSync.getRecordID();
+                                            if (recordID.equalsIgnoreCase(acknowledgedRecordID)) {
+                                                foundIndexes.add(i);
+                                            }
                                         }
                                     }
                                     //Removes from the list of pending those that was reported by ack table
@@ -376,8 +499,9 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                             if (exists){
                                 //update the sync trace from QUEDED to SERVED in the AssessmentSyncTrace table
                                 AssessmentSyncTrace assessmentSyncTrace = null;
+                                String environment = getTargetEnvironment();
                                 try {
-                                    assessmentSyncTrace = syncLoggingDAO.getAssessmentSyncTrace(acknowledgedAssessmentCode);
+                                    assessmentSyncTrace = syncLoggingDAO.getAssessmentSyncTrace(environment, acknowledgedAssessmentCode, DataToSync.Operation.INSERT);
                                     List<FileToSync> tracedFiles = assessmentSyncTrace.getFiles();
                                     for (FileToSync tracedFile : tracedFiles) {
                                         if (tracedFile.getFileName().equalsIgnoreCase(acknowledgedFileName)) {
@@ -399,10 +523,11 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                                     //use a for loop to avoid iterator and remove conflict
                                     for (int i = 0; i < pendingPictures.size(); i++) {
                                         FileToSync pictureFileToSync = pendingPictures.get(i);
-                                        //those should be FileToSync instances
-                                        String fileName = pictureFileToSync.getFileName();
-                                        if (fileName.equalsIgnoreCase(acknowledgedFileName)) {
-                                            foundIndexes.add(i);
+                                        if(pictureFileToSync.getOperation().equals(DataToSync.Operation.INSERT)){
+                                            String fileName = pictureFileToSync.getFileName();
+                                            if (fileName.equalsIgnoreCase(acknowledgedFileName)) {
+                                                foundIndexes.add(i);
+                                            }
                                         }
                                     }
                                     //Removes from the list of pending those that was reported by ack table
@@ -429,6 +554,66 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                                 // Just do nothing. Probably comes from another tablet
                             }
                         }
+                    }
+                    //CURIOUS about:: Does assessment table records also appears here???
+                    if (tablename.equals(AssessmentDropboxTable.ASSESSMENT_TABLE)) {
+                        String listenerReportedAssessmentCode = null;
+                        Set<DbxRecord> dbxRecords = incomingChanges.get(AssessmentDropboxTable.ASSESSMENT_TABLE);
+                        for (DbxRecord dbxRecord : dbxRecords) {
+                            if (dbxRecord.isDeleted()){
+                                //
+                                listenerReportedAssessmentCode = dbxRecord.getString("code");
+                                //find out if the record being acknowledged exists on the sync queue of this tablet
+                                boolean exists = syncLoggingDAO.existsOnSyncTraces(listenerReportedAssessmentCode);
+                                if (exists){
+                                    //update the sync trace from QUEDED to SERVED in the AssessmentSyncTrace table
+                                    AssessmentSyncTrace assessmentSyncTrace = null;
+                                    String environment = getTargetEnvironment();
+                                    try {
+                                        assessmentSyncTrace = syncLoggingDAO.getAssessmentSyncTrace(environment, listenerReportedAssessmentCode, DataToSync.Operation.DELETE);
+                                        List<RecordToSync> tracedRecords = assessmentSyncTrace.getRecords();
+                                        for (RecordToSync tracedRecord : tracedRecords) {
+                                            if (tracedRecord.getRecordID().equalsIgnoreCase(listenerReportedAssessmentCode)) {
+                                                tracedRecord.setStatus(DataToSync.Status.SERVED);
+                                            }
+                                        }
+                                        syncLoggingDAO.updateAssessmentSyncTrace(assessmentSyncTrace);
+                                    } catch (DAOException e) {
+                                        e.printStackTrace();
+                                        Log.e(SkavaConstants.LOG, e.getMessage());
+                                    }
+
+                                    //find what is the record being acknowledged and remove it from the middleman box space
+                                    SyncQueue middlemanInbox = getSkavaContext().getMiddlemanInbox();
+                                    List<RecordToSync> pendingRecords = middlemanInbox.getRecords(listenerReportedAssessmentCode);
+                                    if (pendingRecords != null) {
+                                        //iterate over all the data records
+                                        //use a array copy for loop to avoid iterator and remove conflict
+                                        List<Integer> foundIndexes = new ArrayList<Integer>();
+                                        for (int i = 0; i < pendingRecords.size(); i++) {
+                                            RecordToSync recordToSync = pendingRecords.get(i);
+                                            if (recordToSync.getOperation().equals(DataToSync.Operation.DELETE)){
+                                                String recordID = recordToSync.getRecordID();
+                                                if (recordID.equalsIgnoreCase(listenerReportedAssessmentCode)) {
+                                                    foundIndexes.add(i);
+                                                }
+                                            }
+                                        }
+                                        //Removes from the list of pending those that was reported by ack table
+                                        if (foundIndexes != null && !foundIndexes.isEmpty()) {
+                                            for (Integer foundIndex : foundIndexes) {
+                                                pendingRecords.remove(foundIndex.intValue());
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    // Just do nothing. Probably comes from another tablet
+                                }
+
+                            }
+
+                        }
+
                     }
                 }
             } catch (DbxException e) {

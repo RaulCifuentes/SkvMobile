@@ -85,7 +85,7 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
     private Bitmap getBitmapFromUri() {
         // HACK: In order to avoid Out Of Memory exceptions, image is resampled.
 //        Bitmap bitmapFromUri = mPictureFilesUtils.getBitmapFromUri(mSelectedPicture.getPictureLocation());
-        Bitmap bitmapFromUri = mPictureFilesUtils.getScaledBitmapFromUri(mSelectedPicture.getPictureLocation(), 1280 , 768);
+        Bitmap bitmapFromUri = mPictureFilesUtils.getScaledBitmapFromUri(mSelectedPicture.getPictureLocation(), 1280, 768);
         return bitmapFromUri;
     }
 
@@ -94,7 +94,7 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.picture_detail_menu, menu);
-        if (mSelectedPictureIndex%2 == 0) {
+        if (mSelectedPictureIndex % 2 == 0) {
             menu.findItem(R.id.action_back_original).setVisible(false);
         }
         return true;
@@ -131,25 +131,24 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
     }
 
 
-
-    public void deletePicture(boolean deleteByPair){
+    public void deletePicture(boolean deleteByPair) {
         //dereference or remove depending on the photo classification
         //0..7 should be always present that's why those are set to null
         //8 or greater are extras, that means optional, so they can be removed
-        if (mSelectedPictureIndex <8 ){
+        if (mSelectedPictureIndex < 8) {
             mAssessment.getPicturesList().set(mSelectedPictureIndex, null);
             if (deleteByPair) {
                 //the array of pictures has the structure {[original_1],[edited_1],[original_n],[edited_n]}
-                if (mSelectedPictureIndex%2 == 0){
-                    mAssessment.getPicturesList().set(mSelectedPictureIndex+1,null);
+                if (mSelectedPictureIndex % 2 == 0) {
+                    mAssessment.getPicturesList().set(mSelectedPictureIndex + 1, null);
                 }
             }
         } else {
             mAssessment.getPicturesList().remove(mSelectedPictureIndex);
             if (deleteByPair) {
                 //the array of pictures has the structure {[original_1],[edited_1],[original_n],[edited_n]}
-                if (mSelectedPictureIndex%2 == 0){
-                    mAssessment.getPicturesList().remove(mSelectedPictureIndex+1);
+                if (mSelectedPictureIndex % 2 == 0) {
+                    mAssessment.getPicturesList().remove(mSelectedPictureIndex + 1);
                 }
             }
         }
@@ -164,10 +163,11 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
         newIntent.putExtra("app-id", getPackageName());
         String[] tools = new String[]{"BRIGHTNESS", "CROP", "DRAW", "TEXT"};
         newIntent.putExtra(Constants.EXTRA_TOOLS_LIST, tools);
-        newIntent.putExtra(Constants.EXTRA_IN_API_KEY_SECRET, SkavaConstants.AVIARY_APP_KEY );
+        newIntent.putExtra(Constants.EXTRA_IN_API_KEY_SECRET, SkavaConstants.AVIARY_APP_KEY);
         //this will remove from the Aviary Editor the feedback button and the Aviary logo
         newIntent.putExtra(Constants.EXTRA_WHITELABEL, "");
-        newIntent.putExtra("ASSESSMENT_CODE", mAssessment.getCode());
+        //I put the assessment code as an extra but it is not present on the data Intent available in the onActivityResult
+//        newIntent.putExtra("ASSESSMENT_CODE", mAssessment.getCode());
         startActivityForResult(newIntent, EDIT_PICTURE_REQUEST_CODE);
         //newIntent.putExtra("EXTRA_OUTPUT", Uri.parse("file:///mnt/sdcard/..."));
     }
@@ -210,35 +210,35 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) if (requestCode == EDIT_PICTURE_REQUEST_CODE) {
-            //This is the URI data from Aviary (image editor)
-            Uri fileFromImageEditorURI = data.getData();
-            //Create a URL similar to the original picture to store the edited one
-            String originalPictureName = mSelectedPicture.getPictureLocation().getLastPathSegment();
-            //clone the editedPhoto to store later in a private skava folder
-            String newPictureSuggestedName = originalPictureName.substring(0, originalPictureName.lastIndexOf(mSelectedPicture.getPictureTag().name()));
-            newPictureSuggestedName += mSelectedPicture.getPictureTag().name() + "_EDITED_";
-
-            String assessmenCode = data.getStringExtra("ASSESSMENT_CODE");
-            Uri originalPicture = mSelectedPicture.getPictureLocation();
-            Uri skavaEditedPicture = mPictureFilesUtils.getOutputUri(assessmenCode, newPictureSuggestedName);
-            boolean success = false;
-            try {
-                success = mPictureFilesUtils.copyFileFromUriToUri(fileFromImageEditorURI, skavaEditedPicture, true);
-            } catch (Exception e) {
-                BugSenseHandler.sendException(e);
-                Log.e(SkavaConstants.LOG, e.getMessage());
-                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        if (resultCode == RESULT_OK) {
+            if (requestCode == EDIT_PICTURE_REQUEST_CODE) {
+                //This is the URI data from Aviary (image editor)
+                Uri fileFromImageEditorURI = data.getData();
+                //Create a URL similar to the original picture to store the edited one
+                String originalPictureName = mSelectedPicture.getPictureLocation().getLastPathSegment();
+                //clone the editedPhoto to store later in a private skava folder
+                String newPictureSuggestedName = originalPictureName.substring(0, originalPictureName.lastIndexOf(mSelectedPicture.getPictureTag().name()));
+                newPictureSuggestedName += mSelectedPicture.getPictureTag().name() + "_EDITED_";
+//                String assessmenCode = data.getStringExtra("ASSESSMENT_CODE");
+                String assessmentCode = getCurrentAssessment().getCode();
+                Uri skavaEditedPicture = mPictureFilesUtils.getOutputUri(assessmentCode, newPictureSuggestedName);
+                boolean success = false;
+                try {
+                    success = mPictureFilesUtils.copyFileFromUriToUri(fileFromImageEditorURI, skavaEditedPicture, true);
+                } catch (Exception e) {
+                    BugSenseHandler.sendException(e);
+                    Log.e(SkavaConstants.LOG, e.getMessage());
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+                SkavaPicture editedPicture = new SkavaPicture(mSelectedPicture.getPictureTag(), skavaEditedPicture, false);
+                getCurrentAssessment().getPicturesList().set(mSelectedPictureIndex + 1, editedPicture);
+                if (success) {
+                    backToPicturesMenu();
+                } else {
+                    onBackPressed();
+                }
             }
-            SkavaPicture editedPicture = new SkavaPicture(mSelectedPicture.getPictureTag(), skavaEditedPicture, false);
-            getCurrentAssessment().getPicturesList().set(mSelectedPictureIndex + 1, editedPicture);
-            if (success) {
-                backToPicturesMenu();
-            } else {
-                onBackPressed();
-            }
-        }
-        else {
+        } else {
             Log.d(SkavaConstants.LOG, "onActivityResult >> RequestCode  :" + requestCode + ",  ResultCode: " + resultCode + ", Intent: " + data);
         }
 
@@ -272,11 +272,11 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
 
     }
 
-    public void onPreExecuteImportAppData(){
+    public void onPreExecuteImportAppData() {
 //        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
     }
 
-    public void onPreExecuteImportUserData(){
+    public void onPreExecuteImportUserData() {
 //        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
     }
 

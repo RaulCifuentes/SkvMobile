@@ -23,9 +23,8 @@ public class UserDataHelper {
         localTunnelFaceDAO = daoFactory.getLocalTunnelFaceDAO();
     }
 
-
-    public UserDataDomain buildUserDataDomain(User user) throws DAOException {
-        List<TunnelFace> faceList = localTunnelFaceDAO.getTunnelFacesByUser(user);
+    public UserDataDomain buildUserDataDomain(String environment, User user) throws DAOException {
+        List<TunnelFace> faceList = localTunnelFaceDAO.getTunnelFacesByUser(environment, user);
         UserDataDomain userDataDomain = new UserDataDomain(faceList) ;
         return userDataDomain;
     }

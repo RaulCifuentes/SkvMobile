@@ -50,11 +50,11 @@ public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
         return mediaStorageDir;
     }
 
-    public File getOutputFile(String assessmenCode, String suggestedName) throws SkavaSystemException {
+    public File getOutputFile(String assessmentCode, String suggestedName) throws SkavaSystemException {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
         File skavaPicturesFolder = getSkavaPicturesFolder();
-        File assessmentPicturesFolder = new File(skavaPicturesFolder, assessmenCode);
+        File assessmentPicturesFolder = new File(skavaPicturesFolder, assessmentCode);
         // Create the storage directory if it does not exist
         if (! assessmentPicturesFolder.exists()){
             if (! assessmentPicturesFolder.mkdirs()){

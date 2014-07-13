@@ -11,11 +11,11 @@ import java.util.List;
 public interface RemoteUserDAO {
 
 
-    public User getUserByCode(String code) throws DAOException;
+//    public User getUserByCode(String code) throws DAOException;
 
-    public List<User> getAllUsers() throws DAOException;
+    public List<User> getAllUsers(String environment) throws DAOException;
 
-    public User getUserByEmail(String email) throws DAOException;
+//    public User getUserByEmail(String email) throws DAOException;
 
 
 }

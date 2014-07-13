@@ -7,6 +7,7 @@ public class AssessmentSyncTraceFilesTable extends SkavaTable {
 
     public static String SYNC_TRACE_FILES_TABLE = "AssessmentTraceFilesSync";
 
+    public static final String ENVIRONMENT_COLUMN = "ENVIRONMENT";
     public static final String ASSESSMENT_COLUMN = "ASSESSMENT_CODE";
     public static final String OPERATION_COLUMN = "OPERATION";
     public static final String FILE_NAME_COLUMN = "FILE_NAME";
@@ -17,6 +18,7 @@ public class AssessmentSyncTraceFilesTable extends SkavaTable {
             SYNC_TRACE_FILES_TABLE +
             " (" +
 //            GLOBAL_KEY_ID + " integer primary key autoincrement, " +
+            ENVIRONMENT_COLUMN + " text not null, " +
             ASSESSMENT_COLUMN + " text not null, " +
             OPERATION_COLUMN + " text not null, " +
             FILE_NAME_COLUMN + " text not null, " +

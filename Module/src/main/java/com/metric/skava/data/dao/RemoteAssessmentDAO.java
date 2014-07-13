@@ -1,8 +1,6 @@
 package com.metric.skava.data.dao;
 
 import com.metric.skava.app.model.Assessment;
-import com.metric.skava.app.model.TunnelFace;
-import com.metric.skava.app.model.User;
 import com.metric.skava.data.dao.exception.DAOException;
 
 import java.util.List;
@@ -14,9 +12,9 @@ public interface RemoteAssessmentDAO {
 
     public List<Assessment> getAllAssessments() throws DAOException;
 
-    public List<Assessment> getAssessmentsByUser(User user) throws DAOException;
-
-    public List<Assessment> getAssessmentsByTunnelFace(TunnelFace face) throws DAOException;
+//    public List<Assessment> getAssessmentsByUser(User user) throws DAOException;
+//
+//    public List<Assessment> getAssessmentsByTunnelFace(TunnelFace face) throws DAOException;
 
     public void saveAssessment(Assessment assessment) throws DAOException;
 
