@@ -14,13 +14,13 @@ public interface LocalAssessmentDAO {
 
     public Assessment getAssessment(String code) throws DAOException;
 
-    public Assessment getAssessmentByInternalCode(String internalCode) throws DAOException;
+//    public Assessment getAssessmentByInternalCode(String environment, String internalCode) throws DAOException;
 
-    public List<Assessment> getAssessmentsByUser(User user) throws DAOException;
+    public List<Assessment> getAssessmentsByUser(String environment, User user) throws DAOException;
 
-    public List<Assessment> getAssessmentsByTunnelFace(TunnelFace face) throws DAOException;
+    public List<Assessment> getAssessmentsByTunnelFace(String environment, TunnelFace face) throws DAOException;
 
-    public List<Assessment> getAllAssessments(String orderedBy) throws DAOException;
+    public List<Assessment> getAllAssessments(String environment, String orderedBy) throws DAOException;
 
     public void saveAssessment(Assessment assessment) throws DAOException;
 
@@ -28,7 +28,7 @@ public interface LocalAssessmentDAO {
 
     public boolean deleteAssessment(String code) throws DAOException;
 
-    public int deleteAllAssessments() throws DAOException;
+    public int deleteAllAssessments(String environment) throws DAOException;
 
 
 }

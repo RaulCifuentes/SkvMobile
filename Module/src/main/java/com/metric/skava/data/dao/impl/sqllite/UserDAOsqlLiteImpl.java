@@ -63,11 +63,11 @@ public class UserDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<User> i
         return list;
     }
 
-    @Override
-    public User getUserByEmail(String email) throws DAOException {
-        User entity = getPersistentEntityByCandidateKey(UserTable.USER_DATABASE_TABLE, UserTable.EMAIL_COLUMN, email);
-        return entity;
-    }
+//    @Override
+//    public User getUserByEmail(String email) throws DAOException {
+//        User entity = getPersistentEntityByCandidateKey(UserTable.USER_DATABASE_TABLE, UserTable.EMAIL_COLUMN, email);
+//        return entity;
+//    }
 
     @Override
     public User getUserByUsername(String username) throws DAOException {
@@ -95,12 +95,12 @@ public class UserDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<User> i
     }
 
 
-    @Override
-    public boolean deleteUser(String code) {
-        deletePersistentEntitiesFilteredByColumn(UserRolesTable.USER_ROLES_DATABASE_TABLE, UserRolesTable.USER_CODE_COLUMN, code);
-        //find user roles record to delete
-        return deleteIdentifiableEntity(UserTable.USER_DATABASE_TABLE, code);
-    }
+//    @Override
+//    public boolean deleteUser(String code) {
+//        deletePersistentEntitiesFilteredByColumn(UserRolesTable.USER_ROLES_DATABASE_TABLE, UserRolesTable.USER_CODE_COLUMN, code);
+//        //find user roles record to delete
+//        return deleteIdentifiableEntity(UserTable.USER_DATABASE_TABLE, code);
+//    }
 
     @Override
     public int deleteAllUsers() {

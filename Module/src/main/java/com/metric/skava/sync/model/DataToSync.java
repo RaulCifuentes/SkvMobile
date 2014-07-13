@@ -10,13 +10,23 @@ public class DataToSync {
     public enum Operation {INSERT, DELETE}
     public enum Status {QUEUED, SERVED}
 
+    private String environment;
     private String assessmentCode;
     private Operation operation;
     private Date date;
     private Status status;
 
-    public DataToSync(String assessmentCode) {
+    public DataToSync(String environment, String assessmentCode) {
+        this.environment = environment;
         this.assessmentCode = assessmentCode;
+    }
+
+    public String getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(String environment) {
+        this.environment = environment;
     }
 
     public String getAssessmentCode() {

@@ -16,13 +16,13 @@ public interface LocalUserDAO {
 
     public User getUserByCode(String code) throws DAOException;
 
-    public User getUserByEmail(String email) throws DAOException;
+//    public User getUserByEmail(String email) throws DAOException;
 
     public User getUserByUsername(String email) throws DAOException;
 
     public void saveUser(User newEntity) throws DAOException;
 
-    public boolean deleteUser(String code) throws DAOException;
+//    public boolean deleteUser(String code) throws DAOException;
 
     public int deleteAllUsers() throws DAOException;
 

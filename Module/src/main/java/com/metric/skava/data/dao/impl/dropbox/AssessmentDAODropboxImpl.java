@@ -40,6 +40,7 @@ import com.metric.skava.calculator.rmr.model.Roughness;
 import com.metric.skava.calculator.rmr.model.Spacing;
 import com.metric.skava.calculator.rmr.model.StrengthOfRock;
 import com.metric.skava.calculator.rmr.model.Weathering;
+import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.RemoteAssessmentDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.datastore.tables.AssessmentDropboxTable;
@@ -112,15 +113,15 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         return listAssessments;
     }
 
-    @Override
-    public List<Assessment> getAssessmentsByUser(User user) throws DAOException {
-        return null;
-    }
-
-    @Override
-    public List<Assessment> getAssessmentsByTunnelFace(TunnelFace face) throws DAOException {
-        return null;
-    }
+//    @Override
+//    public List<Assessment> getAssessmentsByUser(User user) throws DAOException {
+//        return null;
+//    }
+//
+//    @Override
+//    public List<Assessment> getAssessmentsByTunnelFace(TunnelFace face) throws DAOException {
+//        return null;
+//    }
 
 
     @Override
@@ -233,7 +234,6 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             if (rockSampleIdentification != null) {
                 assessmentFields.set("rockSampleIdentification", rockSampleIdentification);
             }
-
 
             List<DiscontinuityFamily> discontinuitySystem = assessment.getDiscontinuitySystem();
             if (discontinuitySystem != null) {
@@ -605,7 +605,8 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 alreadyRemoted.setAll(assessmentFields);
             }
             //****** THE ASSESSMENT SAVE WAS JUST CALLED, SO RECORD THIS ON THE SYNC QUEUE
-            RecordToSync recordToSync = new RecordToSync(assessment.getCode());
+            String environment = assessment.getEnvironment();
+            RecordToSync recordToSync = new RecordToSync(environment, assessment.getCode());
             recordToSync.setOperation(RecordToSync.Operation.INSERT);
             recordToSync.setSkavaEntityCode(assessment.getCode());
             recordToSync.setRecordID(recordId);
@@ -613,7 +614,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             recordToSync.setStatus(DataToSync.Status.QUEUED);
 
             //This is just the assessment syncing log table for eventual tracing
-            AssessmentSyncTrace syncTrace = new AssessmentSyncTrace(assessment.getCode());
+            AssessmentSyncTrace syncTrace = new AssessmentSyncTrace(environment, assessment.getCode());
             syncTrace.addRecord(recordToSync);
 
             //This is the on-memory middleman to check if there´s any pending sync request
@@ -644,7 +645,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                             //add the full Uri as String to the list sent to the upload service
                             picturesAsStringList.add(skavaPicture.getPictureLocation().toString());
                             //*** The thread will be called soon, so lets RECORD THIS ON THE SYNC QUEUE too
-                            FileToSync pendingFile = new FileToSync(assessment.getCode());
+                            FileToSync pendingFile = new FileToSync(environment, assessment.getCode());
                             pendingFile.setOperation(DataToSync.Operation.INSERT);
                             pendingFile.setFileName(skavaPicture.getPictureLocation().getLastPathSegment());
                             pendingFile.setDate(SkavaUtils.getCurrentDate());
@@ -661,7 +662,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     //add the full Uri as String to the list sent to the upload service
                     picturesAsStringList.add(tunnelExpanded.toString());
                     //*** The thread will be called soon, so lets RECORD THIS ON THE SYNC QUEUE too
-                    FileToSync pendingFile = new FileToSync(assessment.getCode());
+                    FileToSync pendingFile = new FileToSync(environment, assessment.getCode());
                     pendingFile.setOperation(DataToSync.Operation.INSERT);
                     pendingFile.setFileName(tunnelExpanded.getLastPathSegment());
                     pendingFile.setDate(SkavaUtils.getCurrentDate());
@@ -697,6 +698,17 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         Intent serviceIntent;
         switch (operation) {
             case INSERT:
+                try {
+                    LocalAssessmentDAO assessmentDAO = getDAOFactory().getLocalAssessmentDAO();
+                    Assessment uploadedAssessment = null;
+                    uploadedAssessment = assessmentDAO.getAssessment(assessmentCode);
+                    uploadedAssessment.setPicsSentStatus(Assessment.PICS_SENT_TO_DATASTORE);
+                    assessmentDAO.updateAssessment(uploadedAssessment, false);
+                } catch (DAOException e) {
+                    e.printStackTrace();
+                    BugSenseHandler.sendException(e);
+                    Log.e(SkavaConstants.LOG, e.getMessage());
+                }
                 serviceIntent = new Intent(SkavaConstants.CUSTOM_ACTION);
                 serviceIntent.putExtra(SkavaConstants.EXTRA_OPERATION, operation.name());
                 serviceIntent.putExtra(SkavaConstants.EXTRA_ENVIRONMENT_NAME, folderName);
@@ -762,8 +774,20 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         //Should be just one but if for some any reason (during DEV tests for example) there is multiple records for same assessmentCode
         List<DbxRecord> multipleAssessmentsWithSameCode = mAssessmentsTable.findRecordsByCriteria(new String[]{"code"}, new String[]{assessmentCode});
 
+        String datastoreName = getDatastore().getId();
+        String environment;
+        if (datastoreName.equalsIgnoreCase(SkavaConstants.DROPBOX_DS_DEV_NAME)){
+            environment = SkavaConstants.DEV_KEY;
+        } else if (datastoreName.equalsIgnoreCase(SkavaConstants.DROPBOX_DS_QA_NAME)){
+            environment = SkavaConstants.QA_KEY;
+        } else if (datastoreName.equalsIgnoreCase(SkavaConstants.DROPBOX_DS_PROD_NAME)){
+            environment = SkavaConstants.PROD_KEY;
+        } else {
+            throw new DAOException("Unknown datastore name : " + datastoreName);
+        }
+
         //This is just the assessment syncing log table for eventual tracing
-        AssessmentSyncTrace syncTrace = new AssessmentSyncTrace(assessmentCode);
+        AssessmentSyncTrace syncTrace = new AssessmentSyncTrace(environment, assessmentCode);
 
         //This is the on-memory middleman log space (used somewhere to check if there´s any pending sync request)
         SyncQueue middlemanInbox = getSkavaContext().getMiddlemanInbox();
@@ -801,7 +825,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             }
 
             //Log the DELETE intention in the middle man records log space
-            RecordToSync recordToSync = new RecordToSync(assessmentCode);
+            RecordToSync recordToSync = new RecordToSync(environment, assessmentCode);
             recordToSync.setOperation(RecordToSync.Operation.DELETE);
             recordToSync.setSkavaEntityCode(assessmentCode);
             recordToSync.setRecordID(assessmentRecordToDelete.getId());
@@ -816,16 +840,28 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             //Don't forget to request also the deletion of pictures linked to this assessment
             String assessmentInternalCode = readString(assessmentRecordToDelete, "skavaInternalCode");
             ArrayList<String> picturesList = null;
+            //Remember that picturesURIs does not include the extended view picture,
+            //which is sent separately on its own attribute named tunnelExpanded
             if (assessmentRecordToDelete.hasField("picturesURIs")) {
                 DbxList dbxPictureLists = assessmentRecordToDelete.getList("picturesURIs");
-                picturesList = new ArrayList<String>();
+                if (picturesList == null){
+                    picturesList = new ArrayList<String>();
+                }
                 for (int i = 0; i < dbxPictureLists.size(); i++) {
                     picturesList.add(dbxPictureLists.getString(i));
                 }
             }
+            if (assessmentRecordToDelete.hasField("tunnelExpanded")) {
+                if (picturesList == null){
+                    picturesList = new ArrayList<String>();
+                }
+                String expandedViewUri = assessmentRecordToDelete.getString("tunnelExpanded");
+                picturesList.add(expandedViewUri);
+            }
+
             if (assessmentInternalCode != null && picturesList != null && !picturesList.isEmpty()) {
                 //delete the folder with the pictures of this assessment
-                this.deletePictures(assessmentInternalCode, assessmentCode, picturesList);
+                this.deletePictures(environment, assessmentInternalCode, assessmentCode, picturesList);
             }
 
             //finally delete the remote assessment record
@@ -837,7 +873,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
     }
 
 
-    private void deletePictures(final String assessmentInternalCode, final String assessmentCode, final ArrayList<String> picturesList) throws DAOException {
+    private void deletePictures(String environment, final String assessmentInternalCode, final String assessmentCode, final ArrayList<String> picturesList) throws DAOException {
 
         String folderName = null;
         String target = getSkavaContext().getTargetEnvironment();
@@ -848,7 +884,6 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         } else if (target.equalsIgnoreCase(SkavaConstants.PROD_KEY)) {
             folderName = SkavaConstants.DROPBOX_DS_PROD_NAME;
         }
-
 
         //the param picturesList contains just the name of the picture, but the full Uri is needed so
 //        ArrayList<String> picturesURIsAsStringList = null;
@@ -877,12 +912,12 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         myThread.start();
 
         //This is just the assessment syncing log table for eventual tracing
-        AssessmentSyncTrace syncTrace = new AssessmentSyncTrace(assessmentCode);
+        AssessmentSyncTrace syncTrace = new AssessmentSyncTrace(environment, assessmentCode);
         //This is the on-memory middleman log space (used somewhere to check if there´s any pending sync request)
         SyncQueue middlemanInbox = getSkavaContext().getMiddlemanInbox();
 
         for (String currPicture : picturesList) {
-            FileToSync pendingFile = new FileToSync(assessmentCode);
+            FileToSync pendingFile = new FileToSync(environment, assessmentCode);
             //record each picture of this asssessment as a DELETE
             pendingFile.setOperation(DataToSync.Operation.DELETE);
             pendingFile.setFileName(currPicture);

@@ -6,6 +6,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,10 @@ import android.widget.ListView;
 
 import com.metric.skava.R;
 import com.metric.skava.app.activity.SkavaFragmentActivity;
+import com.metric.skava.app.util.SkavaConstants;
+import com.metric.skava.app.util.SkavaUtils;
+
+import java.text.SimpleDateFormat;
 
 public abstract class AbstractNavDrawerActivity extends SkavaFragmentActivity {
 
@@ -52,6 +57,9 @@ public abstract class AbstractNavDrawerActivity extends SkavaFragmentActivity {
 	}
 
     protected void setupTheDrawer() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String dateAsString = sdf.format(SkavaUtils.getCurrentDate());
+        Log.d(SkavaConstants.LOG, "********** setupTheDrawer ***** " + dateAsString);
         navConf = getNavDrawerConfiguration();
 
         setContentView(navConf.getMainLayout());

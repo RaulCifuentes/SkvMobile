@@ -743,9 +743,23 @@ public class MappingReportMainFragment extends SkavaFragment {
             }
         }
 
-        List<SkavaPicture> pictureList = currentAssessment.getPicturesList();
         SkavaPictureFilesUtils pictureFilesUtils = new SkavaPictureFilesUtils(this.getActivity());
 
+        int centeredImageWidth = (int) getResources().getDimension(R.dimen.summary_report_face_image_width);
+        int centeredImageHeight = (int) getResources().getDimension(R.dimen.summary_report_face_image_height);
+        int sidedImageWidth = (int) getResources().getDimension(R.dimen.summary_report_non_face_image_width);
+        int sidedImageHeight = (int) getResources().getDimension(R.dimen.summary_report_non_face_image_height);
+
+        Uri tunnelExtendedUri = currentAssessment.getTunnelExpandedView();
+        if (tunnelExtendedUri != null) {
+            Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(tunnelExtendedUri, centeredImageWidth, centeredImageHeight);
+            if (bitmap != null) {
+                ((ImageView) rootView.findViewById(R.id.summary_report_expanded_pic)).setImageBitmap(bitmap);
+            }
+        }
+
+
+        List<SkavaPicture> pictureList = currentAssessment.getPicturesList();
         if (pictureList != null && !pictureList.isEmpty()) {
             int pictureListSize = pictureList.size();
             //first try with the edited FACE picture
@@ -756,7 +770,7 @@ public class MappingReportMainFragment extends SkavaFragment {
             if (picture != null) {
                 Uri faceUri = picture.getPictureLocation();
                 if (faceUri != null) {
-                    Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(faceUri, 800, 600);
+                    Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(faceUri, centeredImageWidth, centeredImageHeight);
                     if (bitmap != null) {
                         ((ImageView) rootView.findViewById(R.id.summary_report_face_pic)).setImageBitmap(bitmap);
                     }
@@ -770,7 +784,7 @@ public class MappingReportMainFragment extends SkavaFragment {
             if (picture != null) {
                 Uri leftUri = picture.getPictureLocation();
                 if (leftUri != null) {
-                    Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(leftUri, 400, 300);
+                    Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(leftUri, sidedImageWidth, sidedImageHeight);
                     if (bitmap != null) {
                         ((ImageView) rootView.findViewById(R.id.summary_report_left_wall_pic)).setImageBitmap(bitmap);
                     }
@@ -784,7 +798,7 @@ public class MappingReportMainFragment extends SkavaFragment {
             if (picture != null) {
                 Uri rightUri = picture.getPictureLocation();
                 if (rightUri != null) {
-                    Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(rightUri, 400, 300);
+                    Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(rightUri, sidedImageWidth, sidedImageHeight);
                     if (bitmap != null) {
                         ((ImageView) rootView.findViewById(R.id.summary_report_right_wall_pic)).setImageBitmap(bitmap);
                     }
@@ -798,14 +812,12 @@ public class MappingReportMainFragment extends SkavaFragment {
             if (picture != null) {
                 Uri roofUri = picture.getPictureLocation();
                 if (roofUri != null) {
-                    Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(roofUri, 400, 300);
+                    Bitmap bitmap = pictureFilesUtils.getSampledBitmapFromFile(roofUri, sidedImageWidth, sidedImageHeight);
                     if (bitmap != null) {
                         ((ImageView) rootView.findViewById(R.id.summary_report_roof_pic)).setImageBitmap(bitmap);
                     }
                 }
             }
-
-
         }
 
 

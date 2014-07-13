@@ -1208,7 +1208,8 @@ public class SyncHelper {
     private Long syncUsers() throws DAOException {
         //Read from DropBox
         RemoteUserDAO dropBoxUserDAO = daoFactory.getRemoteUserDAO(DAOFactory.Flavour.DROPBOX);
-        List<User> downloadedUsers = dropBoxUserDAO.getAllUsers();
+        String targetEnvironment = skavaContext.getTargetEnvironment();
+        List<User> downloadedUsers = dropBoxUserDAO.getAllUsers(targetEnvironment);
         //Write into the SQLLite
         LocalUserDAO sqlLiteLocalUserDAO = daoFactory.getLocalUserDAO();
         for (User downloadedUser : downloadedUsers) {

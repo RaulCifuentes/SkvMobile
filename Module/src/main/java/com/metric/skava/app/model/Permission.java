@@ -11,17 +11,27 @@ public class Permission {
 
     public enum IdentifiableEntityType {PROJECT, TUNNEL, FACE};
 
+    private String environment;
     private User who;
     private Action what;
     private IdentifiableEntityType where;
     private IdentifiableEntity whereExactly;
 
 
-    public Permission(User who, Action what, IdentifiableEntityType where, IdentifiableEntity whereExactly ) {
+    public Permission(String environment, User who, Action what, IdentifiableEntityType where, IdentifiableEntity whereExactly ) {
+        this.environment = environment;
         this.who = who;
         this.what = what;
         this.where = where;
         this.whereExactly = whereExactly;
+    }
+
+    public String getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(String environment) {
+        this.environment = environment;
     }
 
     public User getWho() {

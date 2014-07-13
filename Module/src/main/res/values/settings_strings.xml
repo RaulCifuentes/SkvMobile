@@ -4,12 +4,14 @@
     <string name="persistence_bucket_file_key">com.skava.mobile.MY_PREFS_FILE</string>
     <string name="settings_preference_file_key">com.metric.skava_preferences</string>
 
-    <string name="user_data_last_sync_succeed">user_data_sync_sucess_key</string>
-    <string name="user_data_last_sync_date">user_data_sync_date_key</string>
+    <string name="user_data_last_sync_succeed_key">user_data_sync_sucess_key</string>
+    <string name="user_data_last_sync_date_key">user_data_sync_date_key</string>
 
-    <string name="app_data_last_sync_succeed">app_data_sync_sucess_key</string>
-    <string name="app_data_last_sync_date">app_data_sync_date_key</string>
+    <string name="app_data_last_sync_succeed_key">app_data_sync_sucess_key</string>
+    <string name="app_data_last_sync_date_key">app_data_sync_date_key</string>
 
+    <string name="needs_reimport_app_data_key">needs_reimport_app_data_key</string>
+    <string name="needs_reimport_user_data_key">needs_reimport_user_data_key</string>
 
     <string name="preferences_security_label">Security</string>
     <string name="preferences_gui_label">User Interface</string>

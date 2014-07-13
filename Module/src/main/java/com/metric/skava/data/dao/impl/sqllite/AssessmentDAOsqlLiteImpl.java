@@ -43,8 +43,6 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
     private LocalRMRCalculationDAO mLocalRMRCalculationDAO;
     private LocalSupportRecommendationDAO mLocalSupportRecommendationDAO;
 
-
-
     private AssessmentBuilder4SqlLite assessmentBuilder;
 
     public AssessmentDAOsqlLiteImpl(Context context, SkavaContext skavaContext) throws DAOException {
@@ -58,8 +56,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
     }
 
     @Override
-    public List<Assessment> getAllAssessments(String orderBy) throws DAOException {
-        Cursor cursor = getAllRecords(AssessmentTable.ASSESSMENT_DATABASE_TABLE, orderBy);
+    public List<Assessment> getAllAssessments(String environment, String orderBy) throws DAOException {
+        Cursor cursor = getRecordsFilteredByColumn(AssessmentTable.ASSESSMENT_DATABASE_TABLE, AssessmentTable.ENVIRONMENT_COLUMN, environment, orderBy);
         List<Assessment> list = assemblePersistentEntities(cursor);
         cursor.close();
         return list;
@@ -79,35 +77,39 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         return list.get(0);
     }
 
-    @Override
-    public Assessment getAssessmentByInternalCode(String internalCode) throws DAOException {
-        Cursor cursor = getRecordsFilteredByColumn(AssessmentTable.ASSESSMENT_DATABASE_TABLE, AssessmentTable.INTERNAL_CODE_COLUMN, internalCode, null);
-        List<Assessment> list = assemblePersistentEntities(cursor);
-        if (list.isEmpty()) {
-            throw new DAOException("Entity not found. [Internal Code : " + internalCode + "]");
-        }
-        if (list.size() > 1) {
-            throw new DAOException("Multiple records for same code. [Internal Code : " + internalCode + "]");
-        }
-        cursor.close();
-        return list.get(0);
-    }
+//    @Override
+//    public Assessment getAssessmentByInternalCode(String environment, String internalCode) throws DAOException {
+//        String[] names = new String[]{AssessmentTable.ENVIRONMENT_COLUMN ,AssessmentTable.INTERNAL_CODE_COLUMN};
+//        String[] values = new String[]{environment, internalCode};
+//        Cursor cursor = getRecordsFilteredByColumns(AssessmentTable.ASSESSMENT_DATABASE_TABLE, names, values, null);
+//        List<Assessment> list = assemblePersistentEntities(cursor);
+//        if (list.isEmpty()) {
+//            throw new DAOException("Entity not found. [Internal Code : " + internalCode + "]");
+//        }
+//        if (list.size() > 1) {
+//            throw new DAOException("Multiple records for same code. [Internal Code : " + internalCode + "]");
+//        }
+//        cursor.close();
+//        return list.get(0);
+//    }
 
     @Override
-    public List<Assessment> getAssessmentsByUser(User user) throws DAOException {
+    public List<Assessment> getAssessmentsByUser(String environment, User user) throws DAOException {
         List<Assessment> allAssessments = new ArrayList<Assessment>();
-        List<TunnelFace> facesGranted = mLocalTunnelFaceDAO.getTunnelFacesByUser(user);
+        List<TunnelFace> facesGranted = mLocalTunnelFaceDAO.getTunnelFacesByUser(environment, user);
         //find the last five active assessment for each of those faces
         for (TunnelFace grantedFace : facesGranted) {
-            List<Assessment> grantedFaceAssessments = getAssessmentsByTunnelFace(grantedFace);
+            List<Assessment> grantedFaceAssessments = getAssessmentsByTunnelFace(environment, grantedFace);
             allAssessments.addAll(grantedFaceAssessments);
         }
         return allAssessments;
     }
 
     @Override
-    public List<Assessment> getAssessmentsByTunnelFace(TunnelFace face) throws DAOException {
-        Cursor cursor = getRecordsFilteredByColumn(AssessmentTable.ASSESSMENT_DATABASE_TABLE, AssessmentTable.TUNEL_FACE_CODE_COLUMN, face.getCode(), null);
+    public List<Assessment> getAssessmentsByTunnelFace(String environment, TunnelFace face) throws DAOException {
+        String[] names = new String[]{AssessmentTable.ENVIRONMENT_COLUMN ,AssessmentTable.TUNEL_FACE_CODE_COLUMN};
+        String[] values = new String[]{environment, face.getCode()};
+        Cursor cursor = getRecordsFilteredByColumns(AssessmentTable.ASSESSMENT_DATABASE_TABLE, names, values, null);
         List<Assessment> list = assemblePersistentEntities(cursor);
         return list;
     }
@@ -226,6 +228,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             saveAssessment(newSkavaEntity);
         } else {
             String[] names = new String[]{
+                    AssessmentTable.ENVIRONMENT_COLUMN,
                     AssessmentTable.CODE_COLUMN,
                     AssessmentTable.INTERNAL_CODE_COLUMN,
                     AssessmentTable.GEOLOGIST_CODE_COLUMN,
@@ -250,6 +253,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             };
 
             Object[] values = new Object[]{
+                    newSkavaEntity.getEnvironment(),
                     newSkavaEntity.getCode(),
                     newSkavaEntity.getInternalCode(),
                     SkavaUtils.isUndefined(newSkavaEntity.getGeologist()) ? null : newSkavaEntity.getGeologist().getCode(),
@@ -280,6 +284,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
     @Override
     protected void savePersistentEntity(java.lang.String tableName, Assessment newSkavaEntity) throws DAOException {
         String[] names = new String[]{
+                AssessmentTable.ENVIRONMENT_COLUMN,
                 AssessmentTable.CODE_COLUMN,
                 AssessmentTable.INTERNAL_CODE_COLUMN,
                 AssessmentTable.GEOLOGIST_CODE_COLUMN,
@@ -304,6 +309,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         };
 
         Object[] values = new Object[]{
+                newSkavaEntity.getEnvironment(),
                 newSkavaEntity.getCode(),
                 newSkavaEntity.getInternalCode(),
                 SkavaUtils.isUndefined(newSkavaEntity.getGeologist()) ? null : newSkavaEntity.getGeologist().getCode(),
@@ -372,8 +378,9 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                     ExternalResourcesTable.PICTURE_RESOURCE_TYPE,
                     currPicture.getPictureTag(),
                     currPicture.isOriginal()? 0:1,
-                    //getPath is not enough, it losses the Uri scheme part ( file:/// in most our cases)
-//                    currPicture.getPictureLocation().getPath()
+                    //currPicture.getPictureLocation().getPath() is not enough,
+                    // it losses the Uri scheme part ( file:/// in most our cases)
+                    // so toString is better here
                     currPicture.getPictureLocation().toString()
             };
             saveRecord(ExternalResourcesTable.EXTERNAL_RESOURCES_DATABASE_TABLE, resourcesNames, resourcesValues);
@@ -422,16 +429,18 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
 
 
     @Override
-    public int deleteAllAssessments() throws DAOException {
-        //iteratem, get the ocode, delete each
-        Cursor cursor = getAllRecords(AssessmentTable.ASSESSMENT_DATABASE_TABLE, null);
+    public int deleteAllAssessments(String environment) throws DAOException {
+        // It's not enough to delete the records on Assessment table. That's why
+        // deleteAllPersistentEntities(AssessmentTable.ASSESSMENT_DATABASE_TABLE)
+        // isn't used. Instead of it, iterate on assessment records and call deletion
+        // so pictures and everything related will also be removed
+        Cursor cursor = getRecordsFilteredByColumn(AssessmentTable.ASSESSMENT_DATABASE_TABLE, AssessmentTable.ENVIRONMENT_COLUMN, environment, null);
         int i = 0;
         while (cursor.moveToNext()) {
             String assessmentCode = CursorUtils.getString(AssessmentTable.CODE_COLUMN, cursor);
             deleteAssessment(assessmentCode);
             i++;
         }
-//        return deleteAllPersistentEntities(AssessmentTable.ASSESSMENT_DATABASE_TABLE);
         return i;
     }
 

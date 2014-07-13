@@ -69,7 +69,7 @@ public class SkavaDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "mySkavaDatabase.db";
 
-    public static final int DATABASE_VERSION = 55;
+    public static final int DATABASE_VERSION = 57;
 
     public SkavaDBHelper(Context context, String name,
                          SQLiteDatabase.CursorFactory factory, int version) {

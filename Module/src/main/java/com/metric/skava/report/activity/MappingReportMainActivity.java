@@ -125,7 +125,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
             RemoteAssessmentDAO remoteAssessmentDAO = getDAOFactory().getRemoteAssessmentDAO(DAOFactory.Flavour.DROPBOX);
             remoteAssessmentDAO.saveAssessment(currentAssessment);
             return true;
-        } catch (DAOException e) {
+        } catch (final DAOException e) {
             e.printStackTrace();
             Log.e(SkavaConstants.LOG, e.getMessage());
             BugSenseHandler.sendException(e);
@@ -135,7 +135,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
                 public Dialog onCreateDialog(Bundle savedInstanceState) {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(MappingReportMainActivity.this);
                     builder.setTitle("Problems on sending ...");
-                    builder.setMessage("There was an error while saving the mapping remotely: " );
+                    builder.setMessage("There was an error while saving the mapping remotely: " + e.getMessage());
                     // Create the AlertDialog object and return it
                     return builder.create();
                 }

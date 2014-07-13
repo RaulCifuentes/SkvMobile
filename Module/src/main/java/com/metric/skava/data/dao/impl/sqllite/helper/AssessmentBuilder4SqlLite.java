@@ -11,6 +11,7 @@ import com.metric.skava.app.model.ExcavationSection;
 import com.metric.skava.app.model.TunnelFace;
 import com.metric.skava.app.model.User;
 import com.metric.skava.app.util.DateDataFormat;
+import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalExcavationMethodDAO;
 import com.metric.skava.data.dao.LocalExcavationProjectDAO;
@@ -66,13 +67,25 @@ public class AssessmentBuilder4SqlLite {
         Assessment babyAssessment = new Assessment(code);
         babyAssessment.setInternalCode(internalCode);
 
-        java.lang.String faceID = CursorUtils.getString(AssessmentTable.TUNEL_FACE_CODE_COLUMN, cursor);
+        String environmentCode = CursorUtils.getString(AssessmentTable.ENVIRONMENT_COLUMN, cursor);
+        if (environmentCode != null) {
+            if (    environmentCode.equalsIgnoreCase(SkavaConstants.DEV_KEY)
+                    || environmentCode.equalsIgnoreCase(SkavaConstants.QA_KEY)
+                    || environmentCode.equalsIgnoreCase(SkavaConstants.PROD_KEY)
+                ) {
+                babyAssessment.setEnvironment(environmentCode);
+            } else {
+                throw new DAOException("Unknown environment code: " + environmentCode);
+            }
+        }
+
+        String faceID = CursorUtils.getString(AssessmentTable.TUNEL_FACE_CODE_COLUMN, cursor);
         if (faceID != null) {
             TunnelFace tunnelFace = localTunnelFaceDAO.getTunnelFaceByCode(faceID);
             babyAssessment.setFace(tunnelFace);
         }
 
-        java.lang.String geologistID = CursorUtils.getString(AssessmentTable.GEOLOGIST_CODE_COLUMN, cursor);
+        String geologistID = CursorUtils.getString(AssessmentTable.GEOLOGIST_CODE_COLUMN, cursor);
         if (geologistID != null) {
             User geologist = localUserDAO.getUserByCode(geologistID);
             babyAssessment.setGeologist(geologist);

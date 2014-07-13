@@ -43,12 +43,8 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
 
 
     @Override
-    public List<User> getAllUsers() throws DAOException {
+    public List<User> getAllUsers(String environment) throws DAOException {
         try {
-//            DbxDatastoreStatus status = getDatastore().getSyncStatus();
-//            if (status.hasIncoming) {
-//                getDatastore().sync();
-//            }
             List<User> listUsers = new ArrayList<User>();
             List<DbxRecord> recordList = mUsersTable.findAll();
             for (DbxRecord currentDbxRecord : recordList) {
@@ -58,14 +54,12 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
                 for (int i = 0; i < faces.size(); i++) {
                     String faceCode = faces.getString(i);
                     TunnelFace tunnelFace = mLocalTunnelFaceDAO.getTunnelFaceByCode(faceCode);
-                    Permission newPermission = new Permission(newUser, Permission.Action.ALL, Permission.IdentifiableEntityType.FACE, tunnelFace);
+                    Permission newPermission = new Permission(environment, newUser, Permission.Action.ALL, Permission.IdentifiableEntityType.FACE, tunnelFace);
                     mLocalPermissionDAO.savePermission(newPermission);
                 }
                 listUsers.add(newUser);
             }
             return listUsers;
-//        } catch (DbxException e) {
-            //Just to keep the try
         } catch (Exception e) {
             BugSenseHandler.sendException(e);
             Log.e(SkavaConstants.LOG, e.getMessage());
@@ -90,62 +84,49 @@ public class UserDAODropboxImpl extends DropBoxBaseDAO implements RemoteUserDAO 
         return newUser;
     }
 
-    @Override
-    public User getUserByEmail(String email) throws DAOException {
-        try {
-//            DbxDatastoreStatus status = getDatastore().getSyncStatus();
-//            if (status.hasIncoming) {
-//                getDatastore().sync();
+//    @Override
+//    public User getUserByEmail(String environment, String email) throws DAOException {
+//        try {
+//            DbxRecord userRecord = mUsersTable.findRecordByCandidateKey("UserMail", email);
+//            User newUser = mapUserFromDbxRecord(userRecord);
+//
+//            DbxList faces = userRecord.getList("Faces");
+//            for (int i = 0; i < faces.size(); i++) {
+//                String faceCode = faces.getString(i);
+//                TunnelFace tunnelFace = mLocalTunnelFaceDAO.getTunnelFaceByCode(faceCode);
+//                Permission newPermission = new Permission(environment, newUser, Permission.Action.ALL, Permission.IdentifiableEntityType.FACE, tunnelFace);
+//                mLocalPermissionDAO.savePermission(newPermission);
 //            }
-            DbxRecord userRecord = mUsersTable.findRecordByCandidateKey("UserMail", email);
-            User newUser = mapUserFromDbxRecord(userRecord);
-
-            DbxList faces = userRecord.getList("Faces");
-            for (int i = 0; i < faces.size(); i++) {
-                String faceCode = faces.getString(i);
-                TunnelFace tunnelFace = mLocalTunnelFaceDAO.getTunnelFaceByCode(faceCode);
-                Permission newPermission = new Permission(newUser, Permission.Action.ALL, Permission.IdentifiableEntityType.FACE, tunnelFace);
-                mLocalPermissionDAO.savePermission(newPermission);
-            }
-
-            return newUser;
-//        } catch (DbxException e) {
-            //Just to keep the try
-        } catch (Exception e) {
-            BugSenseHandler.sendException(e);
-            Log.e(SkavaConstants.LOG, e.getMessage());
-            throw new DAOException(e);
-        }
-    }
-
-
-    @Override
-    public User getUserByCode(String code) throws DAOException {
-        try {
-//            DbxDatastoreStatus status = getDatastore().getSyncStatus();
-//            if (status.hasIncoming) {
-//                getDatastore().sync();
+//            return newUser;
+//        } catch (Exception e) {
+//            BugSenseHandler.sendException(e);
+//            Log.e(SkavaConstants.LOG, e.getMessage());
+//            throw new DAOException(e);
+//        }
+//    }
+//
+//
+//    @Override
+//    public User getUserByCode(String environment, String code) throws DAOException {
+//        try {
+//            DbxRecord userRecord = mUsersTable.findRecordByCode(code);
+//            User newUser = mapUserFromDbxRecord(userRecord);
+//
+//            DbxList faces = userRecord.getList("Faces");
+//            for (int i = 0; i < faces.size(); i++) {
+//                String faceCode = faces.getString(i);
+//                TunnelFace tunnelFace = mLocalTunnelFaceDAO.getTunnelFaceByCode(faceCode);
+//                Permission newPermission = new Permission(environment, newUser, Permission.Action.ALL, Permission.IdentifiableEntityType.FACE, tunnelFace);
+//                mLocalPermissionDAO.savePermission(newPermission);
 //            }
-            DbxRecord userRecord = mUsersTable.findRecordByCode(code);
-            User newUser = mapUserFromDbxRecord(userRecord);
-
-            DbxList faces = userRecord.getList("Faces");
-            for (int i = 0; i < faces.size(); i++) {
-                String faceCode = faces.getString(i);
-                TunnelFace tunnelFace = mLocalTunnelFaceDAO.getTunnelFaceByCode(faceCode);
-                Permission newPermission = new Permission(newUser, Permission.Action.ALL, Permission.IdentifiableEntityType.FACE, tunnelFace);
-                mLocalPermissionDAO.savePermission(newPermission);
-            }
-
-            return newUser;
-//        } catch (DbxException e) {
-            //Just to keep the try
-        } catch (Exception e) {
-            BugSenseHandler.sendException(e);
-            Log.e(SkavaConstants.LOG, e.getMessage());
-            throw new DAOException(e);
-        }
-    }
+//
+//            return newUser;
+//        } catch (Exception e) {
+//            BugSenseHandler.sendException(e);
+//            Log.e(SkavaConstants.LOG, e.getMessage());
+//            throw new DAOException(e);
+//        }
+//    }
 
 
 

@@ -19,16 +19,18 @@ import java.util.List;
  */
 public class Assessment implements IdentifiableEntity {
 
-    public static final int DATA_SENT_TO_DATASTORE = 30;
-    public static final int DATA_SENT_TO_CLOUD = 10;
+    public static final int DATA_SENT_TO_DATASTORE = 10;
+    public static final int DATA_SENT_TO_CLOUD = 100;
 
-    public static final int PICS_SENT_TO_DATASTORE = 40;
-    public static final int PICS_SENT_TO_CLOUD = 20;
+    public static final int PICS_SENT_TO_DATASTORE = 50;
+    public static final int PICS_SENT_TO_CLOUD = 200;
 
     private int dataSentStatus;
     private int picsSentStatus;
 
     private Long _id;
+
+    private String environment;
     private String code;
     private String internalCode;
     private TunnelFace face;
@@ -62,6 +64,14 @@ public class Assessment implements IdentifiableEntity {
 
     public Assessment(String code) {
         this.code = code;
+    }
+
+    public String getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(String environment) {
+        this.environment = environment;
     }
 
     public int getDataSentStatus() {

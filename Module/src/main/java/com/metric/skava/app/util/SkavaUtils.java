@@ -8,7 +8,6 @@ import com.metric.skava.app.data.IdentifiableEntity;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.calculator.barton.model.Q_Calculation;
 import com.metric.skava.calculator.rmr.model.RMR_Calculation;
-import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.datastore.tables.ClientDropboxTable;
 import com.metric.skava.data.dao.impl.dropbox.datastore.tables.ExcavationProjectDropboxTable;
@@ -82,7 +81,11 @@ public class SkavaUtils {
         String code = UUID.randomUUID().toString();
         Assessment initialAssessment = new Assessment(code);
 
-        DAOFactory daoFactory = skavaContext.getDAOFactory();
+        // determine the getDatastore().getTitle().
+        // skavaContext.getTargetEnvironment().
+        String targetEnvironment = skavaContext.getTargetEnvironment();
+        initialAssessment.setEnvironment(targetEnvironment);
+
 
         // Get the current time
         Calendar currentDateTime = SkavaUtils.getCurrentDateTime();

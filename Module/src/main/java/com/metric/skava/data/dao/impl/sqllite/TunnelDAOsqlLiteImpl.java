@@ -7,8 +7,6 @@ import com.metric.skava.app.context.SkavaContext;
 import com.metric.skava.app.database.utils.CursorUtils;
 import com.metric.skava.app.model.ExcavationProject;
 import com.metric.skava.app.model.Tunnel;
-import com.metric.skava.app.model.TunnelFace;
-import com.metric.skava.app.model.User;
 import com.metric.skava.data.dao.LocalEsrDAO;
 import com.metric.skava.data.dao.LocalExcavationProjectDAO;
 import com.metric.skava.data.dao.LocalTunnelDAO;
@@ -80,46 +78,46 @@ import java.util.List;
      }
 
 
-     @Override
-     public List<Tunnel> getTunnelsByProject(ExcavationProject project) throws DAOException {
-         String projectCode = null;
-         if (project != null) {
-             projectCode = project.getCode();
-         }
-         Cursor cursor = getRecordsFilteredByColumn(TunnelTable.TUNNEL_DATABASE_TABLE, TunnelTable.PROJECT_CODE_COLUMN, projectCode, null);
-         List<Tunnel> list = assemblePersistentEntities(cursor);
-         cursor.close();
-         return list;
-     }
+//     @Override
+//     public List<Tunnel> getTunnelsByProject(ExcavationProject project) throws DAOException {
+//         String projectCode = null;
+//         if (project != null) {
+//             projectCode = project.getCode();
+//         }
+//         Cursor cursor = getRecordsFilteredByColumn(TunnelTable.TUNNEL_DATABASE_TABLE, TunnelTable.PROJECT_CODE_COLUMN, projectCode, null);
+//         List<Tunnel> list = assemblePersistentEntities(cursor);
+//         cursor.close();
+//         return list;
+//     }
 
-     @Override
-     public List<Tunnel> getTunnelsByProject(ExcavationProject project, User user) throws DAOException {
-         if (user == null) {
-             return getTunnelsByProject(project);
-         } else {
-             List<Tunnel> projectList = new ArrayList<Tunnel>();
-             List<Tunnel> allTunnelsOfUser = getTunnelsByUser(user);
-             for (Tunnel currTunnel : allTunnelsOfUser) {
-                 if (currTunnel.getProject().equals(project)) {
-                     projectList.add(currTunnel);
-                 }
-             }
-             return projectList;
-         }
-     }
+//     @Override
+//     public List<Tunnel> getTunnelsByProject(ExcavationProject project, User user) throws DAOException {
+//         if (user == null) {
+//             return getTunnelsByProject(project);
+//         } else {
+//             List<Tunnel> projectList = new ArrayList<Tunnel>();
+//             List<Tunnel> allTunnelsOfUser = getTunnelsByUser(user);
+//             for (Tunnel currTunnel : allTunnelsOfUser) {
+//                 if (currTunnel.getProject().equals(project)) {
+//                     projectList.add(currTunnel);
+//                 }
+//             }
+//             return projectList;
+//         }
+//     }
 
-     @Override
-     public List<Tunnel> getTunnelsByUser(User user) throws DAOException {
-         List<Tunnel> tunnelList = new ArrayList<Tunnel>();
-         //find the faces of this user
-         List<TunnelFace> faces = faceDAO.getTunnelFacesByUser(user);
-         //find the correspondant tunnels
-         for (TunnelFace currentFace : faces) {
-             Tunnel tunnel = currentFace.getTunnel();
-             tunnelList.add(tunnel);
-         }
-         return tunnelList;
-     }
+//     @Override
+//     public List<Tunnel> getTunnelsByUser(String environment, User user) throws DAOException {
+//         List<Tunnel> tunnelList = new ArrayList<Tunnel>();
+//         //find the faces of this user
+//         List<TunnelFace> faces = faceDAO.getTunnelFacesByUser(environment, user);
+//         //find the correspondant tunnels
+//         for (TunnelFace currentFace : faces) {
+//             Tunnel tunnel = currentFace.getTunnel();
+//             tunnelList.add(tunnel);
+//         }
+//         return tunnelList;
+//     }
 
      @Override
      public Tunnel getTunnelByUniqueCode(String code) throws DAOException {
@@ -127,21 +125,21 @@ import java.util.List;
          return tunnel;
      }
 
-     @Override
-     public Tunnel getTunnelByCode(String projectCode, String code) throws DAOException {
-         String[] names = new String[]{TunnelTable.PROJECT_CODE_COLUMN, TunnelTable.CODE_COLUMN};
-         String[] values = new String[]{projectCode, code};
-         Cursor cursor = getRecordsFilteredByColumns(TunnelTable.TUNNEL_DATABASE_TABLE, names, values, null);
-         List<Tunnel> list = assemblePersistentEntities(cursor);
-         if (list.isEmpty()) {
-             throw new DAOException("Entity not found. [Project Code : " + projectCode + ", Tunnel Code: " + code + " ]");
-         }
-         if (list.size() > 1) {
-             throw new DAOException("Multiple records for same code. [Project Code : " + projectCode + ", Tunnel Code: " + code + " ]");
-         }
-         cursor.close();
-         return list.get(0);
-     }
+//     @Override
+//     public Tunnel getTunnelByCode(String projectCode, String code) throws DAOException {
+//         String[] names = new String[]{TunnelTable.PROJECT_CODE_COLUMN, TunnelTable.CODE_COLUMN};
+//         String[] values = new String[]{projectCode, code};
+//         Cursor cursor = getRecordsFilteredByColumns(TunnelTable.TUNNEL_DATABASE_TABLE, names, values, null);
+//         List<Tunnel> list = assemblePersistentEntities(cursor);
+//         if (list.isEmpty()) {
+//             throw new DAOException("Entity not found. [Project Code : " + projectCode + ", Tunnel Code: " + code + " ]");
+//         }
+//         if (list.size() > 1) {
+//             throw new DAOException("Multiple records for same code. [Project Code : " + projectCode + ", Tunnel Code: " + code + " ]");
+//         }
+//         cursor.close();
+//         return list.get(0);
+//     }
 
      @Override
      public List<Tunnel> getAllTunnels() throws DAOException {
@@ -165,10 +163,10 @@ import java.util.List;
          saveRecord(ExcavationFactorTable.FACTOR_DATABASE_TABLE, colNames, colValues);
      }
 
-     @Override
-     public boolean deleteTunnel(String code) {
-         return deleteIdentifiableEntity(TunnelTable.TUNNEL_DATABASE_TABLE, code);
-     }
+//     @Override
+//     public boolean deleteTunnel(String code) {
+//         return deleteIdentifiableEntity(TunnelTable.TUNNEL_DATABASE_TABLE, code);
+//     }
 
      @Override
      public int deleteAllTunnels() {

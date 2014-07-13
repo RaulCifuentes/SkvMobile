@@ -57,6 +57,7 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
     private List<RecordToSync> assembleSyncTraceRecordPersistentEntities(Cursor cursorRecords) {
         List<RecordToSync> list = new ArrayList<RecordToSync>();
         while (cursorRecords.moveToNext()) {
+            String environment = CursorUtils.getString(AssessmentSyncTraceRecordsTable.ENVIRONMENT_COLUMN, cursorRecords);
             String assessmentCode = CursorUtils.getString(AssessmentSyncTraceRecordsTable.ASSESSMENT_COLUMN, cursorRecords);
             Long dateAsLong = CursorUtils.getLong(AssessmentSyncTraceRecordsTable.DATE_COLUMN, cursorRecords);
             String operationAsString = CursorUtils.getString(AssessmentSyncTraceRecordsTable.OPERATION_COLUMN, cursorRecords);
@@ -64,11 +65,11 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
             String recordID = CursorUtils.getString(AssessmentSyncTraceRecordsTable.RECORD_ID_COLUMN, cursorRecords);
             String skavaEntityCode = CursorUtils.getString(AssessmentSyncTraceRecordsTable.ENTITY_CODE_COLUMN, cursorRecords);
 
-            Date date = DateDataFormat.getDateFromFormattedLong(dateAsLong);;
+            Date date = DateDataFormat.getDateFromFormattedLong(dateAsLong);
             DataToSync.Operation operation = DataToSync.Operation.valueOf(operationAsString);
             DataToSync.Status status = DataToSync.Status.valueOf(statusAsString);
 
-            RecordToSync newInstance = new RecordToSync(assessmentCode);
+            RecordToSync newInstance = new RecordToSync(environment, assessmentCode);
             newInstance.setDate(date);
             newInstance.setOperation(operation);
             newInstance.setRecordID(recordID);
@@ -82,17 +83,18 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
     private List<FileToSync> assembleSyncTraceFilePersistentEntities(Cursor cursorFiles) {
         List<FileToSync> list = new ArrayList<FileToSync>();
         while (cursorFiles.moveToNext()) {
+            String environment = CursorUtils.getString(AssessmentSyncTraceRecordsTable.ENVIRONMENT_COLUMN, cursorFiles);
             String assessmentCode = CursorUtils.getString(AssessmentSyncTraceFilesTable.ASSESSMENT_COLUMN, cursorFiles);
             Long dateAsLong = CursorUtils.getLong(AssessmentSyncTraceFilesTable.DATE_COLUMN, cursorFiles);
             String operationAsString = CursorUtils.getString(AssessmentSyncTraceFilesTable.OPERATION_COLUMN, cursorFiles);
             String statusAsString = CursorUtils.getString(AssessmentSyncTraceFilesTable.STATUS_COLUMN, cursorFiles);
             String fileName = CursorUtils.getString(AssessmentSyncTraceFilesTable.FILE_NAME_COLUMN, cursorFiles);
 
-            Date date = DateDataFormat.getDateFromFormattedLong(dateAsLong);;
+            Date date = DateDataFormat.getDateFromFormattedLong(dateAsLong);
             DataToSync.Operation operation = DataToSync.Operation.valueOf(operationAsString);
             DataToSync.Status status = DataToSync.Status.valueOf(statusAsString);
 
-            FileToSync newInstance = new FileToSync(assessmentCode);
+            FileToSync newInstance = new FileToSync(environment, assessmentCode);
             newInstance.setDate(date);
             newInstance.setOperation(operation);
             newInstance.setFileName(fileName);
@@ -120,17 +122,17 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
     }
 
 
-    @Override
-    public SyncLogEntry getLastSyncByState(SyncTask.Domain domain, SyncTask.Status state) throws DAOException {
-        String[] columns = new String[]{SyncLoggingTable.DOMAIN_COLUMN, SyncLoggingTable.STATUS_COLUMN};
-        String[] values = new String[]{domain.name(), state.name()};
-        Cursor cursor = getRecordsFilteredByColumns(SyncLoggingTable.SYNC_LOGGING_TABLE, columns, values, SyncLoggingTable.DATE_COLUMN);
-        List<SyncLogEntry> list = assemblePersistentEntities(cursor);
-        if (list.isEmpty()) {
-            return null;
-        }
-        return list.get(0);
-    }
+//    @Override
+//    public SyncLogEntry getLastSyncByState(SyncTask.Domain domain, SyncTask.Status state) throws DAOException {
+//        String[] columns = new String[]{SyncLoggingTable.DOMAIN_COLUMN, SyncLoggingTable.STATUS_COLUMN};
+//        String[] values = new String[]{domain.name(), state.name()};
+//        Cursor cursor = getRecordsFilteredByColumns(SyncLoggingTable.SYNC_LOGGING_TABLE, columns, values, SyncLoggingTable.DATE_COLUMN);
+//        List<SyncLogEntry> list = assemblePersistentEntities(cursor);
+//        if (list.isEmpty()) {
+//            return null;
+//        }
+//        return list.get(0);
+//    }
 
     @Override
     public void saveSyncLogEntry(SyncLogEntry newEntity) throws DAOException {
@@ -144,10 +146,10 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
         saveRecord(tableName, columnNames, values);
     }
 
-    @Override
-    public int deleteAllSyncLogs() {
-        return deleteAllPersistentEntities(SyncLoggingTable.SYNC_LOGGING_TABLE);
-    }
+//    @Override
+//    public int deleteAllSyncLogs() {
+//        return deleteAllPersistentEntities(SyncLoggingTable.SYNC_LOGGING_TABLE);
+//    }
 
     @Override
     public int deleteAllAssessmentSyncTraces() {
@@ -158,14 +160,21 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
 
 
     @Override
-    public AssessmentSyncTrace getAssessmentSyncTrace(String assessmentCode) {
-        Cursor cursorFiles = getRecordsFilteredByColumn(AssessmentSyncTraceFilesTable.SYNC_TRACE_FILES_TABLE, AssessmentSyncTraceFilesTable.ASSESSMENT_COLUMN, assessmentCode, AssessmentSyncTraceFilesTable.DATE_COLUMN);
+    public AssessmentSyncTrace getAssessmentSyncTrace(String environment, String assessmentCode, DataToSync.Operation operation) {
+
+        String[] names = new String[] {AssessmentSyncTraceFilesTable.ENVIRONMENT_COLUMN, AssessmentSyncTraceFilesTable.ASSESSMENT_COLUMN, AssessmentSyncTraceFilesTable.OPERATION_COLUMN};
+        String[] values = new String[] {environment, assessmentCode, operation.name()};
+
+        Cursor cursorFiles = getRecordsFilteredByColumns(AssessmentSyncTraceFilesTable.SYNC_TRACE_FILES_TABLE, names, values, AssessmentSyncTraceFilesTable.DATE_COLUMN);
         List<FileToSync> listFiles = assembleSyncTraceFilePersistentEntities(cursorFiles);
 
-        Cursor cursorRecords = getRecordsFilteredByColumn(AssessmentSyncTraceRecordsTable.SYNC_TRACE_RECORDS_TABLE, AssessmentSyncTraceRecordsTable.ASSESSMENT_COLUMN, assessmentCode, AssessmentSyncTraceRecordsTable.DATE_COLUMN);
+        names = new String[] {AssessmentSyncTraceRecordsTable.ENVIRONMENT_COLUMN, AssessmentSyncTraceRecordsTable.ASSESSMENT_COLUMN};
+        values = new String[] {environment, assessmentCode};
+
+        Cursor cursorRecords = getRecordsFilteredByColumns(AssessmentSyncTraceRecordsTable.SYNC_TRACE_RECORDS_TABLE, names, values, AssessmentSyncTraceRecordsTable.DATE_COLUMN);
         List<RecordToSync> listRecords = assembleSyncTraceRecordPersistentEntities(cursorRecords);
 
-        AssessmentSyncTrace assessmentSyncTrace = new AssessmentSyncTrace(assessmentCode);
+        AssessmentSyncTrace assessmentSyncTrace = new AssessmentSyncTrace(environment, assessmentCode);
         assessmentSyncTrace.setFiles(listFiles);
         assessmentSyncTrace.setRecords(listRecords);
         return assessmentSyncTrace;
@@ -191,12 +200,14 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
         List<FileToSync> filesForThisAssessment = syncTrace.getFiles();
         for (FileToSync fileToSync : filesForThisAssessment) {
             String[] columnNames = new String[]{
+                    AssessmentSyncTraceFilesTable.ENVIRONMENT_COLUMN,
                     AssessmentSyncTraceFilesTable.ASSESSMENT_COLUMN,
                     AssessmentSyncTraceFilesTable.OPERATION_COLUMN,
                     AssessmentSyncTraceFilesTable.FILE_NAME_COLUMN,
                     AssessmentSyncTraceFilesTable.DATE_COLUMN,
                     AssessmentSyncTraceFilesTable.STATUS_COLUMN};
             Object[] values = new Object[]{
+                    syncTrace.getEnvironment(),
                     syncTrace.getAssessmentCode(),
                     fileToSync.getOperation(),
                     fileToSync.getFileName(),
@@ -209,6 +220,7 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
         List<RecordToSync> recordsForThisAssessment = syncTrace.getRecords();
         for (RecordToSync recordToSync : recordsForThisAssessment) {
             String[] columnNames = new String[]{
+                    AssessmentSyncTraceRecordsTable.ENVIRONMENT_COLUMN,
                     AssessmentSyncTraceRecordsTable.ASSESSMENT_COLUMN,
                     AssessmentSyncTraceRecordsTable.OPERATION_COLUMN,
                     AssessmentSyncTraceRecordsTable.ENTITY_CODE_COLUMN,
@@ -216,6 +228,7 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
                     AssessmentSyncTraceRecordsTable.DATE_COLUMN,
                     AssessmentSyncTraceRecordsTable.STATUS_COLUMN};
             Object[] values = new Object[]{
+                    syncTrace.getEnvironment(),
                     syncTrace.getAssessmentCode(),
                     recordToSync.getOperation(),
                     recordToSync.getSkavaEntityCode(),
@@ -223,7 +236,6 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
                     DateDataFormat.formatDateAsLong(recordToSync.getDate()),
                     recordToSync.getStatus().name()};
             saveRecord(AssessmentSyncTraceRecordsTable.SYNC_TRACE_RECORDS_TABLE, columnNames, values);
-
         }
     }
 
