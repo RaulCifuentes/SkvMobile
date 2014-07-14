@@ -85,7 +85,11 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
     private Bitmap getBitmapFromUri() {
         // HACK: In order to avoid Out Of Memory exceptions, image is resampled.
 //        Bitmap bitmapFromUri = mPictureFilesUtils.getBitmapFromUri(mSelectedPicture.getPictureLocation());
-        Bitmap bitmapFromUri = mPictureFilesUtils.getScaledBitmapFromUri(mSelectedPicture.getPictureLocation(), 1280, 768);
+//        Bitmap bitmapFromUri = mPictureFilesUtils.getScaledBitmapFromUri(mSelectedPicture.getPictureLocation(), 1280, 768);
+//        640x480-----4:3
+//        800x600-----4:3
+//        1024x768-----4:3
+        Bitmap bitmapFromUri = mPictureFilesUtils.getScaledBitmapFromUri(mSelectedPicture.getPictureLocation(), 800, 600);
         return bitmapFromUri;
     }
 

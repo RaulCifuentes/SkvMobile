@@ -12,6 +12,9 @@
 
     <string name="needs_reimport_app_data_key">needs_reimport_app_data_key</string>
     <string name="needs_reimport_user_data_key">needs_reimport_user_data_key</string>
+    <string name="linked_to_dropbox_key">linked_to_dropbox_key</string>
+
+
 
     <string name="preferences_security_label">Security</string>
     <string name="preferences_gui_label">User Interface</string>

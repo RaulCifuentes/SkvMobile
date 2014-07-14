@@ -227,6 +227,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 }
 //                linkDropboxCompleted = true;
                 setLinkDropboxCompleted(true);
+
                 getSkavaContext().setDatastore(mDatastore);
             }
         } catch (DbxException e) {
@@ -471,7 +472,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         if (success) {
             //mostrar que termino exitosamente
             lackOfUserData = false;
-            if (shouldImportAppData()) {
+            if (shouldImportUserData()) {
                 ((SkavaApplication) getApplication()).setNeedImportUserData(false);
                 ((SkavaApplication) getApplication()).saveState();
             }

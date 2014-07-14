@@ -26,9 +26,10 @@ public class SkavaApplication extends MetricApplication {
     private SkavaContext mSkavaContext;
     private SharedPreferences mSharedPreferences;
 
-    boolean wantUnlinkDropboxAccount;
-    boolean needImportAppData;
-    boolean needImportUserData;
+    private boolean wantUnlinkDropboxAccount;
+    private boolean needImportAppData;
+    private boolean needImportUserData;
+    private boolean linkDropboxCompleted;
 
     public SkavaContext getSkavaContext() {
         return mSkavaContext;
@@ -57,6 +58,15 @@ public class SkavaApplication extends MetricApplication {
 
     public boolean isImportUserDataNeeded() {
         return needImportUserData;
+    }
+
+
+    public boolean isLinkDropboxCompleted() {
+        return linkDropboxCompleted;
+    }
+
+    public void setLinkDropboxCompleted(boolean linkDropboxCompleted) {
+        this.linkDropboxCompleted = linkDropboxCompleted;
     }
 
 
@@ -102,6 +112,9 @@ public class SkavaApplication extends MetricApplication {
         boolean reimportUserDate = persistenceBucket.getBoolean(getString(R.string.needs_reimport_user_data_key), false);
         this.setNeedImportUserData(reimportUserDate);
 
+        boolean linkedToDropbox = persistenceBucket.getBoolean(getString(R.string.linked_to_dropbox_key), false);
+        this.setLinkDropboxCompleted(linkedToDropbox);
+
         DAOFactory daoFactory = DAOFactory.getInstance(this, mSkavaContext);
         mSkavaContext.setDAOFactory(daoFactory);
 
@@ -125,6 +138,7 @@ public class SkavaApplication extends MetricApplication {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(getString(R.string.needs_reimport_app_data_key), isImportAppDataNeeded());
         editor.putBoolean(getString(R.string.needs_reimport_user_data_key), isImportUserDataNeeded());
+        editor.putBoolean(getString(R.string.linked_to_dropbox_key), isImportUserDataNeeded());
         editor.commit();
     }
 

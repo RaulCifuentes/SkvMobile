@@ -13,13 +13,13 @@
             android:background="@color/Black">
             <ImageView
                 android:id="@+id/imageView"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/logo_skava" />
+            <!--android:visibility="gone"-->
         </RelativeLayout>
     </FrameLayout>
 

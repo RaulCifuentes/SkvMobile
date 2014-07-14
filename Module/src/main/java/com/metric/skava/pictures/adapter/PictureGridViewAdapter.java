@@ -39,14 +39,22 @@ public class PictureGridViewAdapter extends BaseAdapter {
     }
 
     public int getCount() {
+        //mapReduceNumberOfPictures represents the elements of pictures on the grid
+        //the originals will be hidden by the edited if any, so just half of the size
+        //is needed
         int mapReduceNumberOfPictures = 0;
         if (!mAssessment.getPicturesList().isEmpty()) {
             int realNumberOfPictures = mAssessment.getPicturesList().size();
-            mapReduceNumberOfPictures = (realNumberOfPictures / 2);
+            //picture list will host by default 8 pictures
+            //2 for FACE, 2 for LEFT, 2 for RIGHT, 2 for ROOF
+            //if theres one EXTRA the size of the list will be greater
+            //strarting at 9 and a new gris element will be required, so
+            mapReduceNumberOfPictures = (int) Math.ceil((double)realNumberOfPictures / 2);
         }
-        return mapReduceNumberOfPictures < 4 ? 4 : mapReduceNumberOfPictures;
+        return mapReduceNumberOfPictures <= 4 ? 4 : mapReduceNumberOfPictures;
     }
 
+    //fictionalPosition is the position on the grid, ie. 0 for FACE; 1 for LEFT; 2 for RIGHT; 3 for ROOF; 4,5,..n  for EXTRAs
     public Bitmap getItem(int fictionalPosition) {
         Bitmap thumnailBitmap = null;
         List<SkavaPicture> pictureList = mAssessment.getPicturesList();
@@ -54,10 +62,19 @@ public class PictureGridViewAdapter extends BaseAdapter {
         if (pictureList.isEmpty() || resolvedPosition >= pictureList.size()) {
             thumnailBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.skava_shadow);
         } else {
-            //try first an edited picture
-            SkavaPicture picture = pictureList.get(resolvedPosition + 1);
-            if (picture == null || picture.getPictureLocation() == null){
+            //First check the border case when an EXTRA picture
+            // has just been added to the list
+            SkavaPicture picture = null;
+            if (resolvedPosition == pictureList.size() - 1){
                 picture = pictureList.get(resolvedPosition);
+            } else {
+                //ok, if the list is big enough then
+                //try first an edited picture,
+                picture = pictureList.get(resolvedPosition + 1);
+                if (picture == null || picture.getPictureLocation() == null){
+                    //there no edited version of this picture, use the original
+                    picture = pictureList.get(resolvedPosition);
+                }
             }
             if (picture == null || picture.getPictureLocation() == null) {
                 thumnailBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.skava_shadow);
