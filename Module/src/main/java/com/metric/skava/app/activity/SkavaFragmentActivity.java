@@ -115,11 +115,11 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
     }
 
     public boolean isLinkDropboxCompleted() {
-        return getSkavaContext().isLinkDropboxCompleted();
+        return ((SkavaApplication) getApplication()).isLinkDropboxCompleted();
     }
 
     public void setLinkDropboxCompleted(boolean linkDropboxCompleted) {
-        this.getSkavaContext().setLinkDropboxCompleted(linkDropboxCompleted);
+        ((SkavaApplication) getApplication()).setLinkDropboxCompleted(linkDropboxCompleted);
     }
 
     public String getTargetEnvironment() {

@@ -128,50 +128,68 @@ public class MyUploaderService extends IntentService {
         boolean success = false;
         try {
             for (File mFile : fileList) {
-                //Creates a reduced (centered thumbnail) of each file to upload that small size picture first
-                //ASSESSMENT_CODE_TAG_DATE_TIME, example: 052f4269-a273-4c1f-035ceb7afe62_FACE_2014_07_09_16_04_05.jpg
+                //First create a reduced (centered thumbnail) of each file to upload that small size picture first
+                //original file name has a structure like this ASSESSMENT_CODE_TAG_DATE_TIME.jpg,
+                //for instance: 052f4269-a273-4c1f-035ceb7afe62_FACE_2014_07_09_16_04_05.jpg
                 String originalFileName = mFile.getName();
-                //THUMBNAIL
-//                int tagStartsAt = originalFileName.indexOf("_");
-//                int tagEndsAt = originalFileName.indexOf("_", tagStartsAt);
-//                String dateToAppend = originalFileName.substring(tagEndsAt);
-//                String codeAndTagToPrepend = originalFileName.substring(0, tagEndsAt);
-//                String thumbnailFileName = codeAndTagToPrepend + "_THUMBNAIL_" + dateToAppend;
-                String thumbnailFileName = originalFileName.replace(".jpg", "_mini.jpg");
-                File thumbnailFile = new File(mFile.getParent(), thumbnailFileName);
-                String remoteFilePath = dropboxPath + SkavaUploaderConstants.REMOTE_FOLDER_SEPARATOR + mFile.getName();
-                //begin create a thumbnail
-                Bitmap thumbnailImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(mFile.getPath()), SkavaUploaderConstants.THUMBSIZE_WIDTH, SkavaUploaderConstants.THUMBSIZE_HEIGHT);
-                FileOutputStream fos = null;
-                try {
-                    //create a file from the bitmap
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    thumbnailImage.compress(Bitmap.CompressFormat.PNG, 90 /*ignored for PNG*/, bos);
-                    byte[] bitmapdata = bos.toByteArray();
-                    //write the bytes in file
-                    fos = new FileOutputStream(thumbnailFile);
-                    fos.write(bitmapdata);
-                    fos.flush();
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
-                //Put a file on the Dropbox repo
-                long fileLength = thumbnailFile.length();
-                Log.d(SkavaUploaderConstants.LOG, "Uploading " + remoteFilePath + " which size is " + fileLength);
-                FileInputStream fis = new FileInputStream(thumbnailFile);
+                if(originalFileName.contains("TUNNEL")){
+                   // the extended view does not need a thumbnail version of the image
+                   // so do nothing
+                } else {
+                    //The thumbnail will have the word THUMBNAIL appended to the end of the file name
+                    String thumbnailFileName = originalFileName.replace(".jpg", "_THUMBNAIL.jpg");
+                    File thumbnailFile = new File(mFile.getParent(), thumbnailFileName);
+                    // Set the name of the file in the remote Dropbox folder
+                    String thumbnailRemoteFilePath = dropboxPath + SkavaUploaderConstants.REMOTE_FOLDER_SEPARATOR + thumbnailFileName;
+                    // Begin create a thumbnail
+                    Bitmap thumbnailImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(mFile.getPath()), SkavaUploaderConstants.THUMBSIZE_WIDTH, SkavaUploaderConstants.THUMBSIZE_HEIGHT);
+                    FileOutputStream fos = null;
+                    try {
+                        //create a file from the bitmap
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        thumbnailImage.compress(Bitmap.CompressFormat.PNG, 90 /*ignored for PNG*/, bos);
+                        byte[] bitmapdata = bos.toByteArray();
+                        //write the bytes in file
+                        fos = new FileOutputStream(thumbnailFile);
+                        fos.write(bitmapdata);
+                        fos.flush();
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e(SkavaUploaderConstants.LOG, e.getMessage());
+                        BugSenseHandler.sendException(e);
+                    }
+                    //Put a file on the Dropbox repo
+                    long fileLength = thumbnailFile.length();
+                    Log.d(SkavaUploaderConstants.LOG, "Uploading " + thumbnailRemoteFilePath + " which size is " + fileLength);
+                    FileInputStream fis = new FileInputStream(thumbnailFile);
+                    if (api.getSession().isLinked()) {
+                        api.putFileOverwrite(thumbnailRemoteFilePath, fis, fileLength, null);
+                        Log.d(SkavaUploaderConstants.LOG, "Uploading " + thumbnailRemoteFilePath + " finished successfully");
+                        success = true;
+                    } else {
+                        Log.d(SkavaUploaderConstants.LOG, "Dropbox for uploader service is not linked");
+                        success = false;
+                        //Notify the user of this is a bad thing
+                        notifyDropboxUnlinked(0, "Skava Uploader", "Dropbox for uploader service is not linked");
+                    }
+                }
+                // Set the name of the file in the remote Dropbox folder
+                String fullSizeRemoteFilePath = dropboxPath + SkavaUploaderConstants.REMOTE_FOLDER_SEPARATOR + originalFileName;
+                long fileLength = mFile.length();
+                Log.d(SkavaUploaderConstants.LOG, "Uploading " + fullSizeRemoteFilePath + " which size is " + fileLength);
+                FileInputStream fis = new FileInputStream(mFile);
                 if (api.getSession().isLinked()) {
-                    api.putFileOverwrite(remoteFilePath, fis, fileLength, null);
-                    Log.d(SkavaUploaderConstants.LOG, "Uploading seems to finish successfully");
-//                    notifyUploadSucceed(0, "Skava Uploader", "Upload for " + assessmentCode + " was complete");
+                    api.putFileOverwrite(fullSizeRemoteFilePath, fis, fileLength, null);
+                    Log.d(SkavaUploaderConstants.LOG, "Uploading " + fullSizeRemoteFilePath + " finished successfully");
+                    success = true;
                 } else {
                     Log.d(SkavaUploaderConstants.LOG, "Dropbox for uploader service is not linked");
                     success = false;
                     //Notify the user of this is a bad thing
                     notifyDropboxUnlinked(0, "Skava Uploader", "Dropbox for uploader service is not linked");
                 }
-                success = true;
             }
         } catch (DropboxUnlinkedException e) {
             // This session wasn't authenticated properly or user unlinked

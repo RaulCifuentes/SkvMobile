@@ -24,32 +24,15 @@ public class SkavaContext {
     private String targetEnvironment;
     private SyncQueue middlemanInbox;
 
-    private boolean linkDropboxCompleted;
 
     private MyMonitorObject myMonitoObject;
     private boolean wasSignalled = true;
-
-//    private boolean importingData = true;
 
     public SkavaContext() {
         myMonitoObject = new MyMonitorObject();
     }
 
-    public boolean isLinkDropboxCompleted() {
-        return linkDropboxCompleted;
-    }
 
-    public void setLinkDropboxCompleted(boolean linkDropboxCompleted) {
-        this.linkDropboxCompleted = linkDropboxCompleted;
-    }
-
-//    public boolean isImportingData() {
-//        return importingData;
-//    }
-//
-//    public void setImportingData(boolean importingData) {
-//        this.importingData = importingData;
-//    }
 
     public void doWait(){
         synchronized (myMonitoObject){

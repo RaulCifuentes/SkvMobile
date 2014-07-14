@@ -294,9 +294,13 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
                     } else {
                         pictureURI = uriGenerated[8];
                     }
+                    //as extras could be more than one, increase the size of the list as needed
+                    //adding the new extra picture at the end of the list
                     int currentNumberOfPictures = mAssessment.getPicturesList().size();
                     picture = new SkavaPicture(SkavaPicture.PictureTag.EXTRA, pictureURI, true);
+                    //add the extra original picture and the placeholder {null} for an eventual edition
                     mAssessment.getPicturesList().add(currentNumberOfPictures, picture);
+                    mAssessment.getPicturesList().add(currentNumberOfPictures+1, null);
                     mAdapter.notifyDataSetChanged();
                     break;
             }
