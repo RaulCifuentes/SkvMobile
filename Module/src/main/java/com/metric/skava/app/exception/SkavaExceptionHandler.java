@@ -8,6 +8,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.metric.skava.app.util.SkavaConstants;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
@@ -23,9 +27,14 @@ public class SkavaExceptionHandler implements UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
-        ex.printStackTrace();
-        String detailMessage = ex.getMessage() !=null ? ex.getMessage(): ex.getCause().getMessage();
-        showExceptionMessage(thread.getName(), detailMessage);
+        if (ex != null){
+            ex.printStackTrace();
+            String detailMessage = ex.getMessage() !=null ? ex.getMessage(): ex.getCause().getMessage();
+            Log.e(SkavaConstants.LOG, detailMessage);
+            if (thread!=null){
+                showExceptionMessage(thread.getName(), detailMessage);
+            }
+        }
     }
 
     private void showExceptionMessage(final String method, final String message) {
@@ -54,6 +63,7 @@ public class SkavaExceptionHandler implements UncaughtExceptionHandler {
         };
         // Showing Alert Message
         theDialog.show(mFragmentManager, "exceptionUserDialog");
+        Toast.makeText(mContext, "Hola amigos: " + message, Toast.LENGTH_LONG).show();
     }
 
 

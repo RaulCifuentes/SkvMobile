@@ -19,16 +19,15 @@ import java.util.List;
  */
 public class Assessment implements IdentifiableEntity {
 
-    public static final int DATA_SENT_TO_DATASTORE = 10;
-    public static final int DATA_SENT_TO_CLOUD = 100;
-
-    public static final int PICS_SENT_TO_DATASTORE = 50;
-    public static final int PICS_SENT_TO_CLOUD = 200;
-
-    private int dataSentStatus;
-    private int picsSentStatus;
+    public enum SavingStatus {DRAFT, PERSISTENT};
+    public enum SendingStatus {SENT_TO_DATASTORE, SENT_TO_CLOUD};
 
     private Long _id;
+
+    private SendingStatus dataSentStatus;
+    private SendingStatus picsSentStatus;
+
+    private SavingStatus savedStatus;
 
     private String environment;
     private String code;
@@ -74,19 +73,27 @@ public class Assessment implements IdentifiableEntity {
         this.environment = environment;
     }
 
-    public int getDataSentStatus() {
+    public SavingStatus getSavedStatus() {
+        return savedStatus;
+    }
+
+    public void setSavedStatus(SavingStatus savedStatus) {
+        this.savedStatus = savedStatus;
+    }
+
+    public SendingStatus getDataSentStatus() {
         return dataSentStatus;
     }
 
-    public void setDataSentStatus(int dataSentStatus) {
+    public void setDataSentStatus(SendingStatus dataSentStatus) {
         this.dataSentStatus = dataSentStatus;
     }
 
-    public int getPicsSentStatus() {
+    public SendingStatus getPicsSentStatus() {
         return picsSentStatus;
     }
 
-    public void setPicsSentStatus(int picsSentStatus) {
+    public void setPicsSentStatus(SendingStatus picsSentStatus) {
         this.picsSentStatus = picsSentStatus;
     }
 

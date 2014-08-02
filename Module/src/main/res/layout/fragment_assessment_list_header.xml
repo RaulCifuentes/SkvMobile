@@ -8,7 +8,7 @@
     android:background="@color/DeepSkyBlue">
 
     <TextView
-        android:id="@+id/third_column_text_view"
+        android:id="@+id/project_column_text_view"
         android:gravity="center"
         android:layout_gravity="center"
         android:layout_width="0dp"
@@ -19,7 +19,7 @@
         android:layout_weight="2" />
 
     <TextView
-        android:id="@+id/zero_column_text_view"
+        android:id="@+id/code_column_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -30,7 +30,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/first_column_text_view"
+        android:id="@+id/chainage_column_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -41,7 +41,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/second_column_text_view"
+        android:id="@+id/date_column_text_view"
         android:gravity="center"
         android:layout_gravity="center"
         android:layout_width="0dp"
@@ -52,31 +52,8 @@
         android:layout_weight="3" />
 
 
-
-    <!--<TextView-->
-        <!--android:id="@+id/fourth_column_text_view"-->
-        <!--android:gravity="center"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:textStyle="bold"-->
-        <!--android:text="Tunnel"-->
-        <!--android:textColor="@color/White"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_weight="3" />-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/fifth_column_text_view"-->
-        <!--android:gravity="center"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:textStyle="bold"-->
-        <!--android:textColor="@color/White"-->
-        <!--android:text="Face"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_weight="2" />-->
-
     <TextView
-        android:id="@+id/sixth_column_text_view"
+        android:id="@+id/status_column_text_view"
         android:gravity="center"
         android:layout_gravity="center_vertical"
         android:layout_width="0dp"

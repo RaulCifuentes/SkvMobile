@@ -1,0 +1,24 @@
+/*HOW TO CHANGE AVIARY to INCLUDE one SMALLER brush size*/
+
+It uses an array resource with brush sizes, so decompile it using apktool,
+change the values/arrays.xml file and recompile again
+
+Decompile the APK, put the output on the myAviary folder
+wrapper d -s -f com.aviary.android.feather-1.apk -o myAviary
+
+Edit the XML files (the changes of brush are done on the values/arrays.xml file) of the myAviary folder
+
+Recompile the APK, from the myAviary and name the new bundle myAviary.apk
+wrapper b myAviary myAviary.apk
+
+In order to install and run it sucessfull, in necessary to sign it, so do this
+(on my Win - JDK 7):
+jarsigner -keystore C:\Users\metricboy\.android\debug.keystore -digestalg SHA1 -sigalg MD5withRSA -storepass android com.aviary.android.feather-1.apk androiddebugkey
+
+
+/*HOW TO SNEAK INTO THE SOURCE CODE */
+d2j-dex2jar.bat ../com.aviary.android.feather.plugins.stickers.free_stickers-1.apk
+
+put some png 400x400 files
+
+jarsigner -keystore C:\Users\metricboy\.android\debug.keystore -digestalg SHA1 -sigalg MD5withRSA -storepass android com.aviary.android.feather.plugins.stickers.free_stickers-1.apk androiddebugkey

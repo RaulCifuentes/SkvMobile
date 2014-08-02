@@ -75,6 +75,54 @@ public class SkavaUtils {
         return calendar;
     }
 
+    public static Assessment cloneAssessment(SkavaContext skavaContext, Assessment baseTemplate) throws DAOException {
+        String code = UUID.randomUUID().toString();
+        Assessment cloneAssessment = new Assessment(code);
+
+        String targetEnvironment = skavaContext.getTargetEnvironment();
+        cloneAssessment.setEnvironment(targetEnvironment);
+
+        // Get the current time
+        Calendar currentDateTime = SkavaUtils.getCurrentDateTime();
+        cloneAssessment.setDateTime(currentDateTime);
+
+        //Q Barton (Default values for each one of the components of thr Q process)
+        Q_Calculation mQCalculation = baseTemplate.getQCalculation();
+        cloneAssessment.setQCalculation(mQCalculation);
+
+        RMR_Calculation mRMRCalculation = baseTemplate.getRmrCalculation();
+        cloneAssessment.setRmrCalculation(mRMRCalculation);
+        cloneAssessment.setDiscontinuitySystem(baseTemplate.getDiscontinuitySystem());
+        cloneAssessment.setBlockSize(baseTemplate.getBlockSize());
+        cloneAssessment.setFace(baseTemplate.getFace());
+        cloneAssessment.setFractureType(baseTemplate.getFractureType());
+        cloneAssessment.setGeologist(baseTemplate.getGeologist());
+        cloneAssessment.setInternalCode(baseTemplate.getInternalCode());
+        cloneAssessment.setMethod(baseTemplate.getMethod());
+        cloneAssessment.setNumberOfJoints(baseTemplate.getNumberOfJoints());
+        cloneAssessment.setOrientation(baseTemplate.getOrientation());
+        cloneAssessment.setOutcropDescription(baseTemplate.getOutcropDescription());
+
+        //Default 4 picture placeholders
+        ArrayList<SkavaPicture> pictureList = new ArrayList<SkavaPicture>(5);
+        pictureList.add(null); //0
+        pictureList.add(null);
+        pictureList.add(null);
+        pictureList.add(null);
+        pictureList.add(null);
+        pictureList.add(null);
+        pictureList.add(null);
+        pictureList.add(null); //7
+        cloneAssessment.setPicturesList(pictureList);
+
+        cloneAssessment.setRecomendation(baseTemplate.getRecomendation());
+        cloneAssessment.setReferenceChainage(baseTemplate.getReferenceChainage());
+        cloneAssessment.setRockSampleIdentification(baseTemplate.getRockSampleIdentification());
+        cloneAssessment.setSection(baseTemplate.getSection());
+        cloneAssessment.setSlope(baseTemplate.getSlope());
+
+        return cloneAssessment;
+    }
 
     public static Assessment createInitialAssessment(SkavaContext skavaContext) throws DAOException {
 

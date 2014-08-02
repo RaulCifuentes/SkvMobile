@@ -96,13 +96,15 @@ public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<T
     @Override
     public List<TunnelFace> getTunnelFacesByUser(String environment, User user) throws DAOException {
         List<TunnelFace> tunnelList = new ArrayList<TunnelFace>();
-        String[] names = new String[]{PermissionTable.ENVIRONMENT_COLUMN, PermissionTable.USER_CODE_COLUMN, PermissionTable.TARGET_TYPE_CODE_COLUMN};
-        String[] values = new String[]{environment, user.getCode(), Permission.IdentifiableEntityType.FACE.name()};
-        Cursor cursor = getRecordsFilteredByColumns(PermissionTable.PERMISSION_DATABASE_TABLE, names, values, null);
-        while (cursor.moveToNext()) {
-            String faceCode = CursorUtils.getString(PermissionTable.TARGET_CODE_COLUMN, cursor);
-            TunnelFace tunnelFace = getTunnelFaceByCode(faceCode);
-            tunnelList.add(tunnelFace);
+        if (environment != null && user != null) {
+            String[] names = new String[]{PermissionTable.ENVIRONMENT_COLUMN, PermissionTable.USER_CODE_COLUMN, PermissionTable.TARGET_TYPE_CODE_COLUMN};
+            String[] values = new String[]{environment, user.getCode(), Permission.IdentifiableEntityType.FACE.name()};
+            Cursor cursor = getRecordsFilteredByColumns(PermissionTable.PERMISSION_DATABASE_TABLE, names, values, null);
+            while (cursor.moveToNext()) {
+                String faceCode = CursorUtils.getString(PermissionTable.TARGET_CODE_COLUMN, cursor);
+                TunnelFace tunnelFace = getTunnelFaceByCode(faceCode);
+                tunnelList.add(tunnelFace);
+            }
         }
         return tunnelList;
     }

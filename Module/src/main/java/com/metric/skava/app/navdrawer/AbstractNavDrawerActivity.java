@@ -83,18 +83,12 @@ public abstract class AbstractNavDrawerActivity extends SkavaFragmentActivity {
                 navConf.getDrawerCloseDesc()) {
             public void onDrawerClosed(View view) {
                 getActionBar().setTitle(mTitle);
-//                ImageView backgroundImage = (ImageView) mContentFrameLayout.findViewById(R.id.imageView);
-//                backgroundImage.setVisibility(View.VISIBLE);
-                // setTitle(mDrawerTitle);
                 ActivityCompat
                         .invalidateOptionsMenu(AbstractNavDrawerActivity.this);
             }
 
             public void onDrawerOpened(View drawerView) {
                 getActionBar().setTitle(mDrawerTitle);
-//                ImageView backgroundImage = (ImageView) mContentFrameLayout.findViewById(R.id.imageView);
-//                backgroundImage.setVisibility(View.GONE);
-                // setTitle(mDrawerTitle);
                 ActivityCompat
                         .invalidateOptionsMenu(AbstractNavDrawerActivity.this);
             }

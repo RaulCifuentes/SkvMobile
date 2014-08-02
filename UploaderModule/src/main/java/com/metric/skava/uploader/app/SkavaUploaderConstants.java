@@ -39,7 +39,7 @@ public class SkavaUploaderConstants {
 
     public static final String BUGSENSE_API_KEY = "41e76766";
     public static final String REMOTE_FOLDER_SEPARATOR = "/";
-    public static final int THUMBSIZE_WIDTH = 512;
-    public static final int THUMBSIZE_HEIGHT = 384;
+    public static final int THUMBSIZE_WIDTH = 400;
+    public static final int THUMBSIZE_HEIGHT = 300;
 }
 

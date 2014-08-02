@@ -15,7 +15,12 @@
     <item
         android:id="@+id/action_mapping_report_draft"
         android:showAsAction="ifRoom"
-        android:title="@string/action_report_save_draft"/>
+        android:title="@string/action_report_save"/>
+
+    <item
+        android:id="@+id/action_mapping_report_delete"
+        android:showAsAction="never"
+        android:title="@string/action_report_delete"/>
 
 
 

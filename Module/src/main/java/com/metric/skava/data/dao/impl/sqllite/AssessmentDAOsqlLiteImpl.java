@@ -30,7 +30,12 @@ import com.metric.skava.pictures.util.SkavaPictureFilesUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by metricboy on 3/18/14.
@@ -77,21 +82,54 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         return list.get(0);
     }
 
-//    @Override
-//    public Assessment getAssessmentByInternalCode(String environment, String internalCode) throws DAOException {
-//        String[] names = new String[]{AssessmentTable.ENVIRONMENT_COLUMN ,AssessmentTable.INTERNAL_CODE_COLUMN};
-//        String[] values = new String[]{environment, internalCode};
-//        Cursor cursor = getRecordsFilteredByColumns(AssessmentTable.ASSESSMENT_DATABASE_TABLE, names, values, null);
-//        List<Assessment> list = assemblePersistentEntities(cursor);
-//        if (list.isEmpty()) {
-//            throw new DAOException("Entity not found. [Internal Code : " + internalCode + "]");
-//        }
-//        if (list.size() > 1) {
-//            throw new DAOException("Multiple records for same code. [Internal Code : " + internalCode + "]");
-//        }
-//        cursor.close();
-//        return list.get(0);
-//    }
+
+    @Override
+    public Assessment getPreviousAssessment(String assessmentCode) throws DAOException {
+        Assessment referenceAssessment = getAssessment(assessmentCode);
+        String environment = referenceAssessment.getEnvironment();
+        TunnelFace face = referenceAssessment.getFace();
+        Double initialPeg = referenceAssessment.getInitialPeg();
+        //find the previous assessment (last with same face but previous chainage
+        List<Assessment> listAssessments = getAssessmentsByTunnelFace(environment, face);
+        //find the nearestFinalPeg (from the set of the other assessments) to the initialPeg of the reference assessment
+        //first I'm gonna create a Map with assessmentCode<finalPegs>
+        Map<String, Double> finalPegsMap = new HashMap<String, Double>();
+        Map<String, Double> initialPegsMap = new HashMap<String, Double>();
+        for (Assessment currAssessment : listAssessments) {
+            initialPegsMap.put(currAssessment.getCode(), currAssessment.getInitialPeg());
+            finalPegsMap.put(currAssessment.getCode(), currAssessment.getFinalPeg());
+        }
+        String codeNearestAsssessment = null;
+        Double closestInitial = closest(initialPeg, initialPegsMap.values().toArray(new Double[]{}));
+        Double closestFinal = closest(initialPeg, finalPegsMap.values().toArray(new Double[]{}));
+        Double winner = closest(initialPeg, closestInitial, closestFinal);
+        if (initialPegsMap.containsValue(winner)) {
+            Set<Map.Entry<String, Double>> entrySet = initialPegsMap.entrySet();
+            for (Map.Entry<String, Double> stringDoubleEntry : entrySet) {
+                String key = stringDoubleEntry.getKey();
+                Double value = stringDoubleEntry.getValue();
+                if (value.equals(winner)) {
+                    codeNearestAsssessment = key;
+                    break;
+                }
+            }
+        }
+        return getAssessment(codeNearestAsssessment);
+    }
+
+    public static double closest(double find, Double... values){
+        double closest = values[0];
+        double distance = Math.abs(closest - find);
+        for(double i: values) {
+            double distanceI = Math.abs(i - find);
+            if(distance > distanceI) {
+                closest = i;
+                distance = distanceI;
+            }
+        }
+        return closest;
+    }
+
 
     @Override
     public List<Assessment> getAssessmentsByUser(String environment, User user) throws DAOException {
@@ -100,6 +138,12 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         //find the last five active assessment for each of those faces
         for (TunnelFace grantedFace : facesGranted) {
             List<Assessment> grantedFaceAssessments = getAssessmentsByTunnelFace(environment, grantedFace);
+            Collections.sort(grantedFaceAssessments, new Comparator<Assessment>() {
+                @Override
+                public int compare(Assessment lhs, Assessment rhs) {
+                    return Long.compare(rhs.getDateTime().getTime().getTime(), lhs.getDateTime().getTime().getTime());
+                }
+            });
             allAssessments.addAll(grantedFaceAssessments);
         }
         return allAssessments;
@@ -109,7 +153,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
     public List<Assessment> getAssessmentsByTunnelFace(String environment, TunnelFace face) throws DAOException {
         String[] names = new String[]{AssessmentTable.ENVIRONMENT_COLUMN ,AssessmentTable.TUNEL_FACE_CODE_COLUMN};
         String[] values = new String[]{environment, face.getCode()};
-        Cursor cursor = getRecordsFilteredByColumns(AssessmentTable.ASSESSMENT_DATABASE_TABLE, names, values, null);
+        Cursor cursor = getRecordsFilteredByColumns(AssessmentTable.ASSESSMENT_DATABASE_TABLE, names, values, AssessmentTable.DATE_COLUMN);
         List<Assessment> list = assemblePersistentEntities(cursor);
         return list;
     }
@@ -191,13 +235,13 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 case FACE:
                     resourceIndex = 0;
                     break;
-                case ROOF:
+                case LEFT:
                     resourceIndex = 2;
                     break;
-                case LEFT:
+                case RIGHT:
                     resourceIndex = 4;
                     break;
-                case RIGHT:
+                case ROOF:
                     resourceIndex = 6;
                     break;
                 case EXTRA:
@@ -210,7 +254,6 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             if (resourceIndex < 8) {
                 result.set(resourceIndex, picture);
             } else {
-//                result.add(resourceIndex, picture);
                 result.add(picture);
             }
         }
@@ -249,7 +292,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                     AssessmentTable.OUTCROP_COLUMN,
                     AssessmentTable.ROCK_SAMPLE_IDENTIFICATION_COLUMN,
                     AssessmentTable.DATA_SENT_STATUS_COLUMN,
-                    AssessmentTable.FILES_SENT_STATUS_COLUMN
+                    AssessmentTable.FILES_SENT_STATUS_COLUMN,
+                    AssessmentTable.SAVING_STATUS_COLUMN
             };
 
             Object[] values = new Object[]{
@@ -274,7 +318,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                     newSkavaEntity.getOutcropDescription(),
                     newSkavaEntity.getRockSampleIdentification(),
                     newSkavaEntity.getDataSentStatus(),
-                    newSkavaEntity.getPicsSentStatus()
+                    newSkavaEntity.getPicsSentStatus(),
+                    newSkavaEntity.getSavedStatus()
             };
             Long assesmentId = saveRecord(AssessmentTable.ASSESSMENT_DATABASE_TABLE, names, values);
             newSkavaEntity.set_id(assesmentId);
@@ -305,7 +350,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 AssessmentTable.OUTCROP_COLUMN,
                 AssessmentTable.ROCK_SAMPLE_IDENTIFICATION_COLUMN,
                 AssessmentTable.DATA_SENT_STATUS_COLUMN,
-                AssessmentTable.FILES_SENT_STATUS_COLUMN
+                AssessmentTable.FILES_SENT_STATUS_COLUMN,
+                AssessmentTable.SAVING_STATUS_COLUMN
         };
 
         Object[] values = new Object[]{
@@ -330,7 +376,8 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
                 newSkavaEntity.getOutcropDescription(),
                 newSkavaEntity.getRockSampleIdentification(),
                 newSkavaEntity.getDataSentStatus(),
-                newSkavaEntity.getPicsSentStatus()
+                newSkavaEntity.getPicsSentStatus(),
+                newSkavaEntity.getSavedStatus()
         };
 
         Long assesmentId = saveRecord(tableName, names, values);

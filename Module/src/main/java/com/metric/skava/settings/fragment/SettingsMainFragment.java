@@ -55,7 +55,8 @@ public class SettingsMainFragment extends PreferenceFragment implements SharedPr
             editor.commit();
             ((SkavaApplication)getActivity().getApplication()).setNeedImportAppData(true);
             ((SkavaApplication)getActivity().getApplication()).setNeedImportUserData(true);
-            ((SkavaApplication)getActivity().getApplication()).saveState();
+            //Move the saveState to the body of the setters on Application object itself
+//            ((SkavaApplication)getActivity().getApplication()).saveState();
             restartApp();
         }
         if (key.equals(UNLINK_DROPBOX_PREFERENCE)) {

@@ -18,9 +18,7 @@ public class MainFragment extends SkavaFragment {
     private TextView mSyncingStatusMessageView;
     private ImageView mBackgroudImage;
 
-
     @Override
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
@@ -32,8 +30,7 @@ public class MainFragment extends SkavaFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View mainView = inflater
-                .inflate(R.layout.welcome_main_fragment, container, false);
+        View mainView = inflater.inflate(R.layout.welcome_main_fragment, container, false);
         mSyncingStatusView = mainView.findViewById(R.id.syncing_status);
         mSyncingStatusMessageView = (TextView) mainView.findViewById(R.id.syncing_status_message);
         mBackgroudImage = (ImageView) mainView.findViewById(R.id.imageView);

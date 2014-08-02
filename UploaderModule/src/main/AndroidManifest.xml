@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <uses-permission android:name="com.skava.picture.UPLOADER" />
+    <!--<uses-permission android:name="com.skava.picture.UPLOADER" />-->
 
     <permission
         android:name="com.skava.picture.UPLOADER"

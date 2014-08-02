@@ -22,11 +22,9 @@ import com.dropbox.sync.android.DbxDatastore;
 import com.dropbox.sync.android.DbxDatastoreInfo;
 import com.dropbox.sync.android.DbxDatastoreManager;
 import com.dropbox.sync.android.DbxException;
-import com.dropbox.sync.android.DbxFileSystem;
 import com.metric.skava.R;
 import com.metric.skava.about.activity.AboutMainActivity;
 import com.metric.skava.app.SkavaApplication;
-import com.metric.skava.app.exception.SkavaExceptionHandler;
 import com.metric.skava.app.model.Role;
 import com.metric.skava.app.model.User;
 import com.metric.skava.app.navdrawer.AbstractNavDrawerActivity;
@@ -54,7 +52,8 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 
     private static final int NAV_MENU_SKAVA_SECTION_ID = 10;
     private static final int NAV_MENU_LOGIN_ITEM_ID = 20;
-    private static final int NAV_MENU_FACE_MAPPING_ITEM_ID = 30;
+    public static final int NAV_MENU_ROCK_CLASSIFICATION_ITEM_ID = 25;
+    public static final int NAV_MENU_FACE_MAPPING_ITEM_ID = 30;
     private static final int NAV_MENU_ADMIN_SECTION_ID = 40;
     private static final int NAV_MENU_SETTINGS_ITEM_ID = 70;
     private static final int NAV_MENU_SYNC_ITEM_ID = 50;
@@ -71,7 +70,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     private DbxAccount mAccount;
     private DbxDatastoreManager mDatastoreManager;
     private DbxDatastore mDatastore;
-    private DbxFileSystem mFileSystem;
     private MainFragment mHomeMainFragment;
 
     //ITS SEEMS to reset each restarts so try with an inherited mmethod reading from the skava context
@@ -92,12 +90,19 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(HomeMainActivity.this, SkavaConstants.BUGSENSE_API_KEY);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        String dateAsString = sdf.format(SkavaUtils.getCurrentDate());
-        Log.d(SkavaConstants.LOG, "********** onCreate ***** " + dateAsString);
-        SkavaExceptionHandler handler = new SkavaExceptionHandler(this, getSupportFragmentManager());
-        Thread.setDefaultUncaughtExceptionHandler(handler);
+        /* How to avoid the start a new fresh app each time the launcher icon is pressed */
+//        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+//            // Activity was brought to front and not created,
+//            // Thus finishing this will get us to the last viewed activity
+//            finish();
+//            return;
+//        }
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//        String dateAsString = sdf.format(SkavaUtils.getCurrentDate());
+//        Log.d(SkavaConstants.LOG, "********** onCreate ***** " + dateAsString);
+//        BugSenseHandler.initAndStartSession(HomeMainActivity.this, SkavaConstants.BUGSENSE_API_KEY);
+//        SkavaExceptionHandler handler = new SkavaExceptionHandler(this, getSupportFragmentManager());
+//        Thread.setDefaultUncaughtExceptionHandler(handler);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.nav_drawer_main_layout_content_frame, new MainFragment(), FRAGMENT_HOME_MAIN_TAG)
@@ -124,48 +129,32 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         Log.d(SkavaConstants.LOG, "********** onPostCreate ***** " + dateAsString);
         super.onPostCreate(savedInstanceState);
         this.setupTheData();
-//        Already call on the super contructor
-//        this.setupTheDrawer();
     }
 
     private void setupTheData() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        String dateAsString = sdf.format(SkavaUtils.getCurrentDate());
-        Log.d(SkavaConstants.LOG, "********** onSetupTheData ***** " + dateAsString);
-//        if (!isLinkDropboxCompleted) {
+//        if (!linkDropboxCompleted) {
         if (!isLinkDropboxCompleted()) {
-            Log.d(SkavaConstants.LOG, "********** linkDropboxCompleted IS FALSE ***** " + dateAsString);
             setupLinkToDropbox();
-        } else {
-            Log.d(SkavaConstants.LOG, "********** linkDropboxCompleted IS TRUE ***** " + dateAsString);
-            getSkavaContext().getDatastore().addSyncStatusListener(this);
-            if (shouldImportAppData()) {
-                dateAsString = sdf.format(SkavaUtils.getCurrentDate());
-                Log.d(SkavaConstants.LOG, "********** shouldImportAppData() TRUE ***** " + dateAsString);
-                lackOfAppData = true;
+        }
+
+        if (shouldImportAppData()) {
+            lackOfAppData = true;
+        }
+        if (shouldImportUserData()) {
+            lackOfUserData = true;
+        }
+        if (assertAppDataNeverCalled) {
+            try {
+                assertAppDataAvailable();
+            } catch (DAOException e) {
+                BugSenseHandler.sendException(e);
+                Log.e(SkavaConstants.LOG, e.getMessage());
+                e.printStackTrace();
             }
-            if (shouldImportUserData()) {
-                dateAsString = sdf.format(SkavaUtils.getCurrentDate());
-                Log.d(SkavaConstants.LOG, "********** shouldImportUserData() TRUE ***** " + dateAsString);
-                lackOfUserData = true;
-            }
-            if (assertAppDataNeverCalled) {
-                dateAsString = sdf.format(SkavaUtils.getCurrentDate());
-                Log.d(SkavaConstants.LOG, "********** assertAppDataNeverCalled TRUE ***** " + dateAsString);
-                try {
-                    assertAppDataAvailable();
-                } catch (DAOException e) {
-                    BugSenseHandler.sendException(e);
-                    Log.e(SkavaConstants.LOG, e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-            //Every thing is set up correctly? Show the Skava background image
-            if (enoughDataAvailable) {
-                dateAsString = sdf.format(SkavaUtils.getCurrentDate());
-                Log.d(SkavaConstants.LOG, "********** enoughDataAvailable IS TRUE ***** " + dateAsString);
-                mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
-            }
+        }
+        //Every thing is set up correctly? Show the Skava background image
+        if (enoughDataAvailable) {
+            mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
         }
     }
 
@@ -173,9 +162,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mFileSystem != null && !mFileSystem.isShutDown()) {
-            mFileSystem.shutDown();
-        }
         if (mDatastore != null && mDatastore.isOpen()) {
             mDatastore.close();
         }
@@ -222,13 +208,11 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 if (mDatastore == null) {
                     mDatastore = mDatastoreManager.openDefaultDatastore();
                 }
-                if (mFileSystem == null) {
-                    mFileSystem = DbxFileSystem.forAccount(mAccount);
-                }
-//                linkDropboxCompleted = true;
+//               linkDropboxCompleted = true;
                 setLinkDropboxCompleted(true);
 
                 getSkavaContext().setDatastore(mDatastore);
+                getSkavaContext().getDatastore().addSyncStatusListener(this);
             }
         } catch (DbxException e) {
             BugSenseHandler.sendException(e);
@@ -275,9 +259,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                     }
                     if (mDatastore == null) {
                         mDatastore = mDatastoreManager.openDefaultDatastore();
-                    }
-                    if (mFileSystem == null) {
-                        mFileSystem = DbxFileSystem.forAccount(mAccount);
                     }
 //                    linkDropboxCompleted = true;
                     setLinkDropboxCompleted(true);
@@ -350,6 +331,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 Role metricAdmin = new Role("METRICADMIN", "MetricAdmin");
                 if (loggedUser.hasRole(geologist) || loggedUser.hasRole(admin) || loggedUser.hasRole(metricAdmin)) {
                     menuAsList.remove(1);
+                    menuAsList.add(NavMenuItem.create(NAV_MENU_ROCK_CLASSIFICATION_ITEM_ID, "Rock Classification", "ic_menu_copy_holo_dark", true, true, this));
                     menuAsList.add(NavMenuItem.create(NAV_MENU_FACE_MAPPING_ITEM_ID, "Face Mappings", "ic_menu_copy_holo_dark", true, true, this));
                 }
                 if (loggedUser.hasRole(admin) || loggedUser.hasRole(metricAdmin)) {
@@ -360,7 +342,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             }
         }
         menuAsList.add(NavMenuSection.create(NAV_MENU_GENERAL_SECTION_ID, "General"));
-//        menuAsList.add(NavMenuItem.create(NAV_MENU_TEST_AUTOCAD_ID, "Test Autocad", "ic_action_overflow", true, true, this));
         menuAsList.add(NavMenuItem.create(NAV_MENU_SETTINGS_ITEM_ID, getString(R.string.settings_label), "ic_action_overflow", true, true, this));
         menuAsList.add(NavMenuItem.create(NAV_MENU_ABOUT_ITEM_ID, getString(R.string.about_label), "ic_action_overflow", true, true, this));
         if (loggedUser != null) {
@@ -393,8 +374,16 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 intent.putExtra(LoginMainActivity.EXTRA_PASSWORD, "pepito");
                 startActivity(intent);
                 break;
+            case NAV_MENU_ROCK_CLASSIFICATION_ITEM_ID:
+                intent = new Intent(this, AssessmentsListActivity.class);
+                getSkavaContext().setOriginatorModule(SkavaApplication.Module.ROCK_CLASSIFICATION);
+                intent.putExtra(SkavaConstants.SKAVA_APP_SRC, NAV_MENU_ROCK_CLASSIFICATION_ITEM_ID);
+                startActivity(intent);
+                break;
             case NAV_MENU_FACE_MAPPING_ITEM_ID:
                 intent = new Intent(this, AssessmentsListActivity.class);
+                getSkavaContext().setOriginatorModule(SkavaApplication.Module.FACE_MAPPING);
+                intent.putExtra(SkavaConstants.SKAVA_APP_SRC, NAV_MENU_FACE_MAPPING_ITEM_ID);
                 startActivity(intent);
                 break;
             case NAV_MENU_SYNC_ITEM_ID:
@@ -442,7 +431,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             lackOfAppData = false;
             if (shouldImportAppData()) {
                 ((SkavaApplication) getApplication()).setNeedImportAppData(false);
-                ((SkavaApplication) getApplication()).saveState();
             }
             preventExecution = false;
             saveAppDataSyncStatus(true);
@@ -474,7 +462,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
             lackOfUserData = false;
             if (shouldImportUserData()) {
                 ((SkavaApplication) getApplication()).setNeedImportUserData(false);
-                ((SkavaApplication) getApplication()).saveState();
             }
             preventExecution = false;
             saveUserDataSyncStatus(true);
@@ -488,9 +475,5 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         //Now preventExecution flag is available so setup the drawer menu
         setupTheDrawer();
     }
-
-
-
-
 
 }

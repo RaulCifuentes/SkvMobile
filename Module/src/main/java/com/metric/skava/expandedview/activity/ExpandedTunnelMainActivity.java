@@ -1,6 +1,7 @@
 package com.metric.skava.expandedview.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.util.SkavaConstants;
 import com.metric.skava.assessment.activity.AssessmentStageListActivity;
 import com.metric.skava.expandedview.fragment.ExpandedTunnelMainFragment;
+import com.metric.skava.pictures.util.BitmapFileUtils;
 import com.metric.skava.pictures.util.SkavaPictureFilesUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -45,6 +47,7 @@ public class ExpandedTunnelMainActivity  extends SkavaFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.expanded_tunnel_main_activity);
         mAssessment = ((SkavaApplication)getApplication()).getSkavaContext().getAssessment();
         mTunnelExpandedView = mAssessment.getTunnelExpandedView();
@@ -108,10 +111,25 @@ public class ExpandedTunnelMainActivity  extends SkavaFragmentActivity {
         invalidateOptionsMenu();
     }
 
+
+
     public void editWithAviaryApplication() {
         if (mTunnelExpandedView == null){
+//            Bitmap baseAsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.expanded_tunnel_dark);
             Bitmap baseAsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.expanded_tunnel_dark);
             //show the base grid template
+
+            //use the base bitmap merged with the last segment of the previous tunnel mapping
+            Bitmap previousMapping = BitmapFactory.decodeResource(getResources(), R.drawable.expanded_tunnel_dark_with_lines);
+            //use the previous mapping image but not entirely just a fraction of it
+
+            float factor = 0.15f;
+
+            // Take 10 pixels off the bottom of a Bitmap
+            Bitmap croppedBitmap = Bitmap.createBitmap(previousMapping, 0, 0, previousMapping.getWidth(), (int)(previousMapping.getHeight() * factor));
+
+            Bitmap mergedBitmap = BitmapFileUtils.combineImages(baseAsBitmap, croppedBitmap, true);
+
 //            final DisplayMetrics displayMetrics = new DisplayMetrics();
 //            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 //            int width = displayMetrics.widthPixels;
@@ -120,14 +138,15 @@ public class ExpandedTunnelMainActivity  extends SkavaFragmentActivity {
 //            int scaledH = (int) (height * .7);
 ////                final int longest = (height > width ? height : width) / 2;
 //            Bitmap resizedBaseGridAsBitmap = Bitmap.createScaledBitmap(baseAsBitmap, scaledW, scaledH, false);
-            String assessmenCode = getCurrentAssessment().getCode();
-            String extendedViewSuggestedName =  assessmenCode + "_TUNNEL_";
-            File extendedViewFile = mPictureFilesUtils.getOutputFile(assessmenCode, extendedViewSuggestedName);
+            String assessmentCode = getCurrentAssessment().getCode();
+//            String extendedViewSuggestedName =  assessmentCode + "_TUNNEL_";
+            String extendedViewSuggestedName =  "TUNNEL";
+            File extendedViewFile = mPictureFilesUtils.getOutputFile(assessmentCode, extendedViewSuggestedName, null);
             FileOutputStream fos = null;
             try {
                 //create a file from the bitmap
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                baseAsBitmap.compress(Bitmap.CompressFormat.PNG, 90 /*ignored for PNG*/, bos);
+                mergedBitmap.compress(Bitmap.CompressFormat.PNG, 90 /*ignored for PNG*/, bos);
                 byte[] bitmapdata = bos.toByteArray();
                 //write the bytes in file
                 fos = new FileOutputStream(extendedViewFile);
@@ -136,6 +155,8 @@ public class ExpandedTunnelMainActivity  extends SkavaFragmentActivity {
                 fos.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                Log.e(SkavaConstants.LOG, e.getMessage());
+                BugSenseHandler.sendException(e);
             }
             mTunnelExpandedView = Uri.fromFile(extendedViewFile);
         }

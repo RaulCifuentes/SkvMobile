@@ -33,8 +33,8 @@ import com.metric.skava.instructions.activity.InstructionsMainActivity;
 import com.metric.skava.instructions.fragment.InstructionsMainFragment;
 import com.metric.skava.pictures.activity.PicturesMainActivity;
 import com.metric.skava.pictures.fragment.PicturesMainFragment;
-import com.metric.skava.report.activity.MappingReportMainActivity;
-import com.metric.skava.report.fragment.MappingReportMainFragment;
+import com.metric.skava.report.activity.AssessmentReportMainActivity;
+import com.metric.skava.report.fragment.AssessmentReportMainFragment;
 import com.metric.skava.rockmass.activity.RockMassDescriptionMainActivity;
 import com.metric.skava.rockmass.fragment.RockMassDescriptionMainFragment;
 
@@ -59,8 +59,6 @@ import java.text.NumberFormat;
 public class AssessmentStageListActivity extends SkavaFragmentActivity
         implements AssessmentStageListFragment.StageSelectionCallback, IdentificationMainFragment.TunnelFaceIdentificationListener {
 
-    private static final String SHOW_LOAD_ASSESSMENT_DIALOG_TAG = "SHOW_LOAD_ASSESSMENT_DIALOG";
-
     private static final String FRAGMENT_GRAL_INFO_STAGE_TAG = "FRAGMENT_GRAL_INFO_STAGE_TAG";
     private static final String FRAGMENT_DISCONTINUITIES_STAGE_TAG = "FRAGMENT_DISCONTINUITIES_STAGE_TAG";
     private static final String FRAGMENT_Q_STAGE_TAG = "FRAGMENT_Q_STAGE_TAG";
@@ -70,22 +68,18 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
     private static final String FRAGMENT_DESCRIPTION_STAGE_TAG = "FRAGMENT_DESCRIPTION_STAGE_TAG";
     private static final String FRAGMENT_RECOMENDATION_STAGE_TAG = "FRAGMENT_RECOMENDATION_STAGE_TAG";
     private static final String FRAGMENT_SUMMARY_STAGE_TAG = "FRAGMENT_SUMMARY_STAGE_TAG";
-    private static final String FRAGMENT_SAVE_STAGE_TAG = "FRAGMENT_SAVE_STAGE_TAG";
 
     public static final String REDIRECT_FROM_PICTURES = "PICTURES";
     public static final String REDIRECT_FROM_REPORT = "REPORT";
     public static final String REDIRECT_FROM_EXPANDED = "EXPANDED";
 
-    public static final String EXCEPTION_DIALOG_TAG = "EXCEPTION_DIALOG_TAG ";
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private boolean mTwoPane;
-    private boolean cameFromPictures;
-    private boolean cameFromReport;
-    private boolean cameFromExpanded;
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -113,38 +107,37 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
         if (findViewById(R.id.stage_detail_container) != null) {
             //If this view is present, then the activity should be in two-pane mode.
             mTwoPane = true;
-
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
             ((AssessmentStageListFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.stage_list))
                     .setActivateOnItemClick(true);
 
-
         }
         // TODO: If exposing deep links into your app, handle intents here.
         //This is after getting back from the external picture editor application
         Intent intent = getIntent();
-        cameFromPictures = intent.getBooleanExtra(REDIRECT_FROM_PICTURES, false);
+        boolean cameFromPictures = intent.getBooleanExtra(REDIRECT_FROM_PICTURES, false);
+        boolean cameFromReport = intent.getBooleanExtra(REDIRECT_FROM_REPORT, false);
+        boolean cameFromExpanded = intent.getBooleanExtra(REDIRECT_FROM_EXPANDED, false);
         if (cameFromPictures) {
             //I want to go back directly to pictures
             onItemSelected(AssesmentStageDataProvider.PICS);
             //And I want to have the stages items enabled
             onTunelFaceIdentified();
-        }
-        cameFromReport = intent.getBooleanExtra(REDIRECT_FROM_REPORT, false);
-        if (cameFromReport){
+        } else if (cameFromReport){
             //I want to go back directly to General Information
             onItemSelected(AssesmentStageDataProvider.GRAL_INFO);
             //And I want to have the stages items enabled
             onTunelFaceIdentified();
-        }
-        cameFromExpanded = intent.getBooleanExtra(REDIRECT_FROM_EXPANDED, false);
-        if (cameFromExpanded){
+        } else if (cameFromExpanded){
             //I want to go back directly to General Information
             onItemSelected(AssesmentStageDataProvider.GRAL_INFO);
             //And I want to have the stages items enabled
             onTunelFaceIdentified();
+        } else {
+            //By default to General Information
+            onItemSelected(AssesmentStageDataProvider.GRAL_INFO);
         }
 
     }
@@ -379,13 +372,13 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
             if (id.equalsIgnoreCase(AssesmentStageDataProvider.REPORT)) {
                 saveDraft();
                 //To make it full screen size launh it as an activity instead of as a fragment
-                Intent detailIntent = new Intent(this, MappingReportMainActivity.class);
-                detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, id);
+                Intent detailIntent = new Intent(this, AssessmentReportMainActivity.class);
+                detailIntent.putExtra(AssessmentReportMainFragment.ARG_BASKET_ID, id);
                 startActivity(detailIntent);
                 return;
 //                Bundle arguments = new Bundle();
-//                arguments.putString(MappingReportMainFragment.ARG_BASKET_ID, id);
-//                MappingReportMainFragment fragment = new MappingReportMainFragment();
+//                arguments.putString(AssessmentReportMainFragment.ARG_BASKET_ID, id);
+//                AssessmentReportMainFragment fragment = new AssessmentReportMainFragment();
 //                fragment.setArguments(arguments);
 //                getSupportFragmentManager().beginTransaction()
 //                        .replace(R.id.stage_detail_container, fragment)
@@ -448,8 +441,8 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
             }
 
             if (id.equalsIgnoreCase(AssesmentStageDataProvider.REPORT)) {
-                Intent detailIntent = new Intent(this, MappingReportMainActivity.class);
-                detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, id);
+                Intent detailIntent = new Intent(this, AssessmentReportMainActivity.class);
+                detailIntent.putExtra(AssessmentReportMainFragment.ARG_BASKET_ID, id);
                 startActivity(detailIntent);
                 return;
             }

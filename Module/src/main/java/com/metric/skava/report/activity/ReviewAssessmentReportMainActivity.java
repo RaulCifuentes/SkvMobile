@@ -4,10 +4,10 @@ import android.os.Bundle;
 
 import com.metric.skava.R;
 import com.metric.skava.app.activity.SkavaFragmentActivity;
-import com.metric.skava.report.fragment.MappingReportMainFragment;
+import com.metric.skava.report.fragment.AssessmentReportMainFragment;
 
 
-public class ReviewReportMainActivity extends SkavaFragmentActivity {
+public class ReviewAssessmentReportMainActivity extends SkavaFragmentActivity {
 
     private Boolean isPreview;
     public static final String IS_PREVIEW = "MAPPING_REPORT_MAIN_ACTIVITY_IS_PREVIEW";
@@ -15,10 +15,10 @@ public class ReviewReportMainActivity extends SkavaFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mapping_report_main_activity);
+        setContentView(R.layout.assessment_report_main_activity);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new MappingReportMainFragment())
+                    .add(R.id.container, new AssessmentReportMainFragment())
                     .commit();
         }
 

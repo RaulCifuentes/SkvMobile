@@ -29,6 +29,7 @@ import com.dropbox.sync.android.DbxRecord;
 import com.metric.skava.R;
 import com.metric.skava.app.SkavaApplication;
 import com.metric.skava.app.context.SkavaContext;
+import com.metric.skava.app.exception.SkavaExceptionHandler;
 import com.metric.skava.app.fragment.SkavaFragment;
 import com.metric.skava.app.helper.ImportAppAndUserDataModelTask;
 import com.metric.skava.app.helper.ImportAppDataModelTask;
@@ -134,6 +135,9 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BugSenseHandler.initAndStartSession(SkavaFragmentActivity.this, SkavaConstants.BUGSENSE_API_KEY);
+        SkavaExceptionHandler handler = new SkavaExceptionHandler(this, getSupportFragmentManager());
+        Thread.setDefaultUncaughtExceptionHandler(handler);
         pseudoInjection();
         mActionBar = getActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
@@ -222,6 +226,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
         try {
             Assessment currentAssessment = getCurrentAssessment();
             LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
+            currentAssessment.setSavedStatus(Assessment.SavingStatus.DRAFT);
             localAssessmentDAO.saveAssessment(currentAssessment);
             success = true;
         } catch (DAOException e) {
@@ -232,6 +237,24 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
         }
         return success;
     }
+
+    public boolean save() {
+        boolean success = false;
+        try {
+            Assessment currentAssessment = getCurrentAssessment();
+            LocalAssessmentDAO localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
+            currentAssessment.setSavedStatus(Assessment.SavingStatus.PERSISTENT);
+            localAssessmentDAO.saveAssessment(currentAssessment);
+            success = true;
+        } catch (DAOException e) {
+            e.printStackTrace();
+            Log.e(SkavaConstants.LOG, e.getMessage());
+            BugSenseHandler.sendException(e);
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        return success;
+    }
+
 
 
     @Override
@@ -252,9 +275,9 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                 Set<String> incomingChangesTables = incomingChanges.keySet();
 
                 //Any user or app data related chenges that deserve an import (repopulate tables)
-                if (SkavaUtils.includesAppOrUserData(incomingChangesTables)){
+                if (SkavaUtils.includesAppOrUserData(incomingChangesTables)) {
                     //Are both kind of imports required ??
-                    if (SkavaUtils.includesAppAndUserData(incomingChangesTables)){
+                    if (SkavaUtils.includesAppAndUserData(incomingChangesTables)) {
                         final String alertTitle = "Skava app and user data tables were updated on web admin console";
                         final String textToShow = "There's new data currently not available in your device. When should I try to sync those ? ";
                         Log.d(SkavaConstants.LOG, textToShow);
@@ -290,7 +313,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                                 builder.setNegativeButton("Postpone to the next app start", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        ((SkavaApplication)getApplication()).setNeedImportUserData(true);
+                                        ((SkavaApplication) getApplication()).setNeedImportUserData(true);
                                     }
                                 });
 //                                builder.setCancelable(true);
@@ -303,7 +326,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                     }
 
                     //Or is it only user data what was changed?
-                    if (SkavaUtils.includesOnlyUserData(incomingChangesTables)){
+                    if (SkavaUtils.includesOnlyUserData(incomingChangesTables)) {
                         final String alertTitle = "Skava user data tables were updated on web admin console";
                         final String textToShow = "There's new data currently not available in your device. When should I try to sync those ? ";
                         Log.d(SkavaConstants.LOG, textToShow);
@@ -338,7 +361,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                                 builder.setNegativeButton("Postpone to the next app start", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        ((SkavaApplication)getApplication()).setNeedImportUserData(true);
+                                        ((SkavaApplication) getApplication()).setNeedImportUserData(true);
                                     }
                                 });
 //                                builder.setCancelable(true);
@@ -351,7 +374,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                     }
 
                     //Or was it only app data what was changed?
-                    if (SkavaUtils.includesOnlyAppData(incomingChangesTables)){
+                    if (SkavaUtils.includesOnlyAppData(incomingChangesTables)) {
                         final String alertTitle = "Skava app data tables were updated on web admin console";
                         final String textToShow = "There's new data currently not available in your device. When should I try to sync those ? ";
                         Log.d(SkavaConstants.LOG, textToShow);
@@ -400,11 +423,11 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                 }
 
                 for (String tablename : incomingChangesTables) {
-                    if (tablename.equalsIgnoreCase(":info")){
+                    if (tablename.equalsIgnoreCase(":info")) {
                         //skip as this seems to be metadata from Dropbox
                         continue;
                     }
-                    if (SkavaUtils.isPartOfAppOrUserData(tablename)){
+                    if (SkavaUtils.isPartOfAppOrUserData(tablename)) {
                         //skip as this was aready handled
                         continue;
                     }
@@ -416,70 +439,83 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                         //find what is being aknowledged and remove from the middleman box space
                         Set<DbxRecord> dbxRecords = incomingChanges.get(DataSyncDropboxTable.DATA_SYNC_TABLE);
                         for (DbxRecord dbxRecord : dbxRecords) {
-                            String acknowledgedAssessmentCode = dbxRecord.getString("assesmentCode");
-                            String acknowledgedRecordID = dbxRecord.getString("dropboxId");
-                            //find out if the record being acknowledged exists on the sync queue of this tablet
-                            boolean exists = syncLoggingDAO.existsOnSyncTraces(acknowledgedAssessmentCode);
-                            if (exists){
-                                //update the sync trace from QUEDED to SERVED in the AssessmentSyncTrace table
-                                AssessmentSyncTrace assessmentSyncTrace = null;
-                                String environment = getTargetEnvironment();
-                                try {
-                                    assessmentSyncTrace = syncLoggingDAO.getAssessmentSyncTrace(environment, acknowledgedAssessmentCode, DataToSync.Operation.INSERT);
-                                    List<RecordToSync> tracedRecords = assessmentSyncTrace.getRecords();
-                                    for (RecordToSync tracedRecord : tracedRecords) {
-                                        if (tracedRecord.getRecordID().equalsIgnoreCase(acknowledgedRecordID)) {
-                                            tracedRecord.setStatus(DataToSync.Status.SERVED);
+                            String acknowledgedAssessmentCode = null, acknowledgedRecordID = null, source = null;
+                            if (dbxRecord.hasField("assessmentCode")){
+                                acknowledgedAssessmentCode = dbxRecord.getString("assessmentCode");
+                            }
+                            if (dbxRecord.hasField("dropboxId")){
+                                acknowledgedRecordID = dbxRecord.getString("dropboxId");
+                            }
+                            if (dbxRecord.hasField("source")){
+                                source = dbxRecord.getString("source");
+                            }
+                            if (source != null && acknowledgedAssessmentCode != null && acknowledgedRecordID != null && source.equalsIgnoreCase("WEB")) {
+                                //find out if the record being acknowledged exists on the sync queue of this tablet
+                                boolean exists = syncLoggingDAO.existsOnSyncTraces(acknowledgedAssessmentCode);
+                                if (exists) {
+                                    //update the sync trace from QUEDED to SERVED in the AssessmentSyncTrace table
+                                    AssessmentSyncTrace assessmentSyncTrace = null;
+                                    String environment = getTargetEnvironment();
+                                    try {
+                                        assessmentSyncTrace = syncLoggingDAO.getAssessmentSyncTrace(environment, acknowledgedAssessmentCode, DataToSync.Operation.INSERT);
+                                        List<RecordToSync> tracedRecords = assessmentSyncTrace.getRecords();
+                                        for (RecordToSync tracedRecord : tracedRecords) {
+                                            if (tracedRecord.getRecordID().equalsIgnoreCase(acknowledgedRecordID)) {
+                                                tracedRecord.setStatus(DataToSync.Status.SERVED);
+                                            }
                                         }
+                                        syncLoggingDAO.updateAssessmentSyncTrace(assessmentSyncTrace);
+                                    } catch (DAOException e) {
+                                        e.printStackTrace();
+                                        Log.e(SkavaConstants.LOG, e.getMessage());
                                     }
-                                    syncLoggingDAO.updateAssessmentSyncTrace(assessmentSyncTrace);
-                                } catch (DAOException e) {
-                                    e.printStackTrace();
-                                    Log.e(SkavaConstants.LOG, e.getMessage());
-                                }
 
-                                //find what is the record being acknowledged and remove it from the middleman box space
-                                SyncQueue middlemanInbox = getSkavaContext().getMiddlemanInbox();
-                                List<RecordToSync> pendingRecords = middlemanInbox.getRecords(acknowledgedAssessmentCode);
-                                if (pendingRecords != null) {
-                                    //iterate over all the data records
-                                    //use a array copy for loop to avoid iterator and remove conflict
-                                    List<Integer> foundIndexes = new ArrayList<Integer>();
-                                    for (int i = 0; i < pendingRecords.size(); i++) {
-                                        RecordToSync recordToSync = pendingRecords.get(i);
-                                        if (recordToSync.getOperation().equals(DataToSync.Operation.INSERT)){
-                                            String recordID = recordToSync.getRecordID();
-                                            if (recordID.equalsIgnoreCase(acknowledgedRecordID)) {
-                                                foundIndexes.add(i);
+                                    //find what is the record being acknowledged and remove it from the middleman box space
+                                    SyncQueue middlemanInbox = getSkavaContext().getMiddlemanInbox();
+                                    List<RecordToSync> pendingRecords = middlemanInbox.getRecords(acknowledgedAssessmentCode);
+                                    if (pendingRecords != null) {
+                                        //iterate over all the data records
+                                        //use a array copy for loop to avoid iterator and remove conflict
+                                        List<Integer> foundIndexes = new ArrayList<Integer>();
+                                        for (int i = 0; i < pendingRecords.size(); i++) {
+                                            RecordToSync recordToSync = pendingRecords.get(i);
+                                            if (recordToSync.getOperation().equals(DataToSync.Operation.INSERT)) {
+                                                String recordID = recordToSync.getRecordID();
+                                                if (recordID.equalsIgnoreCase(acknowledgedRecordID)) {
+                                                    foundIndexes.add(i);
+                                                }
+                                            }
+                                        }
+                                        //Removes from the list of pending those that was reported by ack table
+                                        if (foundIndexes != null && !foundIndexes.isEmpty()) {
+                                            for (Integer foundIndex : foundIndexes) {
+                                                pendingRecords.remove(foundIndex.intValue());
+                                            }
+                                        }
+                                        if (pendingRecords.isEmpty()) {
+                                            try {
+                                                LocalAssessmentDAO assessmentDAO = getDAOFactory().getLocalAssessmentDAO();
+                                                Assessment uploadedAssessment = assessmentDAO.getAssessment(acknowledgedAssessmentCode);
+                                                uploadedAssessment.setDataSentStatus(Assessment.SendingStatus.SENT_TO_CLOUD);
+                                                assessmentDAO.updateAssessment(uploadedAssessment, false);
+
+                                                //The assessment which originates this back and forth as been updated as completed.
+                                                //Now we can delete this ACK record.
+                                                dbxRecord.deleteRecord();
+
+                                                //mostrar que termino exitosamente
+                                                notifyUploadSucceed(0, R.drawable.cloud_striped, "Skava Mobile", "Mapping data for " + uploadedAssessment.getPseudoCode() + " was uploaded");
+
+                                            } catch (DAOException e) {
+                                                e.printStackTrace();
+                                                Log.e(SkavaConstants.LOG, e.getMessage());
                                             }
                                         }
                                     }
-                                    //Removes from the list of pending those that was reported by ack table
-                                    if (foundIndexes != null && !foundIndexes.isEmpty()) {
-                                        for (Integer foundIndex : foundIndexes) {
-                                            pendingRecords.remove(foundIndex.intValue());
-                                        }
-                                    }
-                                    if (pendingRecords.isEmpty()) {
-                                        try {
-                                            LocalAssessmentDAO assessmentDAO = getDAOFactory().getLocalAssessmentDAO();
-                                            Assessment uploadedAssessment = assessmentDAO.getAssessment(acknowledgedAssessmentCode);
-                                            uploadedAssessment.setDataSentStatus(Assessment.DATA_SENT_TO_CLOUD);
-                                            assessmentDAO.updateAssessment(uploadedAssessment, false);
-
-                                            //mostrar que termino exitosamente
-                                            notifyUploadSucceed(0, R.drawable.cloud_striped, "Skava Mobile", "Mapping data for " + uploadedAssessment.getPseudoCode() + " was uploaded");
-
-                                        } catch (DAOException e) {
-                                            e.printStackTrace();
-                                            Log.e(SkavaConstants.LOG, e.getMessage());
-                                        }
-                                    }
+                                } else {
+                                    // Just do nothing. Probably comes from another tablet
                                 }
-                            } else {
-                                // Just do nothing. Probably comes from another tablet
                             }
-
                         }
                     }
                     if (tablename.equals(FilesSyncDropboxTable.FILE_SYNC_TABLE)) {
@@ -496,7 +532,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                             acknowledgedFileName = dbxRecord.getString("fileName");
                             //find out if the record being acknowledged exists on the sync queue of this tablet
                             boolean exists = syncLoggingDAO.existsOnSyncTraces(acknowledgedAssessmentCode);
-                            if (exists){
+                            if (exists) {
                                 //update the sync trace from QUEDED to SERVED in the AssessmentSyncTrace table
                                 AssessmentSyncTrace assessmentSyncTrace = null;
                                 String environment = getTargetEnvironment();
@@ -523,7 +559,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                                     //use a for loop to avoid iterator and remove conflict
                                     for (int i = 0; i < pendingPictures.size(); i++) {
                                         FileToSync pictureFileToSync = pendingPictures.get(i);
-                                        if(pictureFileToSync.getOperation().equals(DataToSync.Operation.INSERT)){
+                                        if (pictureFileToSync.getOperation().equals(DataToSync.Operation.INSERT)) {
                                             String fileName = pictureFileToSync.getFileName();
                                             if (fileName.equalsIgnoreCase(acknowledgedFileName)) {
                                                 foundIndexes.add(i);
@@ -540,7 +576,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                                         try {
                                             LocalAssessmentDAO assessmentDAO = getDAOFactory().getLocalAssessmentDAO();
                                             Assessment uploadedAssessment = assessmentDAO.getAssessment(acknowledgedAssessmentCode);
-                                            uploadedAssessment.setPicsSentStatus(Assessment.PICS_SENT_TO_CLOUD);
+                                            uploadedAssessment.setPicsSentStatus(Assessment.SendingStatus.SENT_TO_CLOUD);
                                             assessmentDAO.updateAssessment(uploadedAssessment, false);
                                             //mostrar que termino exitosamente
                                             notifyUploadSucceed(0, R.drawable.cloud_checked, "Skava Uploader", "Pictures for " + uploadedAssessment.getPseudoCode() + " were uploaded");
@@ -560,54 +596,60 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                         String listenerReportedAssessmentCode = null;
                         Set<DbxRecord> dbxRecords = incomingChanges.get(AssessmentDropboxTable.ASSESSMENT_TABLE);
                         for (DbxRecord dbxRecord : dbxRecords) {
-                            if (dbxRecord.isDeleted()){
-                                //
-                                listenerReportedAssessmentCode = dbxRecord.getString("code");
-                                //find out if the record being acknowledged exists on the sync queue of this tablet
-                                boolean exists = syncLoggingDAO.existsOnSyncTraces(listenerReportedAssessmentCode);
-                                if (exists){
-                                    //update the sync trace from QUEDED to SERVED in the AssessmentSyncTrace table
-                                    AssessmentSyncTrace assessmentSyncTrace = null;
-                                    String environment = getTargetEnvironment();
-                                    try {
-                                        assessmentSyncTrace = syncLoggingDAO.getAssessmentSyncTrace(environment, listenerReportedAssessmentCode, DataToSync.Operation.DELETE);
-                                        List<RecordToSync> tracedRecords = assessmentSyncTrace.getRecords();
-                                        for (RecordToSync tracedRecord : tracedRecords) {
-                                            if (tracedRecord.getRecordID().equalsIgnoreCase(listenerReportedAssessmentCode)) {
-                                                tracedRecord.setStatus(DataToSync.Status.SERVED);
+                            if (dbxRecord.isDeleted()) {
+                                if (dbxRecord.hasField("code")) {
+                                    listenerReportedAssessmentCode = dbxRecord.getString("code");
+                                    //find out if the record being acknowledged exists on the sync queue of this tablet
+                                    boolean exists = syncLoggingDAO.existsOnSyncTraces(listenerReportedAssessmentCode);
+                                    if (exists) {
+                                        //update the sync trace from QUEDED to SERVED in the AssessmentSyncTrace table
+                                        AssessmentSyncTrace assessmentSyncTrace = null;
+                                        String environment = getTargetEnvironment();
+                                        try {
+                                            assessmentSyncTrace = syncLoggingDAO.getAssessmentSyncTrace(environment, listenerReportedAssessmentCode, DataToSync.Operation.DELETE);
+                                            List<RecordToSync> tracedRecords = assessmentSyncTrace.getRecords();
+                                            for (RecordToSync tracedRecord : tracedRecords) {
+                                                if (tracedRecord.getRecordID().equalsIgnoreCase(listenerReportedAssessmentCode)) {
+                                                    tracedRecord.setStatus(DataToSync.Status.SERVED);
+                                                }
                                             }
+                                            syncLoggingDAO.updateAssessmentSyncTrace(assessmentSyncTrace);
+                                        } catch (DAOException e) {
+                                            e.printStackTrace();
+                                            Log.e(SkavaConstants.LOG, e.getMessage());
                                         }
-                                        syncLoggingDAO.updateAssessmentSyncTrace(assessmentSyncTrace);
-                                    } catch (DAOException e) {
-                                        e.printStackTrace();
-                                        Log.e(SkavaConstants.LOG, e.getMessage());
-                                    }
 
-                                    //find what is the record being acknowledged and remove it from the middleman box space
-                                    SyncQueue middlemanInbox = getSkavaContext().getMiddlemanInbox();
-                                    List<RecordToSync> pendingRecords = middlemanInbox.getRecords(listenerReportedAssessmentCode);
-                                    if (pendingRecords != null) {
-                                        //iterate over all the data records
-                                        //use a array copy for loop to avoid iterator and remove conflict
-                                        List<Integer> foundIndexes = new ArrayList<Integer>();
-                                        for (int i = 0; i < pendingRecords.size(); i++) {
-                                            RecordToSync recordToSync = pendingRecords.get(i);
-                                            if (recordToSync.getOperation().equals(DataToSync.Operation.DELETE)){
-                                                String recordID = recordToSync.getRecordID();
-                                                if (recordID.equalsIgnoreCase(listenerReportedAssessmentCode)) {
-                                                    foundIndexes.add(i);
+                                        //find what is the record being acknowledged and remove it from the middleman box space
+                                        SyncQueue middlemanInbox = getSkavaContext().getMiddlemanInbox();
+                                        List<RecordToSync> pendingRecords = middlemanInbox.getRecords(listenerReportedAssessmentCode);
+                                        if (pendingRecords != null) {
+                                            //iterate over all the data records
+                                            //use a array copy for loop to avoid iterator and remove conflict
+                                            List<Integer> foundIndexes = new ArrayList<Integer>();
+                                            for (int i = 0; i < pendingRecords.size(); i++) {
+                                                RecordToSync recordToSync = pendingRecords.get(i);
+                                                if (recordToSync.getOperation().equals(DataToSync.Operation.DELETE)) {
+                                                    String recordID = recordToSync.getRecordID();
+                                                    if (recordID.equalsIgnoreCase(listenerReportedAssessmentCode)) {
+                                                        foundIndexes.add(i);
+                                                    }
+                                                }
+                                            }
+                                            //Removes from the list of pending those that was reported by ack table
+                                            if (foundIndexes != null && !foundIndexes.isEmpty()) {
+                                                for (Integer foundIndex : foundIndexes) {
+                                                    pendingRecords.remove(foundIndex.intValue());
                                                 }
                                             }
                                         }
-                                        //Removes from the list of pending those that was reported by ack table
-                                        if (foundIndexes != null && !foundIndexes.isEmpty()) {
-                                            for (Integer foundIndex : foundIndexes) {
-                                                pendingRecords.remove(foundIndex.intValue());
-                                            }
-                                        }
+                                    } else {
+                                        // Just do nothing. Probably comes from another tablet
                                     }
                                 } else {
-                                    // Just do nothing. Probably comes from another tablet
+                                    //TODO
+                                    // Los registros isDeleted true no traen code entonces seguramente
+                                    //solo indican el ID en ese caso sera mejor usar el code como id
+                                    //still some work to do on this
                                 }
 
                             }
@@ -645,7 +687,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                                 Assessment uploadedAssessment = null;
                                 try {
                                     uploadedAssessment = assessmentDAO.getAssessment(assessmentIterQueue);
-                                    uploadedAssessment.setDataSentStatus(Assessment.DATA_SENT_TO_DATASTORE);
+                                    uploadedAssessment.setDataSentStatus(Assessment.SendingStatus.SENT_TO_DATASTORE);
                                     assessmentDAO.updateAssessment(uploadedAssessment, false);
                                 } catch (DAOException e) {
                                     //Not found assessment with that code

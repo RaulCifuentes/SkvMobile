@@ -9,10 +9,8 @@ import android.util.Log;
 
 import com.metric.skava.app.exception.SkavaSystemException;
 import com.metric.skava.app.util.SkavaConstants;
-import com.metric.skava.app.util.SkavaUtils;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 
 /**
  * Created by metricboy on 2/24/14.
@@ -28,8 +26,8 @@ public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
     }
 
 
-    public Uri getOutputUri(String assessmenCode, String suggestedName) throws SkavaSystemException {
-        File theOutputFile = getOutputFile(assessmenCode, suggestedName);
+    public Uri getOutputUri(String assessmenCode, String suggestedPrefixName, String suggestedSuffixName) throws SkavaSystemException {
+        File theOutputFile = getOutputFile(assessmenCode, suggestedPrefixName, suggestedSuffixName);
         Uri targetUri = Uri.fromFile(theOutputFile);
         return targetUri;
     }
@@ -50,7 +48,7 @@ public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
         return mediaStorageDir;
     }
 
-    public File getOutputFile(String assessmentCode, String suggestedName) throws SkavaSystemException {
+    public File getOutputFile(String assessmentCode, String namePrefix, String nameSuffix ) throws SkavaSystemException {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
         File skavaPicturesFolder = getSkavaPicturesFolder();
@@ -64,9 +62,16 @@ public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
         }
 
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(SkavaUtils.getCurrentDate());
-
-        File mediaFile = new File(assessmentPicturesFolder.getPath() + File.separator + suggestedName + timeStamp + ".jpg");
+//        String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(SkavaUtils.getCurrentDate());
+        String newFileName;
+        if (nameSuffix != null){
+//            newFileName = assessmentPicturesFolder.getPath() + File.separator + namePrefix + timeStamp + nameSuffix + ".jpg";
+            newFileName = assessmentPicturesFolder.getPath() + File.separator + namePrefix + nameSuffix + ".jpg";
+        } else {
+//            newFileName = assessmentPicturesFolder.getPath() + File.separator + namePrefix + timeStamp + ".jpg";
+            newFileName = assessmentPicturesFolder.getPath() + File.separator + namePrefix + ".jpg";
+        }
+        File mediaFile = new File(newFileName);
         return mediaFile;
 
     }
@@ -78,12 +83,14 @@ public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
         try {
             // HACK: In order to avoid Out Of Memory exceptions, image is resampled prior to decoding.
             // Value was chosen taking into account image size and display size.
-            
 //            BitmapFactory.Options options = new BitmapFactory.Options();
 //            options.inSampleSize = 2;
-
-            String path = getExistingFileFromUri(uri).getPath();
 //            originalSizeBitmap = BitmapFactory.decodeFile(path, options);
+            String path = null;
+            File file = getExistingFileFromUri(uri);
+            if (file != null) {
+               path = file.getPath();
+            }
             originalSizeBitmap = BitmapFactory.decodeFile(path);
         } catch (OutOfMemoryError e) {
             throw new SkavaSystemException(e);
@@ -95,6 +102,9 @@ public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
     public Bitmap getScaledBitmapFromUri(Uri uri, int reqWidth, int reqHeight ) {
         String path = getExistingFileFromUri(uri).getPath();
         Bitmap originalSizeBitmap = BitmapFactory.decodeFile(path);
+        //To avoid out of memory exception
+        //Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalSizeBitmap, reqWidth, reqHeight, false);
+
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalSizeBitmap, reqWidth, reqHeight, false);
         return resizedBitmap;
     }
@@ -104,15 +114,24 @@ public class SkavaPictureFilesUtils extends SkavaFilesUtils   {
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        String path = getExistingFileFromUri(uri).getPath();
-        BitmapFactory.decodeFile(path, options);
+        options.inDither=false;         //Disable Dithering mode
+        options.inPurgeable=true;       //Tell to gc that whether it needs free memory, the Bitmap can be cleared
+        options.inInputShareable=true;  //Which kind of reference will be used to recover the Bitmap data after being clear, when it will be used in the future
+        options.inTempStorage=new byte[32 * 1024];
+        File file = getExistingFileFromUri(uri);
+        String path = null;
+        if (file != null) {
+            path = file.getPath();
+            BitmapFactory.decodeFile(path, options);
+            // Calculate inSampleSize
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+            // Decode bitmap with inSampleSize set
+            options.inJustDecodeBounds = false;
+            return BitmapFactory.decodeFile(path, options);
+        } else {
+            throw new SkavaSystemException("Skava exception :: File not found at " + uri.getPath());
+        }
 
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeFile(path, options);
     }
 
     public int[] calculateNewDimensionForMaxSize(Uri uri,int maxSize){

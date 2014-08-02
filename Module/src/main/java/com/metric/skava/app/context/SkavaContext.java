@@ -1,6 +1,7 @@
 package com.metric.skava.app.context;
 
 import com.dropbox.sync.android.DbxDatastore;
+import com.metric.skava.app.SkavaApplication;
 import com.metric.skava.app.helper.MyMonitorObject;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.User;
@@ -23,7 +24,7 @@ public class SkavaContext {
     private SyncHelper syncHelper;
     private String targetEnvironment;
     private SyncQueue middlemanInbox;
-
+    private SkavaApplication.Module mOriginatorModule;
 
     private MyMonitorObject myMonitoObject;
     private boolean wasSignalled = true;
@@ -52,6 +53,14 @@ public class SkavaContext {
             wasSignalled = true;
             myMonitoObject.notify();
         }
+    }
+
+    public SkavaApplication.Module getOriginatorModule() {
+        return mOriginatorModule;
+    }
+
+    public void setOriginatorModule(SkavaApplication.Module mOriginatorModule) {
+        this.mOriginatorModule = mOriginatorModule;
     }
 
     public String getTargetEnvironment() {

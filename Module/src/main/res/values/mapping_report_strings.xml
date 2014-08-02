@@ -5,7 +5,10 @@
     <string name="title_activity_review_report_main">Summary Report</string>
 
     <string name="action_report_send">Send</string>
-    <string name="action_report_save_draft">Save draft</string>
+    <string name="action_report_save">Save</string>
+    <string name="action_report_delete">Delete</string>
+    <string name="action_report_use_as_template">Use as template</string>
+
 
     <string name="report_wall_pattern">Wall Pattern (m)</string>
     <string name="report_roof_pattern">Roof Pattern (m)</string>
