@@ -115,13 +115,33 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
 
 //    @Override
 //    public List<Assessment> getAssessmentsByUser(User user) throws DAOException {
-//        return null;
+//        List<Assessment> allAssessments = new ArrayList<Assessment>();
+//        List<TunnelFace> facesGranted = mLocalTunnelFaceDAO.getTunnelFacesByUser(environment, user);
+//        //find the last five active assessment for each of those faces
+//        for (TunnelFace grantedFace : facesGranted) {
+//            List<Assessment> grantedFaceAssessments = getAssessmentsByTunnelFace(environment, grantedFace);
+//            Collections.sort(grantedFaceAssessments, new Comparator<Assessment>() {
+//                @Override
+//                public int compare(Assessment lhs, Assessment rhs) {
+//                    return Long.compare(rhs.getDateTime().getTime().getTime(), lhs.getDateTime().getTime().getTime());
+//                }
+//            });
+//            allAssessments.addAll(grantedFaceAssessments);
+//        }
+//        return allAssessments;
 //    }
-//
-//    @Override
-//    public List<Assessment> getAssessmentsByTunnelFace(TunnelFace face) throws DAOException {
-//        return null;
-//    }
+
+    @Override
+    public List<Assessment> getAssessmentsByTunnelFace(TunnelFace face) throws DAOException {
+        List<Assessment> listAssessments = new ArrayList<Assessment>();
+        List<DbxRecord> assessmentsPerFace = mAssessmentsTable.findRecordsByCriteria(new String[]{"faceCode"}, new String[]{face.getCode()});
+        Assessment newAssessment = null;
+        for (DbxRecord currentDbxRecord : assessmentsPerFace) {
+            newAssessment = assessmentBuilder.buildAssessmentFromRecord(currentDbxRecord);
+            listAssessments.add(newAssessment);
+        }
+        return listAssessments;
+    }
 
 
     @Override
@@ -227,7 +247,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
 
             String outcropGeologicalDescription = assessment.getOutcropDescription();
             if (outcropGeologicalDescription != null) {
-                assessmentFields.set("outrcropGeologicalDescription", outcropGeologicalDescription);
+                assessmentFields.set("outcropGeologicalDescription", outcropGeologicalDescription);
             }
 
             String rockSampleIdentification = assessment.getRockSampleIdentification();
@@ -702,7 +722,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     LocalAssessmentDAO assessmentDAO = getDAOFactory().getLocalAssessmentDAO();
                     Assessment uploadedAssessment = null;
                     uploadedAssessment = assessmentDAO.getAssessment(assessmentCode);
-                    uploadedAssessment.setPicsSentStatus(Assessment.PICS_SENT_TO_DATASTORE);
+                    uploadedAssessment.setPicsSentStatus(Assessment.SendingStatus.SENT_TO_DATASTORE);
                     assessmentDAO.updateAssessment(uploadedAssessment, false);
                 } catch (DAOException e) {
                     e.printStackTrace();

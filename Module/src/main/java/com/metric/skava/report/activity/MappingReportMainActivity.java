@@ -3,6 +3,7 @@ package com.metric.skava.report.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
@@ -24,7 +25,7 @@ import com.metric.skava.assessment.activity.AssessmentsListActivity;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.RemoteAssessmentDAO;
 import com.metric.skava.data.dao.exception.DAOException;
-import com.metric.skava.report.fragment.MappingReportMainFragment;
+import com.metric.skava.report.fragment.AssessmentReportMainFragment;
 
 
 public class MappingReportMainActivity extends SkavaFragmentActivity {
@@ -33,7 +34,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.mapping_report_main_activity);
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
@@ -46,7 +47,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
         //
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new MappingReportMainFragment())
+                    .add(R.id.container, new AssessmentReportMainFragment())
                     .commit();
         }
     }
@@ -62,8 +63,8 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         switch (getCurrentAssessment().getDataSentStatus()) {
-            case Assessment.DATA_SENT_TO_CLOUD:
-            case Assessment.DATA_SENT_TO_DATASTORE:
+            case SENT_TO_CLOUD:
+            case SENT_TO_DATASTORE:
                 // show no buttons as we dont want edit, re save nor resend
                 menu.findItem(R.id.action_mapping_report_draft).setVisible(false);
                 menu.findItem(R.id.action_mapping_report_send).setVisible(false);
@@ -88,7 +89,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
             return true;
         }
         if (id == R.id.action_mapping_report_draft) {
-            boolean successOnSaving = saveDraft();
+            boolean successOnSaving = save();
             if (successOnSaving) {
                 Log.i(SkavaConstants.LOG, "Geological mapping draft succesfully saved.");
                 Toast.makeText(this, "", Toast.LENGTH_LONG).show();
@@ -120,7 +121,7 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
     private boolean sendAsCompleted() {
         try {
             //First save locally
-            saveDraft();
+            save();
             Assessment currentAssessment = getCurrentAssessment();
             RemoteAssessmentDAO remoteAssessmentDAO = getDAOFactory().getRemoteAssessmentDAO(DAOFactory.Flavour.DROPBOX);
             remoteAssessmentDAO.saveAssessment(currentAssessment);
@@ -161,7 +162,11 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
         } else {
             // This activity is part of this app's task, so simply
             // navigate up to the logical parent activity.
-            NavUtils.navigateUpTo(this, upIntent);
+            //NavUtils.navigateUpTo(this, upIntent) does not work on JellyBean
+            //NavUtils.navigateUpTo(this, upIntent);
+            upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(upIntent);
+            finish();
         }
     }
 

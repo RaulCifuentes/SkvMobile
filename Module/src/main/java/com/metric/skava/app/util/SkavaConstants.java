@@ -69,4 +69,5 @@ public class SkavaConstants {
     public static final String EXTRA_OPERATION_INSERT = "INSERT";
     public static final String EXTRA_OPERATION_DELETE = "DELETE";
 
+    public static final String SKAVA_APP_SRC = "SKAVA_APP_SRC";
 }

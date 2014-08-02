@@ -199,7 +199,6 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             throw new SkavaSystemException(e);
-//            return;
         }
         // Create an ArrayAdapter using the string array and a default spinner layout
         sectionAdapter = new SkavaEntityAdapter<ExcavationSection>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, sectionList);

@@ -8,7 +8,7 @@ import com.dropbox.sync.android.DbxTable;
  */
 public class DataSyncDropboxTable extends DropboxBaseTable implements DropboxTable {
 
-    public static final String DATA_SYNC_TABLE = "DataStoreSync";
+    public static final String DATA_SYNC_TABLE = "AssessmentSync";
 
     public DataSyncDropboxTable(DbxDatastore datastore) {
         super(datastore);

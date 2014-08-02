@@ -113,7 +113,7 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.login_main_menu, menu);
+        //getMenuInflater().inflate(R.menu.login_main_menu, menu);
         return true;
     }
 

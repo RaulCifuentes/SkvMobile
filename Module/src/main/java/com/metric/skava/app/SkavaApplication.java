@@ -31,6 +31,8 @@ public class SkavaApplication extends MetricApplication {
     private boolean needImportUserData;
     private boolean linkDropboxCompleted;
 
+    public enum Module {ROCK_CLASSIFICATION, FACE_MAPPING}
+
     public SkavaContext getSkavaContext() {
         return mSkavaContext;
     }
@@ -46,10 +48,12 @@ public class SkavaApplication extends MetricApplication {
 
     public void setNeedImportAppData(boolean wantImportAppData) {
         this.needImportAppData = wantImportAppData;
+        saveState();
     }
 
     public void setNeedImportUserData(boolean wantImportUserData) {
         this.needImportUserData = wantImportUserData;
+        saveState();
     }
 
     public boolean isImportAppDataNeeded() {
@@ -67,6 +71,7 @@ public class SkavaApplication extends MetricApplication {
 
     public void setLinkDropboxCompleted(boolean linkDropboxCompleted) {
         this.linkDropboxCompleted = linkDropboxCompleted;
+        saveState();
     }
 
 
@@ -138,7 +143,7 @@ public class SkavaApplication extends MetricApplication {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(getString(R.string.needs_reimport_app_data_key), isImportAppDataNeeded());
         editor.putBoolean(getString(R.string.needs_reimport_user_data_key), isImportUserDataNeeded());
-        editor.putBoolean(getString(R.string.linked_to_dropbox_key), isImportUserDataNeeded());
+        editor.putBoolean(getString(R.string.linked_to_dropbox_key), isLinkDropboxCompleted());
         editor.commit();
     }
 

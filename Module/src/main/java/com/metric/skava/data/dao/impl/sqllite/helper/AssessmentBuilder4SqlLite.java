@@ -146,11 +146,14 @@ public class AssessmentBuilder4SqlLite {
         java.lang.String rockSampleIdentification = CursorUtils.getString(AssessmentTable.ROCK_SAMPLE_IDENTIFICATION_COLUMN, cursor);
         babyAssessment.setRockSampleIdentification(rockSampleIdentification);
 
-        Integer dataSentStatus = CursorUtils.getInt(AssessmentTable.DATA_SENT_STATUS_COLUMN, cursor);
-        babyAssessment.setDataSentStatus(dataSentStatus);
+        String dataSentStatus = CursorUtils.getString(AssessmentTable.DATA_SENT_STATUS_COLUMN, cursor);
+        babyAssessment.setDataSentStatus(Assessment.SendingStatus.valueOf(dataSentStatus));
 
-        Integer filesSentStatus = CursorUtils.getInt(AssessmentTable.FILES_SENT_STATUS_COLUMN, cursor);
-        babyAssessment.setPicsSentStatus(filesSentStatus);
+        String filesSentStatus = CursorUtils.getString(AssessmentTable.FILES_SENT_STATUS_COLUMN, cursor);
+        babyAssessment.setPicsSentStatus(Assessment.SendingStatus.valueOf(filesSentStatus));
+
+        String savingStatus = CursorUtils.getString(AssessmentTable.SAVING_STATUS_COLUMN, cursor);
+        babyAssessment.setSavedStatus(Assessment.SavingStatus.valueOf(savingStatus));
 
         return babyAssessment;
     }

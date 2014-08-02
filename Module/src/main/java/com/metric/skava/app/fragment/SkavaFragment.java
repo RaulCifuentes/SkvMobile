@@ -27,23 +27,15 @@ public class SkavaFragment extends Fragment {
      */
     public static final String ARG_BASKET_ID = "PARCELABLE_DATA_BASKET_ID";
 
-
-    //This is setted when an anctivity context is available onAttach() method
-//    private SkavaContext mSkavaContext;
-
-
     public SkavaContext getSkavaContext() {
-//        return mSkavaContext;
         return getSkavaActivity().getSkavaContext();
     }
 
     public Assessment getCurrentAssessment() {
-//        return getSkavaContext().getAssessment();
         return getSkavaActivity().getCurrentAssessment();
     }
 
     public DAOFactory getDAOFactory() {
-//        return getSkavaContext().getDAOFactory();
         return getSkavaActivity().getDAOFactory();
     }
 
@@ -60,11 +52,6 @@ public class SkavaFragment extends Fragment {
     public RMR_Calculation getRMRCalculationContext() {
         return getCurrentAssessment().getRmrCalculation();
     }
-
-    //The ESR and Span are not editable, so no need to update through any context at all
-//    public ExcavationFactors getSupportRequirementsContext() {
-//        return getCurrentAssessment().getExcavationFactors();
-//    }
 
 
     @Override
@@ -96,8 +83,6 @@ public class SkavaFragment extends Fragment {
                     + SkavaFragment.class.getSimpleName() + " : onAttach ");
         }
         super.onAttach(activity);
-//        SkavaApplication application = (SkavaApplication) (activity.getApplication());
-//        mSkavaContext = application.getSkavaContext();
     }
 
     @Override

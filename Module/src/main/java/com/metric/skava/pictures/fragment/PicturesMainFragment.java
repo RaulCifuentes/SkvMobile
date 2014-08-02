@@ -52,13 +52,12 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
     public static final int TAKE_PHOTO_EXTRA_REQUEST_CODE = 500;
     public static final String EXTRA_PICTURE_NAME = "Extra";
 
-    public static final String ROOF_FILE_NAME_HINT = "_ROOF_";
-    public static final String LEFT_FILE_NAME_HINT = "_LEFT_";
-    public static final String RIGHT_FILE_NAME_HINT = "_RIGHT_";
-    public static final String FACE_FILE_NAME_HINT = "_FACE_";
-    public static final String EXTRA_FILE_NAME_HINT = "_EXTRA_";
-    public static final String WEDGE_FILE_NAME_HINT = "_WEDGE_";
-    public static final String EXPANDED_FILE_NAME_HINT = "_EXPANDED_";
+    public static final String ROOF_FILE_NAME_HINT = "ROOF";
+    public static final String LEFT_FILE_NAME_HINT = "LEFT";
+    public static final String RIGHT_FILE_NAME_HINT = "RIGHT";
+    public static final String FACE_FILE_NAME_HINT = "FACE";
+    public static final String EXTRA_FILE_NAME_HINT = "EXTRA";
+
 
     private PictureGridViewAdapter mAdapter;
     private Assessment mAssessment;
@@ -138,14 +137,15 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
             return true;
         }
         String assessmenCode = getCurrentAssessment().getCode();
-        String suggestedName = assessmenCode;
+//        String suggestedName = assessmenCode;
+        String suggestedName = "";
         if (id == R.id.action_add_face_picture) {
             Intent photoIntent = new Intent(
                     MediaStore.ACTION_IMAGE_CAPTURE);
             suggestedName+= FACE_FILE_NAME_HINT;
             Uri targetUri = null;
             try {
-                targetUri = mPictureFilesUtils.getOutputUri(assessmenCode, suggestedName);
+                targetUri = mPictureFilesUtils.getOutputUri(assessmenCode, suggestedName, null);
                 uriGenerated[0] = targetUri;
             } catch (SkavaSystemException e) {
                 Log.e(SkavaConstants.LOG, e.getMessage());
@@ -161,7 +161,7 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
             suggestedName+= LEFT_FILE_NAME_HINT;
             Uri targetUri = null;
             try {
-                targetUri = mPictureFilesUtils.getOutputUri(assessmenCode,suggestedName);
+                targetUri = mPictureFilesUtils.getOutputUri(assessmenCode,suggestedName, null);
                 uriGenerated[2] = targetUri;
             } catch (SkavaSystemException e) {
                 Log.e(SkavaConstants.LOG, e.getMessage());
@@ -177,7 +177,7 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
             suggestedName+= RIGHT_FILE_NAME_HINT;
             Uri targetUri = null;
             try {
-                targetUri = mPictureFilesUtils.getOutputUri(assessmenCode,suggestedName);
+                targetUri = mPictureFilesUtils.getOutputUri(assessmenCode,suggestedName, null);
                 uriGenerated[4] = targetUri;
             } catch (SkavaSystemException e) {
                 Log.e(SkavaConstants.LOG, e.getMessage());
@@ -193,7 +193,7 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
             suggestedName+= ROOF_FILE_NAME_HINT;
             Uri targetUri = null;
             try {
-                targetUri = mPictureFilesUtils.getOutputUri(assessmenCode,suggestedName);
+                targetUri = mPictureFilesUtils.getOutputUri(assessmenCode,suggestedName, null);
                 uriGenerated[6] = targetUri;
             } catch (SkavaSystemException e) {
                 Log.e(SkavaConstants.LOG, e.getMessage());
@@ -209,7 +209,7 @@ public class PicturesMainFragment extends SkavaFragment implements AdapterView.O
             suggestedName+= EXTRA_FILE_NAME_HINT;
             Uri targetUri = null;
             try {
-                targetUri = mPictureFilesUtils.getOutputUri(assessmenCode, suggestedName);
+                targetUri = mPictureFilesUtils.getOutputUri(assessmenCode, suggestedName, null);
                 uriGenerated[8] = targetUri;
             } catch (SkavaSystemException e) {
                 Log.e(SkavaConstants.LOG, e.getMessage());

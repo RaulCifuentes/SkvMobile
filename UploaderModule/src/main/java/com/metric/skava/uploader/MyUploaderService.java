@@ -242,6 +242,7 @@ public class MyUploaderService extends IntentService {
             e.printStackTrace();
             mErrorMsg = "Network error.  Try again.";
             Log.e(SkavaUploaderConstants.LOG, e.getMessage());
+            BugSenseHandler.sendException(e);
 //            Log.e(SkavaUploaderConstants.LOG, e.getMessage());
         } catch (DropboxParseException e) {
             BugSenseHandler.sendException(e);

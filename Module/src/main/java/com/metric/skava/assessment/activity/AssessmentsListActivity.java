@@ -20,8 +20,12 @@ import com.metric.skava.assessment.dialog.adapter.AssessmentListAdapter;
 import com.metric.skava.assessment.fragment.AssessmentListFragment;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.LocalRoleDAO;
+import com.metric.skava.mapping.activity.MappingStageListActivity;
+import com.metric.skava.report.activity.AssessmentReportMainActivity;
 import com.metric.skava.report.activity.MappingReportMainActivity;
-import com.metric.skava.report.activity.ReviewReportMainActivity;
+import com.metric.skava.report.activity.ReviewAssessmentReportMainActivity;
+import com.metric.skava.report.activity.ReviewMappingReportMainActivity;
+import com.metric.skava.report.fragment.AssessmentReportMainFragment;
 import com.metric.skava.report.fragment.MappingReportMainFragment;
 
 import java.util.List;
@@ -36,6 +40,7 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
         setContentView(R.layout.assessments_list_activity);
         try {
             localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();
@@ -99,7 +104,15 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
         int id = item.getItemId();
         if (id == R.id.action_new_assessment) {
             getSkavaContext().setAssessment(null);
-            Intent intent = new Intent(this, AssessmentStageListActivity.class);
+            Intent intent = null;
+            switch (getSkavaContext().getOriginatorModule()) {
+                case ROCK_CLASSIFICATION:
+                    intent = new Intent(this, AssessmentStageListActivity.class);
+                    break;
+                case FACE_MAPPING:
+                    intent = new Intent(this, MappingStageListActivity.class);
+                    break;
+            }
             startActivity(intent);
             return true;
         }
@@ -120,19 +133,37 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
 
     @Override
     public void onAssessmentListRowClicked(Assessment selectedAssessment) {
-        // Lanzar activity que muestra el reporte
         getSkavaContext().setAssessment(selectedAssessment);
-        Intent detailIntent;
-        int sentStatus = selectedAssessment.getDataSentStatus();
-        switch (sentStatus) {
-            case Assessment.DATA_SENT_TO_CLOUD:
-            case Assessment.DATA_SENT_TO_DATASTORE:
-                detailIntent = new Intent(this, ReviewReportMainActivity.class);
-                detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, AssesmentStageDataProvider.REPORT);
+        Intent detailIntent = null;
+        Assessment.SendingStatus sentStatus = selectedAssessment.getDataSentStatus();
+        //choose what to do based on the originator
+        switch (getSkavaContext().getOriginatorModule()) {
+            case ROCK_CLASSIFICATION:
+                // Lanzar activity que muestra el reporte
+                switch (sentStatus) {
+                    case SENT_TO_CLOUD:
+                    case SENT_TO_DATASTORE:
+                        detailIntent = new Intent(this, ReviewAssessmentReportMainActivity.class);
+                        detailIntent.putExtra(AssessmentReportMainFragment.ARG_BASKET_ID, AssesmentStageDataProvider.REPORT);
+                        break;
+                    default:
+                        detailIntent = new Intent(this, AssessmentReportMainActivity.class);
+                        detailIntent.putExtra(AssessmentReportMainFragment.ARG_BASKET_ID, AssesmentStageDataProvider.REPORT);
+                }
                 break;
-            default:
-                detailIntent = new Intent(this, MappingReportMainActivity.class);
-                detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, AssesmentStageDataProvider.REPORT);
+            case FACE_MAPPING:
+                sentStatus = selectedAssessment.getDataSentStatus();
+                switch (sentStatus) {
+                    case SENT_TO_CLOUD:
+                    case SENT_TO_DATASTORE:
+                        detailIntent = new Intent(this, ReviewMappingReportMainActivity.class);
+                        detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, AssesmentStageDataProvider.REPORT);
+                        break;
+                    default:
+                        detailIntent = new Intent(this, MappingReportMainActivity.class);
+                        detailIntent.putExtra(MappingReportMainFragment.ARG_BASKET_ID, AssesmentStageDataProvider.REPORT);
+                }
+                break;
         }
         startActivity(detailIntent);
     }
@@ -153,6 +184,10 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
     public void onPreExecuteImportAppData(){
 //        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);

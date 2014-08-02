@@ -16,6 +16,7 @@ public abstract class SqlLiteBaseDAO {
 
     private final SkavaContext mSkavaContext;
     protected Context mContext;
+    private SQLiteDatabase mDatabase;
 
     public Context getContext() {
         return mContext;
@@ -25,18 +26,18 @@ public abstract class SqlLiteBaseDAO {
         return mSkavaContext.getDAOFactory();
     }
 
-
     public SqlLiteBaseDAO(Context mContext, SkavaContext skavaContext) {
         this.mContext = mContext;
         this.mSkavaContext = skavaContext;
     }
 
-
     public SQLiteDatabase getDBConnection() {
         SkavaDatabase skavaDatabase = SkavaDatabase.getInstance(mContext);
         SkavaDBHelper skavaDBHelper = skavaDatabase.getSkavaDBHelper();
-        SQLiteDatabase db = skavaDBHelper.getWritableDatabase();
-        return db;
+        if (mDatabase == null ){
+            mDatabase = skavaDBHelper.getWritableDatabase();
+        }
+        return mDatabase;
     }
 
     public Long countRecords(String tableName){

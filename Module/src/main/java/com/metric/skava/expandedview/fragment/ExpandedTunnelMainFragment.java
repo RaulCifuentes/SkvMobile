@@ -29,7 +29,8 @@ public class ExpandedTunnelMainFragment extends SkavaFragment {
     // the expanded views of previous mappings
 //    private List<Uri> mTunnelExpandedViews;
     private SkavaPictureFilesUtils mPictureFilesUtils;
-    private ImageView mImageView;
+    private ImageView mImageViewUpper;
+    private ImageView mImageViewLower;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,8 @@ public class ExpandedTunnelMainFragment extends SkavaFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mImageView = (ImageView) view.findViewById(R.id.imageView);
+        mImageViewUpper = (ImageView) view.findViewById(R.id.imageViewUpper);
+        mImageViewLower = (ImageView) view.findViewById(R.id.imageViewLower);
         updateImageView();
     }
 
@@ -57,6 +59,7 @@ public class ExpandedTunnelMainFragment extends SkavaFragment {
         try {
             if (mTunnelExpandedView == null){
                 Bitmap baseAsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.expanded_tunnel_dark);
+//                Bitmap baseAsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.expanded_tunnel_duplicated_dark);
                 //show the base grid template
 //                final DisplayMetrics displayMetrics = new DisplayMetrics();
 //                getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -75,7 +78,20 @@ public class ExpandedTunnelMainFragment extends SkavaFragment {
             BugSenseHandler.sendException(e);
             Log.e(SkavaConstants.LOG, e.getMessage());
         }
-        mImageView.setImageBitmap(expandedViewAsBitmap);
+
+        mImageViewUpper.setImageBitmap(expandedViewAsBitmap);
+        mImageViewLower.setAlpha(.5f);
+
+        /** One
+        ImageView iv = (ImageView) findViewById(your_imageId);
+        iv.setColorFilter(Color.argb(150, 155, 155, 155),   Mode.SRC_ATOP);
+        *** Two
+        Drawable d = getResources().getDrawable(R.relevant_drawable);
+        d.setAlpha(50);
+        layout.setBackgroundDrawable(d);
+        * */
+        Bitmap previousMappingAsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.expanded_tunnel_dark_with_lines);
+        mImageViewLower.setImageBitmap(previousMappingAsBitmap);
     }
 
 

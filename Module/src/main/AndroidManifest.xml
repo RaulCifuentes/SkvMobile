@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.metric.skava" >
+    package="com.metric.skava">
 
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -36,7 +36,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/CustomAppTheme" >
+        android:theme="@style/CustomAppTheme">
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCwRSEzlDXPJ010ozR1jLNGj6lO2EMBMH8" />
@@ -51,7 +51,7 @@
         <activity android:name="com.dropbox.sync.android.DbxAuthActivity" />
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask">
             <intent-filter>
 
                 <!-- SKAVAAPP -->
@@ -76,99 +76,99 @@
             android:label="Dropbox Sync" />
 
         <activity
-            android:name="com.metric.skava.authentication.AuthenticatorActivity"
-            android:label="@string/login_label" />
-        <activity
-            android:name="com.metric.skava.authentication.SignUpActivity"
-            android:label="@string/signup_title" />
-
-        <service android:name="com.metric.skava.authentication.SkavaAuthenticatorService" >
-            <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
-        </service>
-
-        <activity
             android:name="com.metric.skava.home.activity.HomeMainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTask" >
-            <intent-filter android:label="@string/app_name" >
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+            <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="com.metric.skava.data.activity.DataExplorerMainActivity"
-            android:label="@string/title_activity_test_main"
-            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.metric.skava.home.activity.HomeMainActivity" />
         </activity>
         <activity
             android:name="com.metric.skava.authentication.LoginMainActivity"
             android:label="@string/title_activity_login_main"
             android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
+            android:windowSoftInputMode="adjustResize|stateVisible"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.home.activity.HomeMainActivity" />
         </activity>
+        <!--<activity-->
+            <!--android:name="com.metric.skava.maps.activity.LocationMapActivity"-->
+            <!--android:label="@string/title_activity_location_map"-->
+            <!--android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity"-->
+            <!--android:screenOrientation="landscape"-->
+            <!--android:configChanges="keyboardHidden|orientation|screenSize">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value="com.metric.skava.home.activity.HomeMainActivity" />-->
+        <!--</activity>-->
         <activity
-            android:name="com.metric.skava.maps.activity.LocationMapActivity"
-            android:label="@string/title_activity_location_map"
-            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.metric.skava.home.activity.HomeMainActivity" />
-        </activity>
-        <activity
-            android:name="com.metric.skava.report.activity.ReviewReportMainActivity"
+            android:name=".report.activity.ReviewAssessmentReportMainActivity"
             android:label="@string/title_activity_mapping_report_main"
-            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentsListActivity" >
+            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentsListActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.assessment.activity.AssessmentsListActivity" />
         </activity>
         <activity
-            android:name="com.metric.skava.report.activity.MappingReportMainActivity"
+            android:name=".report.activity.AssessmentReportMainActivity"
             android:label="@string/title_activity_mapping_report_main"
-            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity" >
+            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.assessment.activity.AssessmentStageListActivity" />
         </activity>
         <activity
-            android:name="com.metric.skava.speech.activity.SpeechMainActivity"
-            android:label="@string/title_activity_speech_main"
-            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity" >
+            android:name=".report.activity.MappingReportMainActivity"
+            android:label="@string/title_activity_mapping_report_main"
+            android:parentActivityName="com.metric.skava.mapping.activity.MappingStageListActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.metric.skava.home.activity.HomeMainActivity" />
+                android:value="com.metric.skava.mapping.activity.MappingStageListActivity" />
         </activity>
+        <!--<activity-->
+            <!--android:name="com.metric.skava.speech.activity.SpeechMainActivity"-->
+            <!--android:label="@string/title_activity_speech_main"-->
+            <!--android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value="com.metric.skava.home.activity.HomeMainActivity" />-->
+        <!--</activity>-->
         <activity
             android:name="com.metric.skava.calculator.activity.CalculatorFlavoursListActivity"
             android:label="Calculator Flavours List Activity"
-            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity" >
+            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.home.activity.HomeMainActivity" />
         </activity>
         <activity
             android:name="com.metric.skava.calculator.barton.activity.QBartonCalculatorDetailActivity"
-            android:parentActivityName="com.metric.skava.calculator.activity.CalculatorFlavoursListActivity" >
+            android:parentActivityName="com.metric.skava.calculator.activity.CalculatorFlavoursListActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.calculator.activity.CalculatorFlavoursListActivity" />
         </activity>
         <activity
             android:name="com.metric.skava.calculator.rmr.activity.RMRCalculatorDetailActivity"
-            android:parentActivityName="com.metric.skava.calculator.activity.CalculatorFlavoursListActivity" >
+            android:parentActivityName="com.metric.skava.calculator.activity.CalculatorFlavoursListActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.calculator.activity.CalculatorFlavoursListActivity" />
@@ -176,7 +176,9 @@
         <activity
             android:name="com.metric.skava.settings.activity.SettingsMainActivity"
             android:label="@string/title_activity_settings_main"
-            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity" >
+            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.home.activity.HomeMainActivity" />
@@ -184,7 +186,19 @@
         <activity
             android:name="com.metric.skava.assessment.activity.AssessmentStageListActivity"
             android:label="@string/title_stage_list"
-            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity" >
+            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.metric.skava.home.activity.HomeMainActivity" />
+        </activity>
+        <activity
+            android:name="com.metric.skava.mapping.activity.MappingStageListActivity"
+            android:label="@string/title_stage_list"
+            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.home.activity.HomeMainActivity" />
@@ -192,7 +206,9 @@
         <activity
             android:name="com.metric.skava.identification.activity.IdentificationMainActivity"
             android:label="@string/title_activity_identification_main"
-            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity" >
+            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.home.activity.HomeMainActivity" />
@@ -200,7 +216,9 @@
         <activity
             android:name="com.metric.skava.rockmass.activity.RockMassDescriptionMainActivity"
             android:label="@string/title_activity_rock_mass_description_main"
-            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity" >
+            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.home.activity.HomeMainActivity" />
@@ -208,7 +226,9 @@
         <activity
             android:name="com.metric.skava.about.activity.AboutMainActivity"
             android:label="@string/title_activity_about_main"
-            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity" >
+            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.home.activity.HomeMainActivity" />
@@ -216,7 +236,9 @@
         <activity
             android:name="com.metric.skava.pictures.activity.PicturesMainActivity"
             android:label="@string/title_activity_pictures_main"
-            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity" >
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.home.activity.HomeMainActivity" />
@@ -224,7 +246,9 @@
         <activity
             android:name="com.metric.skava.pictures.activity.PictureDetailActivity"
             android:label="@string/title_activity_picture_detail"
-            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity" >
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.assessment.activity.AssessmentStageListActivity" />
@@ -232,7 +256,10 @@
         <activity
             android:name="com.metric.skava.expandedview.activity.ExpandedTunnelMainActivity"
             android:label="@string/title_activity_expanded_view"
-            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity" >
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity"
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.assessment.activity.AssessmentStageListActivity" />
@@ -240,7 +267,9 @@
         <activity
             android:name="com.metric.skava.discontinuities.activity.DiscontinuitiesMainActivity"
             android:label="@string/title_activity_discontinuities_main"
-            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity" >
+            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.assessment.activity.AssessmentStageListActivity" />
@@ -248,7 +277,9 @@
         <activity
             android:name="com.metric.skava.instructions.activity.InstructionsMainActivity"
             android:label="@string/title_activity_instructions_main"
-            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity" >
+            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.assessment.activity.AssessmentStageListActivity" />
@@ -256,7 +287,9 @@
         <activity
             android:name="com.metric.skava.test.activity.TestListViewMainActivity"
             android:label="@string/title_activity_test_list_view_main"
-            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity" >
+            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.assessment.activity.AssessmentStageListActivity" />
@@ -264,7 +297,9 @@
         <activity
             android:name="com.metric.skava.rocksupport.activity.RockSupportMainActivity"
             android:label="@string/title_activity_rock_support_main"
-            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity" >
+            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.assessment.activity.AssessmentStageListActivity" />
@@ -272,36 +307,45 @@
         <activity
             android:name="com.metric.skava.sync.activity.SyncMainActivity"
             android:label="@string/title_activity_sync_main"
-            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity" >
+            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.home.activity.HomeMainActivity" />
         </activity>
-        <activity
-            android:name="com.metric.skava.test.activity.WebViewMainActivity"
-            android:label="@string/title_activity_web_view_main" />
+        <!--<activity-->
+            <!--android:name="com.metric.skava.test.activity.WebViewMainActivity"-->
+            <!--android:label="@string/title_activity_web_view_main"-->
+            <!--android:screenOrientation="landscape"-->
+            <!--android:configChanges="keyboardHidden|orientation|screenSize" />-->
         <activity
             android:name="com.metric.skava.assessment.activity.AssessmentsListActivity"
             android:label="@string/title_activity_assessments_list"
-            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity" >
+            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.home.activity.HomeMainActivity" />
         </activity>
-        <activity
-            android:name="com.metric.skava.test.activity.TestAuthenticationMainActivity"
-            android:label="@string/title_activity_test_authentication_main" />
-        <activity
-            android:name="com.metric.skava.assessment.activity.SaveAssessmentActivity"
-            android:label="@string/title_activity_save_assessment" />
-        <activity
-            android:name="com.metric.skava.expandedview.activity.TestAutocadMainActivity"
-            android:label="@string/title_activity_test_autocad_main"
-            android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.metric.skava.assessment.activity.AssessmentStageListActivity" />
-        </activity>
+        <!--<activity-->
+            <!--android:name="com.metric.skava.test.activity.TestAuthenticationMainActivity"-->
+            <!--android:label="@string/title_activity_test_authentication_main"-->
+            <!--android:screenOrientation="landscape"-->
+            <!--android:configChanges="keyboardHidden|orientation|screenSize"-->
+            <!--/>-->
+        <!--<activity-->
+            <!--android:name="com.metric.skava.assessment.activity.SaveAssessmentActivity"-->
+            <!--android:label="@string/title_activity_save_assessment" />-->
+        <!--<activity-->
+            <!--android:name="com.metric.skava.expandedview.activity.TestAutocadMainActivity"-->
+            <!--android:label="@string/title_activity_test_autocad_main"-->
+            <!--android:parentActivityName="com.metric.skava.assessment.activity.AssessmentStageListActivity">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value="com.metric.skava.assessment.activity.AssessmentStageListActivity" />-->
+        <!--</activity>-->
     </application>
 
 </manifest>

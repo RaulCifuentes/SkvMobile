@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.metric.skava.R;
@@ -13,15 +14,11 @@ import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.ExcavationProject;
 import com.metric.skava.app.util.PegNumberFormat;
 import com.metric.skava.app.util.SkavaUtils;
+import com.metric.skava.app.util.ViewUtils;
 
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
-
-import static com.metric.skava.app.model.Assessment.DATA_SENT_TO_CLOUD;
-import static com.metric.skava.app.model.Assessment.DATA_SENT_TO_DATASTORE;
-import static com.metric.skava.app.model.Assessment.PICS_SENT_TO_CLOUD;
-import static com.metric.skava.app.model.Assessment.PICS_SENT_TO_DATASTORE;
 
 /**
  * Created by metricboy on 3/5/14.
@@ -31,6 +28,8 @@ public class AssessmentListAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
     private List<Assessment> assessmentList;
+    private ListView mListView;
+
 
     public AssessmentListAdapter(Context context) {
         this.mContext = context;
@@ -43,6 +42,10 @@ public class AssessmentListAdapter extends BaseAdapter {
 
     public void setAssessmentList(List<Assessment> assessmentList) {
         this.assessmentList = assessmentList;
+        if (mListView != null){
+            //This method is necessary only to use a ListView inside a ScrollView
+            ViewUtils.adjustListViewHeightBasedOnChildren(mListView);
+        }
     }
 
     @Override
@@ -115,12 +118,12 @@ public class AssessmentListAdapter extends BaseAdapter {
             //if it uploaded any picture
             if (SkavaUtils.hasPictures(currentItem.getPicturesList()) || currentItem.getTunnelExpandedView() != null) {
                 switch (currentItem.getPicsSentStatus()) {
-                    case PICS_SENT_TO_DATASTORE:
+                    case SENT_TO_DATASTORE:
                         switch (currentItem.getDataSentStatus()) {
-                            case DATA_SENT_TO_DATASTORE:
+                            case SENT_TO_DATASTORE:
                                 imageView.setImageResource(R.drawable.cloud_sync);
                                 break;
-                            case DATA_SENT_TO_CLOUD:
+                            case SENT_TO_CLOUD:
                                 imageView.setImageResource(R.drawable.cloud_striped);
                                 break;
                             default:
@@ -128,13 +131,13 @@ public class AssessmentListAdapter extends BaseAdapter {
                                 break;
                         }
                         break;
-                    case PICS_SENT_TO_CLOUD: {
+                    case SENT_TO_CLOUD: {
                         //it's hard to believe but check if data has not arrived yet
                         switch (currentItem.getDataSentStatus()) {
-                            case DATA_SENT_TO_DATASTORE:
+                            case SENT_TO_DATASTORE:
                                 imageView.setImageResource(R.drawable.cloud_striped);
                                 break;
-                            case DATA_SENT_TO_CLOUD:
+                            case SENT_TO_CLOUD:
                                 imageView.setImageResource(R.drawable.cloud_checked);
                                 break;
                             default:
@@ -144,16 +147,23 @@ public class AssessmentListAdapter extends BaseAdapter {
                         break;
                     }
                     default:
-                        imageView.setImageResource(R.drawable.tablet);
+                        switch (currentItem.getDataSentStatus()) {
+                            case SENT_TO_CLOUD:
+                            case SENT_TO_DATASTORE:
+                                imageView.setImageResource(R.drawable.cloud_sync);
+                                break;
+                            default:
+                                imageView.setImageResource(R.drawable.tablet);
+                        }
                         break;
                 }
             } else {
                 //no pictures on this maping, the data is enough
                 switch (currentItem.getDataSentStatus()) {
-                    case DATA_SENT_TO_CLOUD:
+                    case SENT_TO_CLOUD:
                         imageView.setImageResource(R.drawable.cloud_checked);
                         break;
-                    case DATA_SENT_TO_DATASTORE:
+                    case SENT_TO_DATASTORE:
                         imageView.setImageResource(R.drawable.cloud_sync);
                         break;
                     default:
@@ -161,6 +171,14 @@ public class AssessmentListAdapter extends BaseAdapter {
                 }
             }
 
+        }
+
+        if (parent instanceof ListView && mListView == null){
+            mListView = (ListView) parent;
+            if ( position == mListView.getAdapter().getCount()){
+                //This method is necessary only to use a ListView inside a ScrollView
+                ViewUtils.adjustListViewHeightBasedOnChildren(mListView);
+            };
         }
 
         return assessmentViewItem;

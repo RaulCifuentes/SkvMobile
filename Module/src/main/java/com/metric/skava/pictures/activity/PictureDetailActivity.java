@@ -83,13 +83,13 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
     }
 
     private Bitmap getBitmapFromUri() {
-        // HACK: In order to avoid Out Of Memory exceptions, image is resampled.
+        // HACK: In order to avoid Out Of Memory exceptions, image is resampled instead of scaled.
 //        Bitmap bitmapFromUri = mPictureFilesUtils.getBitmapFromUri(mSelectedPicture.getPictureLocation());
-//        Bitmap bitmapFromUri = mPictureFilesUtils.getScaledBitmapFromUri(mSelectedPicture.getPictureLocation(), 1280, 768);
 //        640x480-----4:3
 //        800x600-----4:3
 //        1024x768-----4:3
-        Bitmap bitmapFromUri = mPictureFilesUtils.getScaledBitmapFromUri(mSelectedPicture.getPictureLocation(), 800, 600);
+        //Bitmap bitmapFromUri = mPictureFilesUtils.getScaledBitmapFromUri(mSelectedPicture.getPictureLocation(), 800, 600);
+        Bitmap bitmapFromUri = mPictureFilesUtils.getSampledBitmapFromFile(mSelectedPicture.getPictureLocation(), 800, 600);
         return bitmapFromUri;
     }
 
@@ -156,8 +156,11 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
                 }
             }
         }
-        //delete physically
-        mPictureFilesUtils.deleteFileFromUri(mSelectedPicture.getPictureLocation());
+        //TODO Delete physically
+        //delete physically this is too early for delete physizally. what if this is an edition
+        //of a previously saved assessment, the deletions must be centralized on the saving of the
+        //assessment
+        //mPictureFilesUtils.deleteFileFromUri(mSelectedPicture.getPictureLocation());
         backToPicturesMenu();
     }
 
@@ -222,10 +225,10 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
                 String originalPictureName = mSelectedPicture.getPictureLocation().getLastPathSegment();
                 //clone the editedPhoto to store later in a private skava folder
                 String newPictureSuggestedName = originalPictureName.substring(0, originalPictureName.lastIndexOf(mSelectedPicture.getPictureTag().name()));
-                newPictureSuggestedName += mSelectedPicture.getPictureTag().name() + "_EDITED_";
+                newPictureSuggestedName += mSelectedPicture.getPictureTag().name();
 //                String assessmenCode = data.getStringExtra("ASSESSMENT_CODE");
                 String assessmentCode = getCurrentAssessment().getCode();
-                Uri skavaEditedPicture = mPictureFilesUtils.getOutputUri(assessmentCode, newPictureSuggestedName);
+                Uri skavaEditedPicture = mPictureFilesUtils.getOutputUri(assessmentCode, newPictureSuggestedName,  "_EDITED");
                 boolean success = false;
                 try {
                     success = mPictureFilesUtils.copyFileFromUriToUri(fileFromImageEditorURI, skavaEditedPicture, true);
@@ -235,7 +238,12 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
                 SkavaPicture editedPicture = new SkavaPicture(mSelectedPicture.getPictureTag(), skavaEditedPicture, false);
-                getCurrentAssessment().getPicturesList().set(mSelectedPictureIndex + 1, editedPicture);
+                //todo check that double editions of a picture overwrites the edition and not creates a thrird one
+                if (mSelectedPictureIndex %2 == 0){
+                    getCurrentAssessment().getPicturesList().set(mSelectedPictureIndex + 1, editedPicture);
+                } else {
+                    getCurrentAssessment().getPicturesList().set(mSelectedPictureIndex, editedPicture);
+                }
                 if (success) {
                     backToPicturesMenu();
                 } else {
@@ -277,11 +285,11 @@ public class PictureDetailActivity extends SkavaFragmentActivity {
     }
 
     public void onPreExecuteImportAppData() {
-//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
+
     }
 
     public void onPreExecuteImportUserData() {
-//        mMainContainedFragment.getBackgroudImage().setVisibility(View.GONE);
+
     }
 
     @Override

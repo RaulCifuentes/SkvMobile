@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.metric.skava.R;
 import com.metric.skava.app.fragment.SkavaFragment;
 import com.metric.skava.app.model.Assessment;
+import com.metric.skava.app.util.ViewUtils;
 import com.metric.skava.assessment.dialog.adapter.AssessmentListAdapter;
 
 /**
@@ -36,8 +37,6 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
     private String mParam2;
 
     private Context mContext;
-
-
 
     private OnFragmentInteractionListener mListener;
 
@@ -85,15 +84,15 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
 
         View listHeaderView = inflater.inflate(R.layout.fragment_assessment_list_header, null, false);
 
-        TextView zeroTextView = (TextView) listHeaderView.findViewById(R.id.zero_column_text_view);
+        TextView zeroTextView = (TextView) listHeaderView.findViewById(R.id.code_column_text_view);
         zeroTextView.setText("Code");
-        TextView firstTextView = (TextView) listHeaderView.findViewById(R.id.first_column_text_view);
+        TextView firstTextView = (TextView) listHeaderView.findViewById(R.id.chainage_column_text_view);
         firstTextView.setText("Chainage");
-        TextView secondTextView = (TextView) listHeaderView.findViewById(R.id.second_column_text_view);
+        TextView secondTextView = (TextView) listHeaderView.findViewById(R.id.date_column_text_view);
         secondTextView.setText("Date");
-        TextView thirdTextView = (TextView) listHeaderView.findViewById(R.id.third_column_text_view);
+        TextView thirdTextView = (TextView) listHeaderView.findViewById(R.id.project_column_text_view);
         thirdTextView.setText("Project");
-        TextView sixthTextView = (TextView) listHeaderView.findViewById(R.id.sixth_column_text_view);
+        TextView sixthTextView = (TextView) listHeaderView.findViewById(R.id.status_column_text_view);
         sixthTextView.setText("Status");
         mListView.addHeaderView(listHeaderView, null, false);
 
@@ -101,6 +100,9 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
         ((AdapterView<ListAdapter>) mListView).setAdapter(adapter);
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
+
+        //This method is necessary only to use a ListView inside a ScrollView
+        ViewUtils.adjustListViewHeightBasedOnChildren(mListView);
 
         return view;
     }

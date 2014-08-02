@@ -19,8 +19,8 @@
     <dimen name="prefered_image_thumbnail_width">480dp</dimen>
     <dimen name="prefered_image_thumbnail_height">360dp</dimen>
 
-    <dimen name="summary_report_non_face_image_width">426dp</dimen>
-    <dimen name="summary_report_non_face_image_height">320dp</dimen>
+    <dimen name="summary_report_non_face_image_width">320dp</dimen>
+    <dimen name="summary_report_non_face_image_height">240dp</dimen>
 
     <dimen name="summary_report_face_image_width">665dp</dimen>
     <dimen name="summary_report_face_image_height">500dp</dimen>

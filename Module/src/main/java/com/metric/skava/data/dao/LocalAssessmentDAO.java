@@ -16,6 +16,8 @@ public interface LocalAssessmentDAO {
 
 //    public Assessment getAssessmentByInternalCode(String environment, String internalCode) throws DAOException;
 
+    public Assessment getPreviousAssessment(String assessmentCode) throws DAOException;
+
     public List<Assessment> getAssessmentsByUser(String environment, User user) throws DAOException;
 
     public List<Assessment> getAssessmentsByTunnelFace(String environment, TunnelFace face) throws DAOException;
