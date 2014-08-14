@@ -96,6 +96,9 @@ public abstract class DropboxBaseTable implements DropboxTable {
                     if (keyValues[i] instanceof Long){
                         criteria.set(candidateKeyColumns[i], (Long)keyValues[i]);
                     }
+                    if (keyValues[i] instanceof Integer){
+                        criteria.set(candidateKeyColumns[i], (Integer)keyValues[i]);
+                    }
                     if (keyValues[i] instanceof Double){
                         criteria.set(candidateKeyColumns[i], (Double)keyValues[i]);
                     }
@@ -134,6 +137,9 @@ public abstract class DropboxBaseTable implements DropboxTable {
                     }
                     if (values[i] instanceof Long){
                         criteria.set(names[i], (Long)values[i]);
+                    }
+                    if (values[i] instanceof Integer){
+                        criteria.set(names[i], (Integer)values[i]);
                     }
                     if (values[i] instanceof Double){
                         criteria.set(names[i], (Double)values[i]);

@@ -8,14 +8,15 @@ import com.dropbox.sync.android.DbxTable;
  */
 public class DiscontinuitiesFamilyDropboxTable extends DropboxBaseTable implements DropboxTable {
 
+    public static final String DISCONTINUITIES_TABLE = "DiscontinuitiesFamily";
+
     public DiscontinuitiesFamilyDropboxTable(DbxDatastore datastore) {
         super(datastore);
     }
 
-
     @Override
     public DbxTable getBaseDropboxTable() {
-        return mDatastore.getTable("DiscontinuitiesFamily");
+        return mDatastore.getTable(DISCONTINUITIES_TABLE);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.metric.skava.sync.helper;
 
 import com.dropbox.sync.android.DbxDatastoreStatus;
 import com.metric.skava.app.context.SkavaContext;
+import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.Client;
 import com.metric.skava.app.model.ExcavationMethod;
 import com.metric.skava.app.model.ExcavationProject;
@@ -31,6 +32,7 @@ import com.metric.skava.calculator.rmr.model.Weathering;
 import com.metric.skava.data.dao.DAOFactory;
 import com.metric.skava.data.dao.LocalApertureDAO;
 import com.metric.skava.data.dao.LocalArchTypeDAO;
+import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.LocalBoltTypeDAO;
 import com.metric.skava.data.dao.LocalClientDAO;
 import com.metric.skava.data.dao.LocalCoverageDAO;
@@ -71,6 +73,7 @@ import com.metric.skava.data.dao.LocalUserDAO;
 import com.metric.skava.data.dao.LocalWeatheringDAO;
 import com.metric.skava.data.dao.RemoteApertureDAO;
 import com.metric.skava.data.dao.RemoteArchTypeDAO;
+import com.metric.skava.data.dao.RemoteAssessmentDAO;
 import com.metric.skava.data.dao.RemoteBoltTypeDAO;
 import com.metric.skava.data.dao.RemoteClientDAO;
 import com.metric.skava.data.dao.RemoteCoverageDAO;
@@ -300,6 +303,11 @@ public class SyncHelper {
         return totalRecords;
     }
 
+    public Long findOutNumberOfRecordsToImportForAssessment(String assessmentCode) throws DAOException {
+        RemoteMetadataDAO dropBoxMetadataDAO = daoFactory.getRemoteMetadataDAO(DAOFactory.Flavour.DROPBOX);
+        //Read from DropBox
+        return dropBoxMetadataDAO.getAssessmentRelatedRecordsCount(assessmentCode);
+    }
 
     public Long findOutNumberOfRecordsToImport(SyncTask.Domain[] domains) throws DAOException {
         /**Update the excavation methods data*/
@@ -308,6 +316,8 @@ public class SyncHelper {
         List<String> dropboxTables = new ArrayList<String>();
         for (SyncTask.Domain currentDomain : domains) {
             switch (currentDomain) {
+                case ASSESSMENTS:
+                    return dropBoxMetadataDAO.getAllAssessmentRelatedRecordsCount();
                 case ALL_APP_DATA_TABLES:
                     return dropBoxMetadataDAO.getAllAppDataRecordsCount();
                 case ALL_USER_DATA_TABLES:
@@ -394,6 +404,44 @@ public class SyncHelper {
     }
 
 
+    public Long downloadDiscontinuities(String assessmentCode) throws DAOException, SyncDataFailedException {
+        return 1L;
+    }
+
+    public Long downloadRMRCalculation(String assessmentCode) throws DAOException, SyncDataFailedException {
+        return 1L;
+    }
+
+
+    public Long downloadQCalculation(String assessmentCode) throws DAOException, SyncDataFailedException {
+        return 1L;
+    }
+
+
+    public Long downloadSupportRecommendation(String assessmentCode) throws DAOException, SyncDataFailedException {
+        return 1L;
+    }
+
+
+
+    public Long downloadAssessment(String assessmentCode) throws DAOException, SyncDataFailedException {
+        Long numRecords = 0L;
+        SyncLoggingDAO syncLoggingDAO = daoFactory.getSyncLoggingDAO();
+        DbxDatastoreStatus status = skavaContext.getDatastore().getSyncStatus();
+        SyncTask.Source source = status.isConnected ? SyncTask.Source.DROPBOX_REMOTE_DATASTORE : SyncTask.Source.DROPBOX_LOCAL_DATASTORE;
+        SyncLogEntry syncLogEntry = new SyncLogEntry(SkavaUtils.getCurrentDate(), SyncTask.Domain.ASSESSMENTS, source, SyncTask.Status.SUCCESS, numRecords);
+        try {
+            clearAssessment(assessmentCode);
+            numRecords = syncAssessment(assessmentCode);
+            syncLogEntry.setNumRecordsSynced(numRecords);
+        } catch (Exception e) {
+            syncLogEntry.setStatus(SyncTask.Status.FAIL);
+            syncLogEntry.setMessage(e.getMessage());
+            throw new SyncDataFailedException(syncLogEntry, e.getMessage());
+        }
+        syncLoggingDAO.saveSyncLogEntry(syncLogEntry);
+        return numRecords;
+    }
 
 
     public Long downloadRoles() throws DAOException, SyncDataFailedException {
@@ -1139,9 +1187,26 @@ public class SyncHelper {
         return numRecords;
     }
 
+
+
     //TODO Use the user information to pull just the faces, tunnels, projects anc clients for that user
-    public void downloadUserRelatedDataFilteredByUser(User user) throws DAOException {
-        syncFacesCascade(user);
+//    public void downloadUserRelatedDataFilteredByUser(User user) throws DAOException {
+//        syncFacesCascade(user);
+//    }
+
+    private void clearAssessment(String assessmentCode) throws DAOException {
+        LocalAssessmentDAO sqlLiteAssessmentDAO = daoFactory.getLocalAssessmentDAO();
+        sqlLiteAssessmentDAO.deleteAssessment(assessmentCode);
+    }
+
+    private Long syncAssessment(String assessmentCode) throws DAOException {
+        //Read from DropBox
+        RemoteAssessmentDAO remoteAssessmentDAO = daoFactory.getRemoteAssessmentDAO(DAOFactory.Flavour.DROPBOX);
+        Assessment downloadedAssessment = remoteAssessmentDAO.getAssessment(assessmentCode);
+        //Write into the SQLLite
+        LocalAssessmentDAO sqlLiteAssessmentDAO = daoFactory.getLocalAssessmentDAO();
+        sqlLiteAssessmentDAO.saveAssessment(downloadedAssessment);
+        return 1L;
     }
 
     private int clearExcavationSections() throws DAOException {
@@ -1188,13 +1253,13 @@ public class SyncHelper {
     private Long syncRoles() throws DAOException {
         //Read from DropBox
         RemoteRoleDAO dropBoxRemoteRoleDAO = daoFactory.getRemoteRoleDAO(DAOFactory.Flavour.DROPBOX);
-        List<Role> downloadedMethods = dropBoxRemoteRoleDAO.getAllRoles();
+        List<Role> downloadedRoles = dropBoxRemoteRoleDAO.getAllRoles();
         //Write into the SQLLite
         LocalRoleDAO sqlLiteLocalRoleDAO = daoFactory.getLocalRoleDAO();
-        for (Role downloadedMethod : downloadedMethods) {
+        for (Role downloadedMethod : downloadedRoles) {
             sqlLiteLocalRoleDAO.saveRole(downloadedMethod);
         }
-        return Long.valueOf(downloadedMethods.size());
+        return Long.valueOf(downloadedRoles.size());
     }
 
     private int clearUsers() throws DAOException {

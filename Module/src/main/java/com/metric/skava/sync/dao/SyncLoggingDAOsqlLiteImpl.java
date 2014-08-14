@@ -83,7 +83,7 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
     private List<FileToSync> assembleSyncTraceFilePersistentEntities(Cursor cursorFiles) {
         List<FileToSync> list = new ArrayList<FileToSync>();
         while (cursorFiles.moveToNext()) {
-            String environment = CursorUtils.getString(AssessmentSyncTraceRecordsTable.ENVIRONMENT_COLUMN, cursorFiles);
+            String environment = CursorUtils.getString(AssessmentSyncTraceFilesTable.ENVIRONMENT_COLUMN, cursorFiles);
             String assessmentCode = CursorUtils.getString(AssessmentSyncTraceFilesTable.ASSESSMENT_COLUMN, cursorFiles);
             Long dateAsLong = CursorUtils.getLong(AssessmentSyncTraceFilesTable.DATE_COLUMN, cursorFiles);
             String operationAsString = CursorUtils.getString(AssessmentSyncTraceFilesTable.OPERATION_COLUMN, cursorFiles);

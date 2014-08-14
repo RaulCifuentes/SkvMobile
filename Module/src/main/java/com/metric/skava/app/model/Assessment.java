@@ -19,15 +19,17 @@ import java.util.List;
  */
 public class Assessment implements IdentifiableEntity {
 
-    public enum SavingStatus {DRAFT, PERSISTENT};
-    public enum SendingStatus {SENT_TO_DATASTORE, SENT_TO_CLOUD};
-
     private Long _id;
+
+    public enum SavingStatus {NOT_SAVED, DRAFT, PERSISTENT};
+    public enum SendingStatus {NOT_SENT, SENT_TO_DATASTORE, SENT_TO_CLOUD};
 
     private SendingStatus dataSentStatus;
     private SendingStatus picsSentStatus;
 
     private SavingStatus savedStatus;
+
+    private String originatorDeviceID;
 
     private String environment;
     private String code;
@@ -63,6 +65,15 @@ public class Assessment implements IdentifiableEntity {
 
     public Assessment(String code) {
         this.code = code;
+    }
+
+
+    public String getOriginatorDeviceID() {
+        return originatorDeviceID;
+    }
+
+    public void setOriginatorDeviceID(String originatorDeviceID) {
+        this.originatorDeviceID = originatorDeviceID;
     }
 
     public String getEnvironment() {

@@ -52,12 +52,7 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
         return fragment;
     }
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public AssessmentListFragment() {
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

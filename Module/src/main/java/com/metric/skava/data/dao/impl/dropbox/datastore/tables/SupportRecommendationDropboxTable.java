@@ -8,13 +8,15 @@ import com.dropbox.sync.android.DbxTable;
  */
 public class SupportRecommendationDropboxTable extends DropboxBaseTable implements DropboxTable {
 
+    public static final String SUPPORT_RECOMMENDATION_TABLE = "SupportRecommendation";
+
     public SupportRecommendationDropboxTable(DbxDatastore datastore) {
         super(datastore);
     }
 
     @Override
     public DbxTable getBaseDropboxTable() {
-        return mDatastore.getTable("SupportRecommendation");
+        return mDatastore.getTable(SUPPORT_RECOMMENDATION_TABLE);
     }
 
     @Override

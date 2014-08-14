@@ -23,6 +23,66 @@ public class ImportDataHelper {
     }
 
 
+    public Long importAssessment(String currentAssessmentToImport) throws SyncDataFailedException  {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadAssessment(currentAssessmentToImport);
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    public Long importDiscontinuities(String currentAssessmentToImport) throws SyncDataFailedException  {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadDiscontinuities(currentAssessmentToImport);
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    public Long importQCalculation(String currentAssessmentToImport) throws SyncDataFailedException  {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadQCalculation(currentAssessmentToImport);
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    public Long importRMRCalculation(String currentAssessmentToImport) throws SyncDataFailedException  {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadRMRCalculation(currentAssessmentToImport);
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
+    public Long importSupportRecommendation(String currentAssessmentToImport) throws SyncDataFailedException  {
+        Long totalRecords = 0L;
+        SyncHelper syncHelper = getSyncHelper();
+        try {
+            totalRecords = syncHelper.downloadSupportRecommendation(currentAssessmentToImport);
+        } catch (DAOException daoe) {
+            Log.e(SkavaConstants.LOG, daoe.getMessage());
+            throw new SyncDataFailedException(daoe);
+        }
+        return totalRecords;
+    }
+
     public Long importRoles() throws SyncDataFailedException {
         Long totalRecords = 0L;
         SyncHelper syncHelper = getSyncHelper();

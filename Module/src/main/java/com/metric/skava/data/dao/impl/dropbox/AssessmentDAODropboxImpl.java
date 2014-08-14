@@ -40,7 +40,18 @@ import com.metric.skava.calculator.rmr.model.Roughness;
 import com.metric.skava.calculator.rmr.model.Spacing;
 import com.metric.skava.calculator.rmr.model.StrengthOfRock;
 import com.metric.skava.calculator.rmr.model.Weathering;
+import com.metric.skava.data.dao.LocalApertureDAO;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
+import com.metric.skava.data.dao.LocalDiscontinuityRelevanceDAO;
+import com.metric.skava.data.dao.LocalDiscontinuityShapeDAO;
+import com.metric.skava.data.dao.LocalDiscontinuityTypeDAO;
+import com.metric.skava.data.dao.LocalDiscontinuityWaterDAO;
+import com.metric.skava.data.dao.LocalInfillingDAO;
+import com.metric.skava.data.dao.LocalJrDAO;
+import com.metric.skava.data.dao.LocalPersistenceDAO;
+import com.metric.skava.data.dao.LocalRoughnessDAO;
+import com.metric.skava.data.dao.LocalSpacingDAO;
+import com.metric.skava.data.dao.LocalWeatheringDAO;
 import com.metric.skava.data.dao.RemoteAssessmentDAO;
 import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.data.dao.impl.dropbox.datastore.tables.AssessmentDropboxTable;
@@ -89,6 +100,17 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
     private SupportRecommendationDropboxTable mSupportRecommendationDropboxTable;
     private AssessmentBuilder4DropBox assessmentBuilder;
     private SyncLoggingDAO mSyncLoggingDAO;
+    private LocalDiscontinuityTypeDAO discontinuityTypeDAO;
+    private LocalDiscontinuityRelevanceDAO discontinuityRelevanceDAO;
+    private LocalDiscontinuityShapeDAO discontinuityShapeDAO;
+    private LocalPersistenceDAO discontinuityPersistenceDAO;
+    private LocalSpacingDAO discontinuitySpacingDAO;
+    private LocalApertureDAO discontinuityApertureDAO;
+    private LocalRoughnessDAO discontinuityRoughnessDAO;
+    private LocalInfillingDAO discontinuityInfillingDAO;
+    private LocalWeatheringDAO discontinuityWeatheringDAO;
+    private LocalDiscontinuityWaterDAO discontinuityWaterDAO;
+    private LocalJrDAO discontinuityJrDAO;
 
     public AssessmentDAODropboxImpl(Context context, SkavaContext skavaContext) throws DAOException {
         super(context, skavaContext);
@@ -99,6 +121,174 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         this.mSupportRecommendationDropboxTable = new SupportRecommendationDropboxTable(getDatastore());
         this.assessmentBuilder = new AssessmentBuilder4DropBox(skavaContext);
         this.mSyncLoggingDAO = getDAOFactory().getSyncLoggingDAO();
+        discontinuityTypeDAO = getDAOFactory().getLocalDiscontinuityTypeDAO();
+        discontinuityRelevanceDAO = getDAOFactory().getLocalDiscontinuityRelevanceDAO();
+        discontinuityShapeDAO = getDAOFactory().getLocalDiscontinuityShapeDAO();
+        discontinuityPersistenceDAO = getDAOFactory().getLocalPersistenceDAO();
+        discontinuitySpacingDAO = getDAOFactory().getLocalSpacingDAO();
+        discontinuityApertureDAO = getDAOFactory().getLocalApertureDAO();
+        discontinuityRoughnessDAO = getDAOFactory().getLocalRoughnessDAO();
+        discontinuityInfillingDAO = getDAOFactory().getLocalInfillingDAO();
+        discontinuityWeatheringDAO = getDAOFactory().getLocalWeatheringDAO();
+        discontinuityWaterDAO = getDAOFactory().getLocalDiscontinuityWaterDAO();
+        discontinuityJrDAO = getDAOFactory().getLocalJrDAO();
+    }
+
+
+    @Override
+    public Assessment getAssessment(String assessmentCode) throws DAOException {
+        DbxRecord assessmentRecord = mAssessmentsTable.findRecordByCode(assessmentCode);
+        Assessment newAssessment = null;
+        if (assessmentRecord != null) {
+            newAssessment = assessmentBuilder.buildAssessmentFromRecord(assessmentRecord);
+        }
+
+        List<DiscontinuityFamily> discontinuitySystem = getDiscontinuitiyFamilies(assessmentCode);
+        newAssessment.setDiscontinuitySystem(discontinuitySystem);
+
+        Q_Calculation qCalculation = getQCalculation(assessmentCode);
+        newAssessment.setQCalculation(qCalculation);
+
+        RMR_Calculation rmrCalculation = getRMRCalculation(assessmentCode);
+        newAssessment.setRmrCalculation(rmrCalculation);
+
+        SupportRecommendation recomendation = getSupportRecommendation(assessmentCode);
+        newAssessment.setRecomendation(recomendation);
+
+//        List<SkavaPicture> resourceList = getPicturesByAssessmentCode(assessmentCode);
+//        newAssessment.setPicturesList(resourceList);
+
+//        Uri expandedView = getExpandedTunnelViewByAssessmentCode(assessmentCode);
+//        if(expandedView!=null) {
+//            newAssessment.setTunnelExpandedView(expandedView);
+//        }
+
+        return newAssessment;
+    }
+
+
+    public Q_Calculation getQCalculation(String assessmentCode) throws DAOException {
+        DbxRecord qCalculationByAssessment = mQBartonCalculationDropBoxTable.findRecordByCandidateKey("assessmentCode", assessmentCode);
+        Q_Calculation qCalculation = assessmentBuilder.buildQCalculationFromRecord(qCalculationByAssessment);
+        return qCalculation;
+    }
+
+    public RMR_Calculation getRMRCalculation(String assessmentCode) throws DAOException {
+        DbxRecord rmrCalculationByAssessment = mRMRCalculationDropBoxTable.findRecordByCandidateKey("assessmentCode", assessmentCode);
+        RMR_Calculation qCalculation = assessmentBuilder.buildRMRCalculationFromRecord(rmrCalculationByAssessment);
+        return qCalculation;
+    }
+
+    public SupportRecommendation getSupportRecommendation(String assessmentCode) throws DAOException {
+        DbxRecord recommendationByAssessment = mSupportRecommendationDropboxTable.findRecordByCandidateKey("assessmentCode", assessmentCode);
+        SupportRecommendation supportRecommendation = assessmentBuilder.buildSupportRecommendation(recommendationByAssessment);
+        return supportRecommendation;
+    }
+
+
+    public List<DiscontinuityFamily> getDiscontinuitiyFamilies(String assessmentCode) throws DAOException {
+
+        String[] names = new String[]{"assessmentCode"};
+        String[] values = new String[]{assessmentCode};
+
+        List<DbxRecord> familiesByAssessment = mDiscontinuitiesFamilyDropBoxTable.findRecordsByCriteria(names, values);
+
+        ArrayList<DiscontinuityFamily> discontinuitySystem = null;
+
+        if (!familiesByAssessment.isEmpty()) {
+
+            for (DbxRecord discontinuityFamilyRecord : familiesByAssessment) {
+            
+                discontinuitySystem = new ArrayList<DiscontinuityFamily>();
+
+                DiscontinuityFamily discontinuity = new DiscontinuityFamily();
+
+                if (discontinuityFamilyRecord.hasField("number")) {
+                    Long number = discontinuityFamilyRecord.getLong("number");
+                    Integer numero = number.intValue();
+                    discontinuity.setNumber(numero);
+                }
+
+                if (discontinuityFamilyRecord.hasField("typeCode")) {
+                    String typeCode = discontinuityFamilyRecord.getString("typeCode");
+                    DiscontinuityType type = discontinuityTypeDAO.getDiscontinuityTypeByCode(typeCode);
+                    discontinuity.setType(type);
+                }
+
+                if (discontinuityFamilyRecord.hasField("relevanceCode")) {
+                    String relevanceCode = discontinuityFamilyRecord.getString("relevanceCode");
+                    DiscontinuityRelevance relevance = discontinuityRelevanceDAO.getDiscontinuityRelevanceByCode(relevanceCode);
+                    discontinuity.setRelevance(relevance);
+                }
+
+                if (discontinuityFamilyRecord.hasField("dipDirDegrees")) {
+                    Long dipDirDegrees = discontinuityFamilyRecord.getLong("dipDirDegrees");
+                    discontinuity.setDipDirDegrees(dipDirDegrees.shortValue());
+                }
+
+                if (discontinuityFamilyRecord.hasField("dipDegrees")) {
+                    Long dipDegrees = discontinuityFamilyRecord.getLong("dipDegrees");
+                    discontinuity.setDipDegrees(dipDegrees.shortValue());
+                }
+
+                if (discontinuityFamilyRecord.hasField("spacingCode")) {
+                    String spacingCode = discontinuityFamilyRecord.getString("spacingCode");
+                    Spacing spacing = discontinuitySpacingDAO.getSpacingByUniqueCode(spacingCode);
+                    discontinuity.setSpacing(spacing);
+                }
+
+                if (discontinuityFamilyRecord.hasField("persistenceCode")) {
+                    String persistenceCode = discontinuityFamilyRecord.getString("persistenceCode");
+                    Persistence persistence = discontinuityPersistenceDAO.getPersistenceByUniqueCode(persistenceCode);
+                    discontinuity.setPersistence(persistence);
+                }
+
+                if (discontinuityFamilyRecord.hasField("apertureCode")) {
+                    String apertureCode = discontinuityFamilyRecord.getString("apertureCode");
+                    Aperture aperture = discontinuityApertureDAO.getApertureByUniqueCode(apertureCode);
+                    discontinuity.setAperture(aperture);
+                }
+
+                if (discontinuityFamilyRecord.hasField("shapeCode")) {
+                    String shapeCode = discontinuityFamilyRecord.getString("shapeCode");
+                    DiscontinuityShape shape = discontinuityShapeDAO.getDiscontinuityShapeByCode(shapeCode);
+                    discontinuity.setShape(shape);
+                }
+
+                if (discontinuityFamilyRecord.hasField("roughnessCode")) {
+                    String roughnessCode = discontinuityFamilyRecord.getString("roughnessCode");
+                    Roughness roughness = discontinuityRoughnessDAO.getRoughnessByUniqueCode(roughnessCode);
+                    discontinuity.setRoughness(roughness);
+                }
+
+                if (discontinuityFamilyRecord.hasField("infillingCode")) {
+                    String infillingCode = discontinuityFamilyRecord.getString("infillingCode");
+                    Infilling infilling = discontinuityInfillingDAO.getInfillingByUniqueCode(infillingCode);
+                    discontinuity.setInfilling(infilling);
+                }
+
+                if (discontinuityFamilyRecord.hasField("weatheringCode")) {
+                    String weatheringCode = discontinuityFamilyRecord.getString("weatheringCode");
+                    Weathering weathering = discontinuityWeatheringDAO.getWeatheringByUniqueCode(weatheringCode);
+                    discontinuity.setWeathering(weathering);
+                }
+
+                if (discontinuityFamilyRecord.hasField("waterCode")) {
+                    String waterCode = discontinuityFamilyRecord.getString("waterCode");
+                    DiscontinuityWater water = discontinuityWaterDAO.getDiscontinuityWaterByCode(waterCode);
+                    discontinuity.setWater(water);
+                }
+
+                if (discontinuityFamilyRecord.hasField("jrCode")) {
+                    String jrCode = discontinuityFamilyRecord.getString("jrCode");
+                    Jr jr = discontinuityJrDAO.getJrByUniqueCode(jrCode);
+                    discontinuity.setJr(jr);
+                }
+
+                discontinuitySystem.add(discontinuity);
+            }
+        }
+        return discontinuitySystem;
     }
 
     @Override
@@ -158,6 +348,11 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             final String internalCode = assessment.getInternalCode();
             if (internalCode != null) {
                 assessmentFields.set("skavaInternalCode", internalCode);
+            }
+
+            final String originatorDeviceID = assessment.getOriginatorDeviceID();
+            if (internalCode != null) {
+                assessmentFields.set("deviceID", originatorDeviceID);
             }
 
             ExcavationProject project = assessment.getProject();
@@ -269,7 +464,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     String familyPK = UUID.randomUUID().toString();
                     discontinuityFamilyFields.set("familyPK", familyPK);
 
-                    discontinuityFamilyFields.set("assesmentCode", assessment.getCode());
+                    discontinuityFamilyFields.set("assessmentCode", assessment.getCode());
 
                     int number = family.getNumber();
                     discontinuityFamilyFields.set("number", number);
@@ -619,7 +814,11 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             if (alreadyRemoted == null) {
                 //Do the actual insert on Datastore.
                 //From now on Dropbox middle man has the power
+
+                // check if this is enough to set the ID of the assessment
+                //assessmentFields.set("id", code);
                 recordId = mAssessmentsTable.persist(assessmentFields);
+                Log.d(SkavaConstants.LOG, "[recordId : " + recordId + " , assessmentCode : " + code + " ]");
             } else {
                 recordId = alreadyRemoted.getId();
                 alreadyRemoted.setAll(assessmentFields);
@@ -643,7 +842,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
 
             //****** Proceed saving the pictures if any of this assessment
             //Here tunnelExpanded will work similar to pictures so..
-            if (SkavaUtils.hasPictures(pictureList) || tunnelExpanded != null ) {
+            if (SkavaUtils.hasPictures(pictureList) || tunnelExpanded != null) {
                 //Invoke a service to do the upload of the Pictures
                 //com.metric.skava.uploader.MyUploaderService
                 //Creates a new Thread and run the service on it
@@ -659,7 +858,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
 
                 final ArrayList<String> picturesAsStringList = new ArrayList<String>();
                 //Here we check specifically for pictures but not tunnel expanded view
-                if (SkavaUtils.hasPictures(pictureList)){
+                if (SkavaUtils.hasPictures(pictureList)) {
                     for (SkavaPicture skavaPicture : pictureList) {
                         if (skavaPicture != null && skavaPicture.getPictureLocation() != null) {
                             //add the full Uri as String to the list sent to the upload service
@@ -796,11 +995,11 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
 
         String datastoreName = getDatastore().getId();
         String environment;
-        if (datastoreName.equalsIgnoreCase(SkavaConstants.DROPBOX_DS_DEV_NAME)){
+        if (datastoreName.equalsIgnoreCase(SkavaConstants.DROPBOX_DS_DEV_NAME)) {
             environment = SkavaConstants.DEV_KEY;
-        } else if (datastoreName.equalsIgnoreCase(SkavaConstants.DROPBOX_DS_QA_NAME)){
+        } else if (datastoreName.equalsIgnoreCase(SkavaConstants.DROPBOX_DS_QA_NAME)) {
             environment = SkavaConstants.QA_KEY;
-        } else if (datastoreName.equalsIgnoreCase(SkavaConstants.DROPBOX_DS_PROD_NAME)){
+        } else if (datastoreName.equalsIgnoreCase(SkavaConstants.DROPBOX_DS_PROD_NAME)) {
             environment = SkavaConstants.PROD_KEY;
         } else {
             throw new DAOException("Unknown datastore name : " + datastoreName);
@@ -836,7 +1035,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     }
                 }
                 //Here the multiplicity is not an error, nor strange, is in fact very usual
-                List<DbxRecord> records = mDiscontinuitiesFamilyDropBoxTable.findRecordsByCriteria(new String[]{"assesmentCode"}, new String[]{assessmentCode});
+                List<DbxRecord> records = mDiscontinuitiesFamilyDropBoxTable.findRecordsByCriteria(new String[]{"assessmentCode"}, new String[]{assessmentCode});
                 for (DbxRecord dbxRecord : records) {
                     if (dbxRecord != null) {
                         dbxRecord.deleteRecord();
@@ -864,7 +1063,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             //which is sent separately on its own attribute named tunnelExpanded
             if (assessmentRecordToDelete.hasField("picturesURIs")) {
                 DbxList dbxPictureLists = assessmentRecordToDelete.getList("picturesURIs");
-                if (picturesList == null){
+                if (picturesList == null) {
                     picturesList = new ArrayList<String>();
                 }
                 for (int i = 0; i < dbxPictureLists.size(); i++) {
@@ -872,7 +1071,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                 }
             }
             if (assessmentRecordToDelete.hasField("tunnelExpanded")) {
-                if (picturesList == null){
+                if (picturesList == null) {
                     picturesList = new ArrayList<String>();
                 }
                 String expandedViewUri = assessmentRecordToDelete.getString("tunnelExpanded");
@@ -905,7 +1104,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             folderName = SkavaConstants.DROPBOX_DS_PROD_NAME;
         }
 
-        //the param picturesList contains just the name of the picture, but the full Uri is needed so
+//the param picturesList contains just the name of the picture, but the full Uri is needed so
 //        ArrayList<String> picturesURIsAsStringList = null;
 //        if (picturesList!= null && !picturesList.isEmpty()){
 //            //pictureList must be full URI not just the name of the picture

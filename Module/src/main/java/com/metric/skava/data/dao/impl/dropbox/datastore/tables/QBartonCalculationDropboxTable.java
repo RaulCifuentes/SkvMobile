@@ -8,6 +8,7 @@ import com.dropbox.sync.android.DbxTable;
  */
 public class QBartonCalculationDropboxTable extends DropboxBaseTable implements DropboxTable {
 
+    public static final String Q_CALCULATION_TABLE = "QBartonCalculation";
 
     public QBartonCalculationDropboxTable(DbxDatastore datastore) {
         super(datastore);
@@ -15,7 +16,7 @@ public class QBartonCalculationDropboxTable extends DropboxBaseTable implements 
 
     @Override
     public DbxTable getBaseDropboxTable() {
-        return mDatastore.getTable("QBartonCalculation");
+        return mDatastore.getTable(Q_CALCULATION_TABLE);
     }
 
     @Override

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.metric.skava.uploader">
+    package="com.metric.skava.uploader"
+    android:sharedUserId="my.skava.app"
+    android:process="my.skava.app"
+    >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -10,9 +13,7 @@
     <permission
         android:name="com.skava.picture.UPLOADER"
         android:label="@string/uploader_service_permission_label"
-        android:description="@string/uploader_service_permission_description">
-    </permission>
-
+        android:description="@string/uploader_service_permission_description"></permission>
 
     <application
         android:name=".app.SkavaUploaderApplication"
@@ -31,7 +32,7 @@
         </activity>
 
         <service
-            android:name=".MyUploaderService"
+            android:name=".SkavaUploaderService"
             android:exported="true"
             android:permission="com.skava.picture.UPLOADER">
             <intent-filter>

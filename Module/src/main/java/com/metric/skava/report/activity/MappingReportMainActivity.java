@@ -62,22 +62,33 @@ public class MappingReportMainActivity extends SkavaFragmentActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        switch (getCurrentAssessment().getDataSentStatus()) {
-            case SENT_TO_CLOUD:
-            case SENT_TO_DATASTORE:
-                // show no buttons as we dont want edit, re save nor resend
-                menu.findItem(R.id.action_mapping_report_draft).setVisible(false);
-                menu.findItem(R.id.action_mapping_report_send).setVisible(false);
-                break;
-            default:
-                //i.e It has never been sent, just saved locally
-                //Save as draft available as this is still editable
-                menu.findItem(R.id.action_mapping_report_draft).setVisible(true);
-                if (getSkavaContext().getDatastore() != null) {
-                    menu.findItem(R.id.action_mapping_report_send).setVisible(true);
-                } else {
+        if (getCurrentAssessment().getDataSentStatus()!=null) {
+            switch (getCurrentAssessment().getDataSentStatus()) {
+                case SENT_TO_CLOUD:
+                case SENT_TO_DATASTORE:
+                    // show no buttons as we dont want edit, re save nor resend
+                    menu.findItem(R.id.action_mapping_report_draft).setVisible(false);
                     menu.findItem(R.id.action_mapping_report_send).setVisible(false);
-                }
+                    break;
+                case NOT_SENT:
+                    //Save as draft available as this is still editable
+                    menu.findItem(R.id.action_mapping_report_draft).setVisible(true);
+                    if (getSkavaContext().getDatastore() != null) {
+                        menu.findItem(R.id.action_mapping_report_send).setVisible(true);
+                    } else {
+                        menu.findItem(R.id.action_mapping_report_send).setVisible(false);
+                    }
+                    break;
+            }
+        } else {
+            //i.e It has never been sent, just saved locally
+            //Save as draft available as this is still editable
+            menu.findItem(R.id.action_mapping_report_draft).setVisible(true);
+            if (getSkavaContext().getDatastore() != null) {
+                menu.findItem(R.id.action_mapping_report_send).setVisible(true);
+            } else {
+                menu.findItem(R.id.action_mapping_report_send).setVisible(false);
+            }
         }
         return super.onPrepareOptionsMenu(menu);
     }

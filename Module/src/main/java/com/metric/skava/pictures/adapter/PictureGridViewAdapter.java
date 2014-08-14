@@ -84,9 +84,11 @@ public class PictureGridViewAdapter extends BaseAdapter {
                 Float maxSize = resources.getDimension(R.dimen.max_image_thumbnail_size);
                 Float prefThumbnailWidth = resources.getDimension(R.dimen.prefered_image_thumbnail_width);
                 Float prefThumbnailHeight = resources.getDimension(R.dimen.prefered_image_thumbnail_height);
-                //TODO probar con el ScaledBitmap y con el SampledBitmap
-//            thumnailBitmap = mPictureFilesUtils.getScaledBitmapFromUri(picture, prefThumbnailWidth.intValue(), prefThumbnailHeight.intValue());
+                //El ScaledBitmap es mas propenso al OutOfMemory que el SampledBitmap
+                //thumnailBitmap = mPictureFilesUtils.getScaledBitmapFromUri(picture, prefThumbnailWidth.intValue(), prefThumbnailHeight.intValue());
                 thumnailBitmap = mPictureFilesUtils.getSampledBitmapFromFile(pictureLocation, prefThumbnailWidth.intValue(), prefThumbnailHeight.intValue());
+                //The following way of get the thumbnail has not been tested yet
+                //Bitmap thumbnailBitmapAnotherWay = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(pictureLocation.getPath()), prefThumbnailWidth.intValue(), prefThumbnailHeight.intValue());
             }
         }
         return thumnailBitmap;

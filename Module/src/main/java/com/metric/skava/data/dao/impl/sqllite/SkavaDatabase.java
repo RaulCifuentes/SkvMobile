@@ -27,7 +27,6 @@ public class SkavaDatabase {
 
 
     private SkavaDatabase(Context context) {
-
         SkavaFilesUtils skavaFilesUtils = new SkavaFilesUtils(context);
         File databaseStorageDir = new File(skavaFilesUtils.getSkavaDocumentsBaseFolder(), SkavaConstants.DATABASE_DIRECTORY_NAME);
         // Create the storage directory if it does not exist
@@ -51,29 +50,6 @@ public class SkavaDatabase {
     public void closeDatabase() {
         skavaDBHelper.close();
     }
-
-//    public boolean isTableExists(String tableName, boolean openDb) {
-//        if(openDb) {
-//            if(mDatabase == null || !mDatabase.isOpen()) {
-//                mDatabase = getReadableDatabase();
-//            }
-//
-//            if(!mDatabase.isReadOnly()) {
-//                mDatabase.close();
-//                mDatabase = getReadableDatabase();
-//            }
-//        }
-//
-//        Cursor cursor = mDatabase.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+tableName+"'", null);
-//        if(cursor!=null) {
-//            if(cursor.getCount()>0) {
-//                cursor.close();
-//                return true;
-//            }
-//            cursor.close();
-//        }
-//        return false;
-//    }
 
 
 }

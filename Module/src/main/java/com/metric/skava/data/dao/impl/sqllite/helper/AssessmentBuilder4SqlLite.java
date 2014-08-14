@@ -62,10 +62,13 @@ public class AssessmentBuilder4SqlLite {
     public Assessment buildBareAssessmentFromCursorRecord(Cursor cursor) throws DAOException {
 
         String code = CursorUtils.getString(AssessmentTable.CODE_COLUMN, cursor);
-        String internalCode = CursorUtils.getString(AssessmentTable.INTERNAL_CODE_COLUMN, cursor);
-
         Assessment babyAssessment = new Assessment(code);
+
+        String internalCode = CursorUtils.getString(AssessmentTable.INTERNAL_CODE_COLUMN, cursor);
         babyAssessment.setInternalCode(internalCode);
+
+        String deviceID = CursorUtils.getString(AssessmentTable.DEVICE_ID_COLUMN, cursor);
+        babyAssessment.setOriginatorDeviceID(deviceID);
 
         String environmentCode = CursorUtils.getString(AssessmentTable.ENVIRONMENT_COLUMN, cursor);
         if (environmentCode != null) {

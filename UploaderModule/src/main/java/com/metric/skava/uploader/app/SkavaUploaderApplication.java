@@ -8,6 +8,7 @@ import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
+import com.metric.skava.uploader.app.util.SkavaUploaderConstants;
 
 /**
  * Created by metricboy on 6/25/14.
@@ -64,8 +65,9 @@ public class SkavaUploaderApplication extends Application {
     public void loadAuth(AndroidAuthSession session) {
         String key = mSharedPreferences.getString(SkavaUploaderConstants.ACCESS_KEY_NAME, null);
         String secret = mSharedPreferences.getString(SkavaUploaderConstants.ACCESS_SECRET_NAME, null);
-        if (key == null || secret == null || key.length() == 0 || secret.length() == 0) return;
-
+        if (key == null || secret == null || key.length() == 0 || secret.length() == 0) {
+            return;
+        }
         if (key.equals("oauth2:")) {
             // If the key is set to "oauth2:", then we can assume the token is for OAuth 2.
             session.setOAuth2AccessToken(secret);
