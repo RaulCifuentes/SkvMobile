@@ -83,6 +83,12 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
     }
 
 
+    public boolean exists(String assessmentCode) throws DAOException{
+        Cursor cursor = getRecordsFilteredByColumn(AssessmentTable.ASSESSMENT_DATABASE_TABLE, AssessmentTable.CODE_COLUMN, assessmentCode, null);
+        int howMany = cursor.getCount();
+        return (howMany > 0);
+    }
+
     @Override
     public Assessment getPreviousAssessment(String assessmentCode) throws DAOException {
         Assessment referenceAssessment = getAssessment(assessmentCode);
@@ -273,6 +279,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             String[] names = new String[]{
                     AssessmentTable.ENVIRONMENT_COLUMN,
                     AssessmentTable.CODE_COLUMN,
+                    AssessmentTable.DEVICE_ID_COLUMN,
                     AssessmentTable.INTERNAL_CODE_COLUMN,
                     AssessmentTable.GEOLOGIST_CODE_COLUMN,
                     AssessmentTable.TUNEL_FACE_CODE_COLUMN,
@@ -299,6 +306,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             Object[] values = new Object[]{
                     newSkavaEntity.getEnvironment(),
                     newSkavaEntity.getCode(),
+                    newSkavaEntity.getOriginatorDeviceID(),
                     newSkavaEntity.getInternalCode(),
                     SkavaUtils.isUndefined(newSkavaEntity.getGeologist()) ? null : newSkavaEntity.getGeologist().getCode(),
                     SkavaUtils.isUndefined(newSkavaEntity.getFace()) ? null : newSkavaEntity.getFace().getCode(),
@@ -331,6 +339,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         String[] names = new String[]{
                 AssessmentTable.ENVIRONMENT_COLUMN,
                 AssessmentTable.CODE_COLUMN,
+                AssessmentTable.DEVICE_ID_COLUMN,
                 AssessmentTable.INTERNAL_CODE_COLUMN,
                 AssessmentTable.GEOLOGIST_CODE_COLUMN,
                 AssessmentTable.TUNEL_FACE_CODE_COLUMN,
@@ -357,6 +366,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         Object[] values = new Object[]{
                 newSkavaEntity.getEnvironment(),
                 newSkavaEntity.getCode(),
+                newSkavaEntity.getOriginatorDeviceID(),
                 newSkavaEntity.getInternalCode(),
                 SkavaUtils.isUndefined(newSkavaEntity.getGeologist()) ? null : newSkavaEntity.getGeologist().getCode(),
                 SkavaUtils.isUndefined(newSkavaEntity.getFace()) ? null : newSkavaEntity.getFace().getCode(),
@@ -458,7 +468,6 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
     @Override
     public boolean deleteAssessment(String code) throws DAOException {
         SkavaPictureFilesUtils filesUtils = new SkavaPictureFilesUtils(mContext);
-
         File skavaPictureStorageDir = filesUtils.getSkavaPicturesFolder();
         File assessmentPictureFolder = new File(skavaPictureStorageDir, code);
         filesUtils.deleteRecursively(assessmentPictureFolder);

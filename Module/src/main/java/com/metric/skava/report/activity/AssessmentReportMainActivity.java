@@ -68,23 +68,36 @@ public class AssessmentReportMainActivity extends SkavaFragmentActivity {
                 menu.findItem(R.id.action_assessment_report_use_as_template).setVisible(false);
                 break;
         }
-        switch (getCurrentAssessment().getDataSentStatus()) {
-            case SENT_TO_CLOUD:
-            case SENT_TO_DATASTORE:
-                // show no buttons as we dont want edit, re save nor resend
-                menu.findItem(R.id.action_assessment_report_save).setVisible(false);
-                menu.findItem(R.id.action_assessment_report_send).setVisible(false);
-                break;
-            default:
-                //i.e It has never been sent, just saved locally
-                //Save as draft available as this is still editable
-                menu.findItem(R.id.action_assessment_report_save).setVisible(true);
-                if (getSkavaContext().getDatastore() != null) {
-                    menu.findItem(R.id.action_assessment_report_send).setVisible(true);
-                } else {
+
+        if (getCurrentAssessment().getDataSentStatus() != null){
+            switch (getCurrentAssessment().getDataSentStatus()) {
+                case SENT_TO_CLOUD:
+                case SENT_TO_DATASTORE:
+                    // show no buttons as we dont want edit, re save nor resend
+                    menu.findItem(R.id.action_assessment_report_save).setVisible(false);
                     menu.findItem(R.id.action_assessment_report_send).setVisible(false);
-                }
+                    break;
+                case NOT_SENT:
+                    //Save as draft available as this is still editable
+                    menu.findItem(R.id.action_assessment_report_save).setVisible(true);
+                    if (getSkavaContext().getDatastore() != null) {
+                        menu.findItem(R.id.action_assessment_report_send).setVisible(true);
+                    } else {
+                        menu.findItem(R.id.action_assessment_report_send).setVisible(false);
+                    }
+                    break;
+            }
+        } else {
+            //i.e It has never been sent, just saved locally
+            //Save as draft available as this is still editable
+            menu.findItem(R.id.action_assessment_report_save).setVisible(true);
+            if (getSkavaContext().getDatastore() != null) {
+                menu.findItem(R.id.action_assessment_report_send).setVisible(true);
+            } else {
+                menu.findItem(R.id.action_assessment_report_send).setVisible(false);
+            }
         }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -98,7 +111,6 @@ public class AssessmentReportMainActivity extends SkavaFragmentActivity {
             boolean successOnSaving = save();
             if (successOnSaving) {
                 Log.i(SkavaConstants.LOG, "Geological mapping draft succesfully saved.");
-                Toast.makeText(this, "", Toast.LENGTH_LONG).show();
                 backToAssessmentList();
             } else {
                 Log.e(SkavaConstants.LOG, "Failed when saving geological mapping draft.");

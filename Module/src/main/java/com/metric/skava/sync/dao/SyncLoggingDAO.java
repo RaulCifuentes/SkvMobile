@@ -11,18 +11,15 @@ import com.metric.skava.sync.model.SyncQueue;
  */
 public interface SyncLoggingDAO {
 
-
-//    public SyncLogEntry getLastSyncByState(SyncTask.Domain domain, SyncTask.Status state) throws DAOException;
+    //    public int deleteAllSyncLogs();
+    //    public SyncLogEntry getLastSyncByState(SyncTask.Domain domain, SyncTask.Status state) throws DAOException;
+    //    public void saveSyncQueue(SyncQueue newEntity);
 
     public void saveSyncLogEntry(SyncLogEntry newEntity) throws DAOException;
-
-//    public int deleteAllSyncLogs();
 
     public int deleteAllAssessmentSyncTraces();
 
     public SyncQueue getSyncQueue();
-
-//    public void saveSyncQueue(SyncQueue newEntity);
 
     public AssessmentSyncTrace getAssessmentSyncTrace(String environment, String assessmentCode, DataToSync.Operation operation);
 

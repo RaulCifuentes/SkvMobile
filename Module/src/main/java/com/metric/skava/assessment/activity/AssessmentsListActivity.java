@@ -40,7 +40,6 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
         setContentView(R.layout.assessments_list_activity);
         try {
             localAssessmentDAO = getDAOFactory().getLocalAssessmentDAO();

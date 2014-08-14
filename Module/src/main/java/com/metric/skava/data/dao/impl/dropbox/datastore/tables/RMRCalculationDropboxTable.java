@@ -9,13 +9,15 @@ import com.dropbox.sync.android.DbxTable;
 public class RMRCalculationDropboxTable extends DropboxBaseTable implements DropboxTable {
 
 
+    public static final String RMR_CALCULATION_TABLE = "RMRCalculation";
+
     public RMRCalculationDropboxTable(DbxDatastore datastore) {
         super(datastore);
     }
 
     @Override
     public DbxTable getBaseDropboxTable() {
-        return mDatastore.getTable("RMRCalculation");
+        return mDatastore.getTable(RMR_CALCULATION_TABLE);
     }
 
     @Override

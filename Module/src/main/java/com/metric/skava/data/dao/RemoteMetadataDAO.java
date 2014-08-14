@@ -12,4 +12,10 @@ public interface RemoteMetadataDAO {
     public Long getAllUserDataRecordsCount() throws DAOException;
 
     public Long getRecordsCount(String[] dropboxTables) throws DAOException;
+
+    public Long getAllAssessmentRelatedRecordsCount() throws DAOException;
+
+    public Long getAssessmentRelatedRecordsCount(String assessmentCode) throws DAOException;
+
+
 }

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by metricboy on 3/5/14.
  */
-public interface LocalAssessmentDAO {
+public interface LocalAssessmentDAO  {
 
     public Assessment getAssessment(String code) throws DAOException;
 
@@ -32,5 +32,5 @@ public interface LocalAssessmentDAO {
 
     public int deleteAllAssessments(String environment) throws DAOException;
 
-
+    public boolean exists(String assessmentCode) throws DAOException;
 }

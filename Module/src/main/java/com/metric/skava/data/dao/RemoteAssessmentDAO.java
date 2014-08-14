@@ -11,6 +11,8 @@ import java.util.List;
  */
 public interface RemoteAssessmentDAO {
 
+    public Assessment getAssessment(String code) throws DAOException;
+
     public List<Assessment> getAllAssessments() throws DAOException;
 
 //    public List<Assessment> getAssessmentsByUser(User user) throws DAOException;

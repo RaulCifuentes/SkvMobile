@@ -7,6 +7,8 @@ public class AssessmentTable extends SkavaTable {
 
     public static final String ASSESSMENT_DATABASE_TABLE = "Assessments";
 
+    public static final String DEVICE_ID_COLUMN = "ORIGINATOR_DEVICE";
+
     public static final String ENVIRONMENT_COLUMN = "ENVIRONMENT";
 
     public static final String INTERNAL_CODE_COLUMN = "INTERNAL_CODE";
@@ -58,6 +60,7 @@ public class AssessmentTable extends SkavaTable {
             ASSESSMENT_DATABASE_TABLE + " (" +
 //            GLOBAL_KEY_ID + " integer primary key autoincrement, " +
             CODE_COLUMN + " text primary key not null, " +
+            DEVICE_ID_COLUMN + " text not null, " +
             ENVIRONMENT_COLUMN + " text not null, " +
             INTERNAL_CODE_COLUMN + " text null, " +
             GEOLOGIST_CODE_COLUMN + " text null, " +
@@ -81,6 +84,5 @@ public class AssessmentTable extends SkavaTable {
             FILES_SENT_STATUS_COLUMN + " text not null, " +
             SAVING_STATUS_COLUMN + " text not null " +
             " );";
-
 
 }

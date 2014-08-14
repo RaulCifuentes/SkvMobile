@@ -24,7 +24,14 @@ import com.dropbox.client2.exception.DropboxPartialFileException;
 import com.dropbox.client2.exception.DropboxServerException;
 import com.dropbox.client2.exception.DropboxUnlinkedException;
 import com.metric.skava.uploader.app.SkavaUploaderApplication;
-import com.metric.skava.uploader.app.SkavaUploaderConstants;
+import com.metric.skava.uploader.app.util.SkavaUploaderConstants;
+import com.metric.skava.uploader.app.util.SkavaUploaderFileUtils;
+import com.metric.skava.uploader.app.util.SkavaUploaderUtils;
+import com.metric.skava.uploader.data.dao.SkavaUploaderDAOFactory;
+import com.metric.skava.uploader.data.dao.exception.SkavaUploaderDAOException;
+import com.metric.skava.uploader.sync.model.SkavaUploaderDataToSync;
+import com.metric.skava.uploader.sync.model.SkavaUploaderFileToSync;
+import com.metric.skava.uploader.sync.model.SkavaUploaderSyncTrace;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,17 +45,31 @@ import java.util.ArrayList;
 /**
  * Created by metricboy on 6/25/14.
  */
-public class MyUploaderService extends IntentService {
+public class SkavaUploaderService extends IntentService {
 
     private Context mContext;
+    private SkavaUploaderDAOFactory daoFactory;
 
-    public MyUploaderService() {
-        super(SkavaUploaderConstants.INTENT_SERVICE_TAG);
+    public SkavaUploaderService() {
+        this(SkavaUploaderConstants.INTENT_SERVICE_TAG);
     }
 
-    public MyUploaderService(String name) {
+    public SkavaUploaderService(String name) {
         super(name);
-        mContext = getApplicationContext();
+        mContext = this;
+        daoFactory = SkavaUploaderDAOFactory.getInstance(mContext);
+//        Context sharedContext = null;
+//        try {
+//            sharedContext = mContext.createPackageContext("com.metric.skava", Context.CONTEXT_INCLUDE_CODE);
+//            if (sharedContext != null) {
+//                daoFactory = SkavaUploaderDAOFactory.getInstance(sharedContext);
+//            }
+//        } catch (Exception e) {
+//            BugSenseHandler.sendException(e);
+//            Log.e(SkavaUploaderConstants.LOG, e.getMessage());
+//            e.printStackTrace();
+//        }
+
     }
 
     public SkavaUploaderApplication getSkavaUploaderApplication() {
@@ -127,15 +148,15 @@ public class MyUploaderService extends IntentService {
         String mErrorMsg;
         boolean success = false;
         try {
+            //First send the thumbnails
             for (File mFile : fileList) {
-                //First create a reduced (centered thumbnail) of each file to upload that small size picture first
+                //Create a reduced (centered thumbnail) of each file to upload that small size picture first
                 //original file name has a structure like this ASSESSMENT_CODE_TAG_DATE_TIME.jpg,
                 //for instance: 052f4269-a273-4c1f-035ceb7afe62_FACE_2014_07_09_16_04_05.jpg
                 String originalFileName = mFile.getName();
-
-                if(originalFileName.contains("TUNNEL")){
-                   // the extended view does not need a thumbnail version of the image
-                   // so do nothing
+                if (originalFileName.contains("TUNNEL")) {
+                    // the extended view does not need a thumbnail version of the image
+                    // so do nothing
                 } else {
                     //The thumbnail will have the word THUMBNAIL appended to the end of the file name
                     String thumbnailFileName = originalFileName.replace(".jpg", "_THUMBNAIL.jpg");
@@ -163,6 +184,9 @@ public class MyUploaderService extends IntentService {
                     //Put a file on the Dropbox repo
                     long fileLength = thumbnailFile.length();
                     Log.d(SkavaUploaderConstants.LOG, "Uploading " + thumbnailRemoteFilePath + " which size is " + fileLength);
+                    // *** BEGIN syncing log table for tracing *//
+                    success = logForTrace(assessmentCode, dropboxPath, thumbnailFile);
+                    // *** END syncing log table for tracing *//
                     FileInputStream fis = new FileInputStream(thumbnailFile);
                     if (api.getSession().isLinked()) {
                         api.putFileOverwrite(thumbnailRemoteFilePath, fis, fileLength, null);
@@ -175,10 +199,25 @@ public class MyUploaderService extends IntentService {
                         notifyDropboxUnlinked(0, "Skava Uploader", "Dropbox for uploader service is not linked");
                     }
                 }
+            }
+
+            //Now send the real images
+            for (File originalBigSizeFile : fileList) {
+                String originalFileName = originalBigSizeFile.getName();
                 // Set the name of the file in the remote Dropbox folder
                 String fullSizeRemoteFilePath = dropboxPath + SkavaUploaderConstants.REMOTE_FOLDER_SEPARATOR + originalFileName;
+                File mFile = null;
+                if (originalFileName.contains("TUNNEL")) {
+                    mFile = originalBigSizeFile;
+                } else {
+                    SkavaUploaderFileUtils fileUtils = new SkavaUploaderFileUtils(this);
+                    mFile = fileUtils.scalePictureToHalf(originalBigSizeFile);
+                }
                 long fileLength = mFile.length();
                 Log.d(SkavaUploaderConstants.LOG, "Uploading " + fullSizeRemoteFilePath + " which size is " + fileLength);
+                // *** BEGIN syncing log table for tracing *//
+                success = logForTrace(assessmentCode, dropboxPath, mFile);
+                // *** END syncing log table for tracing *//
                 FileInputStream fis = new FileInputStream(mFile);
                 if (api.getSession().isLinked()) {
                     api.putFileOverwrite(fullSizeRemoteFilePath, fis, fileLength, null);
@@ -191,6 +230,7 @@ public class MyUploaderService extends IntentService {
                     notifyDropboxUnlinked(0, "Skava Uploader", "Dropbox for uploader service is not linked");
                 }
             }
+
         } catch (DropboxUnlinkedException e) {
             // This session wasn't authenticated properly or user unlinked
             mErrorMsg = "This app wasn't authenticated properly.";
@@ -264,6 +304,36 @@ public class MyUploaderService extends IntentService {
             e.printStackTrace();
         }
         return success;
+    }
+
+    private boolean logForTrace(String assessmentCode, String dropboxPath, File mFile) {
+        // *** BEGIN syncing log table for tracing *//
+        String environment = null;
+        String[] parts = dropboxPath.split("\\/");
+        String folderName = parts[1];
+        if (folderName.equalsIgnoreCase(SkavaUploaderConstants.DROPBOX_DS_DEV_NAME)) {
+            environment  = SkavaUploaderConstants.DEV_KEY;
+        } else if (folderName.equalsIgnoreCase(SkavaUploaderConstants.DROPBOX_DS_QA_NAME)) {
+            environment = SkavaUploaderConstants.QA_KEY;
+        } else if (folderName.equalsIgnoreCase(SkavaUploaderConstants.DROPBOX_DS_PROD_NAME)) {
+            environment = SkavaUploaderConstants.PROD_KEY;
+        }
+        SkavaUploaderFileToSync fileToSync = new SkavaUploaderFileToSync(environment, assessmentCode);
+        fileToSync.setFileName(mFile.getName());
+        fileToSync.setDate(SkavaUploaderUtils.getCurrentDate());
+        fileToSync.setOperation(SkavaUploaderDataToSync.Operation.INSERT);
+        fileToSync.setStatus(SkavaUploaderDataToSync.Status.QUEUED);
+        SkavaUploaderSyncTrace trace = new SkavaUploaderSyncTrace(environment, assessmentCode);
+        trace.addFile(fileToSync);
+        try {
+            daoFactory.getSyncLoggingDAO().saveUploaderSyncTrace(trace);
+            return true;
+        } catch (SkavaUploaderDAOException e) {
+            e.printStackTrace();
+            BugSenseHandler.sendException(e);
+            Log.e(SkavaUploaderConstants.LOG, e.getMessage());
+            return false;
+        }
     }
 
 

@@ -97,12 +97,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 //            finish();
 //            return;
 //        }
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-//        String dateAsString = sdf.format(SkavaUtils.getCurrentDate());
-//        Log.d(SkavaConstants.LOG, "********** onCreate ***** " + dateAsString);
-//        BugSenseHandler.initAndStartSession(HomeMainActivity.this, SkavaConstants.BUGSENSE_API_KEY);
-//        SkavaExceptionHandler handler = new SkavaExceptionHandler(this, getSupportFragmentManager());
-//        Thread.setDefaultUncaughtExceptionHandler(handler);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.nav_drawer_main_layout_content_frame, new MainFragment(), FRAGMENT_HOME_MAIN_TAG)
@@ -172,7 +167,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         showProgressBar(true, message, false);
         try {
             //Abrir el acount manager que Dropbox ofrece para esta app
-            mDbxAcctMgr = DbxAccountManager.getInstance(this.getApplicationContext(), SkavaConstants.DROBOX_APP_KEY, SkavaConstants.DROBOX_APP_SECRET);
+            mDbxAcctMgr = DbxAccountManager.getInstance(this.getApplicationContext(), SkavaConstants.DROPBOX_APP_KEY, SkavaConstants.DROPBOX_APP_SECRET);
             //Connect y tener la referencia al account
             if (!mDbxAcctMgr.hasLinkedAccount()) {
                 if (isNetworkAvailable()) {

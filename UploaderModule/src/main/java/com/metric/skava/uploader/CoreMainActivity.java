@@ -15,7 +15,7 @@ import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.android.AuthActivity;
 import com.metric.skava.uploader.app.SkavaUploaderActivity;
 import com.metric.skava.uploader.app.SkavaUploaderApplication;
-import com.metric.skava.uploader.app.SkavaUploaderConstants;
+import com.metric.skava.uploader.app.util.SkavaUploaderConstants;
 
 public class CoreMainActivity extends SkavaUploaderActivity {
 

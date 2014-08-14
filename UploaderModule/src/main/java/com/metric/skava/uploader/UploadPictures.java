@@ -41,7 +41,7 @@ import com.dropbox.client2.exception.DropboxParseException;
 import com.dropbox.client2.exception.DropboxPartialFileException;
 import com.dropbox.client2.exception.DropboxServerException;
 import com.dropbox.client2.exception.DropboxUnlinkedException;
-import com.metric.skava.uploader.app.SkavaUploaderConstants;
+import com.metric.skava.uploader.app.util.SkavaUploaderConstants;
 
 import java.io.File;
 import java.io.FileInputStream;

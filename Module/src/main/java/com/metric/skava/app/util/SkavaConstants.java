@@ -29,32 +29,32 @@ public class SkavaConstants {
     public static final String CUSTOM_ACTION = "com.metric.skava.uploader.UPLOAD_SERVICE_ACTION";
 
 //    SKAVAAPP DATASTORE ONLY
-//    public static final String DROBOX_APP_KEY = "wv7jc0wirvu2c8y";
-//    public static final String DROBOX_APP_SECRET = "qebhcnh6lxqu7di";
+//    public static final String DROPBOX_APP_KEY = "wv7jc0wirvu2c8y";
+//    public static final String DROPBOX_APP_SECRET = "qebhcnh6lxqu7di";
 
     // SKAVA ONLY FILE ACCESS
-//    public static final String DROBOX_APP_KEY = "wipi7ui8mgii76j";
-//    public static final String DROBOX_APP_SECRET = "rzqlw9qn9i24ttv";
+//    public static final String DROPBOX_APP_KEY = "wipi7ui8mgii76j";
+//    public static final String DROPBOX_APP_SECRET = "rzqlw9qn9i24ttv";
 //
     //FABIAN TEST
-//    public static final String DROBOX_APP_KEY = "zt0gfu84ayugdhp";
-//    public static final String DROBOX_APP_SECRET = "d31ifw9hsvgfo39";
+//    public static final String DROPBOX_APP_KEY = "zt0gfu84ayugdhp";
+//    public static final String DROPBOX_APP_SECRET = "d31ifw9hsvgfo39";
 //    public static final String DROPBOX_DS_DEV_NAME = "test";
 
     //SKAVA_DEV
-    public static final String DROBOX_APP_KEY = "1ij9s1t1ab2evpu";
-    public static final String DROBOX_APP_SECRET = "sxr158c6hlqajex";
+    public static final String DROPBOX_APP_KEY = "1ij9s1t1ab2evpu";
+    public static final String DROPBOX_APP_SECRET = "sxr158c6hlqajex";
 
     public static final String AVIARY_APP_KEY = "cd9f4966112e789c";
 
     //    SKAVAAPP FULL ACCESS
-//    public static final String DROBOX_APP_KEY = "1xwvqk4tepx9w1r";
-//    public static final String DROBOX_APP_SECRET = "nabmi5njy4lgxct";
+//    public static final String DROPBOX_APP_KEY = "1xwvqk4tepx9w1r";
+//    public static final String DROPBOX_APP_SECRET = "nabmi5njy4lgxct";
 
 
     //RAULCIFUENTES
-//    public static final String DROBOX_APP_KEY = "bzsvwf0odnoslis";
-//    public static final String DROBOX_APP_SECRET = "pc2wwbqnblh0r53";
+//    public static final String DROPBOX_APP_KEY = "bzsvwf0odnoslis";
+//    public static final String DROPBOX_APP_SECRET = "pc2wwbqnblh0r53";
 
     public static final int REQUEST_LINK_TO_DROPBOX = 510;
 

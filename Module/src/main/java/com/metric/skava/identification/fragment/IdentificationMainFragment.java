@@ -29,6 +29,7 @@ import com.metric.skava.R;
 import com.metric.skava.app.adapter.SkavaEntityAdapter;
 import com.metric.skava.app.exception.SkavaSystemException;
 import com.metric.skava.app.fragment.SkavaFragment;
+import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.ExcavationMethod;
 import com.metric.skava.app.model.ExcavationProject;
 import com.metric.skava.app.model.ExcavationSection;
@@ -167,10 +168,9 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
         numberFormatter = DecimalFormat.getNumberInstance();
 
         daoFactory = getDAOFactory();
-
         geologist = getSkavaContext().getLoggedUser();
-        getCurrentAssessment().setGeologist(geologist);
 
+        Assessment currentAssessment = getCurrentAssessment();
         String environment = getSkavaActivity().getTargetEnvironment();
 
         try {
@@ -189,7 +189,6 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
         // Specify the layout to use when the list of choices appears
         projectAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-
         LocalExcavationSectionDAO sectionDAO = null;
         try {
             sectionDAO = daoFactory.getLocalExcavationSectionDAO();
@@ -204,7 +203,6 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
         sectionAdapter = new SkavaEntityAdapter<ExcavationSection>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, sectionList);
         // Specify the layout to use when the list of choices appears
         sectionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
 
         LocalExcavationMethodDAO localExcavationMethodDAO = null;
         try {
@@ -222,18 +220,21 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
         methodAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
 
-        selectedDateTime = getCurrentAssessment().getDateTime();
-        selectedFace = getCurrentAssessment().getFace();
-        selectedTunnel = getCurrentAssessment().getTunnel();
-        selectedProject = getCurrentAssessment().getProject();
-        selectedSection = getCurrentAssessment().getSection();
-        selectedMethod = getCurrentAssessment().getMethod();
-        initialPeg = getSkavaContext().getAssessment().getInitialPeg();
-        finalPeg = getSkavaContext().getAssessment().getFinalPeg();
-        advance = getSkavaContext().getAssessment().getCurrentAdvance();
-        accumAdvance = getSkavaContext().getAssessment().getAccummAdvance();
 
-        pegNumberFormat = new PegNumberFormat();
+        if (currentAssessment != null) {
+            currentAssessment.setGeologist(geologist);
+            selectedDateTime = currentAssessment.getDateTime();
+            selectedFace = currentAssessment.getFace();
+            selectedTunnel = currentAssessment.getTunnel();
+            selectedProject = currentAssessment.getProject();
+            selectedSection = currentAssessment.getSection();
+            selectedMethod = currentAssessment.getMethod();
+            initialPeg = currentAssessment.getInitialPeg();
+            finalPeg = currentAssessment.getFinalPeg();
+            advance = currentAssessment.getCurrentAdvance();
+            accumAdvance = currentAssessment.getAccummAdvance();
+            pegNumberFormat = new PegNumberFormat();
+        }
 
     }
 

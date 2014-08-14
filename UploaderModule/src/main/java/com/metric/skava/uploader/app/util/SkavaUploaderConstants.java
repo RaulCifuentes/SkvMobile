@@ -1,4 +1,4 @@
-package com.metric.skava.uploader.app;
+package com.metric.skava.uploader.app.util;
 
 /**
  * Created by metricboy on 6/25/14.
@@ -14,6 +14,8 @@ public class SkavaUploaderConstants {
     public static final String DEV_KEY = "DEV";
     public static final String QA_KEY = "QA";
     public static final String PROD_KEY = "PROD";
+
+    public static final String DATABASE_DIRECTORY_NAME = "SkavaUploaderDatabase";
 
     public static final String DROBOX_APP_KEY = "cuv2qsemrj5o4xw";
     public static final String DROBOX_APP_SECRET = "va39b5k96eroaht";
@@ -35,7 +37,7 @@ public class SkavaUploaderConstants {
 
     //Use the same value of the action on the app Module in order to Intent by action
     // and avoid the need of include a library on buildPath
-    public static final String INTENT_SERVICE_TAG = "MyUploaderService";
+    public static final String INTENT_SERVICE_TAG = "SkavaUploaderService";
 
     public static final String BUGSENSE_API_KEY = "41e76766";
     public static final String REMOTE_FOLDER_SEPARATOR = "/";
