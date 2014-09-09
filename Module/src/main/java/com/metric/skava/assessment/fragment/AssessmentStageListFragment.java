@@ -79,9 +79,13 @@ public class AssessmentStageListFragment extends ListFragment {
         setListAdapter(mStageArrayAdapter);
     }
 
+
+    /* You can customize the fragment layout by returning your own view hierarchy from
+    onCreateView(LayoutInflater, ViewGroup, Bundle). To do this, your view hierarchy must contain a
+    ListView object with the id "@android:id/list" (or list if it's in code)*/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.assessment_stage_list_fragment, container, false);
     }
 
     @Override

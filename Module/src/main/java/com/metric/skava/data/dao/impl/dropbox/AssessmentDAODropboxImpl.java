@@ -139,7 +139,7 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
     public Assessment getAssessment(String assessmentCode) throws DAOException {
         DbxRecord assessmentRecord = mAssessmentsTable.findRecordByCode(assessmentCode);
         Assessment newAssessment = null;
-        if (assessmentRecord != null) {
+        if (assessmentRecord != null && !assessmentRecord.isDeleted())  {
             newAssessment = assessmentBuilder.buildAssessmentFromRecord(assessmentRecord);
         }
 
@@ -155,13 +155,6 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
         SupportRecommendation recomendation = getSupportRecommendation(assessmentCode);
         newAssessment.setRecomendation(recomendation);
 
-//        List<SkavaPicture> resourceList = getPicturesByAssessmentCode(assessmentCode);
-//        newAssessment.setPicturesList(resourceList);
-
-//        Uri expandedView = getExpandedTunnelViewByAssessmentCode(assessmentCode);
-//        if(expandedView!=null) {
-//            newAssessment.setTunnelExpandedView(expandedView);
-//        }
 
         return newAssessment;
     }
@@ -813,10 +806,8 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
             String recordId;
             if (alreadyRemoted == null) {
                 //Do the actual insert on Datastore.
-                //From now on Dropbox middle man has the power
-
-                // check if this is enough to set the ID of the assessment
-                //assessmentFields.set("id", code);
+                //From now on Dropbox middle man has the control of what happens with the actual remote creation assessment
+                //Check if this is enough to set the ID of the assessment, rather than wait for Dropbox to set a random id
                 recordId = mAssessmentsTable.persist(assessmentFields);
                 Log.d(SkavaConstants.LOG, "[recordId : " + recordId + " , assessmentCode : " + code + " ]");
             } else {

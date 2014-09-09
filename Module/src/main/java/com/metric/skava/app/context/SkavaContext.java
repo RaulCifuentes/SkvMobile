@@ -2,7 +2,6 @@ package com.metric.skava.app.context;
 
 import com.dropbox.sync.android.DbxDatastore;
 import com.metric.skava.app.SkavaApplication;
-import com.metric.skava.app.helper.MyMonitorObject;
 import com.metric.skava.app.model.Assessment;
 import com.metric.skava.app.model.User;
 import com.metric.skava.data.dao.DAOFactory;
@@ -26,33 +25,46 @@ public class SkavaContext {
     private SyncQueue middlemanInbox;
     private SkavaApplication.Module mOriginatorModule;
 
-    private MyMonitorObject myMonitoObject;
-    private boolean wasSignalled = true;
+//    private MyMonitorObject myMonitoObject;
+//    private boolean wasSignalled = true;
+
+    //Work in progress serves as flag to avoid the disturbing and annoying pop-up window
+    //indicating that the listener on assessment were trigger, so the idea is to use this flag variable
+    //to be true only when it is OK to listen to changes on dropbox listener
+    private boolean workInProgress = false;
 
     public SkavaContext() {
-        myMonitoObject = new MyMonitorObject();
+//        myMonitoObject = new MyMonitorObject();
     }
 
 
+//    public void doWait(){
+//        synchronized (myMonitoObject){
+//            while (!wasSignalled){
+//                try {
+//                    myMonitoObject.wait();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//        wasSignalled = true;
+//    }
+//
+//    public void doNotify(){
+//        synchronized (myMonitoObject) {
+//            wasSignalled = true;
+//            myMonitoObject.notify();
+//        }
+//    }
 
-    public void doWait(){
-        synchronized (myMonitoObject){
-            while (!wasSignalled){
-                try {
-                    myMonitoObject.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        wasSignalled = true;
+
+    public boolean isWorkInProgress() {
+        return workInProgress;
     }
 
-    public void doNotify(){
-        synchronized (myMonitoObject) {
-            wasSignalled = true;
-            myMonitoObject.notify();
-        }
+    public void setWorkInProgress(boolean currentlyWorking) {
+        this.workInProgress = currentlyWorking;
     }
 
     public SkavaApplication.Module getOriginatorModule() {

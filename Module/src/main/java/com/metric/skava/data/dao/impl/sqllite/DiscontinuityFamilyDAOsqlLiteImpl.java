@@ -37,15 +37,117 @@ public class DiscontinuityFamilyDAOsqlLiteImpl extends SqlLiteBasePersistentEnti
     }
 
 
+
+//    protected List<DiscontinuityFamily> assemblePersistentEntities(Cursor cursor) throws DAOException {
+//        //Discontinuity System
+//        List<DiscontinuityFamily> list = new ArrayList<DiscontinuityFamily>();
+//        //add as many families as the cursor retrieve, the others will remain null
+//        for(int i=0; i < cursor.getCount(); i++){
+//            DiscontinuityFamily df = new DiscontinuityFamily();
+//            list.add(df);
+//        }
+//        while (cursor.moveToNext()) {
+//            DiscontinuityFamily newDiscontinuityFamily = new DiscontinuityFamily();
+//            newDiscontinuityFamily.setNumber(CursorUtils.getInt(DiscontinuityFamilyTable.NUMBER_COLUMN, cursor));
+//
+//            String discontinuityTypeCode = CursorUtils.getString(DiscontinuityFamilyTable.TYPE_CODE_COLUMN, cursor);
+//            if (discontinuityTypeCode != null) {
+//                DiscontinuityType discontinuityType = getDAOFactory().getLocalDiscontinuityTypeDAO().getDiscontinuityTypeByCode(discontinuityTypeCode);
+//                newDiscontinuityFamily.setType(discontinuityType);
+//            }
+//
+//            String discontinuityRelevanceCode = CursorUtils.getString(DiscontinuityFamilyTable.RELEVANCE_CODE_COLUMN, cursor);
+//            if (discontinuityRelevanceCode != null) {
+//                DiscontinuityRelevance discontinuityRelevance = getDAOFactory().getLocalDiscontinuityRelevanceDAO().getDiscontinuityRelevanceByCode(discontinuityRelevanceCode);
+//                newDiscontinuityFamily.setRelevance(discontinuityRelevance);
+//            }
+//
+//            newDiscontinuityFamily.setDipDegrees((short) CursorUtils.getInt(DiscontinuityFamilyTable.DIPDEGREES_CODE_COLUMN, cursor));
+//            newDiscontinuityFamily.setDipDirDegrees((short) CursorUtils.getInt(DiscontinuityFamilyTable.DIPDIRDEGREES_CODE_COLUMN, cursor));
+//
+//            String discontinuityShapeCode = CursorUtils.getString(DiscontinuityFamilyTable.SHAPE_CODE_COLUMN, cursor);
+//            if (discontinuityShapeCode != null) {
+//                DiscontinuityShape discontinuityShape = getDAOFactory().getLocalDiscontinuityShapeDAO().getDiscontinuityShapeByCode(discontinuityShapeCode);
+//                newDiscontinuityFamily.setShape(discontinuityShape);
+//            }
+//
+//            String discontinuitySpacingCode = CursorUtils.getString(DiscontinuityFamilyTable.SPACING_CODE_COLUMN, cursor);
+//            if (discontinuitySpacingCode != null) {
+//                Spacing discontinuitySpacing = getDAOFactory().getLocalSpacingDAO().getSpacingByUniqueCode(discontinuitySpacingCode);
+//                newDiscontinuityFamily.setSpacing(discontinuitySpacing);
+//            }
+//
+//            String roughnessCode = CursorUtils.getString(DiscontinuityFamilyTable.ROUGHNESS_CODE_COLUMN, cursor);
+//            if (roughnessCode != null) {
+//                Roughness roughness = getDAOFactory().getLocalRoughnessDAO().getRoughnessByUniqueCode(roughnessCode);
+//                newDiscontinuityFamily.setRoughness(roughness);
+//            }
+//
+//            String weatheringCode = CursorUtils.getString(DiscontinuityFamilyTable.WEATHERING_CODE_COLUMN, cursor);
+//            if (weatheringCode != null) {
+//                Weathering weathering = getDAOFactory().getLocalWeatheringDAO().getWeatheringByUniqueCode(weatheringCode);
+//                newDiscontinuityFamily.setWeathering(weathering);
+//            }
+//
+//            String discontinuityWaterCode = CursorUtils.getString(DiscontinuityFamilyTable.DISCONTINUITYWATER_CODE_COLUMN, cursor);
+//            if (discontinuityWaterCode != null) {
+//                DiscontinuityWater discontinuityWater = getDAOFactory().getLocalDiscontinuityWaterDAO().getDiscontinuityWaterByCode(discontinuityWaterCode);
+//                newDiscontinuityFamily.setWater(discontinuityWater);
+//            }
+//
+//            String persistenceCode = CursorUtils.getString(DiscontinuityFamilyTable.PERSISTENCE_CODE_COLUMN, cursor);
+//            if (persistenceCode != null) {
+//                Persistence persistence = getDAOFactory().getLocalPersistenceDAO().getPersistenceByUniqueCode(persistenceCode);
+//                newDiscontinuityFamily.setPersistence(persistence);
+//            }
+//
+//            String apertureCode = CursorUtils.getString(DiscontinuityFamilyTable.APERTURE_CODE_COLUMN, cursor);
+//            if (apertureCode != null) {
+//                Aperture aperture = getDAOFactory().getLocalApertureDAO().getApertureByUniqueCode(apertureCode);
+//                newDiscontinuityFamily.setAperture(aperture);
+//            }
+//
+//            String infillingCode = CursorUtils.getString(DiscontinuityFamilyTable.INFILLING_CODE_COLUMN, cursor);
+//            if (infillingCode != null) {
+//                Infilling infilling = getDAOFactory().getLocalInfillingDAO().getInfillingByUniqueCode(infillingCode);
+//                newDiscontinuityFamily.setInfilling(infilling);
+//            }
+//
+//            String jaCode = CursorUtils.getString(DiscontinuityFamilyTable.JA_CODE_COLUMN, cursor);
+//            if (jaCode != null) {
+//                Ja ja = getDAOFactory().getLocalJaDAO().getJaByUniqueCode(jaCode);
+//                newDiscontinuityFamily.setJa(ja);
+//            }
+//
+//            String jrCode = CursorUtils.getString(DiscontinuityFamilyTable.JR_CODE_COLUMN, cursor);
+//            if (jrCode != null) {
+//                Jr jr = getDAOFactory().getLocalJrDAO().getJrByUniqueCode(jrCode);
+//                newDiscontinuityFamily.setJr(jr);
+//            }
+//
+//            list.set(newDiscontinuityFamily.getNumber(), newDiscontinuityFamily);
+//
+//            //complete the set of 7 discontinuites, with empty ones if there no definition
+//            for(int j=list.size(); j < 7; j++){
+//                DiscontinuityFamily df = new DiscontinuityFamily();
+//                df.setNumber(j);
+//                list.add(df);
+//            }
+//        }
+//        return list;
+//    }
+
+
     @Override
     protected List<DiscontinuityFamily> assemblePersistentEntities(Cursor cursor) throws DAOException {
         //Discontinuity System
         List<DiscontinuityFamily> list = new ArrayList<DiscontinuityFamily>();
-        //add as many families as the cursor retrieve, the others will remain null
-        for(int i=0; i < cursor.getCount(); i++){
+        for(int i=0; i < 7; i++){
             DiscontinuityFamily df = new DiscontinuityFamily();
+            df.setNumber(i);
             list.add(df);
         }
+
         while (cursor.moveToNext()) {
             DiscontinuityFamily newDiscontinuityFamily = new DiscontinuityFamily();
             newDiscontinuityFamily.setNumber(CursorUtils.getInt(DiscontinuityFamilyTable.NUMBER_COLUMN, cursor));
@@ -124,16 +226,11 @@ public class DiscontinuityFamilyDAOsqlLiteImpl extends SqlLiteBasePersistentEnti
                 Jr jr = getDAOFactory().getLocalJrDAO().getJrByUniqueCode(jrCode);
                 newDiscontinuityFamily.setJr(jr);
             }
-
+            //Java list is zero-index based, discontinuity number is also zero based
             list.set(newDiscontinuityFamily.getNumber(), newDiscontinuityFamily);
 
-            //complete the set of 7 discontinuites, with empty ones if there no definition
-            for(int j=list.size(); j < 7; j++){
-                DiscontinuityFamily df = new DiscontinuityFamily();
-                df.setNumber(j);
-                list.add(df);
-            }
         }
+
         return list;
     }
 
@@ -143,6 +240,7 @@ public class DiscontinuityFamilyDAOsqlLiteImpl extends SqlLiteBasePersistentEnti
         List<DiscontinuityFamily> discontinuitySystem;
         Cursor cursor = getRecordsFilteredByColumn(DiscontinuityFamilyTable.DISCONTINUITY_FAMILY_DATABASE_TABLE, DiscontinuityFamilyTable.ASSESSMENT_CODE_COLUMN, assessmentCode, DiscontinuityFamilyTable.NUMBER_COLUMN);
         discontinuitySystem = assemblePersistentEntities(cursor);
+        cursor.close();
         return discontinuitySystem;
 
     }

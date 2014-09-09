@@ -87,34 +87,34 @@ public abstract class DropboxBaseTable implements DropboxTable {
             DbxFields criteria = new DbxFields();
             if (candidateKeyColumns.length == keyValues.length) {
                 for (int i = 0; i < candidateKeyColumns.length; i++) {
-                    if (keyValues[i] instanceof String){
-                        criteria.set(candidateKeyColumns[i], (String)keyValues[i]);
+                    if (keyValues[i] instanceof String) {
+                        criteria.set(candidateKeyColumns[i], (String) keyValues[i]);
                     }
-                    if (keyValues[i] instanceof Boolean){
-                        criteria.set(candidateKeyColumns[i], (Boolean)keyValues[i]);
+                    if (keyValues[i] instanceof Boolean) {
+                        criteria.set(candidateKeyColumns[i], (Boolean) keyValues[i]);
                     }
-                    if (keyValues[i] instanceof Long){
-                        criteria.set(candidateKeyColumns[i], (Long)keyValues[i]);
+                    if (keyValues[i] instanceof Long) {
+                        criteria.set(candidateKeyColumns[i], (Long) keyValues[i]);
                     }
-                    if (keyValues[i] instanceof Integer){
-                        criteria.set(candidateKeyColumns[i], (Integer)keyValues[i]);
+                    if (keyValues[i] instanceof Integer) {
+                        criteria.set(candidateKeyColumns[i], (Integer) keyValues[i]);
                     }
-                    if (keyValues[i] instanceof Double){
-                        criteria.set(candidateKeyColumns[i], (Double)keyValues[i]);
+                    if (keyValues[i] instanceof Double) {
+                        criteria.set(candidateKeyColumns[i], (Double) keyValues[i]);
                     }
-                    if (keyValues[i] instanceof Date){
-                        criteria.set(candidateKeyColumns[i], (Date)keyValues[i]);
+                    if (keyValues[i] instanceof Date) {
+                        criteria.set(candidateKeyColumns[i], (Date) keyValues[i]);
                     }
                 }
 
-            DbxTable.QueryResult results = getBaseDropboxTable().query(criteria);
-            if (results.hasResults()) {
-                if (results.count() == 1) {
-                    resultRecord = results.iterator().next();
-                } else {
-                    throw new DAOException("Multiple record instances for same code: " + candidateKeyColumns + "with values " + keyValues);
+                DbxTable.QueryResult results = getBaseDropboxTable().query(criteria);
+                if (results.hasResults()) {
+                    if (results.count() == 1) {
+                        resultRecord = results.iterator().next();
+                    } else {
+                        throw new DAOException("Multiple record instances for same code: " + candidateKeyColumns + "with values " + keyValues);
+                    }
                 }
-            }
             }
         } catch (DbxException e) {
             throw new DAOException(e);
@@ -129,23 +129,23 @@ public abstract class DropboxBaseTable implements DropboxTable {
             DbxFields criteria = new DbxFields();
             if (names.length == values.length) {
                 for (int i = 0; i < names.length; i++) {
-                    if (values[i] instanceof String){
-                        criteria.set(names[i], (String)values[i]);
+                    if (values[i] instanceof String) {
+                        criteria.set(names[i], (String) values[i]);
                     }
-                    if (values[i] instanceof Boolean){
-                        criteria.set(names[i], (Boolean)values[i]);
+                    if (values[i] instanceof Boolean) {
+                        criteria.set(names[i], (Boolean) values[i]);
                     }
-                    if (values[i] instanceof Long){
-                        criteria.set(names[i], (Long)values[i]);
+                    if (values[i] instanceof Long) {
+                        criteria.set(names[i], (Long) values[i]);
                     }
-                    if (values[i] instanceof Integer){
-                        criteria.set(names[i], (Integer)values[i]);
+                    if (values[i] instanceof Integer) {
+                        criteria.set(names[i], (Integer) values[i]);
                     }
-                    if (values[i] instanceof Double){
-                        criteria.set(names[i], (Double)values[i]);
+                    if (values[i] instanceof Double) {
+                        criteria.set(names[i], (Double) values[i]);
                     }
-                    if (values[i] instanceof Date){
-                        criteria.set(names[i], (Date)values[i]);
+                    if (values[i] instanceof Date) {
+                        criteria.set(names[i], (Date) values[i]);
                     }
                 }
                 resultSet = getBaseDropboxTable().query(criteria).asList();
@@ -170,14 +170,30 @@ public abstract class DropboxBaseTable implements DropboxTable {
                 throw new DAOException("Criteria names[] and values[] must have the same number of elements.");
             }
         } catch (DbxException e) {
+            e.printStackTrace();
             throw new DAOException(e);
         }
         return resultSet;
     }
 
 
-    public String persist(DbxFields fields) {
-        DbxRecord dbxRecord = getBaseDropboxTable().insert(fields);
+    public String persist(DbxFields fields) throws DAOException {
+        DbxRecord dbxRecord = null;
+        if (fields.hasField("code")){
+            String code = fields.getString("code");
+            try {
+                if (code != null) {
+                    dbxRecord = getBaseDropboxTable().getOrInsert(code, fields);
+                } else {
+                    dbxRecord = getBaseDropboxTable().insert(fields);
+                }
+            } catch (DbxException e) {
+                e.printStackTrace();
+                throw new DAOException(e);
+            }
+        } else {
+            dbxRecord = getBaseDropboxTable().insert(fields);
+        }
         return dbxRecord.getId();
     }
 

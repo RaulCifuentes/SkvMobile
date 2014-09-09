@@ -80,47 +80,47 @@ public class DiscontinuitiesMainFragment extends SkavaFragment implements TabHos
         mTabHost.setup(getActivity(), getChildFragmentManager(), R.id.realtabcontent);
 
         Bundle bundle = new Bundle();
-        bundle.putInt(DiscontinuitySystemBaseFragment.ARG_BASKET_ID, 1);
+        bundle.putInt(DiscontinuitySystemBaseFragment.ARG_BASKET_ID, 0);
         TabHost.TabSpec firstTabSpec = mTabHost.newTabSpec(TAB_FAMILY_1).setIndicator(mContext.getString(R.string.title_tab_discontinuities_family_1));
         firstTabFragmentTag = firstTabSpec.getTag();
         mTabHost.addTab(firstTabSpec, DiscontinuitySystemBaseFragment.class, bundle);
 
         bundle = new Bundle();
-        bundle.putInt(DiscontinuitySystemBaseFragment.ARG_BASKET_ID, 2);
+        bundle.putInt(DiscontinuitySystemBaseFragment.ARG_BASKET_ID, 1);
         TabHost.TabSpec secondTabSpec = mTabHost.newTabSpec(TAB_FAMILY_2).setIndicator(mContext.getString(R.string.title_tab_discontinuities_family_2));
         secondTabFragmentTag = secondTabSpec.getTag();
         mTabHost.addTab(secondTabSpec,
                 DiscontinuitySystemBaseFragment.class, bundle);
 
         bundle = new Bundle();
-        bundle.putInt(DiscontinuitySystemBaseFragment.ARG_BASKET_ID, 3);
+        bundle.putInt(DiscontinuitySystemBaseFragment.ARG_BASKET_ID, 2);
         TabHost.TabSpec thirdTabSpec = mTabHost.newTabSpec(TAB_FAMILY_3).setIndicator(mContext.getString(R.string.title_tab_discontinuities_family_3));
         thirdTabFragmentTag = thirdTabSpec.getTag();
         mTabHost.addTab(thirdTabSpec,
                 DiscontinuitySystemBaseFragment.class, bundle);
 
         bundle = new Bundle();
-        bundle.putInt(DiscontinuitySystemBaseFragment.ARG_BASKET_ID, 4);
+        bundle.putInt(DiscontinuitySystemBaseFragment.ARG_BASKET_ID, 3);
         TabHost.TabSpec fourthTabSpec = mTabHost.newTabSpec(TAB_FAMILY_4).setIndicator(mContext.getString(R.string.title_tab_discontinuities_family_4));
         fourthTabFragmentTag = fourthTabSpec.getTag();
         mTabHost.addTab(fourthTabSpec, DiscontinuitySystemBaseFragment.class, bundle);
 
         bundle = new Bundle();
-        bundle.putInt(DiscontinuitySystemBaseFragment.ARG_BASKET_ID, 5);
+        bundle.putInt(DiscontinuitySystemBaseFragment.ARG_BASKET_ID, 4);
         TabHost.TabSpec fifthTabSpec = mTabHost.newTabSpec(TAB_FAMILY_5).setIndicator(mContext.getString(R.string.title_tab_discontinuities_family_5));
         fifthTabFragmentTag = fifthTabSpec.getTag();
         mTabHost.addTab(fifthTabSpec, DiscontinuitySystemBaseFragment.class, bundle);
 
 
         bundle = new Bundle();
-        bundle.putInt(DiscontinuitySystemBaseFragment.ARG_BASKET_ID, 6);
+        bundle.putInt(DiscontinuitySystemBaseFragment.ARG_BASKET_ID, 5);
         TabHost.TabSpec sixthTabSpec = mTabHost.newTabSpec(TAB_FAMILY_6).setIndicator(mContext.getString(R.string.title_tab_discontinuities_family_6));
         sixthTabFragmentTag = fourthTabSpec.getTag();
         mTabHost.addTab(sixthTabSpec, DiscontinuitySystemBaseFragment.class, bundle);
 
 
         bundle = new Bundle();
-        bundle.putInt(DiscontinuitySystemBaseFragment.ARG_BASKET_ID, 7);
+        bundle.putInt(DiscontinuitySystemBaseFragment.ARG_BASKET_ID, 6);
         TabHost.TabSpec seventhTabSpec = mTabHost.newTabSpec(TAB_FAMILY_7).setIndicator(mContext.getString(R.string.title_tab_discontinuities_family_7));
         seventhTabFragmentTag = seventhTabSpec.getTag();
         mTabHost.addTab(seventhTabSpec, DiscontinuitySystemBaseFragment.class, bundle);

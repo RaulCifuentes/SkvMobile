@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
 
     <!-- <string name="barton_indicator">Barton</string> -->
@@ -73,8 +79,4 @@
     <string name="syncing_app_data_progress">Syncing app data from internet</string>
     <string name="syncing_progress">Syncing data from internet</string>
     <string name="connecting_dropbox">Linking to Dropbox</string>
-    <string name="title_activity_dropbox_core_test_main">DropboxCoreTestMainActivity</string>
-    <string name="test_dropbox_core">Test dropbox core</string>
-    <string name="title_activity_test_autocad_main">TestAutocadMainActivity</string>
-
 </resources>

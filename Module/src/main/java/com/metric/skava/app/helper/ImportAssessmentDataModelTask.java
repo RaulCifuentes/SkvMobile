@@ -39,6 +39,7 @@ public class ImportAssessmentDataModelTask extends AsyncTask<String, Long, Long>
         String message = mActivity.getString(R.string.syncing_user_data_progress);
         mActivity.onPreExecuteImportUserData();
         mActivity.showProgressBar(true, message, true);
+        mContext.setWorkInProgress(true);
     }
 
     @Override
@@ -97,5 +98,7 @@ public class ImportAssessmentDataModelTask extends AsyncTask<String, Long, Long>
             messageBox.setNeutralButton("OK", null);
             messageBox.show();
         }
+        mContext.setWorkInProgress(false);
     }
+
 }

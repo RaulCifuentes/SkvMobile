@@ -110,11 +110,13 @@ public class SupportRecommendationDAOsqlLiteImpl extends SqlLiteBasePersistentEn
     public SupportRecommendation getSupportRecommendation(String assessmentCode) throws DAOException {
         Cursor cursor = getRecordsFilteredByColumn(SupportRecommendationTable.RECOMENDATION_DATABASE_TABLE, SupportRecommendationTable.ASSESSMENT_CODE_COLUMN, assessmentCode, null);
         List<SupportRecommendation> list = assemblePersistentEntities(cursor);
+        cursor.close();
         if (list != null && !list.isEmpty()) {
             return list.get(0);
         } else {
             return null;
         }
+
     }
 
     @Override

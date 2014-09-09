@@ -17,7 +17,7 @@ public interface DropboxTable {
 
     public DbxRecord findRecordByCandidateKey(String candidateKeyColumn, String candidateKeyValue) throws DAOException;
 
-    public String persist(DbxFields fields);
+    public String persist(DbxFields fields) throws DAOException;
 
     public void delete(DbxRecord dbxRecord);
 

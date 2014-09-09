@@ -20,7 +20,6 @@ import com.metric.skava.assessment.dialog.adapter.AssessmentListAdapter;
 import com.metric.skava.assessment.fragment.AssessmentListFragment;
 import com.metric.skava.data.dao.LocalAssessmentDAO;
 import com.metric.skava.data.dao.LocalRoleDAO;
-import com.metric.skava.mapping.activity.MappingStageListActivity;
 import com.metric.skava.report.activity.AssessmentReportMainActivity;
 import com.metric.skava.report.activity.MappingReportMainActivity;
 import com.metric.skava.report.activity.ReviewAssessmentReportMainActivity;
@@ -32,10 +31,8 @@ import java.util.List;
 
 public class AssessmentsListActivity extends SkavaFragmentActivity implements AssessmentListFragment.OnFragmentInteractionListener {
 
-
     private LocalAssessmentDAO localAssessmentDAO;
     private AssessmentListAdapter mAssessmentAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,10 +105,8 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
                 case ROCK_CLASSIFICATION:
                     intent = new Intent(this, AssessmentStageListActivity.class);
                     break;
-                case FACE_MAPPING:
-                    intent = new Intent(this, MappingStageListActivity.class);
-                    break;
             }
+            getSkavaContext().setWorkInProgress(true);
             startActivity(intent);
             return true;
         }
@@ -164,6 +159,7 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
                 }
                 break;
         }
+        getSkavaContext().setWorkInProgress(true);
         startActivity(detailIntent);
     }
 
@@ -171,6 +167,7 @@ public class AssessmentsListActivity extends SkavaFragmentActivity implements As
         List<Assessment> updatedList = null;
         try {
             updatedList = localAssessmentDAO.getAssessmentsByUser(getTargetEnvironment(), getSkavaContext().getLoggedUser());
+            getSkavaContext().setWorkInProgress(false);
         } catch (Exception daoe) {
             daoe.printStackTrace();
             Log.e(SkavaConstants.LOG, daoe.getMessage());

@@ -123,7 +123,7 @@ public class SupportRequirementDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
     public SupportRequirement findSupportRequirement(Tunnel tunnel, Double qBarton) throws DAOException {
         Cursor cursor = getRecordsFilteredByColumn(SupportRequirementTable.SUPPORT_REQUIREMENT_DATABASE_TABLE, SupportRequirementTable.TUNNEL_CODE_COLUMN, tunnel.getCode(), SupportRequirementTable.Q_LOWER_BOUND_COLUMN);
         List<SupportRequirement> listSupportRequirements = assemblePersistentEntities(cursor);
-
+        cursor.close();
         for (SupportRequirement currentSupportRequirement : listSupportRequirements) {
             Double lowerBound = currentSupportRequirement.getqBartonLowerBoundary();
             Double upperBound = currentSupportRequirement.getqBartonUpperBoundary();

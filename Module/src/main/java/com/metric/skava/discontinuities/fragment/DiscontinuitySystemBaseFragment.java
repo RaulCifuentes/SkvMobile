@@ -117,24 +117,24 @@ public class DiscontinuitySystemBaseFragment extends SkavaFragment implements Ad
             //six nulls DiscontinuityFamily list
             if (getCurrentAssessment().getDiscontinuitySystem().isEmpty()) {
                 mDiscontinuityFamilyInstance = new DiscontinuityFamily();
-                mDiscontinuityFamilyInstance.setNumber(mDiscontinuityFamilyNumber - 1);
+                mDiscontinuityFamilyInstance.setNumber(mDiscontinuityFamilyNumber);
                 getCurrentAssessment().getDiscontinuitySystem().add(mDiscontinuityFamilyInstance);
             } else {
                 if (getCurrentAssessment().getDiscontinuitySystem().size() < mDiscontinuityFamilyNumber) {
                     mDiscontinuityFamilyInstance = new DiscontinuityFamily();
-                    mDiscontinuityFamilyInstance.setNumber(mDiscontinuityFamilyNumber - 1);
+                    mDiscontinuityFamilyInstance.setNumber(mDiscontinuityFamilyNumber);
                     //add as many as necessary
                     for (int i = getCurrentAssessment().getDiscontinuitySystem().size(); i < mDiscontinuityFamilyNumber; i++) {
                         getCurrentAssessment().getDiscontinuitySystem().add(null);
                     }
-                    getCurrentAssessment().getDiscontinuitySystem().add(mDiscontinuityFamilyNumber - 1, mDiscontinuityFamilyInstance);
+                    getCurrentAssessment().getDiscontinuitySystem().add(mDiscontinuityFamilyNumber , mDiscontinuityFamilyInstance);
                 } else {
                     //This is the case where actually goes into
-                    mDiscontinuityFamilyInstance = getCurrentAssessment().getDiscontinuitySystem().get(mDiscontinuityFamilyNumber - 1);
+                    mDiscontinuityFamilyInstance = getCurrentAssessment().getDiscontinuitySystem().get(mDiscontinuityFamilyNumber);
                     if (mDiscontinuityFamilyInstance == null) {
                         mDiscontinuityFamilyInstance = new DiscontinuityFamily();
-                        mDiscontinuityFamilyInstance.setNumber(mDiscontinuityFamilyNumber - 1);
-                        getCurrentAssessment().getDiscontinuitySystem().set(mDiscontinuityFamilyNumber - 1, mDiscontinuityFamilyInstance);
+                        mDiscontinuityFamilyInstance.setNumber(mDiscontinuityFamilyNumber);
+                        getCurrentAssessment().getDiscontinuitySystem().set(mDiscontinuityFamilyNumber, mDiscontinuityFamilyInstance);
                     } else {
                         //The family has already been initialized ...
                         //System.out.println("mDiscontinuityFamilyNumber:: " + mDiscontinuityFamilyNumber + " tiene el mDiscontinuityFamilyInstance :: " + mDiscontinuityFamilyInstance);

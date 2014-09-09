@@ -53,7 +53,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     private static final int NAV_MENU_SKAVA_SECTION_ID = 10;
     private static final int NAV_MENU_LOGIN_ITEM_ID = 20;
     public static final int NAV_MENU_ROCK_CLASSIFICATION_ITEM_ID = 25;
-    public static final int NAV_MENU_FACE_MAPPING_ITEM_ID = 30;
+//    public static final int NAV_MENU_FACE_MAPPING_ITEM_ID = 30;
     private static final int NAV_MENU_ADMIN_SECTION_ID = 40;
     private static final int NAV_MENU_SETTINGS_ITEM_ID = 70;
     private static final int NAV_MENU_SYNC_ITEM_ID = 50;
@@ -327,7 +327,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 if (loggedUser.hasRole(geologist) || loggedUser.hasRole(admin) || loggedUser.hasRole(metricAdmin)) {
                     menuAsList.remove(1);
                     menuAsList.add(NavMenuItem.create(NAV_MENU_ROCK_CLASSIFICATION_ITEM_ID, "Rock Classification", "ic_menu_copy_holo_dark", true, true, this));
-                    menuAsList.add(NavMenuItem.create(NAV_MENU_FACE_MAPPING_ITEM_ID, "Face Mappings", "ic_menu_copy_holo_dark", true, true, this));
                 }
                 if (loggedUser.hasRole(admin) || loggedUser.hasRole(metricAdmin)) {
                     menuAsList.add(NavMenuSection.create(NAV_MENU_ADMIN_SECTION_ID, "Admin"));
@@ -373,12 +372,6 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 intent = new Intent(this, AssessmentsListActivity.class);
                 getSkavaContext().setOriginatorModule(SkavaApplication.Module.ROCK_CLASSIFICATION);
                 intent.putExtra(SkavaConstants.SKAVA_APP_SRC, NAV_MENU_ROCK_CLASSIFICATION_ITEM_ID);
-                startActivity(intent);
-                break;
-            case NAV_MENU_FACE_MAPPING_ITEM_ID:
-                intent = new Intent(this, AssessmentsListActivity.class);
-                getSkavaContext().setOriginatorModule(SkavaApplication.Module.FACE_MAPPING);
-                intent.putExtra(SkavaConstants.SKAVA_APP_SRC, NAV_MENU_FACE_MAPPING_ITEM_ID);
                 startActivity(intent);
                 break;
             case NAV_MENU_SYNC_ITEM_ID:

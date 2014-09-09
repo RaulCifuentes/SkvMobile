@@ -49,6 +49,8 @@ public class AssessmentTable extends SkavaTable {
 
     public static final String ROCK_SAMPLE_IDENTIFICATION_COLUMN = "ROCK_SAMPLE_IDENTIFICATION";
 
+    public static final String SOURCE_COLUMN = "SOURCE";
+
     public static final String DATA_SENT_STATUS_COLUMN = "DATA_SENT_STATUS";
 
     public static final String FILES_SENT_STATUS_COLUMN = "FILES_SENT_STATUS";
@@ -80,6 +82,7 @@ public class AssessmentTable extends SkavaTable {
             NUMBER_JOINTS_COLUMN + " integer null, " +
             OUTCROP_COLUMN + " text null, " +
             ROCK_SAMPLE_IDENTIFICATION_COLUMN + " text null, " +
+            SOURCE_COLUMN + " text null, " +
             DATA_SENT_STATUS_COLUMN + " text not null, " +
             FILES_SENT_STATUS_COLUMN + " text not null, " +
             SAVING_STATUS_COLUMN + " text not null " +

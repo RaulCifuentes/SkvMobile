@@ -53,6 +53,7 @@ public class RockQualityDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<RockQuality>
     public List<RockQuality> getAllRockQualities(RockQuality.AccordingTo accordingTo) throws DAOException {
         Cursor cursor = getRecordsFilteredByColumn(RockQualityTable.ROCK_QUALITY_DATABASE_TABLE, RockQualityTable.ACCORDING_TO_COLUMN, accordingTo.name(), RockQualityTable.LOWERBOUND_COLUMN);
         List<RockQuality> list = assemblePersistentEntities(cursor);
+        cursor.close();
         return list;
     }
 
