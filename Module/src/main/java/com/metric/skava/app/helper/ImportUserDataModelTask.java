@@ -39,6 +39,7 @@ public class ImportUserDataModelTask extends AsyncTask<SyncTask.Domain, Long, Lo
         String message = mActivity.getString(R.string.syncing_user_data_progress);
         mActivity.onPreExecuteImportUserData();
         mActivity.showProgressBar(true, message, true);
+        mContext.setWorkInProgress(true);
     }
 
     @Override
@@ -132,5 +133,6 @@ public class ImportUserDataModelTask extends AsyncTask<SyncTask.Domain, Long, Lo
             messageBox.setNeutralButton("OK", null);
             messageBox.show();
         }
+        mContext.setWorkInProgress(false);
     }
 }

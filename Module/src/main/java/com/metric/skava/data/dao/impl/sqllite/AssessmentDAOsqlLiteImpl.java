@@ -161,6 +161,7 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
         String[] values = new String[]{environment, face.getCode()};
         Cursor cursor = getRecordsFilteredByColumns(AssessmentTable.ASSESSMENT_DATABASE_TABLE, names, values, AssessmentTable.DATE_COLUMN);
         List<Assessment> list = assemblePersistentEntities(cursor);
+        cursor.close();
         return list;
     }
 
@@ -209,12 +210,14 @@ public class AssessmentDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<A
             String uriString = CursorUtils.getString(ExternalResourcesTable.RESOURCE_URL_COLUMN, cursor);
             expandedTunnel = Uri.parse(uriString);
         }
+        cursor.close();
         return expandedTunnel;
     }
 
     private List<SkavaPicture> getPicturesByAssessmentCode(String code) {
         Cursor cursor = getRecordsFilteredByColumn(ExternalResourcesTable.EXTERNAL_RESOURCES_DATABASE_TABLE, ExternalResourcesTable.ASSESSMENT_CODE_COLUMN, code, ExternalResourcesTable.RESOURCE_ORDINAL);
         List<SkavaPicture> list = assemblePicturesList(cursor);
+        cursor.close();
         return list;
     }
 

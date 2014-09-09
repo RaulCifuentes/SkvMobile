@@ -83,6 +83,7 @@ public class ExcavationFactorsDAOsqlLiteImpl extends SqlLiteBasePersistentEntity
         if (list.size() > 1) {
             throw new DAOException("Multiple records for same tunnel. [Tunnel  : " + tunnel + " ]");
         }
+        cursor.close();
         return list.get(0);
     }
 

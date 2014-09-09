@@ -38,6 +38,7 @@ public class ImportAppDataModelTask extends AsyncTask<SyncTask.Domain, Long, Lon
         String message = mActivity.getString(R.string.syncing_app_data_progress);
         mActivity.onPreExecuteImportAppData();
         mActivity.showProgressBar(true, message, true);
+        mContext.setWorkInProgress(true);
     }
 
     @Override
@@ -147,5 +148,6 @@ public class ImportAppDataModelTask extends AsyncTask<SyncTask.Domain, Long, Lon
             messageBox.setNeutralButton("OK", null);
             messageBox.show();
         }
+        mContext.setWorkInProgress(false);
     }
 }

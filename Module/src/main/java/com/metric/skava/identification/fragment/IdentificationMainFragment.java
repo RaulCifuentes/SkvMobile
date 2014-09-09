@@ -528,10 +528,6 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
 
         orientationEditText = (EditText) rootView.findViewById(R.id.mapping_gral_info_orientation_value);
         orientationEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
-        Short orientation = getCurrentAssessment().getOrientation();
-        if (orientation != null) {
-            orientationEditText.setText(numberFormatter.format(orientation));
-        }
 
         orientationEditText.addTextChangedListener(new TextValidator(orientationEditText) {
             @Override
@@ -551,6 +547,10 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
             }
         });
 
+        Short orientation = getCurrentAssessment().getOrientation();
+        if (orientation != null) {
+            orientationEditText.setText(numberFormatter.format(orientation));
+        }
 
         slopeTextEdit = (EditText) rootView.findViewById(R.id.mapping_gral_info_slope_value);
         slopeTextEdit.setRawInputType(Configuration.KEYBOARD_12KEY);

@@ -23,6 +23,7 @@ public class Assessment implements IdentifiableEntity {
 
     public enum SavingStatus {NOT_SAVED, DRAFT, PERSISTENT};
     public enum SendingStatus {NOT_SENT, SENT_TO_DATASTORE, SENT_TO_CLOUD};
+    public enum Originator {WEB, MOBILE};
 
     private SendingStatus dataSentStatus;
     private SendingStatus picsSentStatus;
@@ -54,6 +55,8 @@ public class Assessment implements IdentifiableEntity {
     private Short numberOfJoints;
     private String outcropDescription;
     private String rockSampleIdentification;
+
+    private Originator source;
 
     private SupportRecommendation recomendation;
     private List<DiscontinuityFamily> discontinuitySystem;
@@ -319,6 +322,14 @@ public class Assessment implements IdentifiableEntity {
 
     public void setRecomendation(SupportRecommendation recomendation) {
         this.recomendation = recomendation;
+    }
+
+    public Originator getSource() {
+        return source;
+    }
+
+    public void setSource(Originator source) {
+        this.source = source;
     }
 
     public List<DiscontinuityFamily> getDiscontinuitySystem() {

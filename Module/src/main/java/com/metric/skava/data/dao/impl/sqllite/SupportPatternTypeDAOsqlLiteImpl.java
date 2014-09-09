@@ -52,6 +52,7 @@ public class SupportPatternTypeDAOsqlLiteImpl extends SqlLiteBaseEntityDAO<Suppo
     public List<SupportPatternType> getAllSupportPatternTypes(SupportPatternType.Group group ) throws DAOException {
         Cursor cursor = getRecordsFilteredByColumn(SupportPatternTypeTable.PATTERN_TYPE_DATABASE_TABLE, SupportPatternTypeTable.GROUP_CODE_COLUMN, group.name(), null);
         List<SupportPatternType> list = assemblePersistentEntities(cursor);
+        cursor.close();
         return list;
     }
 

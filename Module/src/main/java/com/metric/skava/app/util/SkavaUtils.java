@@ -178,6 +178,8 @@ public class SkavaUtils {
 
         initialAssessment.setOriginatorDeviceID(getUniquePsuedoID());
 
+        initialAssessment.setSource(Assessment.Originator.MOBILE);
+
         // determine the getDatastore().getTitle().
         // skavaContext.getTargetEnvironment().
         String targetEnvironment = skavaContext.getTargetEnvironment();
@@ -211,8 +213,6 @@ public class SkavaUtils {
         int dfItems = 7;
         ArrayList<DiscontinuityFamily> discontinuitySystem = new ArrayList<DiscontinuityFamily>(dfItems);
         for (int i = 0; i < dfItems; i++) {
-            //DiscontinuityFamily df = new DiscontinuityFamily();
-            //df.setNumber(i);
             discontinuitySystem.add(null);
         }
 

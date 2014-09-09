@@ -294,150 +294,84 @@ public class AssessmentBuilder4DropBox {
             babyAssessment.setRockSampleIdentification(rockSampleId);
         }
 
-//  ***** COMMENTED OUT, TRY TO ASSEMBLE THE ENTIRE ASSESSMENT HERE IS TOO MUCH CODE, BETTER TO DIVIDE AND CONQUER, THE ASSESSMENT DROPBOX DAO WILL HANDLE THIS COMPOSITION
-//        DbxList discontinuitiesSystemIds;
-//        if (assessmentRecord.hasField("discontinuitiesSystem")) {
-//            discontinuitiesSystemIds = assessmentRecord.getList("discontinuitiesSystem");
-//            if (!discontinuitiesSystemIds.isEmpty()) {
-//
-//                List<DiscontinuityFamily> discontinuitySystem = new ArrayList<DiscontinuityFamily>();
-//
-//                for (int i = 0; i < discontinuitiesSystemIds.size(); i++) {
-//
-//                    String discontinuityId = discontinuitiesSystemIds.getString(i);
-//
-//                    DbxRecord discontinuityFamilyRecord = mDiscontinuitiesFamilyDropBoxTable.findRecordByCandidateKey("id", discontinuityId);
-//
-//                    DiscontinuityFamily discontinuity = new DiscontinuityFamily();
-//
-//                    if (discontinuityFamilyRecord.hasField("number")) {
-//                        Long number = discontinuityFamilyRecord.getLong("number");
-//                        Integer numero = number.intValue();
-//                        discontinuity.setNumber(numero);
-//                    }
-//
-//                    if (discontinuityFamilyRecord.hasField("typeCode")) {
-//                        String typeCode = discontinuityFamilyRecord.getString("typeCode");
-//                        DiscontinuityType type = discontinuityTypeDAO.getDiscontinuityTypeByCode(typeCode);
-//                        discontinuity.setType(type);
-//                    }
-//
-//                    if (discontinuityFamilyRecord.hasField("relevanceCode")) {
-//                        String relevanceCode = discontinuityFamilyRecord.getString("relevanceCode");
-//                        DiscontinuityRelevance relevance = discontinuityRelevanceDAO.getDiscontinuityRelevanceByCode(relevanceCode);
-//                        discontinuity.setRelevance(relevance);
-//                    }
-//
-//                    if (discontinuityFamilyRecord.hasField("dipDirDegrees")) {
-//                        Long dipDirDegrees = discontinuityFamilyRecord.getLong("dipDirDegrees");
-//                        discontinuity.setDipDirDegrees(dipDirDegrees.shortValue());
-//                    }
-//
-//                    if (discontinuityFamilyRecord.hasField("dipDegrees")) {
-//                        Long dipDegrees = discontinuityFamilyRecord.getLong("dipDegrees");
-//                        discontinuity.setDipDegrees(dipDegrees.shortValue());
-//                    }
-//
-//                    if (discontinuityFamilyRecord.hasField("spacingCode")) {
-//                        String spacingCode = discontinuityFamilyRecord.getString("spacingCode");
-//                        Spacing spacing = discontinuitySpacingDAO.getSpacingByUniqueCode(spacingCode);
-//                        discontinuity.setSpacing(spacing);
-//                    }
-//
-//                    if (discontinuityFamilyRecord.hasField("persistenceCode")) {
-//                        String persistenceCode = discontinuityFamilyRecord.getString("persistenceCode");
-//                        Persistence persistence = discontinuityPersistenceDAO.getPersistenceByUniqueCode(persistenceCode);
-//                        discontinuity.setPersistence(persistence);
-//                    }
-//
-//                    if (discontinuityFamilyRecord.hasField("apertureCode")) {
-//                        String apertureCode = discontinuityFamilyRecord.getString("apertureCode");
-//                        Aperture aperture = discontinuityApertureDAO.getApertureByUniqueCode(apertureCode);
-//                        discontinuity.setAperture(aperture);
-//                    }
-//
-//                    if (discontinuityFamilyRecord.hasField("shapeCode")) {
-//                        String shapeCode = discontinuityFamilyRecord.getString("shapeCode");
-//                        DiscontinuityShape shape = discontinuityShapeDAO.getDiscontinuityShapeByCode(shapeCode);
-//                        discontinuity.setShape(shape);
-//                    }
-//
-//                    if (discontinuityFamilyRecord.hasField("roughnessCode")) {
-//                        String roughnessCode = discontinuityFamilyRecord.getString("roughnessCode");
-//                        Roughness roughness = discontinuityRoughnessDAO.getRoughnessByUniqueCode(roughnessCode);
-//                        discontinuity.setRoughness(roughness);
-//                    }
-//
-//                    if (discontinuityFamilyRecord.hasField("infillingCode")) {
-//                        String infillingCode = discontinuityFamilyRecord.getString("infillingCode");
-//                        Infilling infilling = discontinuityInfillingDAO.getInfillingByUniqueCode(infillingCode);
-//                        discontinuity.setInfilling(infilling);
-//                    }
-//
-//                    if (discontinuityFamilyRecord.hasField("weatheringCode")) {
-//                        String weatheringCode = discontinuityFamilyRecord.getString("weatheringCode");
-//                        Weathering weathering = discontinuityWeatheringDAO.getWeatheringByUniqueCode(weatheringCode);
-//                        discontinuity.setWeathering(weathering);
-//                    }
-//
-//                    if (discontinuityFamilyRecord.hasField("waterCode")) {
-//                        String waterCode = discontinuityFamilyRecord.getString("waterCode");
-//                        DiscontinuityWater water = discontinuityWaterDAO.getDiscontinuityWaterByCode(waterCode);
-//                        discontinuity.setWater(water);
-//                    }
-//
-//                    if (discontinuityFamilyRecord.hasField("jrCode")) {
-//                        String jrCode = discontinuityFamilyRecord.getString("jrCode");
-//                        Jr jr = discontinuityJrDAO.getJrByUniqueCode(jrCode);
-//                        discontinuity.setJr(jr);
-//                    }
-//
-//                    discontinuitySystem.add(discontinuity);
-//                }
-//
-//                babyAssessment.setDiscontinuitySystem(discontinuitySystem);
-//            }
-//
-//        }
+        if (assessmentRecord.hasField("source")) {
+            Assessment.Originator source = Assessment.Originator.valueOf(assessmentRecord.getString("source"));
+            babyAssessment.setSource(source);
+        }
+
+        babyAssessment.setPicsSentStatus(Assessment.SendingStatus.SENT_TO_CLOUD);
+        babyAssessment.setDataSentStatus(Assessment.SendingStatus.SENT_TO_CLOUD);
+        babyAssessment.setSavedStatus(Assessment.SavingStatus.PERSISTENT);
 
         return babyAssessment;
     }
 
 
+    public Integer readInteger(DbxRecord record, String name) {
+        Integer integer =  readLong(record, name)!= null ? readLong(record, name).intValue() : null ;
+        return integer;
+    }
+
+
+    public Double readDouble(DbxRecord record, String name) {
+        if (record != null) {
+            if (record.hasField(name)) {
+                return record.getDouble(name);
+            }
+        }
+        return null;
+    }
+
+    public String readString(DbxRecord record, String name) {
+        if (record != null) {
+            if (record.hasField(name)) {
+                return record.getString(name);
+            }
+        }
+        return null;
+    }
+
+    public Long readLong(DbxRecord record, String name) {
+        if (record != null) {
+            if (record.hasField(name)) {
+                return record.getLong(name);
+            }
+        }
+        return null;
+    }
+
 
     public Q_Calculation buildQCalculationFromRecord(DbxRecord qCalculationRecord) throws DAOException {
-        Integer rqdValue = (int)(qCalculationRecord.getLong(QCalculationTable.RQD_COLUMN));
-        String jnCode = qCalculationRecord.getString(QCalculationTable.Jn_CODE_COLUMN);
-        String jrCode = qCalculationRecord.getString(QCalculationTable.Jr_CODE_COLUMN);
-        String jaCode = qCalculationRecord.getString(QCalculationTable.Ja_CODE_COLUMN);
-        String jwCode = qCalculationRecord.getString(QCalculationTable.Jw_CODE_COLUMN);
-        String srfCode = qCalculationRecord.getString(QCalculationTable.SRF_CODE_COLUMN);
+        Integer rqdValue = readInteger(qCalculationRecord, QCalculationTable.RQD_COLUMN);
+        String jnCode = readString(qCalculationRecord, QCalculationTable.Jn_CODE_COLUMN);
+        String jrCode = readString(qCalculationRecord, QCalculationTable.Jr_CODE_COLUMN);
+        String jaCode = readString(qCalculationRecord, QCalculationTable.Ja_CODE_COLUMN);
+        String jwCode = readString(qCalculationRecord, QCalculationTable.Jw_CODE_COLUMN);
+        String srfCode = readString(qCalculationRecord, QCalculationTable.SRF_CODE_COLUMN);
         //This seems to be persisted only to transfer to Dropbox but not needed in the deserialization/parsing process
-        Double qValue = qCalculationRecord.getDouble(QCalculationTable.Q_COLUMN);
-
-        RQD rqd = new RQD(rqdValue);
+        Double qValue = readDouble(qCalculationRecord, QCalculationTable.Q_COLUMN);
+        RQD rqd = rqdValue != null? new RQD(rqdValue) : null;
         Jn jn = jnCode != null? mLocalJnDAO.getJnByUniqueCode(jnCode):null;
         Jr jr = jrCode != null? mLocalJrDAO.getJrByUniqueCode(jrCode):null;
         Ja ja = jaCode != null? mLocalJaDAO.getJaByUniqueCode(jaCode):null;
         Jw jw = jwCode != null? mLocalJwDAO.getJwByUniqueCode(jwCode):null;
         SRF srf = srfCode != null? mLocalSrfDAO.getSrfByUniqueCode(srfCode):null;
-
         Q_Calculation qCalculation = new Q_Calculation(rqd, jn, jr, ja, jw, srf);
         return qCalculation;
     }
 
 
     public RMR_Calculation buildRMRCalculationFromRecord(DbxRecord rmrCalculationRecord) throws DAOException {
-        String strenghtCode = rmrCalculationRecord.getString(RMRCalculationTable.STRENGTHOFROCK_CODE_COLUMN);
-        String rqdKey = rmrCalculationRecord.getString(RMRCalculationTable.RQD_RMR_CODE_COLUMN);
-        String spacingCode = rmrCalculationRecord.getString(RMRCalculationTable.SPACING_CODE_COLUMN);
-        String persistenceCode = rmrCalculationRecord.getString(RMRCalculationTable.PERSISTENCE_CODE_COLUMN);
-        String apertureCode = rmrCalculationRecord.getString(RMRCalculationTable.APERTURE_CODE_COLUMN);
-        String roughnessCode = rmrCalculationRecord.getString(RMRCalculationTable.ROUGHNESS_CODE_COLUMN);
-        String infillingCode = rmrCalculationRecord.getString(RMRCalculationTable.INFILLING_CODE_COLUMN);
-        String weatheringCode = rmrCalculationRecord.getString(RMRCalculationTable.WEATHERING_CODE_COLUMN);
-        String groundwaterCode = rmrCalculationRecord.getString(RMRCalculationTable.GROUNDWATER_CODE_COLUMN);
-        String orientationCode = rmrCalculationRecord.getString(RMRCalculationTable.ORIENTATION_CODE_COLUMN);
+        String strenghtCode = readString(rmrCalculationRecord, RMRCalculationTable.STRENGTHOFROCK_CODE_COLUMN);
+        String rqdKey = readString(rmrCalculationRecord, RMRCalculationTable.RQD_RMR_CODE_COLUMN);
+        String spacingCode = readString(rmrCalculationRecord, RMRCalculationTable.SPACING_CODE_COLUMN);
+        String persistenceCode = readString(rmrCalculationRecord, RMRCalculationTable.PERSISTENCE_CODE_COLUMN);
+        String apertureCode = readString(rmrCalculationRecord, RMRCalculationTable.APERTURE_CODE_COLUMN);
+        String roughnessCode = readString(rmrCalculationRecord, RMRCalculationTable.ROUGHNESS_CODE_COLUMN);
+        String infillingCode = readString(rmrCalculationRecord, RMRCalculationTable.INFILLING_CODE_COLUMN);
+        String weatheringCode = readString(rmrCalculationRecord, RMRCalculationTable.WEATHERING_CODE_COLUMN);
+        String groundwaterCode = readString(rmrCalculationRecord, RMRCalculationTable.GROUNDWATER_CODE_COLUMN);
+        String orientationCode = readString(rmrCalculationRecord, RMRCalculationTable.ORIENTATION_CODE_COLUMN);
 
         //This seems to be persisted only to transfer to Dropbox but not needed in the deserialization/parsing process
         StrengthOfRock strenght = strenghtCode != null ? mLocalStrengthDAO.getStrengthByUniqueCode(strenghtCode) : null;
@@ -458,50 +392,73 @@ public class AssessmentBuilder4DropBox {
 
 
     public SupportRecommendation buildSupportRecommendation(DbxRecord recommendationRecord) throws DAOException {
-        String assessment = recommendationRecord.getString(SupportRecommendationTable.ASSESSMENT_CODE_COLUMN);
+        String assessment = readString(recommendationRecord, SupportRecommendationTable.ASSESSMENT_CODE_COLUMN);
 
-        String requirementCode = recommendationRecord.getString(SupportRecommendationTable.SUPPORT_REQUIREMENT_BASE_CODE_COLUMN);
+        String requirementCode = readString(recommendationRecord, SupportRecommendationTable.SUPPORT_REQUIREMENT_BASE_CODE_COLUMN);
+
         SupportRequirement baseRequirement = null;
         if (requirementCode != null) {
             baseRequirement = daoFactory.getLocalSupportRequirementDAO().getSupportRequirement(requirementCode);
         }
 
-        String patternTypeCode = recommendationRecord.getString(SupportRecommendationTable.ROOF_PATTERN_TYPE_CODE_COLUMN);
-        Double distanceX = recommendationRecord.getDouble(SupportRecommendationTable.ROOF_PATTERN_DX_COLUMN);
-        Double distanceY = recommendationRecord.getDouble(SupportRecommendationTable.ROOF_PATTERN_DY_COLUMN);
-        SupportPatternType type = daoFactory.getLocalSupportPatternTypeDAO().getSupportPatternTypeByUniqueCode(patternTypeCode);
+        String patternTypeCode = readString(recommendationRecord, SupportRecommendationTable.ROOF_PATTERN_TYPE_CODE_COLUMN);
+        Double distanceX = readDouble(recommendationRecord, SupportRecommendationTable.ROOF_PATTERN_DX_COLUMN);
+        Double distanceY = readDouble(recommendationRecord, SupportRecommendationTable.ROOF_PATTERN_DY_COLUMN);
+        SupportPatternType type = null;
+        if (patternTypeCode != null) {
+            type = daoFactory.getLocalSupportPatternTypeDAO().getSupportPatternTypeByUniqueCode(patternTypeCode);
+        }
         SupportPattern roofPattern = new SupportPattern(type, distanceX, distanceY);
 
-        patternTypeCode = recommendationRecord.getString(SupportRecommendationTable.WALL_PATTERN_TYPE_CODE_COLUMN);
-        distanceX = recommendationRecord.getDouble(SupportRecommendationTable.WALL_PATTERN_DX_COLUMN);
-        distanceY = recommendationRecord.getDouble(SupportRecommendationTable.WALL_PATTERN_DY_COLUMN);
-        type = daoFactory.getLocalSupportPatternTypeDAO().getSupportPatternTypeByUniqueCode(patternTypeCode);
+        patternTypeCode = readString(recommendationRecord, SupportRecommendationTable.WALL_PATTERN_TYPE_CODE_COLUMN);
+        distanceX = readDouble(recommendationRecord, SupportRecommendationTable.WALL_PATTERN_DX_COLUMN);
+        distanceY = readDouble(recommendationRecord, SupportRecommendationTable.WALL_PATTERN_DY_COLUMN);
+        if (patternTypeCode != null) {
+            type = daoFactory.getLocalSupportPatternTypeDAO().getSupportPatternTypeByUniqueCode(patternTypeCode);
+        }
         SupportPattern wallPattern = new SupportPattern(type, distanceX, distanceY);
 
-        String boltTypeCode = recommendationRecord.getString(SupportRecommendationTable.BOLT_TYPE_CODE_COLUMN);
-        BoltType boltType = daoFactory.getLocalBoltTypeDAO().getBoltTypeByCode(boltTypeCode);
+        String boltTypeCode = readString(recommendationRecord, SupportRecommendationTable.BOLT_TYPE_CODE_COLUMN);
+        BoltType boltType = null;
+        if (boltTypeCode != null) {
+            boltType = daoFactory.getLocalBoltTypeDAO().getBoltTypeByCode(boltTypeCode);
+        }
 
-        Double boltDiameter = recommendationRecord.getDouble(SupportRecommendationTable.BOLT_DIAMETER_COLUMN);
-        Double boltLength = recommendationRecord.getDouble(SupportRecommendationTable.BOLT_LENGTH_COLUMN);
+        Double boltDiameter = readDouble(recommendationRecord, SupportRecommendationTable.BOLT_DIAMETER_COLUMN);
+        Double boltLength = readDouble(recommendationRecord, SupportRecommendationTable.BOLT_LENGTH_COLUMN);
 
-        String coverageCode = recommendationRecord.getString(SupportRecommendationTable.MESH_COVERAGE_CODE_COLUMN);
-        Coverage meshCoverage = daoFactory.getLocalCoverageDAO().getCoverageByCode(coverageCode);
+        String coverageCode = readString(recommendationRecord, SupportRecommendationTable.MESH_COVERAGE_CODE_COLUMN);
+        Coverage meshCoverage = null;
+        if (coverageCode != null)
+            meshCoverage = daoFactory.getLocalCoverageDAO().getCoverageByCode(coverageCode);
 
-        String meshTypeCode = recommendationRecord.getString(SupportRecommendationTable.MESH_TYPE_CODE_COLUMN);
-        MeshType meshType = daoFactory.getLocalMeshTypeDAO().getMeshTypeByCode(meshTypeCode);
+        String meshTypeCode = readString(recommendationRecord, SupportRecommendationTable.MESH_TYPE_CODE_COLUMN);
+        MeshType meshType = null;
+        if (meshTypeCode != null) {
+            meshType = daoFactory.getLocalMeshTypeDAO().getMeshTypeByCode(meshTypeCode);
+        }
 
-        String shotcreteTypeCode = recommendationRecord.getString(SupportRecommendationTable.SHOTCRETE_TYPE_CODE_COLUMN);
-        coverageCode = recommendationRecord.getString(SupportRecommendationTable.SHOTCRETE_COVERAGE_CODE_COLUMN);
-        Coverage shotcreteCoverage = daoFactory.getLocalCoverageDAO().getCoverageByCode(coverageCode);
+        String shotcreteTypeCode = readString(recommendationRecord, SupportRecommendationTable.SHOTCRETE_TYPE_CODE_COLUMN);
+        ShotcreteType shotcreteType = null;
+        if (shotcreteTypeCode != null) {
+            shotcreteType = daoFactory.getLocalShotcreteTypeDAO().getShotcreteTypeByCode(shotcreteTypeCode);
+        }
 
-        ShotcreteType shotcreteType = daoFactory.getLocalShotcreteTypeDAO().getShotcreteTypeByCode(shotcreteTypeCode);
+        coverageCode = readString(recommendationRecord, SupportRecommendationTable.SHOTCRETE_COVERAGE_CODE_COLUMN);
+        Coverage shotcreteCoverage = null;
+        if (coverageCode != null) {
+            shotcreteCoverage = daoFactory.getLocalCoverageDAO().getCoverageByCode(coverageCode);
+        }
 
-        String archTypeCode = recommendationRecord.getString(SupportRecommendationTable.ARCH_TYPE_CODE_COLUMN);
-        ArchType archType = daoFactory.getLocalArchTypeDAO().getArchTypeByCode(archTypeCode);
+        String archTypeCode = readString(recommendationRecord,SupportRecommendationTable.ARCH_TYPE_CODE_COLUMN);
+        ArchType archType = null;
+        if (archTypeCode != null) {
+            archType = daoFactory.getLocalArchTypeDAO().getArchTypeByCode(archTypeCode);
+        }
 
-        Double separation = recommendationRecord.getDouble(SupportRecommendationTable.SEPARATION_COLUMN);
-        Double thickness = recommendationRecord.getDouble(SupportRecommendationTable.THICKNESS_COLUMN);
-        String observations = recommendationRecord.getString(SupportRecommendationTable.OBSERVATIONS_COLUMN);
+        Double separation = readDouble(recommendationRecord, SupportRecommendationTable.SEPARATION_COLUMN);
+        Double thickness = readDouble(recommendationRecord, SupportRecommendationTable.THICKNESS_COLUMN);
+        String observations = readString(recommendationRecord,SupportRecommendationTable.OBSERVATIONS_COLUMN);
 
         SupportRecommendation newInstance = new SupportRecommendation();
         newInstance.setArchType(archType);

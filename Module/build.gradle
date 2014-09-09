@@ -17,9 +17,9 @@ android {
         }
     }
 
-//    lintOptions {
-//        checkReleaseBuilds false
-//    }
+    lintOptions {
+        checkReleaseBuilds false
+    }
 }
 
 

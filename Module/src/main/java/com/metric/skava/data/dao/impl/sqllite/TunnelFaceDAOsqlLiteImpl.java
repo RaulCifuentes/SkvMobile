@@ -105,6 +105,7 @@ public class TunnelFaceDAOsqlLiteImpl extends SqlLiteBaseIdentifiableEntityDAO<T
                 TunnelFace tunnelFace = getTunnelFaceByCode(faceCode);
                 tunnelList.add(tunnelFace);
             }
+            cursor.close();
         }
         return tunnelList;
     }

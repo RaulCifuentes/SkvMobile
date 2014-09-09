@@ -149,6 +149,11 @@ public class AssessmentBuilder4SqlLite {
         java.lang.String rockSampleIdentification = CursorUtils.getString(AssessmentTable.ROCK_SAMPLE_IDENTIFICATION_COLUMN, cursor);
         babyAssessment.setRockSampleIdentification(rockSampleIdentification);
 
+        java.lang.String source = CursorUtils.getString(AssessmentTable.SOURCE_COLUMN, cursor);
+        if (source != null) {
+            babyAssessment.setSource(Assessment.Originator.valueOf(source));
+        }
+
         String dataSentStatus = CursorUtils.getString(AssessmentTable.DATA_SENT_STATUS_COLUMN, cursor);
         babyAssessment.setDataSentStatus(Assessment.SendingStatus.valueOf(dataSentStatus));
 

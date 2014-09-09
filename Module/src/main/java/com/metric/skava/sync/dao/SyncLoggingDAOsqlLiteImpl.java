@@ -118,6 +118,12 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
         for (RecordToSync recordToSync : listRecords) {
             theQueue.addRecord(recordToSync);
         }
+        if (cursorFiles != null) {
+            cursorFiles.close();
+        }
+        if (cursorRecords != null) {
+            cursorRecords.close();
+        }
         return theQueue;
     }
 
@@ -174,6 +180,13 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
         Cursor cursorRecords = getRecordsFilteredByColumns(AssessmentSyncTraceRecordsTable.SYNC_TRACE_RECORDS_TABLE, names, values, AssessmentSyncTraceRecordsTable.DATE_COLUMN);
         List<RecordToSync> listRecords = assembleSyncTraceRecordPersistentEntities(cursorRecords);
 
+        if (cursorFiles != null) {
+            cursorFiles.close();
+        }
+        if (cursorRecords != null) {
+            cursorRecords.close();
+        }
+
         AssessmentSyncTrace assessmentSyncTrace = new AssessmentSyncTrace(environment, assessmentCode);
         assessmentSyncTrace.setFiles(listFiles);
         assessmentSyncTrace.setRecords(listRecords);
@@ -191,6 +204,13 @@ public class SyncLoggingDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Sy
 
         Cursor cursorRecords = getRecordsFilteredByColumn(AssessmentSyncTraceRecordsTable.SYNC_TRACE_RECORDS_TABLE, AssessmentSyncTraceRecordsTable.ASSESSMENT_COLUMN, assessmentCode, AssessmentSyncTraceRecordsTable.DATE_COLUMN);
         int records = cursorRecords.getCount();
+
+        if (cursorFiles != null) {
+            cursorFiles.close();
+        }
+        if (cursorRecords != null) {
+            cursorRecords.close();
+        }
 
         return (files > 0 || records > 0);
     }
