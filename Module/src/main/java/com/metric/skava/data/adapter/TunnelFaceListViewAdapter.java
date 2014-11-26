@@ -39,13 +39,13 @@ public class TunnelFaceListViewAdapter extends SkavaEntityListViewAdapter<Tunnel
 
         if (actualFace != null) {
 
-            TextView text = (TextView) tunnelViewItem.findViewById(R.id.first_column_text_view);
+            TextView text = (TextView) tunnelViewItem.findViewById(R.id.project_name_text_view);
             text.setText(actualFace.getCode());
 
-            text = (TextView) tunnelViewItem.findViewById(R.id.second_column_text_view);
+            text = (TextView) tunnelViewItem.findViewById(R.id.tunnel_name_text_view);
             text.setText(actualFace.getName());
 
-            text = (TextView) tunnelViewItem.findViewById(R.id.third_column_text_view);
+            text = (TextView) tunnelViewItem.findViewById(R.id.face_name_text_view);
             text.setText(actualFace.getTunnel().getName());
         }
 

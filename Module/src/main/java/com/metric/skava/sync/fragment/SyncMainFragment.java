@@ -8,6 +8,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -150,7 +152,7 @@ public class SyncMainFragment extends SkavaFragment {
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listAssessments);
 
             TextView firstTextView = (TextView) usersHeaderView.findViewById(R.id.headerText);
-            firstTextView.setText("Local Mappings");
+            firstTextView.setText("Local Assessments");
 
             localAssessmentsListView.addHeaderView(usersHeaderView, null, false);
             final int numberOfHeaders = localAssessmentsListView.getHeaderViewsCount();
@@ -162,6 +164,21 @@ public class SyncMainFragment extends SkavaFragment {
         } catch (DAOException daoe) {
             daoe.printStackTrace();
             Log.e(SkavaConstants.LOG, daoe.getMessage());
+            BugSenseHandler.sendException(daoe);
+            //Adding alert message to inform exception occurred
+            final String finalTextToShow = daoe.getMessage();
+            DialogFragment theDialog = new DialogFragment() {
+                @Override
+                public Dialog onCreateDialog(Bundle savedInstanceState) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Error assembling local assessments ::");
+                    builder.setMessage(finalTextToShow).setPositiveButton("OK", null);
+                    // Create the AlertDialog object and return it
+                    return builder.create();
+                }
+            };
+            theDialog.show(getSkavaActivity().getSupportFragmentManager(), "assertUserDataDialog");
+            //
         }
     }
 
@@ -175,7 +192,7 @@ public class SyncMainFragment extends SkavaFragment {
                     R.layout.test_three_column_list_view_row, R.id.first_column_text_view, listAssessments);
 
             TextView firstTextView = (TextView) usersHeaderView.findViewById(R.id.headerText);
-            firstTextView.setText("Remote Mappings");
+            firstTextView.setText("Remote Assessments");
 
             remoteAssessmentsListView.addHeaderView(usersHeaderView, null, false);
             final int numberOfHeaders = remoteAssessmentsListView.getHeaderViewsCount();
@@ -187,6 +204,21 @@ public class SyncMainFragment extends SkavaFragment {
         } catch (DAOException daoe) {
             daoe.printStackTrace();
             Log.e(SkavaConstants.LOG, daoe.getMessage());
+            BugSenseHandler.sendException(daoe);
+            //Adding alert message to inform exception occurred
+            final String finalTextToShow = daoe.getMessage();
+            DialogFragment theDialog = new DialogFragment() {
+                @Override
+                public Dialog onCreateDialog(Bundle savedInstanceState) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Error assembling remote assessments ::");
+                    builder.setMessage(finalTextToShow).setPositiveButton("OK", null);
+                    // Create the AlertDialog object and return it
+                    return builder.create();
+                }
+            };
+            theDialog.show(getSkavaActivity().getSupportFragmentManager(), "assertUserDataDialog");
+            //
         }
     }
 
@@ -335,6 +367,7 @@ public class SyncMainFragment extends SkavaFragment {
         } catch (DAOException daoe) {
             daoe.printStackTrace();
             Log.e(SkavaConstants.LOG, daoe.getMessage());
+            BugSenseHandler.sendException(daoe);
         }
         return null;
     }

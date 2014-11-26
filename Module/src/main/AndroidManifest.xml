@@ -313,11 +313,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.metric.skava.home.activity.HomeMainActivity" />
         </activity>
-        <!--<activity-->
-        <!--android:name="com.metric.skava.test.activity.WebViewMainActivity"-->
-        <!--android:label="@string/title_activity_web_view_main"-->
-        <!--android:screenOrientation="landscape"-->
-        <!--android:configChanges="keyboardHidden|orientation|screenSize" />-->
+
+
+        <activity
+            android:name="com.metric.skava.user.activity.UserAccountMainActivity"
+            android:label="@string/title_activity_user_account_main"
+            android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.metric.skava.home.activity.HomeMainActivity" />
+        </activity>
+
         <activity
             android:name="com.metric.skava.assessment.activity.AssessmentsListActivity"
             android:label="@string/title_activity_assessments_list"

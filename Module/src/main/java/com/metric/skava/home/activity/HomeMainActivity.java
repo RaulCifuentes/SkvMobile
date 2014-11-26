@@ -42,6 +42,7 @@ import com.metric.skava.expandedview.activity.TestAutocadMainActivity;
 import com.metric.skava.home.fragment.MainFragment;
 import com.metric.skava.settings.activity.SettingsMainActivity;
 import com.metric.skava.sync.activity.SyncMainActivity;
+import com.metric.skava.user.activity.UserAccountMainActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     public static final int NAV_MENU_ROCK_CLASSIFICATION_ITEM_ID = 25;
 //    public static final int NAV_MENU_FACE_MAPPING_ITEM_ID = 30;
     private static final int NAV_MENU_ADMIN_SECTION_ID = 40;
+    private static final int NAV_MENU_USER_ACCOUNT = 55;
     private static final int NAV_MENU_SETTINGS_ITEM_ID = 70;
     private static final int NAV_MENU_SYNC_ITEM_ID = 50;
     private static final int NAV_MENU_GENERAL_SECTION_ID = 60;
@@ -127,6 +129,9 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     }
 
     private void setupTheData() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String dateAsString = sdf.format(SkavaUtils.getCurrentDate());
+        Log.d(SkavaConstants.LOG, "********** setupTheData ***** " + dateAsString);
 //        if (!linkDropboxCompleted) {
         if (!isLinkDropboxCompleted()) {
             setupLinkToDropbox();
@@ -147,6 +152,17 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 e.printStackTrace();
             }
         }
+        //**
+//        if (assertUserDataNeverCalled) {
+//            try {
+//                assertUserDataAvailable();
+//            } catch (DAOException e) {
+//                BugSenseHandler.sendException(e);
+//                Log.e(SkavaConstants.LOG, e.getMessage());
+//                e.printStackTrace();
+//            }
+//        }
+        //**
         //Every thing is set up correctly? Show the Skava background image
         if (enoughDataAvailable) {
             mHomeMainFragment.getBackgroudImage().setVisibility(View.VISIBLE);
@@ -326,16 +342,19 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 Role metricAdmin = new Role("METRICADMIN", "MetricAdmin");
                 if (loggedUser.hasRole(geologist) || loggedUser.hasRole(admin) || loggedUser.hasRole(metricAdmin)) {
                     menuAsList.remove(1);
-                    menuAsList.add(NavMenuItem.create(NAV_MENU_ROCK_CLASSIFICATION_ITEM_ID, "Rock Classification", "ic_menu_copy_holo_dark", true, true, this));
+                    menuAsList.add(NavMenuItem.create(NAV_MENU_ROCK_CLASSIFICATION_ITEM_ID, getString(R.string.rock_classification_label) , "ic_menu_copy_holo_dark", true, true, this));
                 }
                 if (loggedUser.hasRole(admin) || loggedUser.hasRole(metricAdmin)) {
                     menuAsList.add(NavMenuSection.create(NAV_MENU_ADMIN_SECTION_ID, "Admin"));
-                    menuAsList.add(NavMenuItem.create(NAV_MENU_SYNC_ITEM_ID, "Data management", "ic_menu_copy_holo_dark", true, true, this));
+                    menuAsList.add(NavMenuItem.create(NAV_MENU_SYNC_ITEM_ID, getString(R.string.data_management_label), "ic_menu_copy_holo_dark", true, true, this));
                 }
                 BugSenseHandler.setUserIdentifier(loggedUser.getName());
             }
         }
         menuAsList.add(NavMenuSection.create(NAV_MENU_GENERAL_SECTION_ID, "General"));
+        if (loggedUser != null) {
+            menuAsList.add(NavMenuItem.create(NAV_MENU_USER_ACCOUNT, getString(R.string.usr_account_label), "ic_action_overflow", true, true, this));
+        }
         menuAsList.add(NavMenuItem.create(NAV_MENU_SETTINGS_ITEM_ID, getString(R.string.settings_label), "ic_action_overflow", true, true, this));
         menuAsList.add(NavMenuItem.create(NAV_MENU_ABOUT_ITEM_ID, getString(R.string.about_label), "ic_action_overflow", true, true, this));
         if (loggedUser != null) {
@@ -376,6 +395,10 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 break;
             case NAV_MENU_SYNC_ITEM_ID:
                 intent = new Intent(this, SyncMainActivity.class);
+                startActivity(intent);
+                break;
+            case NAV_MENU_USER_ACCOUNT:
+                intent = new Intent(this, UserAccountMainActivity.class);
                 startActivity(intent);
                 break;
             case NAV_MENU_SETTINGS_ITEM_ID:

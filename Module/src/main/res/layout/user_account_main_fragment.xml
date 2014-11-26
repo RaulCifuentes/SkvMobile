@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom_edit="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <!-- Login progress -->
+    <LinearLayout
+        android:id="@+id/syncing_status"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/syncing_status_progress_circle"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/syncing_status_message"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/syncing_progress" />
+    </LinearLayout>
+
+
+    <GridLayout
+        android:id="@+id/grid_top"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:columnCount="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView12"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TOP"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/grid_bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:visibility="invisible"
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BOTTOM"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-" />
+    </GridLayout>
+
+
+    <GridLayout
+        android:id="@+id/grid_left"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@id/grid_bottom"
+        android:layout_below="@id/grid_top">
+
+        <TextView
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LEFT"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/grid_right"
+        android:layout_below="@id/grid_top"
+        android:layout_above="@id/grid_bottom"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:visibility="invisible"
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="RIGHT"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </GridLayout>
+
+    <!--Este es el Grid del CENTER content -->
+    <GridLayout
+        android:id="@+id/grid_centre"
+        android:layout_above="@id/grid_bottom"
+        android:layout_below="@id/grid_top"
+        android:layout_toRightOf="@id/grid_left"
+        android:layout_toLeftOf="@id/grid_right"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:columnCount="1">
+
+    <!--BEGIN Grid de spinners-->
+    <GridLayout
+        android:columnCount="2"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mapping_gral_info_project"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold"
+            />
+
+        <Spinner
+            android:id="@+id/user_account_project_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/form_column_left_margin" />
+
+        <Space
+            android:layout_width="@dimen/grid_space_separation_width"
+            android:layout_height="@dimen/grid_space_separation_height"
+            />
+
+        <Space
+            android:layout_width="@dimen/grid_space_separation_width"
+            android:layout_height="@dimen/grid_space_separation_height"
+            />
+
+
+        <TextView
+            android:id="@+id/textView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mapping_gral_info_tunnel"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold"
+            />
+
+
+        <Spinner
+            android:id="@+id/user_account_tunnel_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/form_column_left_margin" />
+
+        <Space
+            android:layout_width="@dimen/grid_space_separation_width"
+            android:layout_height="@dimen/grid_space_separation_height"
+            />
+
+        <Space
+            android:layout_width="@dimen/grid_space_separation_width"
+            android:layout_height="@dimen/grid_space_separation_height"
+            />
+
+    </GridLayout>
+        <!--END Grid de spinners-->
+
+        <Space
+            android:layout_width="@dimen/grid_space_separation_width"
+            android:layout_height="@dimen/grid_space_separation_height" />
+
+
+        <LinearLayout
+                android:id="@+id/dataBaseTablesContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!--Very First row -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ListView
+                        android:background="@color/Coral"
+                        android:layout_weight="1"
+                        android:id="@+id/listview_faces_granted_to_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:choiceMode="singleChoice" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+    </GridLayout>
+
+</RelativeLayout>

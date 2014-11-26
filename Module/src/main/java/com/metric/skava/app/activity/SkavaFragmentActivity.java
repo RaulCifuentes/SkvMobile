@@ -435,6 +435,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
 
                     for (String tablename : incomingChangesTables) {
 
+//  BEGIN COMMENTED OUT
                         if (tablename.equals(AssessmentDropboxTable.ASSESSMENT_TABLE)) {
 
                             final Set<String> assessmentsToImport = new HashSet<String>();
@@ -499,6 +500,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                                         } catch (DAOException e) {
                                             e.printStackTrace();
                                             Log.e(SkavaConstants.LOG, e.getMessage());
+                                            BugSenseHandler.sendException(e);
                                         }
 
                                         //find what is the record being acknowledged and remove it from the middleman box space
@@ -581,6 +583,8 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
 
                         }
 
+                        ////END COMMENTED OUT
+
                         if (tablename.equalsIgnoreCase(":info")) {
                             //skip as this seems to be metadata from Dropbox
                             continue;
@@ -625,6 +629,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                                         } catch (DAOException e) {
                                             e.printStackTrace();
                                             Log.e(SkavaConstants.LOG, e.getMessage());
+                                            BugSenseHandler.sendException(e);
                                         }
 
                                         //find what is the record being acknowledged and remove it from the middleman box space
@@ -666,6 +671,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                                                 } catch (DAOException e) {
                                                     e.printStackTrace();
                                                     Log.e(SkavaConstants.LOG, e.getMessage());
+                                                    BugSenseHandler.sendException(e);
                                                 }
                                             }
                                         }
@@ -705,6 +711,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                                     } catch (DAOException e) {
                                         e.printStackTrace();
                                         Log.e(SkavaConstants.LOG, e.getMessage());
+                                        BugSenseHandler.sendException(e);
                                     }
 
                                     //find what is the file being acknowledged and remove it from the middleman box space
@@ -742,6 +749,7 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                                             } catch (DAOException e) {
                                                 e.printStackTrace();
                                                 Log.e(SkavaConstants.LOG, e.getMessage());
+                                                BugSenseHandler.sendException(e);
                                             }
                                         }
                                     }
@@ -809,12 +817,10 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
         if (datastoreStatus.isUploading) {
             //Is actually going into the cloud
             Log.d(SkavaConstants.LOG, "uploading");
-
         }
         if (datastoreStatus.isDownloading) {
             //Is actually reading from the cloud
             Log.d(SkavaConstants.LOG, "downloading");
-
         }
 
     }
@@ -850,7 +856,8 @@ public abstract class SkavaFragmentActivity extends FragmentActivity implements 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (isNetworkAvailable()) {
-                                ImportAppDataModelTask fixedDataTask = new ImportAppDataModelTask(getSkavaContext(), SkavaFragmentActivity.this);
+//                                ImportAppDataModelTask fixedDataTask = new ImportAppDataModelTask(getSkavaContext(), SkavaFragmentActivity.this);
+                                ImportAppAndUserDataModelTask fixedDataTask = new ImportAppAndUserDataModelTask(getSkavaContext(), SkavaFragmentActivity.this);
                                 fixedDataTask.execute(SyncTask.Domain.ALL_APP_DATA_TABLES);
                             } else {
                                 //show internet required message

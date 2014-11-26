@@ -15,6 +15,8 @@ import com.metric.skava.sync.exception.SyncDataFailedException;
 import com.metric.skava.sync.model.SyncLogEntry;
 import com.metric.skava.sync.model.SyncTask;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Created by metricboy on 7/8/14.
  */
@@ -34,6 +36,9 @@ public class ImportAppDataModelTask extends AsyncTask<SyncTask.Domain, Long, Lon
 
     @Override
     protected void onPreExecute() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String dateAsString = sdf.format(SkavaUtils.getCurrentDate());
+        Log.d(SkavaConstants.LOG, "********** ImportAppDataModelTask onPreExecute ***** " + dateAsString);
         importHelper = new ImportDataHelper(mContext.getSyncHelper());
         String message = mActivity.getString(R.string.syncing_app_data_progress);
         mActivity.onPreExecuteImportAppData();
@@ -137,6 +142,9 @@ public class ImportAppDataModelTask extends AsyncTask<SyncTask.Domain, Long, Lon
 
     @Override
     protected void onPostExecute(Long result) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String dateAsString = sdf.format(SkavaUtils.getCurrentDate());
+        Log.d(SkavaConstants.LOG, "********** ImportAppDataModelTask onPostExecute ***** " + dateAsString);
         if (errorCondition == null) {
             mActivity.onPostExecuteImportAppData(true, result);
         } else {
