@@ -41,6 +41,7 @@
     <string name="link_button">Link to Dropbox</string>
     <string name="task_label">New Task</string>
     <string name="add_button">Add</string>
+    <string name="title_activity_user_account_main">User Account</string>
     <string name="title_activity_sync_main">SyncMainActivity</string>
     <string name="action_sync_all">Sync All</string>
     <string name="action_setup_data">Setup Data</string>

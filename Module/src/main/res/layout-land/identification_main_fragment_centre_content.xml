@@ -16,7 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <TextView
             android:id="@+id/textView01"
             android:layout_width="wrap_content"
@@ -24,7 +23,6 @@
             android:text="@string/mapping_gral_info_code"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold"
-
             />
 
 
@@ -39,8 +37,6 @@
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
             android:layout_height="@dimen/grid_space_separation_height"
-
-
             />
 
         <Space
@@ -56,7 +52,6 @@
             android:text="@string/mapping_gral_info_project"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold"
-
             />
 
 
@@ -69,13 +64,11 @@
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
             android:layout_height="@dimen/grid_space_separation_height"
-
             />
 
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
             android:layout_height="@dimen/grid_space_separation_height"
-
             />
 
 
@@ -89,7 +82,6 @@
 
             />
 
-
         <Spinner
             android:id="@+id/mapping_gral_info_tunnel_spinner"
             android:layout_width="wrap_content"
@@ -99,13 +91,11 @@
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
             android:layout_height="@dimen/grid_space_separation_height"
-
             />
 
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
             android:layout_height="@dimen/grid_space_separation_height"
-
             />
 
         <TextView
@@ -115,9 +105,7 @@
             android:text="@string/mapping_gral_info_face"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold"
-
             />
-
 
         <Spinner
             android:id="@+id/mapping_gral_info_face_spinner"
@@ -128,13 +116,11 @@
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
             android:layout_height="@dimen/grid_space_separation_height"
-
             />
 
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
             android:layout_height="@dimen/grid_space_separation_height"
-
             />
 
         <TextView
@@ -144,7 +130,6 @@
             android:text="@string/mapping_gral_info_section"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold"
-
             />
 
 
@@ -157,13 +142,11 @@
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
             android:layout_height="@dimen/grid_space_separation_height"
-
             />
 
         <Space
             android:layout_width="@dimen/grid_space_separation_width"
             android:layout_height="@dimen/grid_space_separation_height"
-
             />
 
         <TextView
@@ -173,7 +156,6 @@
             android:text="@string/mapping_gral_info_date"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold"
-
             />
 
 

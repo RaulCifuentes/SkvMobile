@@ -13,6 +13,11 @@
     <string name="maps_label">Maps</string>
     <string name="test_label">Test (Pruebitas)</string>
     <string name="test_write_label">Test (Write files)</string>
+    <string name="usr_account_label">User account</string>
+    <string name="rock_classification_label">Rock classification</string>
+    <string name="data_management_label">Data management</string>
+
+
     <string name="settings_label">Settings</string>
     <string name="about_label">About</string>
     <string name="logout_label">LogOut</string>
