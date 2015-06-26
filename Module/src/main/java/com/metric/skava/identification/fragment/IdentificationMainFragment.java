@@ -183,7 +183,8 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
         }
 
         projectList = mUserDataDomain.getProjects();
-        projectList.add(new ExcavationProject("HINT", "Select one project ...", null));
+        String chooseAProject = getResources().getString(R.string.choose_a_project);
+        projectList.add(new ExcavationProject("HINT", chooseAProject, null));
 
         projectAdapter = new SkavaEntityAdapter<ExcavationProject>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, projectList);
         // Specify the layout to use when the list of choices appears
@@ -193,7 +194,8 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
         try {
             sectionDAO = daoFactory.getLocalExcavationSectionDAO();
             sectionList = sectionDAO.getAllExcavationSections();
-            sectionList.add(new ExcavationSection("HINT", "Select one section ..."));
+            String chooseASection = getResources().getString(R.string.choose_a_section);
+            sectionList.add(new ExcavationSection("HINT", chooseASection));
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -208,7 +210,8 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
         try {
             localExcavationMethodDAO = daoFactory.getLocalExcavationMethodDAO();
             methodList = localExcavationMethodDAO.getAllExcavationMethods();
-            methodList.add(new ExcavationMethod("HINT", "Select one method ..."));
+            String chooseAMethod = getResources().getString(R.string.choose_a_method);
+            methodList.add(new ExcavationMethod("HINT", chooseAMethod));
         } catch (DAOException e) {
             Log.e(SkavaConstants.LOG, e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -539,10 +542,10 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
                     if (enteredValue >= 0 && enteredValue <= 360) {
                         getSkavaContext().getAssessment().setOrientation(enteredValue);
                     } else {
-                        orientationEditText.setError("Orientation must be between 0 and 360!");
+                        orientationEditText.setError("Orientation (grades) must be between 0 and 360!");
                     }
                 } catch (NumberFormatException e) {
-                    orientationEditText.setError("Orientation must be between 0 and 360!");
+                    orientationEditText.setError("Orientation must be a number between 0 and 360!");
                 }
             }
         });
@@ -704,7 +707,8 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
 
     private SkavaEntityAdapter prepareTunnelAdapter(ExcavationProject project) {
         tunnelList = mUserDataDomain.getTunnels(project);
-        tunnelList.add(new Tunnel(null, "HINT", "Select a tunnel ...", null));
+        String chooseATunnel = getResources().getString(R.string.choose_a_tunnel);
+        tunnelList.add(new Tunnel(null, "HINT", chooseATunnel, null));
         tunnelAdapter = new SkavaEntityAdapter<Tunnel>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, tunnelList);
         // Specify the layout to use when the list of choices appears
         tunnelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -716,7 +720,8 @@ public class IdentificationMainFragment extends SkavaFragment implements TimePic
 
     private SkavaEntityAdapter prepareFaceAdapter(Tunnel tunnel) {
         faceList = mUserDataDomain.getFaces(tunnel);
-        faceList.add(new TunnelFace(null, "HINT", "Select a face ...", Short.MIN_VALUE, Double.MIN_VALUE));
+        String chooseAFace = getResources().getString(R.string.choose_a_face);
+        faceList.add(new TunnelFace(null, "HINT", chooseAFace, Short.MIN_VALUE, Double.MIN_VALUE));
         faceAdapter = new SkavaEntityAdapter<TunnelFace>(getActivity(), android.R.layout.simple_spinner_item, android.R.id.text1, faceList);
         // Specify the layout to use when the list of choices appears
         faceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

@@ -304,7 +304,7 @@
                 android:value="com.metric.skava.assessment.activity.AssessmentStageListActivity" />
         </activity>
         <activity
-            android:name="com.metric.skava.sync.activity.SyncMainActivity"
+            android:name=".sync.activity.DataManagementMainActivity"
             android:label="@string/title_activity_sync_main"
             android:parentActivityName="com.metric.skava.home.activity.HomeMainActivity"
             android:screenOrientation="landscape"

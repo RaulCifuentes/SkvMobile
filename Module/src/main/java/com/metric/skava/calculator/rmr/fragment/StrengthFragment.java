@@ -49,9 +49,14 @@ public class StrengthFragment extends RMRCalculatorBaseFragment  implements Radi
         title.setText(getString(R.string.strength_title_label));
 
         RadioButton pointLoadRadio = (RadioButton) view.findViewById(R.id.radioButtonFirst);
-        pointLoadRadio.setText(StrengthOfRock.Group.POINT_LOAD_KEY.toString());
+//        pointLoadRadio.setText(StrengthOfRock.Group.POINT_LOAD_KEY.toString());
+        String strengthPointLoadGroup = getResources().getString(R.string.strength_point_load_group);
+        pointLoadRadio.setText(strengthPointLoadGroup);
+
         RadioButton uniaxialRadio = (RadioButton) view.findViewById(R.id.radioButtonSecond);
-        uniaxialRadio.setText(StrengthOfRock.Group.UNIAXIAL_KEY.toString());
+//        uniaxialRadio.setText(StrengthOfRock.Group.UNIAXIAL_KEY.toString());
+        String strengthUniaxialGroup = getResources().getString(R.string.strength_uniaxial_group);
+        uniaxialRadio.setText(strengthUniaxialGroup);
 
         RadioButton thirdRadio = (RadioButton) view.findViewById(R.id.radioButtonThird);
         thirdRadio.setVisibility(View.GONE);

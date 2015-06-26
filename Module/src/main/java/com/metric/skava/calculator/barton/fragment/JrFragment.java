@@ -65,11 +65,20 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
         title.setText(getString(R.string.jrTitle));
 
         RadioButton firstRadio = (RadioButton) view.findViewById(R.id.radioButtonFirst);
-        firstRadio.setText(Jr.Group.a.toString());
+//        firstRadio.setText(Jr.Group.a.toString());
+        String jrGroupA = getResources().getString(R.string.jr_a_group);
+        firstRadio.setText(jrGroupA);
+
         RadioButton secondRadio = (RadioButton) view.findViewById(R.id.radioButtonSecond);
-        secondRadio.setText(Jr.Group.b.toString());
+//        secondRadio.setText(Jr.Group.b.toString());
+        String jrGroupB = getResources().getString(R.string.jr_b_group);
+        secondRadio.setText(jrGroupB);
+
         RadioButton thirdRadio = (RadioButton) view.findViewById(R.id.radioButtonThird);
-        thirdRadio.setText(Jr.Group.c.toString());
+//        thirdRadio.setText(Jr.Group.c.toString());
+        String jrGroupC = getResources().getString(R.string.jr_c_group);
+        thirdRadio.setText(jrGroupC);
+
         RadioButton fourthRadio = (RadioButton) view.findViewById(R.id.radioButtonFourth);
         fourthRadio.setVisibility(View.GONE);
 
@@ -155,6 +164,7 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
                                     int position, long id) {
                 selectedJr = (Jr) parent.getItemAtPosition(position);
                 getQCalculationContext().setJr(selectedJr);
+                updateQResult();
             }
         });
     }
@@ -195,6 +205,7 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
                                     int position, long id) {
                 selectedJr = (Jr) parent.getItemAtPosition(position);
                 getQCalculationContext().setJr(selectedJr);
+                updateQResult();
             }
         });
     }
@@ -233,6 +244,7 @@ public class JrFragment extends QBartonCalculatorBaseFragment implements RadioGr
                                     int position, long id) {
                 selectedJr = (Jr) parent.getItemAtPosition(position);
                 getQCalculationContext().setJr(selectedJr);
+                updateQResult();
             }
         });
     }

@@ -10,6 +10,7 @@ public class QCalculationTable extends SkavaEntityTable {
     public static final String ASSESSMENT_CODE_COLUMN = "ASSESSMENT_CODE";
     public static final String RQD_COLUMN = "RQD";
     public static final String Jn_CODE_COLUMN = "JN_CODE";
+    public static final String INTERSECTION_CODE_COLUMN = "IS_INTERSECTION";
     public static final String Jr_CODE_COLUMN = "JR_CODE";
     public static final String Ja_CODE_COLUMN = "JA_CODE";
     public static final String Jw_CODE_COLUMN = "JW_CODE";
@@ -23,6 +24,7 @@ public class QCalculationTable extends SkavaEntityTable {
             ASSESSMENT_CODE_COLUMN + " text primary key not null, " +
             RQD_COLUMN + " integer  null, " +
             Jn_CODE_COLUMN + " text null, " +
+            INTERSECTION_CODE_COLUMN + " integer  null, " +
             Jr_CODE_COLUMN + " text null, " +
             Ja_CODE_COLUMN + " text null, " +
             Jw_CODE_COLUMN + " text null, " +

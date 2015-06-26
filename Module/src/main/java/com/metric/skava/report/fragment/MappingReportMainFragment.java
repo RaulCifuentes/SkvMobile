@@ -305,6 +305,12 @@ public class MappingReportMainFragment extends SkavaFragment {
             textView.setText(numberFormat.format(jn.getValue()));
         }
 
+        if (qCalculation.getIsIntersection().booleanValue()){
+            TextView textView = ((TextView) rootView.findViewById(R.id.jn_label));
+            String label = getResources().getString(R.string.report_q_jn);
+            textView.setText( label + " x 3 " );
+        }
+
         Jr jr = qCalculation.getJr();
         if (jr != null) {
             ((TextView) rootView.findViewById(R.id.report_q_jr_value)).setText(jr.getGroupName() + " " + jr.getKey());
@@ -842,6 +848,7 @@ public class MappingReportMainFragment extends SkavaFragment {
         input.setJa(qCalculation.getJa().getValue());
         input.setJw(qCalculation.getJw().getValue());
         input.setSrf(qCalculation.getSrf().getValue());
+        input.setIntersection(qCalculation.getIsIntersection());
         QBartonOutput output = QBartonCalculator.calculate(input);
         getQCalculationContext().setQResult(output);
     }

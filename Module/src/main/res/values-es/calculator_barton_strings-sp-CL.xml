@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="title_section_rqd">RQD</string>
+    <string name="title_section_jn">Jn</string>
+    <string name="title_section_jr">Jr</string>
+    <string name="title_section_ja">Ja</string>
+    <string name="title_section_jw">Jw</string>
+    <string name="title_section_srf">SRF</string>
+    <string name="title_section_q">Q</string>
+    <string name="rdqTitle">Indice de calidad de roca</string>
+    <string name="jwTitle">Factor de reducción por contenido de agua</string>
+    <string name="srfTitle">Factor de reducción por tensiones</string>
+    <string name="qresultsTitle">Results</string>
+    <string name="rqd_trozos">Number of core pieces more than 10 cm long </string>
+    <string name="rqd_jv">Number of joints per cubic meter (Jv)</string>
+    <string name="rqd_plain">RQD number</string>
+    <string name="rqd_title">Indice de calidad de roca</string>
+    <string name="title_activity_qresultados">QResults</string>
+    <string name="q_title">Results</string>
+    <string name="q_rqd_jn">Degree of Jointing (or block size) [RQD/Jn]</string>
+    <string name="q_jr_ja">Joint Frictions (inter-block shear strength ) [Jr/Ja]</string>
+    <string name="q_jn_intersections">Intersecciones</string>
+    <string name="q_jw_srf">Active Stress [Jw/SRF]</string>
+    <string name="q_Q">Q [RQD/Jn][Jr/Ja][Jw/SRF]</string>
+    <string name="calcular_q_button_text">Calcular Q</string>
+    <string name="resultsLabelIconicFont">h</string>
+
+    <string name="help">Help</string>
+    <string name="jaTitle">Factor de descomposición de discontinuidades</string>
+    <string name="jnTitle">Número de sistemas de discontinuidades</string>
+    <string name="jrTitle">Factor de rugosidad de discontinuidades</string>
+
+    <string name="jr_a_group">a. Contacto entre las paredes</string>
+    <string name="jr_b_group">b. Contacto entre las paredes ante un desplazamiento de cizalla de 10 cm</string>
+    <string name="jr_c_group">c. No existe contacto entre las paredes durante el desplazamiento de cizalla</string>
+
+    <string name="ja_a_group">a. Contacto entre las paredes (sin minerales de relleno, sólo pátinas)</string>
+    <string name="ja_b_group">b. Contacto entre las paredes ante un desplazamiento de cizalla de 10 cm (delgados rellenos de mineral)</string>
+    <string name="ja_c_group">c. No existe contacto entre las paredes durante el desplazamiento de cizalla (delgados rellenos de mineral)</string>
+
+    <string name="srf_a_group">a. Zonas débiles intersectan a la excavación, en las cuáles pueden producirse desprendimientos de la masa rocosa</string>
+    <string name="srf_b_group">b. Roca competente. Problemas tensionales en la roca</string>
+    <string name="srf_c_group">c. Deformación de la roca. Flujos plásticos de roca incompetente bajo la influencia de altas presiones litostáticas</string>
+    <string name="srf_d_group">d. Expansión de la roca. Actividad química expansiva dependiendo de la presencia de agua</string>
+
+</resources>

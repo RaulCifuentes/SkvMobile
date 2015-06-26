@@ -51,13 +51,21 @@ public class JaFragment extends QBartonCalculatorBaseFragment implements RadioGr
         TextView title = (TextView) getView().findViewById(R.id.fragmentTitle);
         title.setText(getString(R.string.jaTitle));
 
-
         RadioButton firstRadio = (RadioButton) view.findViewById(R.id.radioButtonFirst);
-        firstRadio.setText(Ja.Group.a.toString());
+        String jaGroupA = getResources().getString(R.string.ja_a_group);
+        firstRadio.setText(jaGroupA);
+//        firstRadio.setText(Ja.Group.a.toString());
+
         RadioButton secondRadio = (RadioButton) view.findViewById(R.id.radioButtonSecond);
-        secondRadio.setText(Ja.Group.b.toString());
+        String jaGroupB = getResources().getString(R.string.ja_b_group);
+        secondRadio.setText(jaGroupB);
+//        secondRadio.setText(Ja.Group.b.toString());
+
         RadioButton thirdRadio = (RadioButton) view.findViewById(R.id.radioButtonThird);
-        thirdRadio.setText(Ja.Group.c.toString());
+        String jaGroupC = getResources().getString(R.string.ja_c_group);
+        thirdRadio.setText(jaGroupC);
+//        thirdRadio.setText(Ja.Group.c.toString());
+
         RadioButton fourthRadio = (RadioButton) view.findViewById(R.id.radioButtonFourth);
         fourthRadio.setVisibility(View.GONE);
 
@@ -149,6 +157,7 @@ public class JaFragment extends QBartonCalculatorBaseFragment implements RadioGr
                                     int position, long id) {
                 selectedJa = (Ja) parent.getItemAtPosition(position);
                 getQCalculationContext().setJa(selectedJa);
+                updateQResult();
             }
 
         });
@@ -194,6 +203,7 @@ public class JaFragment extends QBartonCalculatorBaseFragment implements RadioGr
                                     int position, long id) {
                 selectedJa = (Ja) parent.getItemAtPosition(position);
                 getQCalculationContext().setJa(selectedJa);
+                updateQResult();
             }
 
         });
@@ -238,6 +248,7 @@ public class JaFragment extends QBartonCalculatorBaseFragment implements RadioGr
                                     int position, long id) {
                 selectedJa = (Ja) parent.getItemAtPosition(position);
                 getQCalculationContext().setJa(selectedJa);
+                updateQResult();
             }
 
         });

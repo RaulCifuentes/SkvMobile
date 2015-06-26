@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_login_main">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_username">Usuario</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Contraseña</string>
+
+    <string name="action_sign_in_register"><b>Sign in</b></string>
+    <string name="action_sign_in"><b>Iniciar sesión</b></string>
+    <string name="action_sign_in_short">Iniciando</string>
+
+    <string name="action_forgot_password">Recuperar contraseña perdida</string>
+
+    <string name="login_progress_signing_in">Iniciando sesión&#8230;</string>
+
+    <string name="error_invalid_email">Este email es inválido</string>
+    <string name="error_invalid_password">La contraseña es muy corta</string>
+    <string name="error_incorrect_password">La contraseña no coincide</string>
+    <string name="error_user_unknown">El usuario no está registrado</string>
+    <string name="error_field_required">Este campo es obligatorio</string>
+</resources>

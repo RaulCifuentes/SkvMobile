@@ -340,6 +340,16 @@ public class AssessmentBuilder4DropBox {
         return null;
     }
 
+    public Boolean  readBoolean(DbxRecord record, String name) {
+        if (record != null) {
+            if (record.hasField(name)) {
+                return record.getBoolean(name);
+            }
+        }
+        return null;
+    }
+
+
 
     public Q_Calculation buildQCalculationFromRecord(DbxRecord qCalculationRecord) throws DAOException {
         Integer rqdValue = readInteger(qCalculationRecord, QCalculationTable.RQD_COLUMN);
@@ -348,6 +358,7 @@ public class AssessmentBuilder4DropBox {
         String jaCode = readString(qCalculationRecord, QCalculationTable.Ja_CODE_COLUMN);
         String jwCode = readString(qCalculationRecord, QCalculationTable.Jw_CODE_COLUMN);
         String srfCode = readString(qCalculationRecord, QCalculationTable.SRF_CODE_COLUMN);
+        Boolean intersection = readBoolean(qCalculationRecord, QCalculationTable.INTERSECTION_CODE_COLUMN);
         //This seems to be persisted only to transfer to Dropbox but not needed in the deserialization/parsing process
         Double qValue = readDouble(qCalculationRecord, QCalculationTable.Q_COLUMN);
         RQD rqd = rqdValue != null? new RQD(rqdValue) : null;
@@ -356,7 +367,7 @@ public class AssessmentBuilder4DropBox {
         Ja ja = jaCode != null? mLocalJaDAO.getJaByUniqueCode(jaCode):null;
         Jw jw = jwCode != null? mLocalJwDAO.getJwByUniqueCode(jwCode):null;
         SRF srf = srfCode != null? mLocalSrfDAO.getSrfByUniqueCode(srfCode):null;
-        Q_Calculation qCalculation = new Q_Calculation(rqd, jn, jr, ja, jw, srf);
+        Q_Calculation qCalculation = new Q_Calculation(rqd, jn, jr, ja, jw, srf, intersection);
         return qCalculation;
     }
 

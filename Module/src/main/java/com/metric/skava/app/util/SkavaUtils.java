@@ -190,7 +190,7 @@ public class SkavaUtils {
         initialAssessment.setDateTime(currentDateTime);
 
         //Q Barton (Default values for each one of the components of thr Q process)
-        Q_Calculation mQCalculation = new Q_Calculation(null, null, null, null, null, null);
+        Q_Calculation mQCalculation = new Q_Calculation(null, null, null, null, null, null, null);
         initialAssessment.setQCalculation(mQCalculation);
 
         RMR_Calculation mRMRCalculation = new RMR_Calculation(null, null, null, null, null, null, null, null, null, null);

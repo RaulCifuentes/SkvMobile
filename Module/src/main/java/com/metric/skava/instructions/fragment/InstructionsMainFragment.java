@@ -338,6 +338,8 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
 
 
     private void mapSupportRecommendationToView() {
+        //help me to refresh when changed the Q //
+        mRootView.invalidate();
 
         NumberFormat numberFormatter = DecimalFormat.getNumberInstance();
 
@@ -362,6 +364,7 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         Double boltDiameter = supportRecommendation.getBoltDiameter();
         if (boltDiameter != null) {
             boltDiameterEditText.setText(numberFormatter.format(boltDiameter));
+            boltDiameterEditText.invalidate();
         }
 
         boltDiameterEditText.addTextChangedListener(new TextValidator(boltDiameterEditText) {
@@ -380,6 +383,7 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         Double boltLength = supportRecommendation.getBoltLength();
         if (boltLength != null) {
             boltLengthEditText.setText(numberFormatter.format(boltLength));
+            boltLengthEditText.invalidate();
         }
 
         boltLengthEditText.addTextChangedListener(new TextValidator(boltLengthEditText) {
@@ -497,6 +501,7 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         Double thickness = supportRecommendation.getThickness();
         if (thickness != null) {
             thicknessEditText.setText(numberFormatter.format(thickness));
+            thicknessEditText.invalidate();
         }
 
         thicknessEditText.addTextChangedListener(new TextValidator(thicknessEditText) {
@@ -537,6 +542,7 @@ public class InstructionsMainFragment extends SkavaFragment implements AdapterVi
         Double separation = supportRecommendation.getSeparation();
         if (separation != null) {
             separationEditText.setText(separation.toString());
+            separationEditText.invalidate();
         }
 
         separationEditText.addTextChangedListener(new TextValidator(separationEditText) {

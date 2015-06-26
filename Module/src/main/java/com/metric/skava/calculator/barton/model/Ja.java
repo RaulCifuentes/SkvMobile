@@ -11,9 +11,14 @@ public class Ja extends MappedIndex implements Serializable {
     private Group group;
 
     public enum Group {
-        a("a. Rock-wall contact (no mineral fillings, only coatings)"),
-        b("b. Rock-wall contact before 10 cm shear (thin mineral fillings)"),
-        c("c. No rock-wall contact when sheared (thick mineral fillings)");
+
+        a ("a. Contacto entre las paredes (sin minerales de relleno, sólo pátinas)"),
+        b ("b. Contacto entre las paredes ante un desplazamiento de cizalla de 10 cm (delgados rellenos de mineral)"),
+        c ("c. No existe contacto entre las paredes durante el desplazamiento de cizalla (delgados rellenos de mineral)");
+
+//        a("a. Rock-wall contact (no mineral fillings, only coatings)"),
+//        b("b. Rock-wall contact before 10 cm shear (thin mineral fillings)"),
+//        c("c. No rock-wall contact when sheared (thick mineral fillings)");
 
         private final String value;
 

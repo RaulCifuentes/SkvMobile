@@ -78,6 +78,7 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
         mListView = (ListView) view.findViewById(android.R.id.list);
 
         View listHeaderView = inflater.inflate(R.layout.fragment_assessment_list_header, null, false);
+        View listFooterView = inflater.inflate(R.layout.fragment_assessment_list_header, null, false);
 
         TextView zeroTextView = (TextView) listHeaderView.findViewById(R.id.code_column_text_view);
         zeroTextView.setText("Code");
@@ -91,10 +92,15 @@ public class AssessmentListFragment extends SkavaFragment implements AbsListView
         sixthTextView.setText("Status");
         mListView.addHeaderView(listHeaderView, null, false);
 
+
         AssessmentListAdapter adapter = mListener.getAssessmentListAdapter();
         ((AdapterView<ListAdapter>) mListView).setAdapter(adapter);
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
+
+        if (adapter.getCount() > 5 ) {
+            mListView.addFooterView(listFooterView, null, false);
+        }
 
         //This method is necessary only to use a ListView inside a ScrollView
         ViewUtils.adjustListViewHeightBasedOnChildren(mListView);

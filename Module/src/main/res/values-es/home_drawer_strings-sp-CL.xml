@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_label">Iniciar sesión</string>
+    <string name="calculators_label">Calculadoras</string>
+    <string name="face_id_label">Frente</string>
+    <string name="assessment_label">Mapeo de frente</string>
+    <string name="mapping_label">Mapeo</string>
+    <string name="mapping_report_label">Reporte</string>
+    <string name="mapping_report_horizontal_label">Reporte Scroll Horizontal </string>
+    <string name="pictures_label">Fotos</string>
+    <string name="drawing_label">Dibujos</string>
+    <string name="voice_label">Voz</string>
+    <string name="maps_label">Mapas</string>
+    <string name="test_label">Pruebas</string>
+    <string name="test_write_label">Test (Write files)</string>
+    <string name="usr_account_label">Cuenta de usuario</string>
+    <string name="sync_label">Sincronizar datos</string>
+    <string name="rock_classification_label">Clasificación de roca</string>
+    <string name="data_management_label">Administración de datos</string>
+    <string name="settings_label">Ajustes</string>
+    <string name="about_label">Acerca de</string>
+    <string name="logout_label">Cerrar sesión</string>
+</resources>

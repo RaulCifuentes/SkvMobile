@@ -10,6 +10,7 @@
     <string name="title_section_q">Q</string>
     <string name="rdqTitle">Rock Quality Designation</string>
     <string name="jwTitle">Joint Water Reduction</string>
+    <string name="srfTitle">"Stress Reduction Factor"</string>
     <string name="qresultsTitle">Results</string>
     <string name="rqd_trozos">Number of core pieces more than 10 cm long </string>
     <string name="rqd_jv">Number of joints per cubic meter (Jv)</string>
@@ -19,6 +20,7 @@
     <string name="q_title">Results</string>
     <string name="q_rqd_jn">Degree of Jointing (or block size) [RQD/Jn]</string>
     <string name="q_jr_ja">Joint Frictions (inter-block shear strength ) [Jr/Ja]</string>
+    <string name="q_jn_intersections">Intersection</string>
     <string name="q_jw_srf">Active Stress [Jw/SRF]</string>
     <string name="q_Q">Q [RQD/Jn][Jr/Ja][Jw/SRF]</string>
     <string name="calcular_q_button_text">Calcular Q</string>
@@ -28,6 +30,34 @@
     <string name="jaTitle">Joint Alteration Number</string>
     <string name="jnTitle">Joint Set Number</string>
     <string name="jrTitle">Joint Roughness Number</string>
+
+    <!--<string name="jr_a_group">a. Rock-wall contact</string>-->
+    <!--<string name="jr_b_group">b. Rock-wall contact before 10 cm of shear movement</string>-->
+    <!--<string name="jr_c_group">c. No rock-wall contact when sheared</string>-->
+
+    <!--<string name="ja_a_group">a. Rock-wall contact (no mineral fillings, only coatings)</string>-->
+    <!--<string name="ja_b_group">b. Rock-wall contact before 10 cm shear (thin mineral fillings)</string>-->
+    <!--<string name="ja_c_group">c. No rock-wall contact when sheared (thick mineral fillings)</string>-->
+
+
+    <!--<string name="srf_a_group">a. Weak zones intersecting the underground opening, which may cause loosening of rock mass</string>-->
+    <!--<string name="srf_b_group">b. Competent, mainly massive rock, stress problems</string>-->
+    <!--<string name="srf_c_group">c. Squeezing rock: plastic deformation in incompetent rock under the influence of high pressure</string>-->
+    <!--<string name="srf_d_group">d. Swelling rock: chemical swelling activity depending on the presence of water</string>-->
+
+    <string name="jr_a_group">a. Contacto entre las paredes</string>
+    <string name="jr_b_group">b. Contacto entre las paredes ante un desplazamiento de cizalla de 10 cm</string>
+    <string name="jr_c_group">c. No existe contacto entre las paredes durante el desplazamiento de cizalla</string>
+
+    <string name="ja_a_group">a. Contacto entre las paredes (sin minerales de relleno, sólo pátinas)</string>
+    <string name="ja_b_group">b. Contacto entre las paredes ante un desplazamiento de cizalla de 10 cm (delgados rellenos de mineral)</string>
+    <string name="ja_c_group">c. No existe contacto entre las paredes durante el desplazamiento de cizalla (delgados rellenos de mineral)</string>
+
+    <string name="srf_a_group">a. Zonas débiles intersectan a la excavación, en las cuáles pueden producirse desprendimientos de la masa rocosa</string>
+    <string name="srf_b_group">b. Roca competente. Problemas tensionales en la roca</string>
+    <string name="srf_c_group">c. Deformación de la roca. Flujos plásticos de roca incompetente bajo la influencia de altas presiones litostáticas</string>
+    <string name="srf_d_group">d. Expansión de la roca. Actividad química expansiva dependiendo de la presencia de agua</string>
+
 
 
 </resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="assessment_master_menu_identification_label">Información general</string>
+    <string name="assessment_master_menu_discontinuities_label">Discontinuidades</string>
+    <string name="assessment_master_menu_qvalue_label">Valor de Q </string>
+    <string name="assessment_master_menu_rock_support_label">ESR (Temporary)</string>
+    <string name="assessment_master_menu_rmr_label">Valor de RMR </string>
+    <string name="assessment_master_menu_pictures_label">Fotografías</string>
+    <string name="assessment_master_menu_description_label">Descripción</string>
+    <string name="assessment_master_menu_instructions_label">Soporte</string>
+    <string name="assessment_master_menu_expanded_tunnel_label">Túnel expandido</string>
+    <string name="assessment_master_menu_summary_label">Resumen (Reporte)</string>
+    <string name="assessment_master_menu_save_label">Guardar</string>
+
+</resources>

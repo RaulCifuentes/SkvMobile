@@ -53,6 +53,7 @@ public class QCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Q
         while (cursor.moveToNext()) {
             Integer rqdValue = CursorUtils.getInt(QCalculationTable.RQD_COLUMN, cursor);
             String jnCode = CursorUtils.getString(QCalculationTable.Jn_CODE_COLUMN, cursor);
+            Boolean intersection = (CursorUtils.getInt(QCalculationTable.INTERSECTION_CODE_COLUMN, cursor)==1)? true: false;
             String jrCode = CursorUtils.getString(QCalculationTable.Jr_CODE_COLUMN, cursor);
             String jaCode = CursorUtils.getString(QCalculationTable.Ja_CODE_COLUMN, cursor);
             String jwCode = CursorUtils.getString(QCalculationTable.Jw_CODE_COLUMN, cursor);
@@ -68,7 +69,7 @@ public class QCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Q
             Jw jw = jwCode != null? mLocalJwDAO.getJwByUniqueCode(jwCode):null;
             SRF srf = srfCode != null? mLocalSrfDAO.getSrfByUniqueCode(srfCode):null;
 
-            Q_Calculation newInstance = new Q_Calculation(rqd, jn, jr, ja, jw, srf);
+            Q_Calculation newInstance = new Q_Calculation(rqd, jn, jr, ja, jw, srf, intersection);
             list.add(newInstance);
         }
         return list;
@@ -99,6 +100,7 @@ public class QCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Q
                     QCalculationTable.RQD_COLUMN,
                     QCalculationTable.Jn_CODE_COLUMN,
                     QCalculationTable.Jr_CODE_COLUMN,
+                    QCalculationTable.INTERSECTION_CODE_COLUMN,
                     QCalculationTable.Ja_CODE_COLUMN,
                     QCalculationTable.Jw_CODE_COLUMN,
                     QCalculationTable.SRF_CODE_COLUMN,
@@ -110,6 +112,7 @@ public class QCalculationDAOsqlLiteImpl extends SqlLiteBasePersistentEntityDAO<Q
                     newQCalculation.getRqd() != null ? newQCalculation.getRqd().getValue() : null,
                     newQCalculation.getJn() != null ? newQCalculation.getJn().getCode() : null,
                     newQCalculation.getJr() != null ? newQCalculation.getJr().getCode() : null,
+                    newQCalculation.getIsIntersection() != null ? (newQCalculation.getIsIntersection().booleanValue() == true ? new Integer(1):new Integer(0)) : new Integer(0),
                     newQCalculation.getJa() != null ? newQCalculation.getJa().getCode() : null,
                     newQCalculation.getJw() != null ? newQCalculation.getJw().getCode() : null,
                     newQCalculation.getSrf() != null ? newQCalculation.getSrf().getCode() : null,

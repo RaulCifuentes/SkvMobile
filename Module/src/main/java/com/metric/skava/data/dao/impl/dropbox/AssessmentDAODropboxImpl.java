@@ -748,6 +748,11 @@ public class AssessmentDAODropboxImpl extends DropBoxBaseDAO implements RemoteAs
                     qCalculationFields.set("jnCode", jn.getCode());
                 }
 
+                Boolean isIntersection = qCalculation.getIsIntersection();
+                if (isIntersection) {
+                    qCalculationFields.set("isIntersection", true);
+                }
+
                 Jr jr = qCalculation.getJr();
                 if (jr != null) {
                     qCalculationFields.set("jrCode", jr.getCode());

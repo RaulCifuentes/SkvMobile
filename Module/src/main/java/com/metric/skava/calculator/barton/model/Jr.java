@@ -11,9 +11,13 @@ public class Jr extends MappedIndex implements Serializable {
     private Group group;
 
     public enum Group {
-        a("a. Rock-wall contact"),
-        b("b. Rock-wall contact before 10 cm of shear movement"),
-        c("c. No rock-wall contact when sheared");
+//        a("a. Rock-wall contact"),
+//        b("b. Rock-wall contact before 10 cm of shear movement"),
+//        c("c. No rock-wall contact when sheared");
+
+        a("a. Contacto entre las paredes"),
+        b("b. Contacto entre las paredes ante un desplazamiento de cizalla de 10 cm"),
+        c("c. No existe contacto entre las paredes durante el desplazamiento de cizalla");
 
         private final String value;
 

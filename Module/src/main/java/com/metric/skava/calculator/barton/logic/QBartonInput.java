@@ -11,8 +11,9 @@ public class QBartonInput implements Parcelable {
 	private Double ja;
 	private Double jw;
 	private Double srf;
-	
-	public QBartonInput() {	
+    private Boolean intersection;
+
+    public QBartonInput() {
 	}
 
 	public Integer getRqd() {
@@ -63,7 +64,15 @@ public class QBartonInput implements Parcelable {
 		this.srf = srf;
 	}
 
-	public boolean isComplete(){
+    public Boolean isIntersection() {
+        return intersection;
+    }
+
+    public void setIntersection(Boolean intersection) {
+        this.intersection = intersection;
+    }
+
+    public boolean isComplete(){
 		return (rqd != null) && (jn != null) && (jr != null) && (ja != null) && (jw != null) && (srf != null); 
 	}
 	

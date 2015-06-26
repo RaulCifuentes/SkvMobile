@@ -16,6 +16,11 @@
     <string name="mapping_gral_info_slope">Inclination (%)</string>
     <string name="mapping_gral_info_code">Code</string>
 
+    <string name="choose_a_project">Select a project ...</string>
+    <string name="choose_a_tunnel">Select a tunnel ...</string>
+    <string name="choose_a_face">Select a face ...</string>
+    <string name="choose_a_section">Select a section ...</string>
+    <string name="choose_a_method">Select a method ...</string>
 
 
 

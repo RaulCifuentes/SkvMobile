@@ -118,13 +118,17 @@ public class AssessmentListAdapter extends BaseAdapter {
             //if it uploaded any picture
             if (SkavaUtils.hasPictures(currentItem.getPicturesList()) || currentItem.getTunnelExpandedView() != null) {
                 switch (currentItem.getPicsSentStatus()) {
+                    //Fabian is not informing the FilesSync tables so the PicsSentStatus no changes from
+                    //SENT TO DATASTORE to SENT TO CLOUD
+                    //so use always the sync not the striped
                     case SENT_TO_DATASTORE:
                         switch (currentItem.getDataSentStatus()) {
                             case SENT_TO_DATASTORE:
                                 imageView.setImageResource(R.drawable.cloud_sync);
                                 break;
                             case SENT_TO_CLOUD:
-                                imageView.setImageResource(R.drawable.cloud_striped);
+//                                imageView.setImageResource(R.drawable.cloud_striped);
+                                imageView.setImageResource(R.drawable.cloud_checked);
                                 break;
                             default:
                                 imageView.setImageResource(R.drawable.tablet);
@@ -135,7 +139,8 @@ public class AssessmentListAdapter extends BaseAdapter {
                         //it's hard to believe but check if data has not arrived yet
                         switch (currentItem.getDataSentStatus()) {
                             case SENT_TO_DATASTORE:
-                                imageView.setImageResource(R.drawable.cloud_striped);
+//                                imageView.setImageResource(R.drawable.cloud_striped);
+                                imageView.setImageResource(R.drawable.cloud_sync);
                                 break;
                             case SENT_TO_CLOUD:
                                 imageView.setImageResource(R.drawable.cloud_checked);

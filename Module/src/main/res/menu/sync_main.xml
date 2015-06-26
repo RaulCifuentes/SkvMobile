@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.metric.skava.sync.activity.SyncMainActivity" >
+    tools:context="com.metric.skava.sync.activity.DataManagementMainActivity" >
 
     <item android:id="@+id/action_clear_local_assessments"
         android:title="Clear local mappings"

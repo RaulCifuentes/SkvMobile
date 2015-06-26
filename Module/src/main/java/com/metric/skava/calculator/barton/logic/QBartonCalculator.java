@@ -12,7 +12,10 @@ public class QBartonCalculator {
 
 			if (input.getRqd() != null && input.getJn() != null) {
 				rqdOverJn = (double) (input.getRqd() / input.getJn());
-				result.setRqdOverJn(rqdOverJn);
+                if (input.isIntersection() != null && input.isIntersection().booleanValue()) {
+                    rqdOverJn /= 3 ;
+                }
+                result.setRqdOverJn(rqdOverJn);
 			} 
 			if (input.getJr() != null && input.getJa() != null) {
 				jrOverJa = (double) (input.getJr() / input.getJa());

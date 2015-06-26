@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="mapping_gral_info_code">Código</string>
+    <string name="mapping_gral_info_project">Proyecto</string>
+    <string name="mapping_gral_info_tunnel">Túnel</string>
+    <string name="mapping_gral_info_face">Frente</string>
+    <string name="mapping_gral_info_section">Sección</string>
+    <string name="mapping_gral_info_date">Fecha</string>
+    <string name="mapping_gral_info_geologist">Geólogo</string>
+    <string name="mapping_gral_info_initial_pk">PK Initial</string>
+    <string name="mapping_gral_info_final_pk">PK Final </string>
+    <string name="mapping_gral_info_actual_advance">Avance(m)</string>
+    <string name="mapping_gral_info_accum_advance">Avance acumulado (m)</string>
+    <string name="mapping_gral_info_method">Método</string>
+    <string name="mapping_gral_info_orientation">Orientación (°)</string>
+    <string name="mapping_gral_info_slope">Inclinación (%)</string>
+
+    <string name="choose_a_project">Elige un proyecto ...</string>
+    <string name="choose_a_tunnel">Elige un túnel ...</string>
+    <string name="choose_a_face">Elige una frente ...</string>
+    <string name="choose_a_section">Elige una sección ...</string>
+    <string name="choose_a_method">Elige un método ...</string>
+
+</resources>

@@ -78,6 +78,7 @@ public class JwFragment extends QBartonCalculatorBaseFragment {
 					int position, long id) {
 				Jw selectedItem = (Jw) parent.getItemAtPosition(position);
 				getQCalculationContext().setJw(selectedItem);
+                updateQResult();
 			}
 		});
 	}

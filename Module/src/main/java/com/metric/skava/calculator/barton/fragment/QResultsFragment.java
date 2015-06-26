@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.metric.skava.R;
 import com.metric.skava.app.util.SkavaConstants;
@@ -15,6 +16,9 @@ import com.metric.skava.calculator.barton.logic.QBartonCalculator;
 import com.metric.skava.calculator.barton.logic.QBartonInput;
 import com.metric.skava.calculator.barton.logic.QBartonOutput;
 import com.metric.skava.calculator.barton.model.Q_Calculation;
+import com.metric.skava.data.dao.exception.DAOException;
+import com.metric.skava.instructions.logic.RecomendationProvider;
+import com.metric.skava.instructions.model.SupportRecommendation;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -58,6 +62,9 @@ public class QResultsFragment extends QBartonCalculatorBaseFragment {
         if (qCalculation.getSrf() != null) {
             input.setSrf(qCalculation.getSrf().getValue());
         }
+        if (qCalculation.getIsIntersection() != null){
+            input.setIntersection(qCalculation.getIsIntersection().booleanValue());
+        }
         if (input.isComplete()) {
             // Inflate the layout for this fragment
             viewRoot = inflater.inflate(R.layout.calculator_qbarton_results_fragment, container,
@@ -77,6 +84,19 @@ public class QResultsFragment extends QBartonCalculatorBaseFragment {
             try {
                 output = QBartonCalculator.calculate(input);
                 getQCalculationContext().setQResult(output);
+
+                // whenever the Q changes it is necessary to reclaculate the support recommendation
+                SupportRecommendation supportRecomendation = null;
+                RecomendationProvider provider = new RecomendationProvider(getSkavaContext());
+                try {
+                    supportRecomendation = provider.recomend(getCurrentAssessment());
+                } catch (DAOException e) {
+                    Log.e(SkavaConstants.LOG, e.getMessage());
+                    Toast.makeText(getSkavaActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+                getCurrentAssessment().setRecomendation(supportRecomendation);
+                //
+
                 rdqOverJnTextView.setText(nf.format(output.getRqdOverJn()));
                 jrOverJaTextView
                         .setText(nf.format(output.getJrOverJa()));

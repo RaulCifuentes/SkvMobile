@@ -49,6 +49,7 @@ public class RQDFragment extends QBartonCalculatorBaseFragment {
                         RQD plainRqd = new RQD(enteredValue);
 //                        RQD mapeado = RQDMapper.getInstance().mapJvToRQD(enteredValue);
 						getQCalculationContext().setRqd(plainRqd);
+                        updateQResult();
                     } else {
                         rqdEditText.setError( "RQD value must be between 0 and 100!" );
                     }
@@ -59,8 +60,30 @@ public class RQDFragment extends QBartonCalculatorBaseFragment {
             }
         });
 
+        rqdEditText.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus)
+            {
+                String input;
+                EditText editText;
+
+                if(!hasFocus)
+                {
+                    updateQResult();
+                }
+            }
+        });
+
+
+
+
 		return rootView;
 	}
+
+
+
+
 
 
 

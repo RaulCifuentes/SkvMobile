@@ -327,16 +327,17 @@ public class AssessmentStageListActivity extends SkavaFragmentActivity
                 //use the previous fragment if there is one
                 Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_RECOMENDATION_STAGE_TAG);
                 InstructionsMainFragment supportRecomendationFragment;
-                if (fragment != null) {
-                    supportRecomendationFragment = (InstructionsMainFragment) fragment;
-                    fx.attach(supportRecomendationFragment);
-                } else {
+                //Commenting this ito see if it fixes the support recommendation update as Q barton changes
+//                if (fragment != null) {
+//                    supportRecomendationFragment = (InstructionsMainFragment) fragment;
+//                    fx.attach(supportRecomendationFragment);
+//                } else {
                     supportRecomendationFragment = new InstructionsMainFragment();
                     Bundle arguments = new Bundle();
                     arguments.putString(InstructionsMainFragment.ARG_BASKET_ID, id);
                     supportRecomendationFragment.setArguments(arguments);
                     fx.add(R.id.stage_detail_container, supportRecomendationFragment, FRAGMENT_RECOMENDATION_STAGE_TAG);
-                }
+//                }
                 fx.commit();
                 return;
             }

@@ -19,6 +19,7 @@ public class MappingStageDataProvider {
     public static String PICS = "PICS";
     public static String EXPANDED = "EXPANDED";
     public static String REPORT = "REPORT";
+    public static String SUPPORT_INSTRUCTIONS = "SUPPORT_INSTRUCTIONS";
 
     public static MappingStageDataProvider getInstance(Context ctx) {
         if (instance == null) {

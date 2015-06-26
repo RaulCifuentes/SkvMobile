@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,13 +59,15 @@ public class JnFragment extends QBartonCalculatorBaseFragment {
         selectedJn = getQCalculationContext().getJn();
 
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.calculator_mapped_index_list_base_fragment, container, false);
+		return inflater.inflate(R.layout.calculator_jn_list_base_fragment, container, false);
 	}
 	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {	
 		super.onViewCreated(view, savedInstanceState);
 		final ListView listview = (ListView) getView().findViewById(R.id.listview);
+
+        CheckBox checkboxIntersection = (CheckBox) getView().findViewById(R.id.checkIntersection);
 
 		TextView title = (TextView) getView().findViewById(R.id.fragmentTitle);
 		title.setText(getString(R.string.jnTitle));
@@ -74,6 +78,19 @@ public class JnFragment extends QBartonCalculatorBaseFragment {
         listview.addHeaderView(headerView, null, false);
 		listview.setAdapter(jnAdapter);
         final int numberOfHeaders = listview.getHeaderViewsCount();
+
+        if (getQCalculationContext().getIsIntersection() != null && getQCalculationContext().getIsIntersection().booleanValue()){
+            checkboxIntersection.setChecked(true);
+        }
+
+        checkboxIntersection.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                getQCalculationContext().setIsIntersection(isChecked);
+            }
+        }
+
+        );
 
         if (selectedJn != null) {
             if (jnAdapter != null) {
@@ -93,6 +110,7 @@ public class JnFragment extends QBartonCalculatorBaseFragment {
 					int position, long id) {
                 selectedJn = (Jn) parent.getItemAtPosition(position);
 				getQCalculationContext().setJn(selectedJn);
+                updateQResult();
 			}
 		});		
 		if (BuildConfig.DEBUG) {

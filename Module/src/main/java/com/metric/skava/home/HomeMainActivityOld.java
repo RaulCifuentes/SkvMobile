@@ -347,7 +347,7 @@
 //                break;
 //
 ////            case 199: //
-////                intent = new Intent(this, SyncMainActivity.class);
+////                intent = new Intent(this, DataManagementMainActivity.class);
 ////                startActivity(intent);
 ////                break;
 //

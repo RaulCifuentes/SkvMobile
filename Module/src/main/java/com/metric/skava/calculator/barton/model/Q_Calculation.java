@@ -20,10 +20,11 @@ public class Q_Calculation implements Parcelable {
 	private Ja ja;
 	private Jw jw;	
 	private SRF sRF;
+    private Boolean isIntersection;
 
     private QBartonOutput qResult;
 
-    public Q_Calculation(RQD rqd, Jn jn, Jr jr, Ja ja, Jw jw, SRF sRF) {
+    public Q_Calculation(RQD rqd, Jn jn, Jr jr, Ja ja, Jw jw, SRF sRF, Boolean intersection) {
 		super();
 		this.rqd = rqd;
 		this.jn = jn;
@@ -31,10 +32,11 @@ public class Q_Calculation implements Parcelable {
 		this.ja = ja;
 		this.jw = jw;
 		this.sRF = sRF;
+        this.isIntersection = intersection;
     }
 
 
-	public Ja getJa() {
+    public Ja getJa() {
 		return ja;
 	}
 
@@ -53,6 +55,14 @@ public class Q_Calculation implements Parcelable {
             this.jn = jn;
         }
 	}
+
+    public Boolean getIsIntersection() {
+        return isIntersection;
+    }
+
+    public void setIsIntersection(Boolean isIntersection) {
+        this.isIntersection = isIntersection;
+    }
 
 	public Jr getJr() {
 		return jr;
@@ -107,6 +117,7 @@ public class Q_Calculation implements Parcelable {
             input.setJa(getJa().getValue());
             input.setJw(getJw().getValue());
             input.setSrf(getSrf().getValue());
+            input.setIntersection(getIsIntersection());
             qResult = QBartonCalculator.calculate(input);
         }
         return qResult;
@@ -133,6 +144,7 @@ public class Q_Calculation implements Parcelable {
 		out.writeValue(ja);
 		out.writeValue(jw);
 		out.writeValue(sRF);
+        out.writeValue(isIntersection);
 	}
 
 	// This is used to regenerate your object.
@@ -150,7 +162,8 @@ public class Q_Calculation implements Parcelable {
 			Ja ja = (Ja) in.readValue(Q_Calculation.class.getClassLoader());
 			Jw jw = (Jw) in.readValue(Q_Calculation.class.getClassLoader());
 			SRF sRF = (SRF) in.readValue(Q_Calculation.class.getClassLoader());
-			Q_Calculation instance = new Q_Calculation(rqd, jn, jr, ja, jw, sRF);
+            Boolean intersection = (Boolean)in.readValue(Q_Calculation.class.getClassLoader());
+			Q_Calculation instance = new Q_Calculation(rqd, jn, jr, ja, jw, sRF, intersection);
 			return instance;
 		}
 
@@ -169,6 +182,7 @@ public class Q_Calculation implements Parcelable {
 		ja = (Ja) in.readValue(Q_Calculation.class.getClassLoader());
 		jw = (Jw) in.readValue(Q_Calculation.class.getClassLoader());
 		sRF = (SRF) in.readValue(Q_Calculation.class.getClassLoader());
+        isIntersection = (Boolean) in.readValue(Q_Calculation.class.getClassLoader());
 	}
 
     public boolean isComplete() {

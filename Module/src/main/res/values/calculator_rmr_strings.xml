@@ -15,5 +15,8 @@
     <string name="condition_results_weathering_label">Weathering : </string>
 
     <string name="strength_title_label">Strength of intact rock material</string>
+    <string name="strength_point_load_group">Point-load strenght index</string>
+    <string name="strength_uniaxial_group">Uniaxial compression strenght</string>
+
 
 </resources>

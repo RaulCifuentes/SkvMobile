@@ -254,6 +254,7 @@ public class LoginMainActivity extends SkavaActivity implements LoaderManager.Lo
             if (success) {
                 ((SkavaApplication) getApplication()).getSkavaContext().setLoggedUser(mUser);
                 NavUtils.navigateUpFromSameTask(LoginMainActivity.this);
+                invalidateOptionsMenu();
 //                onBackPressed();
 //                finish();
             } else {

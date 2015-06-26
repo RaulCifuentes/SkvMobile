@@ -51,16 +51,28 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
         super.onViewCreated(view, savedInstanceState);
 
         TextView title = (TextView) getView().findViewById(R.id.fragmentTitle);
-        title.setText("Stress Reduction Factor");
+        title.setText(getString(R.string.srfTitle));
 
         RadioButton firstRadio = (RadioButton) view.findViewById(R.id.radioButtonFirst);
-        firstRadio.setText(SRF.Group.a.toString());
+//        firstRadio.setText(SRF.Group.a.toString());
+        String srfGroupA = getResources().getString(R.string.srf_a_group);
+        firstRadio.setText(srfGroupA);
+
         RadioButton secondRadio = (RadioButton) view.findViewById(R.id.radioButtonSecond);
-        secondRadio.setText(SRF.Group.b.toString());
+//        secondRadio.setText(SRF.Group.b.toString());
+        String srfGroupB = getResources().getString(R.string.srf_b_group);
+        secondRadio.setText(srfGroupB);
+
         RadioButton thirdRadio = (RadioButton) view.findViewById(R.id.radioButtonThird);
-        thirdRadio.setText(SRF.Group.c.toString());
+//        thirdRadio.setText(SRF.Group.c.toString());
+        String srfGroupC = getResources().getString(R.string.srf_c_group);
+        thirdRadio.setText(srfGroupC);
+
         RadioButton fourthRadio = (RadioButton) view.findViewById(R.id.radioButtonFourth);
-        fourthRadio.setText(SRF.Group.d.toString());
+//        fourthRadio.setText(SRF.Group.d.toString());
+        String srfGroupD = getResources().getString(R.string.srf_d_group);
+        fourthRadio.setText(srfGroupD);
+
 
 
         mListFirstGroup = (ListView) view.findViewById(R.id.listview_a);
@@ -170,6 +182,7 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
                                     int position, long id) {
                 selectedSRF = (SRF) parent.getItemAtPosition(position);
                 getQCalculationContext().setSrf(selectedSRF);
+                updateQResult();
             }
 
         });
@@ -214,6 +227,7 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
                                     int position, long id) {
                 selectedSRF = (SRF) parent.getItemAtPosition(position);
                 getQCalculationContext().setSrf(selectedSRF);
+                updateQResult();
             }
 
         });
@@ -257,6 +271,7 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
                                     int position, long id) {
                 selectedSRF = (SRF) parent.getItemAtPosition(position);
                 getQCalculationContext().setSrf(selectedSRF);
+                updateQResult();
             }
 
         });
@@ -300,6 +315,7 @@ public class SrfFragment extends QBartonCalculatorBaseFragment implements RadioG
                                     int position, long id) {
                 selectedSRF = (SRF) parent.getItemAtPosition(position);
                 getQCalculationContext().setSrf(selectedSRF);
+                updateQResult();
             }
 
         });

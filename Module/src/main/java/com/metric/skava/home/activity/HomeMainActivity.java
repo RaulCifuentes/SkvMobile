@@ -41,7 +41,7 @@ import com.metric.skava.data.dao.exception.DAOException;
 import com.metric.skava.expandedview.activity.TestAutocadMainActivity;
 import com.metric.skava.home.fragment.MainFragment;
 import com.metric.skava.settings.activity.SettingsMainActivity;
-import com.metric.skava.sync.activity.SyncMainActivity;
+import com.metric.skava.sync.activity.DataManagementMainActivity;
 import com.metric.skava.user.activity.UserAccountMainActivity;
 
 import java.text.SimpleDateFormat;
@@ -56,15 +56,15 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
     public static final int NAV_MENU_ROCK_CLASSIFICATION_ITEM_ID = 25;
 //    public static final int NAV_MENU_FACE_MAPPING_ITEM_ID = 30;
     private static final int NAV_MENU_ADMIN_SECTION_ID = 40;
-    private static final int NAV_MENU_USER_ACCOUNT = 55;
-    private static final int NAV_MENU_SETTINGS_ITEM_ID = 70;
-    private static final int NAV_MENU_SYNC_ITEM_ID = 50;
+    private static final int NAV_MENU_DATA_MANAGEMENT_ITEM_ID = 50;
     private static final int NAV_MENU_GENERAL_SECTION_ID = 60;
-    private static final int NAV_MENU_ABOUT_ITEM_ID = 80;
+    private static final int NAV_MENU_USER_ACCOUNT = 70;
+    private static final int NAV_MENU_SYNC_ITEM_ID = 80;
+    private static final int NAV_MENU_SETTINGS_ITEM_ID = 90;
+    private static final int NAV_MENU_ABOUT_ITEM_ID = 100;
+    private static final int NAV_MENU_LOGOUT_ITEM_ID = 200;
+
     private static final int NAV_MENU_TEST_AUTOCAD_ID = 980;
-
-
-    private static final int NAV_MENU_LOGOUT_ITEM_ID = 100;
 
     private static final String FRAGMENT_HOME_MAIN_TAG = "FRAGMENT_HOME_MAIN_TAG";
 
@@ -86,6 +86,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         Log.d(SkavaConstants.LOG, "********** onNewIntent ***** " + dateAsString);
         this.setupTheData();
         super.setupTheDrawer();
+        invalidateOptionsMenu();
     }
 
 
@@ -99,6 +100,15 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
 //            finish();
 //            return;
 //        }
+
+//        String languageToLoad  = "es";
+//        Locale locale = new Locale(languageToLoad);
+//        Locale.setDefault(locale);
+//        Configuration config = new Configuration();
+//        config.locale = locale;
+//        getBaseContext().getResources().updateConfiguration(config,
+//                getBaseContext().getResources().getDisplayMetrics());
+
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -346,7 +356,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 }
                 if (loggedUser.hasRole(admin) || loggedUser.hasRole(metricAdmin)) {
                     menuAsList.add(NavMenuSection.create(NAV_MENU_ADMIN_SECTION_ID, "Admin"));
-                    menuAsList.add(NavMenuItem.create(NAV_MENU_SYNC_ITEM_ID, getString(R.string.data_management_label), "ic_menu_copy_holo_dark", true, true, this));
+                    menuAsList.add(NavMenuItem.create(NAV_MENU_DATA_MANAGEMENT_ITEM_ID, getString(R.string.data_management_label), "ic_menu_copy_holo_dark", true, true, this));
                 }
                 BugSenseHandler.setUserIdentifier(loggedUser.getName());
             }
@@ -355,6 +365,7 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         if (loggedUser != null) {
             menuAsList.add(NavMenuItem.create(NAV_MENU_USER_ACCOUNT, getString(R.string.usr_account_label), "ic_action_overflow", true, true, this));
         }
+        menuAsList.add(NavMenuItem.create(NAV_MENU_SYNC_ITEM_ID, getString(R.string.sync_label), "ic_action_overflow", true, true, this));
         menuAsList.add(NavMenuItem.create(NAV_MENU_SETTINGS_ITEM_ID, getString(R.string.settings_label), "ic_action_overflow", true, true, this));
         menuAsList.add(NavMenuItem.create(NAV_MENU_ABOUT_ITEM_ID, getString(R.string.about_label), "ic_action_overflow", true, true, this));
         if (loggedUser != null) {
@@ -383,8 +394,9 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
         switch (id) {
             case NAV_MENU_LOGIN_ITEM_ID:
                 intent = new Intent(this, LoginMainActivity.class);
-                intent.putExtra(LoginMainActivity.EXTRA_USERNAME, "rcifuentes");
-                intent.putExtra(LoginMainActivity.EXTRA_PASSWORD, "pepito");
+                //TODO comment this out to force login with another credentials
+//                intent.putExtra(LoginMainActivity.EXTRA_USERNAME, "rcifuentes");
+//                intent.putExtra(LoginMainActivity.EXTRA_PASSWORD, "pepito");
                 startActivity(intent);
                 break;
             case NAV_MENU_ROCK_CLASSIFICATION_ITEM_ID:
@@ -393,13 +405,17 @@ public class HomeMainActivity extends AbstractNavDrawerActivity {
                 intent.putExtra(SkavaConstants.SKAVA_APP_SRC, NAV_MENU_ROCK_CLASSIFICATION_ITEM_ID);
                 startActivity(intent);
                 break;
-            case NAV_MENU_SYNC_ITEM_ID:
-                intent = new Intent(this, SyncMainActivity.class);
+            case NAV_MENU_DATA_MANAGEMENT_ITEM_ID:
+                intent = new Intent(this, DataManagementMainActivity.class);
                 startActivity(intent);
                 break;
             case NAV_MENU_USER_ACCOUNT:
                 intent = new Intent(this, UserAccountMainActivity.class);
                 startActivity(intent);
+                break;
+            case NAV_MENU_SYNC_ITEM_ID:
+                //RAUL SYNC ON DEMAND
+                syncOnDemand();
                 break;
             case NAV_MENU_SETTINGS_ITEM_ID:
                 intent = new Intent(this, SettingsMainActivity.class);

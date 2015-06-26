@@ -5,12 +5,12 @@ import android.view.Menu;
 
 import com.metric.skava.R;
 import com.metric.skava.app.activity.SkavaFragmentActivity;
-import com.metric.skava.sync.fragment.SyncMainFragment;
+import com.metric.skava.sync.fragment.DataManagementMainFragment;
 
-public class SyncMainActivity extends SkavaFragmentActivity  {
+public class DataManagementMainActivity extends SkavaFragmentActivity  {
 
     public String FRAGMENT_TAG = "SYNC_FRAGMENT_TAG";
-    private SyncMainFragment mMainContainedFragment;
+    private DataManagementMainFragment mMainContainedFragment;
 
 
     @Override
@@ -19,7 +19,7 @@ public class SyncMainActivity extends SkavaFragmentActivity  {
         setContentView(R.layout.sync_main_activity);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new SyncMainFragment(), FRAGMENT_TAG)
+                    .add(R.id.container, new DataManagementMainFragment(), FRAGMENT_TAG)
                     .commit();
         }
     }
@@ -27,7 +27,7 @@ public class SyncMainActivity extends SkavaFragmentActivity  {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mMainContainedFragment = (SyncMainFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+        mMainContainedFragment = (DataManagementMainFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
 
     }
 
